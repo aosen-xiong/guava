@@ -40,6 +40,7 @@ import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A mutable class-to-instance map backed by an arbitrary user-provided map. See also {@link
@@ -196,7 +197,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
     return Primitives.wrap(type).cast(value);
   }
 
-  private Object writeReplace() {
+  private @Readonly Object writeReplace() {
     return new SerializedForm<>(delegate());
   }
 
@@ -212,7 +213,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
       this.backingMap = backingMap;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return create(backingMap);
     }
 

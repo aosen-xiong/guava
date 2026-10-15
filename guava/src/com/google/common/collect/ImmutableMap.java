@@ -343,6 +343,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * @since 31.0
    */
   @SafeVarargs
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V> ImmutableMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     @SuppressWarnings("unchecked") // we will only ever read these
     Entry<K, V>[] entries2 = (Entry<K, V>[]) entries;
@@ -380,7 +381,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    *
    * @since 23.1
    */
-  public static <K, V> Builder<K, V> builderWithExpectedSize(int expectedSize) {
+  public static <K extends @Immutable Object, V> Builder<K, V> builderWithExpectedSize(int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     return new Builder<>(expectedSize);
   }
@@ -541,6 +542,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
       return this;
     }
 
+    @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     private ImmutableMap<K, V> build(boolean throwIfDuplicateKeys) {
       /*
        * If entries is full, or if hash flooding is detected, then this implementation may end up
@@ -689,7 +691,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    *
    * @throws NullPointerException if any key or value in {@code map} is null
    */
-  public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(Map<? extends K, ? extends V> map) {
+  public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(@Readonly Map<? extends K, ? extends V> map) {
     if ((map instanceof ImmutableMap) && !(map instanceof SortedMap)) {
       @SuppressWarnings("unchecked") // safe since map is not writable
       ImmutableMap<K, V> kvMap = (ImmutableMap<K, V>) map;
@@ -715,8 +717,9 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * @throws IllegalArgumentException if two entries have the same key
    * @since 19.0
    */
-  public static <K, V> ImmutableMap<K, V> copyOf(
-      Iterable<? extends Entry<? extends K, ? extends V>> entries) {
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
+  public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(
+      @Readonly Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant
     Entry<K, V>[] entryArray = (Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
     switch (entryArray.length) {
@@ -782,7 +785,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
         @Override
         @J2ktIncompatible // serialization
         @GwtIncompatible // serialization
-        Object writeReplace() {
+        @Readonly Object writeReplace() {
           return super.writeReplace();
         }
       }
@@ -799,7 +802,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -927,7 +930,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final void putAll(Map<? extends K, ? extends V> map) {
+  public final void putAll(@Readonly Map<? extends K, ? extends V> map) {
     throw new UnsupportedOperationException();
   }
 
@@ -1015,7 +1018,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    */
   @Override
   @CheckForNull
-  public final V getOrDefault(@CheckForNull @UnknownSignedness Object key, @CheckForNull V defaultValue) {
+  public final V getOrDefault(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull V defaultValue) {
     /*
      * Even though it's weird to pass a defaultValue that is null, some callers do so. Those who
      * pass a literal "null" should probably just use `get`, but I would expect other callers to
@@ -1128,7 +1131,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
 
   // cached so that this.multimapView().inverse() only computes inverse once
   @CFComment("Change to @LazyFinal later")
-  @LazyInit @CheckForNull private transient ImmutableSetMultimap<K, @Immutable V> multimapView;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableSetMultimap<K, @Immutable V> multimapView;
 
   /**
    * Returns a multimap view of the map.
@@ -1221,7 +1224,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -1256,7 +1259,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * as implementation details.
    */
   @J2ktIncompatible // serialization
-  static class SerializedForm<K, V> implements Serializable {
+  static class SerializedForm<K extends @Immutable Object, V> implements Serializable {
     // This object retains references to collections returned by keySet() and value(). This saves
     // bytes when the both the map and its keySet or value collection are written to the same
     // instance of ObjectOutputStream.
@@ -1336,7 +1339,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * of SerializedForm whose readResolve() method returns objects of the subclass type.
    */
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<>(this);
   }
 

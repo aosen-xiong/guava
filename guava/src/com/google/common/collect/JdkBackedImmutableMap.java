@@ -146,7 +146,7 @@ final class JdkBackedImmutableMap<K extends @Immutable Object, V> extends Immuta
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

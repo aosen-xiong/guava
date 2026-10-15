@@ -43,6 +43,7 @@ import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
@@ -277,7 +278,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    public Builder<K, V> put(@Readonly Entry<? extends K, ? extends V> entry) {
       super.put(entry);
       return this;
     }
@@ -309,7 +310,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
 
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(Multimap<? extends K, ? extends V> multimap) {
+    public Builder<K, V> putAll(@Readonly Multimap<? extends K, ? extends V> multimap) {
       for (Entry<? extends K, ? extends Collection<? extends V>> entry :
           multimap.asMap().entrySet()) {
         putAll(entry.getKey(), entry.getValue());
@@ -410,7 +411,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
    * @throws NullPointerException if any key, value, or entry is null
    * @since 19.0
    */
-  public static <K, V> ImmutableSetMultimap<K, V> copyOf(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableSetMultimap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     return new Builder<K, V>().putAll(entries).build();
   }
@@ -502,7 +503,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final ImmutableSet<V> removeAll(@CheckForNull Object key) {
+  public final ImmutableSet<V> removeAll(@CheckForNull @Readonly Object key) {
     throw new UnsupportedOperationException();
   }
 
@@ -542,7 +543,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object instanceof Entry) {
         Entry<?, ?> entry = (Entry<?, ?>) object;
         return multimap.containsEntry(entry.getKey(), entry.getValue());
@@ -570,7 +571,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }

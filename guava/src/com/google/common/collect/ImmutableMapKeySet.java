@@ -26,6 +26,7 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -61,7 +62,7 @@ final class ImmutableMapKeySet<K extends @Immutable Object, V> extends IndexedIm
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return map.containsKey(object);
   }
 
@@ -86,7 +87,7 @@ final class ImmutableMapKeySet<K extends @Immutable Object, V> extends IndexedIm
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 
@@ -101,7 +102,7 @@ final class ImmutableMapKeySet<K extends @Immutable Object, V> extends IndexedIm
       this.map = map;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return map.keySet();
     }
 

@@ -39,7 +39,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>, Serializable {
+abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>>, Serializable {
   final C endpoint;
 
   Cut(C endpoint) {
@@ -120,7 +120,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
    * casting the type parameter is safe.
    */
   @SuppressWarnings("unchecked")
-  static <C extends @Readonly Comparable> Cut<C> belowAll() {
+  static <C extends @Immutable Comparable> Cut<C> belowAll() {
     return (Cut<C>) BelowAll.INSTANCE;
   }
 
@@ -207,7 +207,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    public int hashCode(@UnknownSignedness @Readonly BelowAll this) {
+    public int hashCode(@UnknownSignedness BelowAll this) {
       return System.identityHashCode(this);
     }
 
@@ -216,7 +216,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
       return "-\u221e";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -228,7 +228,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
    * type C, so casting the type parameter is safe.
    */
   @SuppressWarnings("unchecked")
-  static <C extends @Readonly Comparable> Cut<C> aboveAll() {
+  static <C extends @Immutable Comparable> Cut<C> aboveAll() {
     return (Cut<C>) AboveAll.INSTANCE;
   }
 
@@ -308,19 +308,19 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
       return "+\u221e";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
     private static final long serialVersionUID = 0;
   }
 
-  static <C extends @Readonly Comparable> Cut<C> belowValue(C endpoint) {
+  static <C extends @Immutable Comparable> Cut<C> belowValue(C endpoint) {
     return new BelowValue<>(endpoint);
   }
 
   @Immutable
-  private static final class BelowValue<C extends @Readonly Comparable> extends Cut<C> {
+  private static final class BelowValue<C extends @Immutable Comparable> extends Cut<C> {
     BelowValue(C endpoint) {
       super(checkNotNull(endpoint));
     }
@@ -400,12 +400,12 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     private static final long serialVersionUID = 0;
   }
 
-  static <C extends @Readonly Comparable> Cut<C> aboveValue(C endpoint) {
+  static <C extends @Immutable Comparable> Cut<C> aboveValue(C endpoint) {
     return new AboveValue<>(endpoint);
   }
 
   @Immutable
-  private static final class AboveValue<C extends @Readonly Comparable> extends Cut<C> {
+  private static final class AboveValue<C extends @Immutable Comparable> extends Cut<C> {
     AboveValue(C endpoint) {
       super(checkNotNull(endpoint));
     }
@@ -479,7 +479,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    public int hashCode(@UnknownSignedness @Readonly AboveValue<C> this) {
+    public int hashCode(@UnknownSignedness AboveValue<C> this) {
       return ~endpoint.hashCode();
     }
 

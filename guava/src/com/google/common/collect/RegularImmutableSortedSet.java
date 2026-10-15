@@ -53,7 +53,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @Immutable
 final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   static final RegularImmutableSortedSet<Comparable> NATURAL_EMPTY_SET =
-      new RegularImmutableSortedSet<>(ImmutableList.<Comparable>of(), Ordering.natural());
+      new RegularImmutableSortedSet<>(ImmutableList.<@Immutable Comparable>of(), Ordering.natural());
 
   private final transient ImmutableList<E> elements;
 
@@ -107,7 +107,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Pure
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
     try {
       return o != null && unsafeBinarySearch(o) >= 0;
     } catch (ClassCastException e) {
@@ -117,7 +117,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Pure
   @Override
-  public boolean containsAll(Collection<?> targets) {
+  public boolean containsAll(@Readonly Collection<?> targets) {
     // TODO(jlevy): For optimal performance, use a binary search when
     // targets.size() < size() / log(size())
     // TODO(kevinb): see if we can share code with OrderedIterator after it
@@ -178,13 +178,13 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
     return elements.copyIntoArray(dst, offset);
   }
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -320,7 +320,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@CheckForNull @Readonly Object target) {
     if (target == null) {
       return -1;
     }
@@ -351,7 +351,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

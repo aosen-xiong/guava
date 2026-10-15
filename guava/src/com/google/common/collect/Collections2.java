@@ -404,7 +404,7 @@ public final class Collections2 {
    * @throws NullPointerException if the specified iterable is null or has any null elements.
    * @since 12.0
    */
-  public static <E extends Comparable<? super E>> Collection<List<E>> orderedPermutations(
+  public static <E extends @Immutable Comparable<? super E>> Collection<List<E>> orderedPermutations(
       Iterable<E> elements) {
     return orderedPermutations(elements, Ordering.natural());
   }

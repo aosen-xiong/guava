@@ -22,6 +22,7 @@ import com.google.common.annotations.J2ktIncompatible;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -48,6 +49,7 @@ final class SparseImmutableTable<R extends @Immutable Object, C extends @Immutab
   @SuppressWarnings("Immutable") // We don't modify this after construction.
   private final int[] cellColumnInRowIndices;
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   SparseImmutableTable(
       ImmutableList<Cell<R, C, V>> cellList,
       ImmutableSet<R> rowSpace,
@@ -137,7 +139,7 @@ final class SparseImmutableTable<R extends @Immutable Object, C extends @Immutab
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     Map<C, Integer> columnKeyToIndex = Maps.indexMap(columnKeySet());
     int[] cellColumnIndices = new int[cellSet().size()];
     int i = 0;

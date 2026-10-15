@@ -58,6 +58,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
   @SuppressWarnings("Immutable") // We don't modify this after construction.
   private final int[] cellColumnIndices;
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   DenseImmutableTable(
       ImmutableList<Cell<R, C, V>> cellList,
       ImmutableSet<R> rowSpace,
@@ -158,7 +159,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @J2ktIncompatible // serialization
     @Override
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -193,7 +194,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -228,7 +229,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -260,7 +261,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -292,7 +293,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -313,7 +314,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V get(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     return ((rowIndex == null) || (columnIndex == null)) ? null : values[rowIndex][columnIndex];
@@ -344,7 +345,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return SerializedForm.create(this, cellRowIndices, cellColumnIndices);
   }
 }

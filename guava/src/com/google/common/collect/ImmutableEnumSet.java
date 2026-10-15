@@ -28,6 +28,8 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -97,13 +99,13 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
 
   @Pure
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return delegate.contains(object);
   }
 
   @Pure
   @Override
-  public boolean containsAll(Collection<?> collection) {
+  public boolean containsAll(@Readonly Collection<?> collection) {
     if (collection instanceof ImmutableEnumSet<?>) {
       collection = ((ImmutableEnumSet<?>) collection).delegate;
     }
@@ -118,7 +120,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -133,7 +135,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
     return true;
   }
 
-  @LazyInit private transient int hashCode;
+  @LazyInit private transient @Assignable int hashCode;
 
   @Pure
   @Override
@@ -151,7 +153,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   // All callers of the constructor are restricted to <E extends Enum<E>>.
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new EnumSerializedForm<E>(delegate);
   }
 
@@ -171,7 +173,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
       this.delegate = delegate;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       // EJ2 #76: Write readObject() methods defensively.
       return new ImmutableEnumSet<E>(delegate.clone());
     }

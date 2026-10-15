@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A {@link MapIteratorCache} that adds additional caching. In addition to the caching provided by
@@ -28,7 +29,7 @@ import javax.annotation.CheckForNull;
  * @author James Sexton
  */
 @ElementTypesAreNonnullByDefault
-final class MapRetrievalCache<K, V> extends MapIteratorCache<K, V> {
+final class MapRetrievalCache<K extends @Immutable Object, V> extends MapIteratorCache<K, V> {
   // See the note about volatile in the superclass.
   @CheckForNull private transient volatile CacheEntry<K, V> cacheEntry1;
   @CheckForNull private transient volatile CacheEntry<K, V> cacheEntry2;
@@ -100,7 +101,7 @@ final class MapRetrievalCache<K, V> extends MapIteratorCache<K, V> {
     cacheEntry1 = entry;
   }
 
-  private static final class CacheEntry<K, V> {
+  private static final class CacheEntry<K extends @Immutable Object, V> {
     final K key;
     final V value;
 

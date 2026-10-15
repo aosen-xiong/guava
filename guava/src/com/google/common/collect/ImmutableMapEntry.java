@@ -49,7 +49,7 @@ class ImmutableMapEntry<K extends @Immutable Object, V> extends ImmutableEntry<K
    * {@code new ImmutableMapEntry[...]}, so it seems silly to insist on that only here.
    */
   @SuppressWarnings("unchecked") // Safe as long as the javadocs are followed
-  static <K, V> ImmutableMapEntry<K, V>[] createEntryArray(int size) {
+  static <K extends @Immutable Object, V> ImmutableMapEntry<K, V>[] createEntryArray(int size) {
     return (ImmutableMapEntry<K, V>[]) new ImmutableMapEntry<?, ?>[size];
   }
 

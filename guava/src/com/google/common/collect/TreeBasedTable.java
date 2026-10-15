@@ -95,12 +95,12 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    * Creates an empty {@code TreeBasedTable} that uses the natural orderings of both row and column
    * keys.
    *
-   * <p>The method signature specifies {@code R extends Comparable} with a raw {@link Comparable},
-   * instead of {@code R extends Comparable<? super R>}, and the same for {@code C}. That's
+   * <p>The method signature specifies {@code R extends @Immutable Comparable} with a raw {@link Comparable},
+   * instead of {@code R extends @Immutable Comparable<? super R>}, and the same for {@code C}. That's
    * necessary to support classes defined without generics.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <R extends Comparable, C extends Comparable, V> TreeBasedTable<R, C, V> create() {
+  public static <R extends @Immutable Comparable, C extends @Immutable Comparable, V> TreeBasedTable<R, C, V> create() {
     return new TreeBasedTable<>(Ordering.natural(), Ordering.natural());
   }
 

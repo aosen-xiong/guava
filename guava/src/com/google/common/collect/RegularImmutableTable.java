@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -66,7 +67,7 @@ abstract class RegularImmutableTable<R extends @Immutable Object, C extends @Imm
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object instanceof Cell) {
         Cell<?, ?, ?> cell = (Cell<?, ?, ?>) object;
         Object value = RegularImmutableTable.this.get(cell.getRowKey(), cell.getColumnKey());
@@ -85,7 +86,7 @@ abstract class RegularImmutableTable<R extends @Immutable Object, C extends @Imm
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -120,7 +121,7 @@ abstract class RegularImmutableTable<R extends @Immutable Object, C extends @Imm
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }

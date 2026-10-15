@@ -42,7 +42,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class RegularContiguousSet<C extends @Readonly Comparable> extends ContiguousSet<C> {
+final class RegularContiguousSet<C extends @Immutable Comparable> extends ContiguousSet<C> {
   private final Range<C> range;
 
   RegularContiguousSet(Range<C> range, DiscreteDomain<C> domain) {
@@ -161,7 +161,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
         @Override
         @J2ktIncompatible // serialization
         @GwtIncompatible // serialization
-        Object writeReplace() {
+        @Readonly Object writeReplace() {
           return super.writeReplace();
         }
       };
@@ -249,7 +249,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
 
   @GwtIncompatible // serialization
   @J2ktIncompatible
-  private static final class SerializedForm<C extends Comparable> implements Serializable {
+  private static final class SerializedForm<C extends @Immutable Comparable> implements Serializable {
     final Range<C> range;
     final DiscreteDomain<C> domain;
 
@@ -258,7 +258,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
       this.domain = domain;
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return new RegularContiguousSet<>(range, domain);
     }
   }
@@ -266,7 +266,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
   @GwtIncompatible // serialization
   @J2ktIncompatible
   @Override
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<>(range, domain);
   }
 

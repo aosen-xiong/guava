@@ -53,6 +53,7 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   // 'and' with an int to get a valid table index.
   private final transient int mask;
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   RegularImmutableSet(Object @Readonly [] elements, int hashCode, @Nullable Object[] table, int mask) {
     this.elements = elements;
     this.hashCode = hashCode;
@@ -62,7 +63,7 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
 
   @Pure
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
     @Nullable Object[] table = this.table;
     if (target == null || table.length == 0) {
       return false;
@@ -112,7 +113,7 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   }
 
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
     System.arraycopy(elements, 0, dst, offset, elements.length);
     return offset + elements.length;
   }
@@ -146,7 +147,7 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

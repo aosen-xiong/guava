@@ -56,7 +56,7 @@ final class AllEqualOrdering extends Ordering<@Nullable @Readonly Object> implem
     return (Ordering<S>) this;
   }
 
-  private Object readResolve() {
+  private @Readonly Object readResolve() {
     return INSTANCE;
   }
 

@@ -57,6 +57,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
@@ -700,14 +701,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<K> keySetView;
+  @LazyInit @CheckForNull private transient @Assignable Set<K> keySetView;
 
   @Override
-  public Set<@KeyFor({"this"}) K> keySet() {
+  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable CompactHashMap<K, V> this) {
     return (keySetView == null) ? keySetView = createKeySet() : keySetView;
   }
 
-  Set<K> createKeySet() {
+  @PolyMutable Set<K> createKeySet(@PolyMutable CompactHashMap<K, V> this) {
     return new KeySetView();
   }
 
@@ -810,14 +811,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySetView;
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySetView;
 
   @Override
-  public Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public @PolyMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable CompactHashMap<K, V> this) {
     return (entrySetView == null) ? entrySetView = createEntrySet() : entrySetView;
   }
 
-  Set<Entry<K, V>> createEntrySet() {
+  @PolyMutable Set<Entry<K, V>> createEntrySet(@PolyMutable CompactHashMap<K, V> this) {
     return new EntrySetView();
   }
 
@@ -993,14 +994,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return false;
   }
 
-  @LazyInit @CheckForNull private transient Collection<V> valuesView;
+  @LazyInit @CheckForNull private transient @Assignable Collection<V> valuesView;
 
   @Override
-  public Collection<V> values() {
+  public @PolyMutable Collection<V> values(@PolyMutable CompactHashMap<K, V> this) {
     return (valuesView == null) ? valuesView = createValues() : valuesView;
   }
 
-  Collection<V> createValues() {
+  @PolyMutable Collection<V> createValues(@PolyMutable CompactHashMap<K, V> this) {
     return new ValuesView();
   }
 

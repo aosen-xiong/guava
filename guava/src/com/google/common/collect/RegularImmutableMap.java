@@ -57,7 +57,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @Immutable
 final class RegularImmutableMap<K extends @Immutable Object, V> extends ImmutableMap<K, V> {
   @SuppressWarnings("unchecked")
-  static final ImmutableMap<Object, Object> EMPTY =
+  static final ImmutableMap<@Immutable Object, Object> EMPTY =
       new RegularImmutableMap<>((Entry<Object, Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, null, 0);
 
   /**
@@ -86,6 +86,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   // 'and' with an int to get a table index
   private final transient int mask;
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object , V> ImmutableMap<K, V> fromEntries(@Immutable Entry<K, V>... entries) {
     return fromEntryArray(entries.length, entries, /* throwIfDuplicateKeys= */ true);
   }
@@ -95,6 +96,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    * the entries in entryArray with its own entry objects (though they will have the same key/value
    * contents), and may take ownership of entryArray.
    */
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V> ImmutableMap<K, V> fromEntryArray(
       int n, @Nullable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys) {
     checkPositionIndex(n, entryArray.length);
@@ -112,6 +114,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     }
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private static <K extends @Immutable Object, V> ImmutableMap<K, V> fromEntryArrayCheckingBucketOverflow(
       int n, @Nullable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys)
       throws BucketOverflowException {
@@ -131,7 +134,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     // that have the same key. Then a second pass will remove all but the first of the slots that
     // have this Entry. The value in the map becomes false when this first entry has been copied, so
     // we know not to copy the remaining ones.
-    IdentityHashMap<Entry<K, V>, Boolean> duplicates = null;
+    IdentityHashMap<@Immutable Entry<K, V>, Boolean> duplicates = null;
     int dupCount = 0;
     for (int entryIndex = n - 1; entryIndex >= 0; entryIndex--) {
       // requireNonNull is safe because the first `n` elements have been filled in.
@@ -194,6 +197,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    *     been included in the new entry array.
    * @return an array of {@code newN} entries where no key appears more than once.
    */
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V> Entry<K, V>[] removeDuplicates(
       Entry<K, V>[] entries, int n, int newN, IdentityHashMap<@Immutable Entry<K, V>, Boolean> duplicates) {
     Entry<K, V>[] newEntries = createEntryArray(newN);
@@ -225,6 +229,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     return makeImmutable(entry, entry.getKey(), entry.getValue());
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private RegularImmutableMap(
       Entry<K, V>[] entries, @CheckForNull @Nullable ImmutableMapEntry<K, V>[] table, int mask) {
     this.entries = entries;
@@ -245,9 +250,9 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  static <K, V> ImmutableMapEntry<K, V> checkNoConflictInKeyBucket(
-      Object key,
-      Object newValue,
+  static <K extends @Immutable Object, V> ImmutableMapEntry<K, V> checkNoConflictInKeyBucket(
+      @Readonly Object key,
+      @Readonly Object newValue,
       @CheckForNull ImmutableMapEntry<K, V> keyBucketHead,
       boolean throwIfDuplicateKeys)
       throws BucketOverflowException {
@@ -322,6 +327,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   }
 
   @Override
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   ImmutableSet<Entry<K, V>> createEntrySet() {
     return new ImmutableMapEntrySet.RegularEntrySet<>(this, entries);
   }
@@ -346,7 +352,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
       return map.containsKey(object);
     }
 
@@ -365,7 +371,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
 
@@ -380,7 +386,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
         this.map = map;
       }
 
-      Object readResolve() {
+      @Readonly Object readResolve() {
         return map.keySet();
       }
 
@@ -423,7 +429,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
 
@@ -452,7 +458,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 
@@ -463,7 +469,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
 
   @Pure
   @Override
-  public boolean containsValue(@Nullable @UnknownSignedness Object arg0) {
+  public boolean containsValue(@Nullable @UnknownSignedness @Readonly Object arg0) {
     return super.containsValue(arg0);
   }
 

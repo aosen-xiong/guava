@@ -121,7 +121,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
 
   @CanIgnoreReturnValue
   @Override
-  public Collection<V> replaceValues(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Collection<V> replaceValues(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     checkNotNull(values);
     Collection<V> result = removeAll(key);
     putAll(key, values);
@@ -133,28 +133,28 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
 
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<@PolyMutable Entry<K, V>> entries(@PolyMutable AbstractMultimap<K, V> this) {
-    Collection<@PolyMutable Entry<K, V>> result = entries;
+  public @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
+    Collection<@ReceiverDependentMutable Entry<K, V>> result = entries;
     return (result == null) ? entries = createEntries() : result;
   }
 
-  abstract @PolyMutable Collection<@PolyMutable Entry<K, V>> createEntries(@PolyMutable AbstractMultimap<K, V> this);
+  abstract @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
   @WeakOuter
   @ReceiverDependentMutable
   class Entries extends Multimaps.Entries<K, V> {
     @Override
-    @PolyMutable Multimap<K, V> multimap(@PolyMutable AbstractMultimap<K,V>.Entries this) {
+    @ReceiverDependentMutable Multimap<K, V> multimap(@ReceiverDependentMutable AbstractMultimap<K,V>.Entries this) {
       return AbstractMultimap.this;
     }
 
     @Override
-    public Iterator<@PolyMutable Entry<K, V>> iterator(@PolyMutable AbstractMultimap<K,V>.Entries this) {
+    public Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable AbstractMultimap<K,V>.Entries this) {
       return entryIterator();
     }
 
     @Override
-    public Spliterator<@PolyMutable Entry<K, V>> spliterator(@PolyMutable AbstractMultimap<K,V>.Entries this) {
+    public Spliterator<@ReceiverDependentMutable Entry<K, V>> spliterator(@ReceiverDependentMutable AbstractMultimap<K,V>.Entries this) {
       return entrySpliterator();
     }
   }
@@ -175,9 +175,9 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
     }
   }
 
-  abstract Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable AbstractMultimap<K, V> this);
+  abstract Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
-  Spliterator<@PolyMutable Entry<K, V>> entrySpliterator(@PolyMutable AbstractMultimap<K, V> this) {
+  Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Spliterators.spliterator(
         entryIterator(), size(), (this instanceof SetMultimap) ? Spliterator.DISTINCT : 0);
   }
@@ -187,36 +187,36 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<K> keySet(@PolyMutable AbstractMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<K> keySet(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     Set<K> result = keySet;
     return (result == null) ? keySet = createKeySet() : result;
   }
 
   @SideEffectFree
-  abstract @PolyMutable Set<K> createKeySet(@PolyMutable AbstractMultimap<K, V> this);
+  abstract @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
   @CFComment("Change to @LazyFinal later")
   @LazyInit @CheckForNull private transient @Assignable Multiset<K> keys;
 
   @Override
-  public @PolyMutable Multiset<K> keys(@PolyMutable AbstractMultimap<K, V> this) {
+  public @ReceiverDependentMutable Multiset<K> keys(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     Multiset<K> result = keys;
     return (result == null) ? keys = createKeys() : result;
   }
 
-  abstract @PolyMutable Multiset<K> createKeys(@PolyMutable AbstractMultimap<K, V> this);
+  abstract @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
   @CFComment("Change to @LazyFinal later")
   @LazyInit @CheckForNull private transient @Assignable Collection<V> values;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable AbstractMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     Collection<V> result = values;
     return (result == null) ? values = createValues() : result;
   }
 
-  abstract @PolyMutable Collection<V> createValues(@PolyMutable AbstractMultimap<K, V> this);
+  abstract @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
   @WeakOuter
   @ReceiverDependentMutable
@@ -249,23 +249,23 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
     }
   }
 
-  Iterator<V> valueIterator(@PolyMutable AbstractMultimap<K, V> this) {
+  Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Maps.valueIterator(entries().iterator());
   }
 
-  Spliterator<V> valueSpliterator(@PolyMutable AbstractMultimap<K, V> this) {
+  Spliterator<V> valueSpliterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Spliterators.spliterator(valueIterator(), size(), 0);
   }
 
   @LazyInit @CheckForNull private transient @Assignable Map<K, @ReceiverDependentMutable Collection<V>> asMap;
 
   @Override
-  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractMultimap<K, V> this) {
-    Map<K, @PolyMutable Collection<V>> result = asMap;
+  public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
+    Map<K, @ReceiverDependentMutable Collection<V>> result = asMap;
     return (result == null) ? asMap = createAsMap() : result;
   }
 
-  abstract @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable AbstractMultimap<K, V> this);
+  abstract @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
   // Comparison and hashing
 

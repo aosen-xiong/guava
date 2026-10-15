@@ -41,6 +41,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -141,7 +142,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @throws NullPointerException if {@code table} has a null key
    */
   @SuppressWarnings("unchecked") // TODO(cpovirk): Make constructor accept wildcard types?
-  public static <R, C, V> ArrayTable<R, C, V> create(Table<R, C, ? extends @Nullable V> table) {
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> ArrayTable<R, C, V> create(Table<R, C, ? extends @Nullable V> table) {
     return (table instanceof ArrayTable)
         ? new ArrayTable<R, C, V>((ArrayTable<R, C, V>) table)
         : new ArrayTable<R, C, V>(table);
@@ -671,7 +672,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     return columnKeyToIndex.keySet();
   }
 
-  @LazyInit @CheckForNull private transient ColumnMap columnMap;
+  @LazyInit @CheckForNull private transient @Assignable ColumnMap columnMap;
 
   @Override
   public Map<C, Map<R, @Nullable V>> columnMap() {
@@ -766,7 +767,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     return rowKeyToIndex.keySet();
   }
 
-  @LazyInit @CheckForNull private transient RowMap rowMap;
+  @LazyInit @CheckForNull private transient @Assignable RowMap rowMap;
 
   @Override
   public Map<R, Map<C, @Nullable V>> rowMap() {

@@ -49,6 +49,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A {@link Type} with generics.
@@ -100,15 +103,16 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @SuppressWarnings("serial") // SimpleTypeToken is the serialized form.
 @ElementTypesAreNonnullByDefault
+@Immutable
 public abstract class TypeToken<T> extends TypeCapture<T> implements Serializable {
 
   private final Type runtimeType;
 
   /** Resolver for resolving parameter and field types with {@link #runtimeType} as context. */
-  @LazyInit @CheckForNull private transient TypeResolver invariantTypeResolver;
+  @LazyInit @CheckForNull private transient @Assignable TypeResolver invariantTypeResolver;
 
   /** Resolver for resolving covariant types with {@link #runtimeType} as context. */
-  @LazyInit @CheckForNull private transient TypeResolver covariantTypeResolver;
+  @LazyInit @CheckForNull private transient @Assignable TypeResolver covariantTypeResolver;
 
   /**
    * Constructs a new type token of {@code T}.
@@ -754,7 +758,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       throw new UnsupportedOperationException("interfaces().classes() not supported.");
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return getTypes().interfaces();
     }
 
@@ -801,7 +805,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       throw new UnsupportedOperationException("classes().interfaces() not supported.");
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return getTypes().classes();
     }
 
@@ -847,7 +851,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
   }
 
   /** Implemented to support serialization of subclasses. */
-  protected Object writeReplace() {
+  protected @Readonly Object writeReplace() {
     // TypeResolver just transforms the type to our own impls that are Serializable
     // except TypeVariable.
     return of(new TypeResolver().resolveType(runtimeType));
@@ -1319,7 +1323,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
    *
    * @param <K> The type "kind". Either a TypeToken, or Class.
    */
-  private abstract static class TypeCollector<K> {
+  private abstract static class TypeCollector<K extends @Immutable Object> {
 
     static final TypeCollector<TypeToken<?>> FOR_GENERIC_TYPE =
         new TypeCollector<TypeToken<?>>() {
@@ -1419,7 +1423,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       return aboveMe + 1;
     }
 
-    private static <K, V> ImmutableList<K> sortKeysByValue(
+    private static <K extends @Immutable Object, V> ImmutableList<K> sortKeysByValue(
         Map<K, V> map, Comparator<? super V> valueComparator) {
       Ordering<K> keyOrdering =
           new Ordering<K>() {
@@ -1440,7 +1444,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     @CheckForNull
     abstract K getSuperclass(K type);
 
-    private static class ForwardingTypeCollector<K> extends TypeCollector<K> {
+    private static class ForwardingTypeCollector<K extends @Immutable Object> extends TypeCollector<K> {
 
       private final TypeCollector<K> delegate;
 

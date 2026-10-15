@@ -149,7 +149,7 @@ public final class Multisets {
       return (Multiset<E>) delegate;
     }
 
-    @LazyInit @CheckForNull transient Set<E> elementSet;
+    @LazyInit @CheckForNull transient @Assignable Set<E> elementSet;
 
     Set<E> createElementSet() {
       return Collections.<E>unmodifiableSet(delegate.elementSet());
@@ -162,7 +162,7 @@ public final class Multisets {
       return (es == null) ? elementSet = createElementSet() : es;
     }
 
-    @LazyInit @CheckForNull transient Set<Multiset.Entry<E>> entrySet;
+    @LazyInit @CheckForNull transient @Assignable Set<Multiset.Entry<E>> entrySet;
 
     @SideEffectFree
     @SuppressWarnings("unchecked")

@@ -46,6 +46,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 
@@ -110,7 +111,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Creates a new min-max priority queue with default settings: natural order, no maximum size, no
    * initial contents, and an initial expected size of 11.
    */
-  public static <E extends Comparable<E>> MinMaxPriorityQueue<E> create() {
+  public static <E extends @Immutable Comparable<E>> MinMaxPriorityQueue<E> create() {
     return new Builder<Comparable<E>>(Ordering.natural()).create();
   }
 
@@ -118,7 +119,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Creates a new min-max priority queue using natural order, no maximum size, and initially
    * containing the given elements.
    */
-  public static <E extends Comparable<E>> MinMaxPriorityQueue<E> create(
+  public static <E extends @Immutable Comparable<E>> MinMaxPriorityQueue<E> create(
       Iterable<? extends E> initialContents) {
     return new Builder<E>(Ordering.<E>natural()).create(initialContents);
   }

@@ -31,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -124,12 +125,12 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
     return (T) backingMap.get(type);
   }
 
-  private static final class UnmodifiableEntry<K, V extends @Nullable Object>
+  private static final class UnmodifiableEntry<K extends @Immutable Object, V extends @Nullable Object>
       extends ForwardingMapEntry<K, V> {
 
     private final Entry<K, V> delegate;
 
-    static <K, V extends @Nullable Object> Set<Entry<K, V>> transformEntries(
+    static <K extends @Immutable Object, V extends @Nullable Object> Set<Entry<K, V>> transformEntries(
         Set<Entry<K, V>> entries) {
       return new ForwardingSet<Map.Entry<K, V>>() {
         @Override
@@ -163,7 +164,7 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
       };
     }
 
-    private static <K, V extends @Nullable Object> Iterator<Entry<K, V>> transformEntries(
+    private static <K extends @Immutable Object, V extends @Nullable Object> Iterator<Entry<K, V>> transformEntries(
         Iterator<Entry<K, V>> entries) {
       return Iterators.transform(entries, UnmodifiableEntry::new);
     }

@@ -134,7 +134,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   @SuppressWarnings("RedundantOverride")
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

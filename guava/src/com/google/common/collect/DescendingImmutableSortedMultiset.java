@@ -96,7 +96,7 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   @SuppressWarnings("RedundantOverride")
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

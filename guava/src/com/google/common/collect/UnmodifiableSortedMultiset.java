@@ -47,29 +47,29 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
   }
 
   @Override
-  protected @Readonly SortedMultiset<E> delegate(@Readonly UnmodifiableSortedMultiset<E> this) {
+  protected @Readonly SortedMultiset<E> delegate(UnmodifiableSortedMultiset<E> this) {
     return (@Readonly SortedMultiset<E>) super.delegate();
   }
 
   @Override
-  public Comparator<? super E> comparator(@Readonly UnmodifiableSortedMultiset<E> this) {
+  public Comparator<? super E> comparator(UnmodifiableSortedMultiset<E> this) {
     return delegate().comparator();
   }
 
   @Override
-  @Readonly NavigableSet<E> createElementSet(@Readonly UnmodifiableSortedMultiset<E> this) {
+  @Readonly NavigableSet<E> createElementSet(UnmodifiableSortedMultiset<E> this) {
     return Sets.unmodifiableNavigableSet(delegate().elementSet());
   }
 
   @Override
-  public @Readonly NavigableSet<E> elementSet(@Readonly UnmodifiableSortedMultiset<E> this) {
+  public @Readonly NavigableSet<E> elementSet(UnmodifiableSortedMultiset<E> this) {
     return (NavigableSet<E>) super.elementSet();
   }
 
-  @LazyInit @CheckForNull private transient UnmodifiableSortedMultiset<E> descendingMultiset;
+  @LazyInit @CheckForNull private transient @Assignable UnmodifiableSortedMultiset<E> descendingMultiset;
 
   @Override
-  public @Readonly SortedMultiset<E> descendingMultiset(@Readonly UnmodifiableSortedMultiset<E> this) {
+  public @Readonly SortedMultiset<E> descendingMultiset(UnmodifiableSortedMultiset<E> this) {
     UnmodifiableSortedMultiset<E> result = descendingMultiset;
     if (result == null) {
       result = new UnmodifiableSortedMultiset<>(delegate().descendingMultiset());
@@ -81,13 +81,13 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> firstEntry(@Readonly UnmodifiableSortedMultiset<E> this) {
+  public @Readonly Entry<E> firstEntry(UnmodifiableSortedMultiset<E> this) {
     return delegate().firstEntry();
   }
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> lastEntry(@Readonly UnmodifiableSortedMultiset<E> this) {
+  public @Readonly Entry<E> lastEntry(UnmodifiableSortedMultiset<E> this) {
     return delegate().lastEntry();
   }
 
@@ -104,13 +104,13 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
   }
 
   @Override
-  public @Readonly SortedMultiset<E> headMultiset(@Readonly UnmodifiableSortedMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType) {
+  public @Readonly SortedMultiset<E> headMultiset(UnmodifiableSortedMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType) {
     return Multisets.unmodifiableSortedMultiset(delegate().headMultiset(upperBound, boundType));
   }
 
   @Override
   public @Readonly SortedMultiset<E> subMultiset(
-          @Readonly UnmodifiableSortedMultiset<E> this,
+          UnmodifiableSortedMultiset<E> this,
       @ParametricNullness E lowerBound,
       BoundType lowerBoundType,
       @ParametricNullness E upperBound,
@@ -120,7 +120,7 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
   }
 
   @Override
-  public @Readonly SortedMultiset<E> tailMultiset(@Readonly UnmodifiableSortedMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType) {
+  public @Readonly SortedMultiset<E> tailMultiset(UnmodifiableSortedMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType) {
     return Multisets.unmodifiableSortedMultiset(delegate().tailMultiset(lowerBound, boundType));
   }
 

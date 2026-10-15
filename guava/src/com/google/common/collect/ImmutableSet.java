@@ -182,7 +182,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   // In the backport, we don't have those cases and thus don't need this suppression.
   // We keep it to minimize diffs.
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableSet<E> copyOf(Collection<? extends E> elements) {
+  public static <E> ImmutableSet<E> copyOf(@Readonly Collection<? extends E> elements) {
     /*
      * TODO(lowasser): consider checking for ImmutableAsList here
      * TODO(lowasser): consider checking for Multiset here
@@ -228,7 +228,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<E> copyOf(Iterable<? extends E> elements) {
+  public static <E> ImmutableSet<@Readonly E> copyOf(Iterable<? extends E> elements) {
     return (elements instanceof Collection)
         ? copyOf((Collection<? extends E>) elements)
         : copyOf(elements.iterator());
@@ -342,7 +342,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -393,7 +393,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
         @Override
         @J2ktIncompatible // serialization
         @GwtIncompatible // serialization
-        Object writeReplace() {
+        @Readonly Object writeReplace() {
           return super.writeReplace();
         }
       };
@@ -404,7 +404,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -424,7 +424,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
       this.elements = elements;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return copyOf(elements);
     }
 
@@ -433,7 +433,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
 
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm(toArray());
   }
 

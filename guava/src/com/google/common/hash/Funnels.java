@@ -30,6 +30,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Funnels for common types. All implementations are serializable.
@@ -129,7 +130,7 @@ public final class Funnels {
       return StringCharsetFunnel.class.hashCode() ^ charset.hashCode();
     }
 
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new SerializedForm(charset);
     }
 
@@ -144,7 +145,7 @@ public final class Funnels {
         this.charsetCanonicalName = charset.name();
       }
 
-      private Object readResolve() {
+      private @Readonly Object readResolve() {
         return stringFunnel(Charset.forName(charsetCanonicalName));
       }
 

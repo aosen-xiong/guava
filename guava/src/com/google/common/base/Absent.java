@@ -23,6 +23,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** Implementation of an {@link Optional} not containing a reference. */
 @AnnotatedFor({"nullness"})
@@ -97,7 +98,7 @@ final class Absent<T> extends Optional<T> {
     return "Optional.absent()";
   }
 
-  private Object readResolve() {
+  private @Readonly Object readResolve() {
     return INSTANCE;
   }
 

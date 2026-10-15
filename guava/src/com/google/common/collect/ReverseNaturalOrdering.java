@@ -92,7 +92,7 @@ final class ReverseNaturalOrdering extends Ordering<@Readonly Comparable<?>> imp
   }
 
   // preserving singleton-ness gives equals()/hashCode() for free
-  private Object readResolve() {
+  private @Readonly Object readResolve() {
     return INSTANCE;
   }
 

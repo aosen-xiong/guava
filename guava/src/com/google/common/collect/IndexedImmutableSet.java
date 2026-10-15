@@ -89,7 +89,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
       @Override
       @J2ktIncompatible // serialization
       @GwtIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     };
@@ -100,7 +100,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

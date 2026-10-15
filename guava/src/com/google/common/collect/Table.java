@@ -28,7 +28,6 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -199,7 +198,7 @@ public interface Table<
    * @param rowKey key of row to search for in the table
    * @return the corresponding map from column keys to values
    */
-  @PolyMutable Map<C, V> row(@PolyMutable Table<R, C, V> this, @ParametricNullness R rowKey);
+  @ReceiverDependentMutable Map<C, V> row(@ReceiverDependentMutable Table<R, C, V> this, @ParametricNullness R rowKey);
 
   /**
    * Returns a view of all mappings that have the given column key. For each row key / column key /
@@ -211,7 +210,7 @@ public interface Table<
    * @param columnKey key of column to search for in the table
    * @return the corresponding map from row keys to values
    */
-  @PolyMutable Map<R, V> column(@PolyMutable Table<R, C, V> this, @ParametricNullness C columnKey);
+  @ReceiverDependentMutable Map<R, V> column(@ReceiverDependentMutable Table<R, C, V> this, @ParametricNullness C columnKey);
 
   /**
    * Returns a set of all row key / column key / value triplets. Changes to the returned set will
@@ -220,7 +219,7 @@ public interface Table<
    *
    * @return set of table cells consisting of row key / column key / value triplets
    */
-  @PolyMutable Set<Cell<R, C, V>> cellSet(@PolyMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Returns a set of row keys that have one or more values in the table. Changes to the set will
@@ -228,7 +227,7 @@ public interface Table<
    *
    * @return set of row keys
    */
-  @PolyMutable Set<R> rowKeySet(@PolyMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Set<R> rowKeySet(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Returns a set of column keys that have one or more values in the table. Changes to the set will
@@ -236,7 +235,7 @@ public interface Table<
    *
    * @return set of column keys
    */
-  @PolyMutable Set<C> columnKeySet(@PolyMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Set<C> columnKeySet(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Returns a collection of all values, which may contain duplicates. Changes to the returned
@@ -244,7 +243,7 @@ public interface Table<
    *
    * @return collection of values
    */
-  @PolyMutable Collection<V> values(@PolyMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Returns a view that associates each row key with the corresponding map from column keys to
@@ -257,7 +256,7 @@ public interface Table<
    *
    * @return a map view from each row key to a secondary map from column keys to values
    */
-  @PolyMutable Map<R, Map<C, V>> rowMap(@PolyMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Map<R, Map<C, V>> rowMap(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Returns a view that associates each column key with the corresponding map from row keys to
@@ -270,7 +269,7 @@ public interface Table<
    *
    * @return a map view from each column key to a secondary map from row keys to values
    */
-  @PolyMutable Map<C, Map<R, V>> columnMap(@PolyMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Map<C, Map<R, V>> columnMap(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Row key / column key / value triplet corresponding to a mapping in a table.

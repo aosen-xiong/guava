@@ -63,7 +63,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
 
     @Override
     @GwtIncompatible("not used in GWT")
-    int copyIntoArray(@Nullable Object[] dst, int offset) {
+    int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
       return entries.copyIntoArray(dst, offset);
     }
 
@@ -92,7 +92,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -135,7 +135,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
   @GwtIncompatible // serialization
   @J2ktIncompatible
   @Override
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new EntrySetSerializedForm<>(map());
   }
 
@@ -147,7 +147,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
 
   @GwtIncompatible // serialization
   @J2ktIncompatible
-  private static class EntrySetSerializedForm<K, V> implements Serializable {
+  private static class EntrySetSerializedForm<K extends @Immutable Object, V> implements Serializable {
     final ImmutableMap<K, V> map;
 
     EntrySetSerializedForm(ImmutableMap<K, V> map) {

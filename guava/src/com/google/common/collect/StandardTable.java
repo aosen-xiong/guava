@@ -690,7 +690,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     return rowMap().keySet();
   }
 
-  @LazyInit @CheckForNull private transient Set<C> columnKeySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<C> columnKeySet;
 
   /**
    * {@inheritDoc}
@@ -823,7 +823,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     return super.values();
   }
 
-  @LazyInit @CheckForNull private transient Map<R, Map<C, V>> rowMap;
+  @LazyInit @CheckForNull private transient @Assignable Map<R, Map<C, V>> rowMap;
 
   @Override
   public @PolyMutable Map<R, Map<C, V>> rowMap(@PolyMutable StandardTable<R, C, V> this) {
@@ -906,7 +906,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
   }
 
-  @LazyInit @CheckForNull private transient ColumnMap columnMap;
+  @LazyInit @CheckForNull private transient @Assignable ColumnMap columnMap;
 
   @Override
   public @PolyMutable Map<C, Map<R, V>> columnMap(@PolyMutable StandardTable<R, C, V> this) {

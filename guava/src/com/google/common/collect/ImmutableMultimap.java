@@ -342,7 +342,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
    * @throws NullPointerException if any key, value, or entry is null
    * @since 19.0
    */
-  public static <K, V> ImmutableMultimap<K, V> copyOf(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableMultimap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     return ImmutableListMultimap.copyOf(entries);
   }
@@ -531,7 +531,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   }
 
   @Override
-  Set<K> createKeySet() {
+  @Immutable Set<K> createKeySet() {
     throw new AssertionError("unreachable");
   }
 
@@ -546,7 +546,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   }
 
   @Override
-  Map<K, Collection<V>> createAsMap() {
+  @Immutable Map<K, @Immutable Collection<V>> createAsMap() {
     throw new AssertionError("should never be called");
   }
 
@@ -601,7 +601,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
 
@@ -638,7 +638,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   }
 
   @Override
-  Spliterator<@Immutable Entry<K, V>> entrySpliterator() {
+  @Mutable Spliterator<@Immutable Entry<K, V>> entrySpliterator() {
     return CollectSpliterators.flatMap(
         asMap().entrySet().spliterator(),
         keyToValueCollectionEntry -> {
@@ -713,7 +713,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     @GwtIncompatible
     @J2ktIncompatible
     @Override
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new KeysSerializedForm(ImmutableMultimap.this);
     }
 
@@ -794,7 +794,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
 
     @GwtIncompatible // not present in emulated superclass
     @Override
-    int copyIntoArray(@Nullable Object[] dst, int offset) {
+    int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
       for (ImmutableCollection<V> valueCollection : multimap.map.values()) {
         offset = valueCollection.copyIntoArray(dst, offset);
       }
@@ -817,7 +817,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
 

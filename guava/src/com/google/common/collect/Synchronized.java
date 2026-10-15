@@ -636,7 +636,7 @@ final class Synchronized {
     return new SynchronizedMultimap<>(multimap, mutex);
   }
 
-  static class SynchronizedMultimap<K extends @Nullable Object, V extends @Nullable Object>
+  static class SynchronizedMultimap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedObject implements Multimap<K, V> {
     @CheckForNull transient Set<K> keySet;
     @CheckForNull transient Collection<V> valuesCollection;
@@ -841,7 +841,7 @@ final class Synchronized {
   }
 
   static final class SynchronizedListMultimap<
-          K extends @Nullable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedMultimap<K, V> implements ListMultimap<K, V> {
     SynchronizedListMultimap(@ReceiverDependentMutable ListMultimap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
@@ -884,7 +884,7 @@ final class Synchronized {
     return new SynchronizedSetMultimap<>(multimap, mutex);
   }
 
-  static class SynchronizedSetMultimap<K extends @Nullable Object, V extends @Nullable Object>
+  static class SynchronizedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedMultimap<K, V> implements SetMultimap<K, V> {
     @CheckForNull transient Set<Map.Entry<K, V>> entrySet;
 
@@ -942,7 +942,7 @@ final class Synchronized {
   }
 
   static final class SynchronizedSortedSetMultimap<
-          K extends @Nullable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedSetMultimap<K, V> implements SortedSetMultimap<K, V> {
     SynchronizedSortedSetMultimap(@ReceiverDependentMutable SortedSetMultimap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
@@ -1009,7 +1009,7 @@ final class Synchronized {
   }
 
   static final class SynchronizedAsMapEntries<
-          K extends @Nullable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedSet<Map.Entry<K, Collection<V>>> {
     SynchronizedAsMapEntries(
             @ReceiverDependentMutable Set<Map.Entry<K, Collection<V>>> delegate, @CheckForNull @Readonly Object mutex) {
@@ -1117,7 +1117,7 @@ final class Synchronized {
     return new SynchronizedMap<>(map, mutex);
   }
 
-  static class SynchronizedMap<K extends @Nullable Object, V extends @Nullable Object>
+  static class SynchronizedMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedObject implements Map<K, V> {
     @CheckForNull transient Set<K> keySet;
     @CheckForNull transient Collection<V> values;
@@ -1419,7 +1419,7 @@ final class Synchronized {
     return new SynchronizedBiMap<>(bimap, mutex, null);
   }
 
-  static final class SynchronizedBiMap<K extends @Nullable Object, V extends @Nullable Object>
+  static final class SynchronizedBiMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedMap<K, V> implements BiMap<K, V>, Serializable {
     @CheckForNull private transient Set<V> valueSet;
     @RetainedWith @CheckForNull private transient BiMap<V, K> inverse;
@@ -1467,7 +1467,7 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static final class SynchronizedAsMap<K extends @Nullable Object, V extends @Nullable Object>
+  static final class SynchronizedAsMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedMap<K, Collection<V>> {
     @CheckForNull transient Set<Map.Entry<K, Collection<V>>> asMapEntrySet;
     @CheckForNull transient Collection<Collection<V>> asMapValues;
@@ -1713,7 +1713,7 @@ final class Synchronized {
   @GwtIncompatible // NavigableMap
   @VisibleForTesting
   static final class SynchronizedNavigableMap<
-          K extends @Nullable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedSortedMap<K, V> implements NavigableMap<K, V> {
 
     SynchronizedNavigableMap(@ReceiverDependentMutable NavigableMap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
@@ -1914,7 +1914,7 @@ final class Synchronized {
   }
 
   @GwtIncompatible // works but is needed only for NavigableMap
-  static final class SynchronizedEntry<K extends @Nullable Object, V extends @Nullable Object>
+  static final class SynchronizedEntry<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedObject implements Map.Entry<K, V> {
 
     SynchronizedEntry(Map.@ReceiverDependentMutable Entry<K, V> delegate, @CheckForNull @Readonly Object mutex) {
@@ -2169,7 +2169,7 @@ final class Synchronized {
   }
 
   static final class SynchronizedTable<
-          R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends SynchronizedObject implements Table<R, C, V> {
 
     SynchronizedTable(@ReceiverDependentMutable Table<R, C, V> delegate, @CheckForNull @Readonly Object mutex) {

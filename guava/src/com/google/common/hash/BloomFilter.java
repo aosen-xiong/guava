@@ -44,6 +44,8 @@ import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A Bloom filter for instances of {@code T}. A Bloom filter offers an approximate containment test
@@ -80,6 +82,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    *
    * <p>Implementations should be collections of pure functions (i.e. stateless).
    */
+  @ReceiverDependentMutable
   interface Strategy extends java.io.Serializable {
 
     /**
@@ -543,7 +546,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
     return (long) (-n * Math.log(p) / (Math.log(2) * Math.log(2)));//(1)
   }
 
-  private Object writeReplace() {
+  private @Readonly Object writeReplace() {
     return new SerialForm<T>(this);
   }
 
@@ -564,7 +567,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
       this.strategy = bf.strategy;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return new BloomFilter<T>(new LockFreeBitArray(data), numHashFunctions, funnel, strategy);
     }
 

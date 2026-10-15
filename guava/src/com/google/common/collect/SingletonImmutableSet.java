@@ -100,7 +100,7 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 

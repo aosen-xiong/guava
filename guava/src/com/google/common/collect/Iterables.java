@@ -268,7 +268,7 @@ public final class Iterables {
    * @throws IllegalArgumentException if the iterable contains multiple elements
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getOnlyElement(Iterable<T> iterable) {
+  public static <T extends @Nullable @Readonly Object> T getOnlyElement(@Readonly Iterable<T> iterable) {
     return Iterators.getOnlyElement(iterable.iterator());
   }
 
@@ -437,7 +437,7 @@ public final class Iterables {
    * <p><b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
    * Stream.concat(a, b)}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> concat(
+  public static <T extends @Nullable @Readonly Object> Iterable<@Readonly T> concat(
       Iterable<? extends T> a, Iterable<? extends T> b) {
     return FluentIterable.concat(a, b);
   }
@@ -833,7 +833,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getFirst(
-      Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
+      @Readonly Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
     return Iterators.getNext(iterable.iterator(), defaultValue);
   }
 
@@ -847,7 +847,7 @@ public final class Iterables {
    * @throws NoSuchElementException if the iterable is empty
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getLast(Iterable<T> iterable) {
+  public static <T extends @Nullable @Readonly Object> T getLast(@Readonly Iterable<T> iterable) {
     // TODO(kevinb): Support a concurrently modified collection?
     if (iterable instanceof List) {
       List<T> list = (List<T>) iterable;

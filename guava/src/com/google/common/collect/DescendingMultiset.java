@@ -27,6 +27,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
@@ -45,7 +46,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
     implements SortedMultiset<E> {
   abstract SortedMultiset<E> forwardMultiset();
 
-  @LazyInit @CheckForNull private transient Comparator<? super E> comparator;
+  @LazyInit @CheckForNull private transient @Assignable Comparator<? super E> comparator;
 
   @Override
   public Comparator<? super E> comparator() {
@@ -56,7 +57,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
     return result;
   }
 
-  @LazyInit @CheckForNull private transient NavigableSet<E> elementSet;
+  @LazyInit @CheckForNull private transient @Assignable NavigableSet<E> elementSet;
 
   @Override
   public NavigableSet<E> elementSet() {
@@ -124,7 +125,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
 
   abstract Iterator<Entry<E>> entryIterator();
 
-  @LazyInit @CheckForNull private transient Set<Entry<E>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<E>> entrySet;
 
   @Override
   public Set<Entry<E>> entrySet() {

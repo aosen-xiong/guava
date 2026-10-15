@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.function.ObjIntConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -51,6 +52,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   private final transient int offset;
   private final transient int length;
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   RegularImmutableSortedMultiset(Comparator<? super E> comparator) {
     this.elementSet = ImmutableSortedSet.emptySet(comparator);
     this.cumulativeCounts = ZERO_CUMULATIVE_COUNTS;
@@ -58,6 +60,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
     this.length = 0;
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   RegularImmutableSortedMultiset(
       RegularImmutableSortedSet<E> elementSet, long[] cumulativeCounts, int offset, int length) {
     this.elementSet = elementSet;
@@ -96,7 +99,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     int index = elementSet.indexOf(element);
     return (index >= 0) ? getCount(index) : 0;
   }
@@ -145,7 +148,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   @SuppressWarnings("RedundantOverride")
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

@@ -17,6 +17,7 @@ package com.google.common.cache;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.cache.LocalCache.ValueReference;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An entry in a reference map.
@@ -40,7 +41,7 @@ import javax.annotation.CheckForNull;
  */
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-interface ReferenceEntry<K, V> {
+interface ReferenceEntry<K extends @Immutable Object, V> {
   /** Returns the value reference from this entry. */
   @CheckForNull
   ValueReference<K, V> getValueReference();

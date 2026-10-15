@@ -47,6 +47,7 @@ import org.checkerframework.checker.index.qual.SubstringIndexFor;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to {@code float} primitives, that are not already found in
@@ -322,7 +323,7 @@ public final class Floats extends FloatsMethodsForWeb {
       return "Floats.stringConverter()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

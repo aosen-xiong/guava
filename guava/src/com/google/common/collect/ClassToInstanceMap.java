@@ -56,6 +56,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @AnnotatedFor({"nullness"})
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface ClassToInstanceMap<B extends @Nullable Object>
     extends Map<Class<? extends @NonNull B>, B> {
   /**

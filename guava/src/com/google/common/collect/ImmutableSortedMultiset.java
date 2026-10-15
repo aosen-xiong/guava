@@ -36,6 +36,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collector;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -60,6 +61,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor("mutability")
 @GwtIncompatible // hasn't been tested yet
 @ElementTypesAreNonnullByDefault
+@Immutable
 public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
     implements SortedMultiset<E> {
   // TODO(lowasser): GWT compatibility
@@ -119,7 +121,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
   }
 
   /** Returns an immutable sorted multiset containing a single element. */
-  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> of(E element) {
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> of(E element) {
     RegularImmutableSortedSet<E> elementSet =
         (RegularImmutableSortedSet<E>) ImmutableSortedSet.of(element);
     long[] cumulativeCounts = {0, 1};
@@ -132,7 +134,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> of(E e1, E e2) {
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> of(E e1, E e2) {
     return copyOf(Ordering.natural(), Arrays.asList(e1, e2));
   }
 
@@ -142,7 +144,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> of(E e1, E e2, E e3) {
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> of(E e1, E e2, E e3) {
     return copyOf(Ordering.natural(), Arrays.asList(e1, e2, e3));
   }
 
@@ -152,7 +154,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> of(
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> of(
       E e1, E e2, E e3, E e4) {
     return copyOf(Ordering.natural(), Arrays.asList(e1, e2, e3, e4));
   }
@@ -163,7 +165,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> of(
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> of(
       E e1, E e2, E e3, E e4, E e5) {
     return copyOf(Ordering.natural(), Arrays.asList(e1, e2, e3, e4, e5));
   }
@@ -174,7 +176,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> of(
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> of(
       E e1, E e2, E e3, E e4, E e5, E e6, E... remaining) {
     int size = remaining.length + 6;
     List<E> all = Lists.newArrayListWithCapacity(size);
@@ -189,7 +191,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E extends Comparable<? super E>> ImmutableSortedMultiset<E> copyOf(E[] elements) {
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> copyOf(E[] elements) {
     return copyOf(Ordering.natural(), Arrays.asList(elements));
   }
 
@@ -218,7 +220,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
     // Hack around E not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedMultisetFauxverideShim.
     @SuppressWarnings("unchecked")
-    Ordering<E> naturalOrder = (Ordering<E>) Ordering.<Comparable<?>>natural();
+    Ordering<E> naturalOrder = (Ordering<E>) Ordering.<@Immutable Comparable<?>>natural();
     return copyOf(naturalOrder, elements);
   }
 
@@ -236,7 +238,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
     // Hack around E not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedMultisetFauxverideShim.
     @SuppressWarnings("unchecked")
-    Ordering<E> naturalOrder = (Ordering<E>) Ordering.<Comparable<?>>natural();
+    Ordering<E> naturalOrder = (Ordering<E>) Ordering.<@Immutable Comparable<?>>natural();
     return copyOf(naturalOrder, elements);
   }
 
@@ -339,7 +341,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
   @Override
   public abstract ImmutableSortedSet<E> elementSet();
 
-  @LazyInit @CheckForNull transient ImmutableSortedMultiset<E> descendingMultiset;
+  @LazyInit @CheckForNull transient @Assignable ImmutableSortedMultiset<E> descendingMultiset;
 
   @Override
   public ImmutableSortedMultiset<E> descendingMultiset() {
@@ -424,7 +426,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    * Comparable<? super E>} as a workaround for javac <a
    * href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6468354">bug 6468354</a>.
    */
-  public static <E extends Comparable<?>> Builder<E> reverseOrder() {
+  public static <E extends @Immutable Comparable<?>> Builder<E> reverseOrder() {
     return new Builder<E>(Ordering.<E>natural().reverse());
   }
 
@@ -438,7 +440,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
    * Comparable<? super E>} as a workaround for javac <a
    * href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6468354">bug 6468354</a>.
    */
-  public static <E extends Comparable<?>> Builder<E> naturalOrder() {
+  public static <E extends @Immutable Comparable<?>> Builder<E> naturalOrder() {
     return new Builder<E>(Ordering.natural());
   }
 
@@ -592,7 +594,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
       }
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       int n = elements.length;
       Builder<E> builder = new Builder<>(comparator);
       for (int i = 0; i < n; i++) {
@@ -604,7 +606,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
 
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<E>(this);
   }
 

@@ -76,8 +76,8 @@ public final class Tables {
    */
   public static <
           T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -105,8 +105,8 @@ public final class Tables {
    */
   public static <
           T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -339,7 +339,7 @@ public final class Tables {
   }
 
   private static <
-          R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
       Cell<C, R, V> transposeCell(Cell<R, C, V> cell) {
     return immutableCell(cell.getColumnKey(), cell.getRowKey(), cell.getValue());
   }
@@ -382,7 +382,7 @@ public final class Tables {
    * @throws IllegalArgumentException if {@code backingMap} is not empty
    * @since 10.0
    */
-  public static <R, C, V> Table<R, C, V> newCustomTable(
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> Table<R, C, V> newCustomTable(
       Map<R, Map<C, V>> backingMap, Supplier<? extends Map<C, V>> factory) {
     checkArgument(backingMap.isEmpty());
     checkNotNull(factory);
@@ -670,7 +670,7 @@ public final class Tables {
    * @return an unmodifiable view of the specified table
    * @since 11.0
    */
-  public static <R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
+  public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
       RowSortedTable<R, C, V> unmodifiableRowSortedTable(
           RowSortedTable<R, ? extends C, ? extends V> table) {
     /*
@@ -682,7 +682,7 @@ public final class Tables {
   }
 
   private static final class UnmodifiableRowSortedMap<
-          R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends UnmodifiableTable<R, C, V> implements RowSortedTable<R, C, V> {
 
     public UnmodifiableRowSortedMap(@Readonly RowSortedTable<R, ? extends C, ? extends V> delegate) {

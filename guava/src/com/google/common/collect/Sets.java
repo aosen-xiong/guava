@@ -58,6 +58,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
@@ -1463,7 +1464,7 @@ public final class Sets {
             @Override
             @J2ktIncompatible // serialization
             @GwtIncompatible // serialization
-            Object writeReplace() {
+            @Readonly Object writeReplace() {
               return super.writeReplace();
             }
           };
@@ -1926,10 +1927,10 @@ public final class Sets {
       throw new UnsupportedOperationException();
     }
 
-    @LazyInit @CheckForNull private transient UnmodifiableNavigableSet<E> descendingSet;
+    @LazyInit @CheckForNull private transient @Assignable UnmodifiableNavigableSet<E> descendingSet;
 
     @Override
-    public @Readonly NavigableSet<E> descendingSet(@Readonly UnmodifiableNavigableSet<E> this) {
+    public @Readonly NavigableSet<E> descendingSet(UnmodifiableNavigableSet<E> this) {
       UnmodifiableNavigableSet<E> result = descendingSet;
       if (result == null) {
         result = descendingSet = new UnmodifiableNavigableSet<E>(delegate.descendingSet());
@@ -1939,13 +1940,13 @@ public final class Sets {
     }
 
     @Override
-    public @Readonly Iterator<E> descendingIterator(@Readonly UnmodifiableNavigableSet<E> this) {
+    public @Readonly Iterator<E> descendingIterator(UnmodifiableNavigableSet<E> this) {
       return Iterators.unmodifiableIterator(delegate.descendingIterator());
     }
 
     @Override
     public @Readonly NavigableSet<E> subSet(
-            @Readonly UnmodifiableNavigableSet<E> this,
+            UnmodifiableNavigableSet<E> this,
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
@@ -1955,12 +1956,12 @@ public final class Sets {
     }
 
     @Override
-    public @Readonly NavigableSet<E> headSet(@Readonly UnmodifiableNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
+    public @Readonly NavigableSet<E> headSet(UnmodifiableNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
       return unmodifiableNavigableSet(delegate.headSet(toElement, inclusive));
     }
 
     @Override
-    public @Readonly NavigableSet<E> tailSet(@Readonly UnmodifiableNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
+    public @Readonly NavigableSet<E> tailSet(UnmodifiableNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
       return unmodifiableNavigableSet(delegate.tailSet(fromElement, inclusive));
     }
 
@@ -2211,7 +2212,7 @@ public final class Sets {
    * @since 20.0
    */
   @GwtIncompatible // NavigableSet
-  public static <K extends Comparable<? super K>> @PolyMutable NavigableSet<K> subSet(
+  public static <K extends @Immutable Comparable<? super K>> NavigableSet<K> subSet(
           @PolyMutable NavigableSet<K> set, Range<K> range) {
     if (set.comparator() != null
         && set.comparator() != Ordering.natural()

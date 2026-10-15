@@ -60,6 +60,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A step in a pipeline of an asynchronous computation. When the last step in the computation is
@@ -233,7 +234,7 @@ public final class ClosingFuture<V extends @Nullable Object> {
      */
     @CanIgnoreReturnValue
     @ParametricNullness
-    public <C extends @Nullable Object & @Nullable AutoCloseable> C eventuallyClose(
+    public <C extends @Nullable @Immutable Object & @Nullable AutoCloseable> C eventuallyClose(
         @ParametricNullness C closeable, Executor closingExecutor) {
       checkNotNull(closingExecutor);
       if (closeable != null) {
@@ -435,7 +436,7 @@ public final class ClosingFuture<V extends @Nullable Object> {
    *     ClosingFuture#from}.
    */
   @Deprecated
-  public static <C extends @Nullable Object & @Nullable AutoCloseable>
+  public static <C extends @Nullable @Immutable Object & @Nullable AutoCloseable>
       ClosingFuture<C> eventuallyClosing(
           ListenableFuture<C> future, final Executor closingExecutor) {
     checkNotNull(closingExecutor);
@@ -1097,7 +1098,7 @@ public final class ClosingFuture<V extends @Nullable Object> {
         executor);
   }
 
-  private static <C extends @Nullable Object, V extends C> void provideValueAndCloser(
+  private static <C extends @Nullable @Immutable Object, V extends C> void provideValueAndCloser(
       ValueAndCloserConsumer<C> consumer, ClosingFuture<V> closingFuture) {
     consumer.accept(new ValueAndCloser<C>(closingFuture));
   }

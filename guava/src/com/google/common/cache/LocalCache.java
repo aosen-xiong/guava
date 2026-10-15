@@ -613,7 +613,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
      * @param hash of the key
      * @param next entry in the same bucket
      */
-    abstract <K, V> ReferenceEntry<K, V> newEntry(
+    abstract <K extends @Immutable Object, V> ReferenceEntry<K, V> newEntry(
         Segment<K, V> segment, K key, int hash, @CheckForNull ReferenceEntry<K, V> next);
 
     /**
@@ -764,7 +764,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
 
   /** Singleton placeholder that indicates a value is being loaded. */
   @SuppressWarnings("unchecked") // impl never uses a parameter or returns any non-null value
-  static <K, V> ValueReference<K, V> unset() {
+  static <K extends @Immutable Object, V> ValueReference<K, V> unset() {
     return (ValueReference<K, V>) UNSET;
   }
 
@@ -846,7 +846,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     public void setPreviousInWriteQueue(ReferenceEntry<Object, Object> previous) {}
   }
 
-  abstract static class AbstractReferenceEntry<K, V> implements ReferenceEntry<K, V> {
+  abstract static class AbstractReferenceEntry<K extends @Immutable Object, V> implements ReferenceEntry<K, V> {
     @Override
     public ValueReference<K, V> getValueReference() {
       throw new UnsupportedOperationException();
@@ -934,7 +934,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   @SuppressWarnings("unchecked") // impl never uses a parameter or returns any non-null value
-  static <K, V> ReferenceEntry<K, V> nullEntry() {
+  static <K extends @Immutable Object, V> ReferenceEntry<K, V> nullEntry() {
     return (ReferenceEntry<K, V>) NullEntry.INSTANCE;
   }
 
@@ -983,7 +983,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
    */
 
   /** Used for strongly-referenced keys. */
-  static class StrongEntry<K, V> extends AbstractReferenceEntry<K, V> {
+  static class StrongEntry<K extends @Immutable Object, V> extends AbstractReferenceEntry<K, V> {
     final K key;
 
     StrongEntry(K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
@@ -1024,7 +1024,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static final class StrongAccessEntry<K, V> extends StrongEntry<K, V> {
+  static final class StrongAccessEntry<K extends @Immutable Object, V> extends StrongEntry<K, V> {
     StrongAccessEntry(K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
       super(key, hash, next);
     }
@@ -1070,7 +1070,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static final class StrongWriteEntry<K, V> extends StrongEntry<K, V> {
+  static final class StrongWriteEntry<K extends @Immutable Object, V> extends StrongEntry<K, V> {
     StrongWriteEntry(K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
       super(key, hash, next);
     }
@@ -1116,7 +1116,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static final class StrongAccessWriteEntry<K, V> extends StrongEntry<K, V> {
+  static final class StrongAccessWriteEntry<K extends @Immutable Object, V> extends StrongEntry<K, V> {
     StrongAccessWriteEntry(K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
       super(key, hash, next);
     }
@@ -1203,7 +1203,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   /** Used for weakly-referenced keys. */
-  static class WeakEntry<K, V> extends WeakReference<K> implements ReferenceEntry<K, V> {
+  static class WeakEntry<K extends @Immutable Object, V> extends WeakReference<K> implements ReferenceEntry<K, V> {
     WeakEntry(ReferenceQueue<K> queue, K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
       super(key, queue);
       this.hash = hash;
@@ -1311,7 +1311,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static final class WeakAccessEntry<K, V> extends WeakEntry<K, V> {
+  static final class WeakAccessEntry<K extends @Immutable Object, V> extends WeakEntry<K, V> {
     WeakAccessEntry(
         ReferenceQueue<K> queue, K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
       super(queue, key, hash, next);
@@ -1358,7 +1358,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static final class WeakWriteEntry<K, V> extends WeakEntry<K, V> {
+  static final class WeakWriteEntry<K extends @Immutable Object, V> extends WeakEntry<K, V> {
     WeakWriteEntry(
         ReferenceQueue<K> queue, K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
       super(queue, key, hash, next);
@@ -1405,7 +1405,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static final class WeakAccessWriteEntry<K, V> extends WeakEntry<K, V> {
+  static final class WeakAccessWriteEntry<K extends @Immutable Object, V> extends WeakEntry<K, V> {
     WeakAccessWriteEntry(
         ReferenceQueue<K> queue, K key, int hash, @CheckForNull ReferenceEntry<K, V> next) {
       super(queue, key, hash, next);
@@ -1493,7 +1493,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   /** References a weak value. */
-  static class WeakValueReference<K, V> extends WeakReference<V> implements ValueReference<K, V> {
+  static class WeakValueReference<K extends @Immutable Object, V> extends WeakReference<V> implements ValueReference<K, V> {
     final ReferenceEntry<K, V> entry;
 
     WeakValueReference(ReferenceQueue<V> queue, V referent, ReferenceEntry<K, V> entry) {
@@ -1581,7 +1581,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   /** References a strong value. */
-  static class StrongValueReference<K, V> implements ValueReference<K, V> {
+  static class StrongValueReference<K extends @Immutable Object, V> implements ValueReference<K, V> {
     final V referent;
 
     StrongValueReference(V referent) {
@@ -1629,7 +1629,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   /** References a weak value. */
-  static final class WeightedWeakValueReference<K, V> extends WeakValueReference<K, V> {
+  static final class WeightedWeakValueReference<K extends @Immutable Object, V> extends WeakValueReference<K, V> {
     final int weight;
 
     WeightedWeakValueReference(
@@ -1651,7 +1651,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   /** References a soft value. */
-  static final class WeightedSoftValueReference<K, V> extends SoftValueReference<K, V> {
+  static final class WeightedSoftValueReference<K extends @Immutable Object, V> extends SoftValueReference<K, V> {
     final int weight;
 
     WeightedSoftValueReference(
@@ -1673,7 +1673,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   /** References a strong value. */
-  static final class WeightedStrongValueReference<K, V> extends StrongValueReference<K, V> {
+  static final class WeightedStrongValueReference<K extends @Immutable Object, V> extends StrongValueReference<K, V> {
     final int weight;
 
     WeightedStrongValueReference(V referent, int weight) {
@@ -1822,26 +1822,26 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   // queues
 
   // Guarded By Segment.this
-  static <K, V> void connectAccessOrder(ReferenceEntry<K, V> previous, ReferenceEntry<K, V> next) {
+  static <K extends @Immutable Object, V> void connectAccessOrder(ReferenceEntry<K, V> previous, ReferenceEntry<K, V> next) {
     previous.setNextInAccessQueue(next);
     next.setPreviousInAccessQueue(previous);
   }
 
   // Guarded By Segment.this
-  static <K, V> void nullifyAccessOrder(ReferenceEntry<K, V> nulled) {
+  static <K extends @Immutable Object, V> void nullifyAccessOrder(ReferenceEntry<K, V> nulled) {
     ReferenceEntry<K, V> nullEntry = nullEntry();
     nulled.setNextInAccessQueue(nullEntry);
     nulled.setPreviousInAccessQueue(nullEntry);
   }
 
   // Guarded By Segment.this
-  static <K, V> void connectWriteOrder(ReferenceEntry<K, V> previous, ReferenceEntry<K, V> next) {
+  static <K extends @Immutable Object, V> void connectWriteOrder(ReferenceEntry<K, V> previous, ReferenceEntry<K, V> next) {
     previous.setNextInWriteQueue(next);
     next.setPreviousInWriteQueue(previous);
   }
 
   // Guarded By Segment.this
-  static <K, V> void nullifyWriteOrder(ReferenceEntry<K, V> nulled) {
+  static <K extends @Immutable Object, V> void nullifyWriteOrder(ReferenceEntry<K, V> nulled) {
     ReferenceEntry<K, V> nullEntry = nullEntry();
     nulled.setNextInWriteQueue(nullEntry);
     nulled.setPreviousInWriteQueue(nullEntry);
@@ -3518,7 +3518,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static class LoadingValueReference<K, V> implements ValueReference<K, V> {
+  static class LoadingValueReference<K extends @Immutable Object, V> implements ValueReference<K, V> {
     volatile ValueReference<K, V> oldValue;
 
     // TODO(fry): rename get, then extend AbstractFuture instead of containing SettableFuture
@@ -3657,7 +3657,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static class ComputingValueReference<K, V> extends LoadingValueReference<K, V> {
+  static class ComputingValueReference<K extends @Immutable Object, V> extends LoadingValueReference<K, V> {
     ComputingValueReference(ValueReference<K, V> oldValue) {
       super(oldValue);
     }
@@ -3681,7 +3681,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
    * the queue as part of copyWriteEntry, and (2) the contains method is highly optimized for the
    * current model.
    */
-  static final class WriteQueue<K, V> extends AbstractQueue<ReferenceEntry<K, V>> {
+  static final class WriteQueue<K extends @Immutable Object, V> extends AbstractQueue<ReferenceEntry<K, V>> {
     final ReferenceEntry<K, V> head =
         new AbstractReferenceEntry<K, V>() {
 
@@ -3824,7 +3824,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
    * the queue as part of copyWriteEntry, and (2) the contains method is highly optimized for the
    * current model.
    */
-  static final class AccessQueue<K, V> extends AbstractQueue<ReferenceEntry<K, V>> {
+  static final class AccessQueue<K extends @Immutable Object, V> extends AbstractQueue<ReferenceEntry<K, V>> {
     final ReferenceEntry<K, V> head =
         new AbstractReferenceEntry<K, V>() {
 
@@ -4751,7 +4751,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
    * <p>Unfortunately, readResolve() doesn't get called when a circular dependency is present, so
    * the proxy must be able to behave as the cache itself.
    */
-  static class ManualSerializationProxy<K, V> extends ForwardingCache<K, V>
+  static class ManualSerializationProxy<K extends @Immutable Object, V> extends ForwardingCache<K, V>
       implements Serializable {
     private static final long serialVersionUID = 1;
 
@@ -4851,7 +4851,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
       this.delegate = builder.build();
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return delegate;
     }
 
@@ -4869,7 +4869,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
    * <p>Unfortunately, readResolve() doesn't get called when a circular dependency is present, so
    * the proxy must be able to behave as the cache itself.
    */
-  static final class LoadingSerializationProxy<K, V> extends ManualSerializationProxy<K, V>
+  static final class LoadingSerializationProxy<K extends @Immutable Object, V> extends ManualSerializationProxy<K, V>
       implements LoadingCache<K, V>, Serializable {
     private static final long serialVersionUID = 1;
 
@@ -4910,12 +4910,12 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
       autoDelegate.refresh(key);
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return autoDelegate;
     }
   }
 
-  static class LocalManualCache<K, V> implements Cache<K, V>, Serializable {
+  static class LocalManualCache<K extends @Immutable Object, V> implements Cache<K, V>, Serializable {
     final LocalCache<K, V> localCache;
 
     LocalManualCache(CacheBuilder<? super K, ? super V> builder) {
@@ -5007,7 +5007,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
 
     private static final long serialVersionUID = 1;
 
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new ManualSerializationProxy<>(localCache);
     }
 
@@ -5016,7 +5016,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
   }
 
-  static class LocalLoadingCache<K, V> extends LocalManualCache<K, V>
+  static class LocalLoadingCache<K extends @Immutable Object, V> extends LocalManualCache<K, V>
       implements LoadingCache<K, V> {
 
     LocalLoadingCache(
@@ -5061,7 +5061,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     private static final long serialVersionUID = 1;
 
     @Override
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new LoadingSerializationProxy<>(localCache);
     }
 

@@ -41,6 +41,8 @@ import java.util.stream.Collector;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -267,7 +269,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
     };
   }
 
-  @LazyInit @CheckForNull private transient ImmutableList<E> asList;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableList<E> asList;
 
   @Pure
   @Override
@@ -277,7 +279,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return count(object) > 0;
   }
 
@@ -305,7 +307,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final int remove(@CheckForNull Object element, int occurrences) {
+  public final int remove(@CheckForNull @Readonly Object element, int occurrences) {
     throw new UnsupportedOperationException();
   }
 
@@ -339,7 +341,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
 
   @GwtIncompatible // not present in emulated superclass
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
     for (Multiset.Entry<E> entry : entrySet()) {
       Arrays.fill(dst, offset, offset + entry.getCount(), entry.getElement());
       offset += entry.getCount();
@@ -349,7 +351,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return Multisets.equalsImpl(this, object);
   }
 
@@ -369,7 +371,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
   @Override
   public abstract ImmutableSet<E> elementSet();
 
-  @LazyInit @CheckForNull private transient ImmutableSet<Entry<E>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableSet<Entry<E>> entrySet;
 
   @SideEffectFree
   @Override
@@ -405,7 +407,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
 
     @Pure
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
       if (o instanceof Entry) {
         Entry<?> entry = (Entry<?>) o;
         if (entry.getCount() <= 0) {
@@ -426,7 +428,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
     @GwtIncompatible
     @J2ktIncompatible
     @Override
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new EntrySetSerializedForm<E>(ImmutableMultiset.this);
     }
 
@@ -448,7 +450,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
       this.multiset = multiset;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return multiset.entrySet();
     }
   }
@@ -456,7 +458,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
   @GwtIncompatible
   @J2ktIncompatible
   @Override
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm(this);
   }
 
@@ -638,7 +640,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
       return delegate.contains(object);
     }
 
@@ -657,7 +659,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -680,7 +682,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
       }
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       LinkedHashMultiset<@Immutable Object> multiset = LinkedHashMultiset.create(elements.length);
       for (int i = 0; i < elements.length; i++) {
         multiset.add(elements[i], counts[i]);

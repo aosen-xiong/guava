@@ -77,7 +77,7 @@ class RegularImmutableList<E> extends ImmutableList<E> {
   }
 
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int dstOff) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int dstOff) {
     System.arraycopy(array, 0, dst, dstOff, array.length);
     return dstOff + array.length;
   }
@@ -110,22 +110,22 @@ class RegularImmutableList<E> extends ImmutableList<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 
 @Override
-public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super.contains(arg0); }
+public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.contains(arg0); }
 
 @Pure
 @Override
-public boolean equals(@Nullable @UnknownSignedness Object arg0) { return super.equals(arg0); }
+public boolean equals(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
-public int indexOf(@Nullable @UnknownSignedness Object arg0) { return super.indexOf(arg0); }
+public int indexOf(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.indexOf(arg0); }
 
 @Override
-public int lastIndexOf(@Nullable @UnknownSignedness Object arg0) { return super.lastIndexOf(arg0); }
+public int lastIndexOf(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.lastIndexOf(arg0); }
 
 @SideEffectFree
 @Override

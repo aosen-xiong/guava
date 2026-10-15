@@ -489,7 +489,7 @@ public final class Longs {
       return "Longs.stringConverter()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

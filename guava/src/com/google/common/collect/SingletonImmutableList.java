@@ -95,7 +95,7 @@ final class SingletonImmutableList<E> extends ImmutableList<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 

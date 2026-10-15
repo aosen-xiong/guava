@@ -373,7 +373,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
       return o.hashCode();
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -394,7 +394,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
       return System.identityHashCode(o);
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

@@ -20,7 +20,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.DoNotCall;
 import java.util.Iterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
@@ -38,8 +38,8 @@ import org.checkerframework.framework.qual.CFComment;
 @AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-@Immutable
-@CFComment("PICO: wait, so unmodifiable means can still do next but can not do remove?")
+@ReceiverDependentMutable
+@CFComment("PICO: unmodifiable is NOT immutable. remove() is unsupported, but next() advances the cursor, so the iterator's state changes. Concrete subclasses hold that cursor (AbstractIndexedListIterator.position), and they are already @ReceiverDependentMutable. Hence RDM here, not @Immutable.")
 public abstract class UnmodifiableIterator<E extends @Nullable @Readonly Object> implements Iterator<E> {
   /** Constructor for use by subclasses. */
   protected UnmodifiableIterator() {}

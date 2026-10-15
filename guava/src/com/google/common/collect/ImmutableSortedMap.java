@@ -75,7 +75,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
-public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
+@Immutable
+public final class ImmutableSortedMap<K extends @Immutable Object, V> extends ImmutableMap<K, V>
     implements NavigableMap<K, V> {
   /**
    * Returns a {@link Collector} that accumulates elements into an {@code ImmutableSortedMap} whose
@@ -124,7 +125,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    */
   private static final Comparator<?> NATURAL_ORDER = Ordering.natural();
 
-  private static final ImmutableSortedMap<Comparable<?>, Object> NATURAL_EMPTY_MAP =
+  private static final ImmutableSortedMap<@Immutable Comparable<?>, Object> NATURAL_EMPTY_MAP =
       new ImmutableSortedMap<>(
           ImmutableSortedSet.emptySet(Ordering.natural()), ImmutableList.<@Readonly Object>of());
 
@@ -150,7 +151,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
   }
 
   /** Returns an immutable map containing a single entry. */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(K k1, V v1) {
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(K k1, V v1) {
     return of(Ordering.natural(), k1, v1);
   }
 
@@ -167,7 +168,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    *
    * @throws IllegalArgumentException if the two keys are equal according to their natural ordering
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2) {
     return fromEntries(entryOf(k1, v1), entryOf(k2, v2));
   }
@@ -178,7 +179,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    *
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3) {
     return fromEntries(entryOf(k1, v1), entryOf(k2, v2), entryOf(k3, v3));
   }
@@ -189,7 +190,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    *
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
     return fromEntries(entryOf(k1, v1), entryOf(k2, v2), entryOf(k3, v3), entryOf(k4, v4));
   }
@@ -200,7 +201,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    *
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
     return fromEntries(
         entryOf(k1, v1), entryOf(k2, v2), entryOf(k3, v3), entryOf(k4, v4), entryOf(k5, v5));
@@ -213,7 +214,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    * @since 31.0
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
     return fromEntries(
         entryOf(k1, v1),
@@ -231,7 +232,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    * @since 31.0
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
     return fromEntries(
         entryOf(k1, v1),
@@ -250,7 +251,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    * @since 31.0
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -285,7 +286,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    * @since 31.0
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -323,7 +324,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * @throws IllegalArgumentException if any two keys are equal according to their natural ordering
    * @since 31.0
    */
-  public static <K extends Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -407,7 +408,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * @throws IllegalArgumentException if any two keys are equal according to the comparator
    * @since 19.0
    */
-  public static <K, V> ImmutableSortedMap<K, V> copyOf(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     // Hack around K not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedSetFauxverideShim.
@@ -424,7 +425,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * @throws IllegalArgumentException if any two keys are equal according to the comparator
    * @since 19.0
    */
-  public static <K, V> ImmutableSortedMap<K, V> copyOf(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries,
       Comparator<? super K> comparator) {
     return fromEntries(checkNotNull(comparator), false, entries);
@@ -482,6 +483,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
     return fromEntries(comparator, sameComparator, map.entrySet());
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> fromEntries(
       @Immutable Entry<K, V>... entries) {
     return fromEntries(Ordering.natural(), false, entries, entries.length);
@@ -504,7 +506,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
   }
 
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  private static <K, V> ImmutableSortedMap<K, V> fromEntries(
+  private static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> fromEntries(
       final Comparator<? super K> comparator,
       boolean sameComparator,
       @Nullable Entry<K, V>[] entryArray,
@@ -573,7 +575,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * Returns a builder that creates immutable sorted maps whose keys are ordered by their natural
    * ordering. The sorted maps use {@link Ordering#natural()} as the comparator.
    */
-  public static <K extends Comparable<?>, V> Builder<K, V> naturalOrder() {
+  public static <K extends @Immutable Comparable<?>, V> Builder<K, V> naturalOrder() {
     return new Builder<>(Ordering.natural());
   }
 
@@ -593,7 +595,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
    * Returns a builder that creates immutable sorted maps whose keys are ordered by the reverse of
    * their natural ordering.
    */
-  public static <K extends Comparable<?>, V> Builder<K, V> reverseOrder() {
+  public static <K extends @Immutable Comparable<?>, V> Builder<K, V> reverseOrder() {
     return new Builder<>(Ordering.<K>natural().reverse());
   }
 
@@ -728,6 +730,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
      * @since 31.0
      */
     @Override
+    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     public ImmutableSortedMap<K, V> buildOrThrow() {
       switch (size) {
         case 0:
@@ -794,7 +797,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     int index = keySet.indexOf(key);
     return (index == -1) ? null : valueList.get(index);
   }
@@ -855,7 +858,7 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
           @Override
           @J2ktIncompatible // serialization
           @GwtIncompatible // serialization
-          Object writeReplace() {
+          @Readonly Object writeReplace() {
             return super.writeReplace();
           }
         };
@@ -868,14 +871,14 @@ public final class ImmutableSortedMap<K, V> extends ImmutableMap<K, V>
 
 @Pure
 @Override
-public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super.contains(arg0); }
+public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.contains(arg0); }
 
       // redeclare to help optimizers with b/310253115
       @SuppressWarnings("RedundantOverride")
       @Override
       @J2ktIncompatible // serialization
       @GwtIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     }
@@ -1167,7 +1170,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    * remain as implementation details.
    */
   @J2ktIncompatible // serialization
-  private static class SerializedForm<K, V> extends ImmutableMap.SerializedForm<K, V> {
+  private static class SerializedForm<K extends @Immutable Object, V> extends ImmutableMap.SerializedForm<K, V> {
     private final Comparator<? super K> comparator;
 
     SerializedForm(ImmutableSortedMap<K, V> sortedMap) {
@@ -1185,7 +1188,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
 
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<>(this);
   }
 
@@ -1208,7 +1211,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Use toImmutableSortedMap")
   @Deprecated
-  public static <T extends @Nullable Object, K, V>
+  public static <T extends @Nullable Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -1225,7 +1228,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Use toImmutableSortedMap")
   @Deprecated
-  public static <T extends @Nullable Object, K, V>
+  public static <T extends @Nullable Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction,
@@ -1242,7 +1245,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Use naturalOrder")
   @Deprecated
-  public static <K, V> ImmutableSortedMap.Builder<K, V> builder() {
+  public static <K extends @Immutable Object, V> ImmutableSortedMap.Builder<K, V> builder() {
     throw new UnsupportedOperationException();
   }
 
@@ -1254,7 +1257,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Use naturalOrder (which does not accept an expected size)")
   @Deprecated
-  public static <K, V> ImmutableSortedMap.Builder<K, V> builderWithExpectedSize(int expectedSize) {
+  public static <K extends @Immutable Object, V> ImmutableSortedMap.Builder<K, V> builderWithExpectedSize(int expectedSize) {
     throw new UnsupportedOperationException();
   }
 
@@ -1269,7 +1272,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass a key of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(K k1, V v1) {
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(K k1, V v1) {
     throw new UnsupportedOperationException();
   }
 
@@ -1284,7 +1287,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(K k1, V v1, K k2, V v2) {
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(K k1, V v1, K k2, V v2) {
     throw new UnsupportedOperationException();
   }
 
@@ -1299,7 +1302,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
     throw new UnsupportedOperationException();
   }
 
@@ -1315,7 +1318,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
     throw new UnsupportedOperationException();
   }
 
@@ -1331,7 +1334,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
     throw new UnsupportedOperationException();
   }
@@ -1348,7 +1351,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
     throw new UnsupportedOperationException();
   }
@@ -1365,7 +1368,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
     throw new UnsupportedOperationException();
   }
@@ -1382,7 +1385,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -1414,7 +1417,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -1448,7 +1451,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
    */
   @DoNotCall("Pass keys of type Comparable")
   @Deprecated
-  public static <K, V> ImmutableSortedMap<K, V> of(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -1480,7 +1483,7 @@ public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super
   @DoNotCall("ImmutableSortedMap.ofEntries not currently available; use ImmutableSortedMap.copyOf")
   @Deprecated
   @SafeVarargs
-  public static <K, V> ImmutableSortedMap<K, V> ofEntries(
+  public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> ofEntries(
       Entry<? extends K, ? extends V>... entries) {
     throw new UnsupportedOperationException();
   }

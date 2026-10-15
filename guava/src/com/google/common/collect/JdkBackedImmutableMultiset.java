@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -73,11 +75,11 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     return delegateMap.getOrDefault(element, 0);
   }
 
-  @LazyInit @CheckForNull private transient ImmutableSet<E> elementSet;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableSet<E> elementSet;
 
   @Override
   public ImmutableSet<E> elementSet() {
@@ -105,7 +107,7 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

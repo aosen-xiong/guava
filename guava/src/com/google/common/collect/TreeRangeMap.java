@@ -88,24 +88,24 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     }
 
     @Override
-    public Range<K> getKey(@Readonly RangeMapEntry<K, V> this) {
+    public Range<K> getKey(RangeMapEntry<K, V> this) {
       return range;
     }
 
     @Override
-    public V getValue(@Readonly RangeMapEntry<K, V> this) {
+    public V getValue(RangeMapEntry<K, V> this) {
       return value;
     }
 
-    public boolean contains(@Readonly RangeMapEntry<K, V> this, K value) {
+    public boolean contains(RangeMapEntry<K, V> this, K value) {
       return range.contains(value);
     }
 
-    Cut<K> getLowerBound(@Readonly RangeMapEntry<K, V> this) {
+    Cut<K> getLowerBound(RangeMapEntry<K, V> this) {
       return range.lowerBound;
     }
 
-    Cut<K> getUpperBound(@Readonly RangeMapEntry<K, V> this) {
+    Cut<K> getUpperBound(RangeMapEntry<K, V> this) {
       return range.upperBound;
     }
   }

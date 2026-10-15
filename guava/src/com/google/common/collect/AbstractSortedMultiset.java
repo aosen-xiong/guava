@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
@@ -126,7 +127,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
     return Multisets.iteratorImpl(descendingMultiset());
   }
 
-  @LazyInit @CheckForNull private transient SortedMultiset<E> descendingMultiset;
+  @LazyInit @CheckForNull private transient @Assignable SortedMultiset<E> descendingMultiset;
 
   @Override
   public SortedMultiset<E> descendingMultiset() {

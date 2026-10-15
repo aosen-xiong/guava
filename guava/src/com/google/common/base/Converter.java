@@ -27,6 +27,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A function from {@code A} to {@code B} with an associated <i>reverse</i> function from {@code B}
@@ -382,7 +384,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * <p>The returned converter is serializable if {@code this} converter and {@code secondConverter}
    * are.
    */
-  public final <C> Converter<A, C> andThen(Converter<B, C> secondConverter) {
+  public final <C extends @Immutable Object> Converter<A, C> andThen(Converter<B, C> secondConverter) {
     return doAndThen(secondConverter);
   }
 
@@ -604,7 +606,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
       return "Converter.identity()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

@@ -26,6 +26,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code com.google.common.base.Function} instances; see that
@@ -126,7 +127,7 @@ public final class Functions {
    * key (instead of an exception being thrown), you can use the method reference {@code map::get}
    * instead.
    */
-  public static <K extends @Nullable Object, V extends @Nullable Object> Function<K, V> forMap(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object> Function<K, V> forMap(
       Map<K, V> map) {
     return new FunctionForMapNoDefault<>(map);
   }
@@ -144,13 +145,13 @@ public final class Functions {
    * @return function that returns {@code map.get(a)} when {@code a} is a key, or {@code
    *     defaultValue} otherwise
    */
-  public static <K extends @Nullable Object, V extends @Nullable Object> Function<K, V> forMap(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object> Function<K, V> forMap(
       Map<K, ? extends V> map, @ParametricNullness V defaultValue) {
     return new ForMapWithDefault<>(map, defaultValue);
   }
 
   private static class FunctionForMapNoDefault<
-          K extends @Nullable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable Object>
       implements Function<K, V>, Serializable {
     final Map<K, V> map;
 
@@ -192,7 +193,7 @@ public final class Functions {
     private static final long serialVersionUID = 0;
   }
 
-  private static class ForMapWithDefault<K extends @Nullable Object, V extends @Nullable Object>
+  private static class ForMapWithDefault<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       implements Function<K, V>, Serializable {
     final Map<K, ? extends V> map;
     @ParametricNullness final V defaultValue;
@@ -250,13 +251,13 @@ public final class Functions {
    * @return the composition of {@code f} and {@code g}
    * @see <a href="//en.wikipedia.org/wiki/Function_composition">function composition</a>
    */
-  public static <A extends @Nullable Object, B extends @Nullable Object, C extends @Nullable Object>
+  public static <A extends @Nullable Object, B extends @Nullable Object, C extends @Nullable @Immutable Object>
       Function<A, C> compose(Function<B, C> g, Function<A, ? extends B> f) {
     return new FunctionComposition<>(g, f);
   }
 
   private static class FunctionComposition<
-          A extends @Nullable Object, B extends @Nullable Object, C extends @Nullable Object>
+          A extends @Nullable Object, B extends @Nullable Object, C extends @Nullable @Immutable Object>
       implements Function<A, C>, Serializable {
     private final Function<B, C> g;
     private final Function<A, ? extends B> f;

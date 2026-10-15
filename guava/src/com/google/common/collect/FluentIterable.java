@@ -729,7 +729,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @since 14.0
    */
   @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
-  public final <K> ImmutableListMultimap<K, @NonNull E> index(Function<? super E, K> keyFunction) {
+  public final <K extends @Immutable Object> ImmutableListMultimap<K, @NonNull E> index(Function<? super E, K> keyFunction) {
     return Multimaps.index((Iterable<@NonNull E>) getDelegate(), keyFunction);
   }
 
@@ -764,7 +764,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @since 14.0
    */
   @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
-  public final <K> ImmutableMap<K, @NonNull E> uniqueIndex(Function<? super E, K> keyFunction) {
+  public final <K extends @Immutable Object> ImmutableMap<K, @NonNull E> uniqueIndex(Function<? super E, K> keyFunction) {
     return Maps.uniqueIndex((Iterable<@NonNull E>) getDelegate(), keyFunction);
   }
 

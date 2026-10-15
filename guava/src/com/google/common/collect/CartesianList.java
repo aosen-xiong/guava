@@ -148,7 +148,7 @@ final class CartesianList<E> extends AbstractList<List<E>> implements RandomAcce
       @J2ktIncompatible // serialization
       @Override
       @GwtIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     };

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
@@ -66,7 +67,7 @@ final class TopKSelector<
    *
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
-  public static <T extends Comparable<? super T>> TopKSelector<T> least(int k) {
+  public static <T extends @Immutable Comparable<? super T>> TopKSelector<T> least(int k) {
     return least(k, Ordering.natural());
   }
 
@@ -88,7 +89,7 @@ final class TopKSelector<
    *
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
-  public static <T extends Comparable<? super T>> TopKSelector<T> greatest(int k) {
+  public static <T extends @Immutable Comparable<? super T>> TopKSelector<T> greatest(int k) {
     return greatest(k, Ordering.natural());
   }
 

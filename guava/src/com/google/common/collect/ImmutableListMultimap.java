@@ -38,6 +38,8 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -239,7 +241,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    public Builder<K, V> put(@Readonly Entry<? extends K, ? extends V> entry) {
       super.put(entry);
       return this;
     }
@@ -272,7 +274,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(Multimap<? extends K, ? extends V> multimap) {
+    public Builder<K, V> putAll(@Readonly Multimap<? extends K, ? extends V> multimap) {
       super.putAll(multimap);
       return this;
     }
@@ -352,7 +354,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
    * @throws NullPointerException if any key, value, or entry is null
    * @since 19.0
    */
-  public static <K, V> ImmutableListMultimap<K, V> copyOf(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     return new Builder<K, V>().putAll(entries).build();
   }
@@ -402,7 +404,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
     return (list == null) ? ImmutableList.<V>of() : list;
   }
 
-  @LazyInit @RetainedWith @CheckForNull private transient ImmutableListMultimap<V, K> inverse;
+  @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableListMultimap<V, K> inverse;
 
   /**
    * {@inheritDoc}
@@ -439,7 +441,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final ImmutableList<V> removeAll(@CheckForNull Object key) {
+  public final ImmutableList<V> removeAll(@CheckForNull @Readonly Object key) {
     throw new UnsupportedOperationException();
   }
 

@@ -252,7 +252,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     return inverse;
   }
 
-  @LazyInit @CheckForNull private transient Set<K> keySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<K> keySet;
 
   @SideEffectFree
   @Override
@@ -299,7 +299,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<V> valueSet;
+  @LazyInit @CheckForNull private transient @Assignable Set<V> valueSet;
 
   @SideEffectFree
   @Override
@@ -346,7 +346,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
   @SideEffectFree
   @Override
@@ -547,7 +547,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
     @GwtIncompatible // Not needed in the emulated source.
     @J2ktIncompatible
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return inverse().inverse();
     }
 

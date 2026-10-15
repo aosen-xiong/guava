@@ -84,8 +84,8 @@ final class TableCollectors {
 
   static <
           T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -105,8 +105,8 @@ final class TableCollectors {
 
   static <
           T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -199,7 +199,7 @@ final class TableCollectors {
     }
   }
 
-  private static <R extends @Nullable Object, C extends @Nullable Object, V> void mergeTables(
+  private static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V> void mergeTables(
       Table<R, C, V> table,
       @ParametricNullness R row,
       @ParametricNullness C column,

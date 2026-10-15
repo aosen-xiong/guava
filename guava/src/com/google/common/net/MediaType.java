@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Represents an <a href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a>
@@ -769,11 +770,11 @@ public final class MediaType {
   private final String subtype;
   private final ImmutableListMultimap<String, String> parameters;
 
-  @LazyInit @CheckForNull private String toString;
+  @LazyInit @CheckForNull private @Assignable String toString;
 
-  @LazyInit private int hashCode;
+  @LazyInit private @Assignable int hashCode;
 
-  @LazyInit @CheckForNull private Optional<Charset> parsedCharset;
+  @LazyInit @CheckForNull private @Assignable Optional<Charset> parsedCharset;
 
   private MediaType(String type, String subtype, ImmutableListMultimap<String, String> parameters) {
     this.type = type;

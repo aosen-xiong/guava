@@ -44,6 +44,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 // TODO(b/278589132): Remove the redundant "@NonNull" on B once it's no longer required by J2KT.
+@Immutable
 public final class ImmutableClassToInstanceMap<B>
     extends ForwardingMap<Class<? extends @NonNull B>, B>
     implements ClassToInstanceMap<B>, Serializable {

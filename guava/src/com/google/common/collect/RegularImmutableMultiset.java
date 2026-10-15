@@ -29,6 +29,7 @@ import java.util.Collection;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -135,6 +136,7 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   @CFComment("Change to @LazyFinal later")
   @LazyInit @CheckForNull private transient @Assignable ImmutableSet<E> elementSet;
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private RegularImmutableMultiset(
       ImmutableEntry<E>[] entries,
       @Nullable ImmutableEntry<?>[] hashTable,
@@ -169,7 +171,7 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     @Nullable ImmutableEntry<?>[] hashTable = this.hashTable;
     if (element == null || hashTable.length == 0) {
       return 0;
@@ -212,7 +214,7 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

@@ -50,6 +50,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to the {@link Future} interface.
@@ -717,7 +718,7 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
      *     typically check whether it failed: See <a
      *     href="https://errorprone.info/bugpattern/FutureReturnValueIgnored">https://errorprone.info/bugpattern/FutureReturnValueIgnored</a>.
      */
-    public <C extends @Nullable Object> ListenableFuture<C> callAsync(
+    public <C extends @Nullable @Immutable Object> ListenableFuture<C> callAsync(
         AsyncCallable<C> combiner, Executor executor) {
       return new CombinedFuture<C>(futures, allMustSucceed, executor, combiner);
     }
@@ -742,7 +743,7 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
      *     typically check whether it failed: See <a
      *     href="https://errorprone.info/bugpattern/FutureReturnValueIgnored">https://errorprone.info/bugpattern/FutureReturnValueIgnored</a>.
      */
-    public <C extends @Nullable Object> ListenableFuture<C> call(
+    public <C extends @Nullable @Immutable Object> ListenableFuture<C> call(
         Callable<C> combiner, Executor executor) {
       return new CombinedFuture<C>(futures, allMustSucceed, executor, combiner);
     }

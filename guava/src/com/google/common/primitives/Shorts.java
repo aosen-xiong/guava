@@ -47,6 +47,7 @@ import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to {@code short} primitives, that are not already found in
@@ -377,7 +378,7 @@ public final class Shorts extends ShortsMethodsForWeb {
       return "Shorts.stringConverter()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

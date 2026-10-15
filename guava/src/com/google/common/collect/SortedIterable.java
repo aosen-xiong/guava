@@ -44,5 +44,5 @@ interface SortedIterable<T extends @Nullable @Readonly Object> extends Iterable<
    * order according to the associated {@link #comparator}.
    */
   @Override
-  Iterator<T> iterator();
+  @ReceiverDependentMutable Iterator<T> iterator();
 }

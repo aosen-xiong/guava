@@ -20,6 +20,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.DoNotCall;
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A type-to-instance map backed by an {@link ImmutableMap}. See also {@link
@@ -29,6 +30,7 @@ import javax.annotation.CheckForNull;
  * @since 13.0
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken<? extends B>, B>
     implements TypeToInstanceMap<B> {
 

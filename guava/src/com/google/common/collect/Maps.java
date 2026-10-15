@@ -392,7 +392,7 @@ public final class Maps {
    * @return a new, empty {@code TreeMap}
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <K extends Comparable, V extends @Nullable Object> TreeMap<K, V> newTreeMap() {
+  public static <K extends @Immutable Comparable, V extends @Nullable Object> TreeMap<K, V> newTreeMap() {
     return new TreeMap<>();
   }
 
@@ -497,7 +497,7 @@ public final class Maps {
    * @param right the map to treat as the "right" map for purposes of comparison
    * @return the difference between the two maps
    */
-  public static <K extends @Nullable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
       MapDifference<K, V> difference(
           @Readonly Map<? extends K, ? extends V> left, @Readonly Map<? extends K, ? extends V> right) {
     if (left instanceof SortedMap) {
@@ -522,7 +522,7 @@ public final class Maps {
    * @return the difference between the two maps
    * @since 10.0
    */
-  public static <K extends @Nullable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
       MapDifference<K, V> difference(
           Map<? extends K, ? extends V> left,
           Map<? extends K, ? extends V> right,
@@ -570,7 +570,7 @@ public final class Maps {
     return new SortedMapDifferenceImpl<>(onlyOnLeft, onlyOnRight, onBoth, differences);
   }
 
-  private static <K extends @Nullable Object, V extends @Nullable Object> void doDifference(
+  private static <K extends @Nullable @Immutable Object, V extends @Nullable Object> void doDifference(
       Map<? extends K, ? extends V> left,
       Map<? extends K, ? extends V> right,
       Equivalence<? super @NonNull V> valueEquivalence,
@@ -675,7 +675,7 @@ public final class Maps {
 
     @Pure
     @Override
-    public int hashCode(@UnknownSignedness @Readonly MapDifferenceImpl<K, V> this) {
+    public int hashCode(@UnknownSignedness MapDifferenceImpl<K, V> this) {
       return Objects.hashCode(
           entriesOnlyOnLeft(), entriesOnlyOnRight(), entriesInCommon(), entriesDiffering());
     }
@@ -742,7 +742,7 @@ public final class Maps {
 
     @Pure
     @Override
-    public int hashCode(@UnknownSignedness @Readonly ValueDifferenceImpl<V> this) {
+    public int hashCode(@UnknownSignedness ValueDifferenceImpl<V> this) {
       return Objects.hashCode(left, right);
     }
 
@@ -1396,7 +1396,7 @@ public final class Maps {
     return uniqueIndex(values, keyFunction, ImmutableMap.builder());
   }
 
-  private static <K, V> ImmutableMap<K, V> uniqueIndex(
+  private static <K extends @Immutable Object, V> ImmutableMap<K, V> uniqueIndex(
       Iterator<V> values, Function<? super V, K> keyFunction, ImmutableMap.Builder<K, V> builder) {
     checkNotNull(keyFunction);
     while (values.hasNext()) {
@@ -1536,7 +1536,7 @@ public final class Maps {
   }
 
   /** The implementation of {@link Multimaps#unmodifiableEntries}. */
-  static class UnmodifiableEntries<K extends @Nullable Object, V extends @Nullable Object>
+  static class UnmodifiableEntries<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends ForwardingCollection<Entry<K, V>> {
     private final Collection<Entry<K, V>> entries;
 
@@ -1585,7 +1585,7 @@ public final class Maps {
   }
 
   /** The implementation of {@link Maps#unmodifiableEntrySet(Set)}. */
-  static class UnmodifiableEntrySet<K extends @Nullable Object, V extends @Nullable Object>
+  static class UnmodifiableEntrySet<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends UnmodifiableEntries<K, V> implements Set<Entry<K, V>> {
     UnmodifiableEntrySet(Set<Entry<K, V>> entries) {
       super(entries);
@@ -1721,7 +1721,7 @@ public final class Maps {
   /**
    * @see Maps#unmodifiableBiMap(BiMap)
    */
-  private static class UnmodifiableBiMap<K extends @Nullable Object, V extends @Nullable Object>
+  private static class UnmodifiableBiMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends ForwardingMap<K, V> implements BiMap<K, V>, Serializable {
     final Map<K, V> unmodifiableMap;
     final BiMap<? extends K, ? extends V> delegate;
@@ -3607,7 +3607,7 @@ public final class Maps {
     }
 
     UnmodifiableNavigableMap(
-            @Readonly NavigableMap<K, ? extends V> delegate, @Readonly UnmodifiableNavigableMap<K, V> descendingMap) {
+            @Readonly NavigableMap<K, ? extends V> delegate, UnmodifiableNavigableMap<K, V> descendingMap) {
       this.delegate = delegate;
       this.descendingMap = descendingMap;
     }
@@ -3754,7 +3754,7 @@ public final class Maps {
       throw new UnsupportedOperationException();
     }
 
-    @LazyInit @CheckForNull private transient UnmodifiableNavigableMap<K, V> descendingMap;
+    @LazyInit @CheckForNull private transient @Assignable UnmodifiableNavigableMap<K, V> descendingMap;
 
     @Override
     public @Readonly NavigableMap<K, V> descendingMap() {
@@ -3885,7 +3885,7 @@ public final class Maps {
      */
     abstract @PolyMutable Set<@PolyMutable Entry<K, V>> createEntrySet(@PolyMutable ViewCachingAbstractMap<K, V> this);
 
-    @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySet;
+    @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
     @Override
     public @PolyMutable Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable ViewCachingAbstractMap<K, V> this) {
@@ -3893,7 +3893,7 @@ public final class Maps {
       return (result == null) ? entrySet = createEntrySet() : result;
     }
 
-    @LazyInit @CheckForNull private transient Set<K> keySet;
+    @LazyInit @CheckForNull private transient @Assignable Set<K> keySet;
 
     @Override
     public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable ViewCachingAbstractMap<K, V> this) {
@@ -3905,7 +3905,7 @@ public final class Maps {
       return new KeySet<>(this);
     }
 
-    @LazyInit @CheckForNull private transient Collection<V> values;
+    @LazyInit @CheckForNull private transient @Assignable Collection<V> values;
 
     @Override
     public @PolyMutable Collection<V> values(@PolyMutable ViewCachingAbstractMap<K, V> this) {
@@ -4475,7 +4475,7 @@ public final class Maps {
       return forward();
     }
 
-    @LazyInit @CheckForNull private transient Comparator<? super K> comparator;
+    @LazyInit @CheckForNull private transient @Assignable Comparator<? super K> comparator;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -4585,7 +4585,7 @@ public final class Maps {
       return forward();
     }
 
-    @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySet;
+    @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
     @Override
     public @PolyMutable Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable DescendingMap<K, V> this) {
@@ -4616,7 +4616,7 @@ public final class Maps {
       return navigableKeySet();
     }
 
-    @LazyInit @CheckForNull private transient NavigableSet<K> navigableKeySet;
+    @LazyInit @CheckForNull private transient @Assignable NavigableSet<K> navigableKeySet;
 
     @Override
     public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable DescendingMap<K, V> this) {

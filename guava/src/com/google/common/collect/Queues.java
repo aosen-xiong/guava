@@ -33,6 +33,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 
@@ -207,7 +208,7 @@ public final class Queues {
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
   @J2ktIncompatible
   @GwtIncompatible // PriorityBlockingQueue
-  public static <E extends Comparable> PriorityBlockingQueue<E> newPriorityBlockingQueue() {
+  public static <E extends @Immutable Comparable> PriorityBlockingQueue<E> newPriorityBlockingQueue() {
     return new PriorityBlockingQueue<E>();
   }
 
@@ -223,7 +224,7 @@ public final class Queues {
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
   @J2ktIncompatible
   @GwtIncompatible // PriorityBlockingQueue
-  public static <E extends Comparable> PriorityBlockingQueue<E> newPriorityBlockingQueue(
+  public static <E extends @Immutable Comparable> PriorityBlockingQueue<E> newPriorityBlockingQueue(
       Iterable<? extends E> elements) {
     if (elements instanceof Collection) {
       return new PriorityBlockingQueue<E>((Collection<? extends E>) elements);
@@ -243,7 +244,7 @@ public final class Queues {
    *     in 15.0)
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends Comparable> PriorityQueue<E> newPriorityQueue() {
+  public static <E extends @Immutable Comparable> PriorityQueue<E> newPriorityQueue() {
     return new PriorityQueue<E>();
   }
 
@@ -257,7 +258,7 @@ public final class Queues {
    *     in 15.0)
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends Comparable> PriorityQueue<E> newPriorityQueue(
+  public static <E extends @Immutable Comparable> PriorityQueue<E> newPriorityQueue(
       Iterable<? extends E> elements) {
     if (elements instanceof Collection) {
       return new PriorityQueue<E>((Collection<? extends E>) elements);

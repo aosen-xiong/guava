@@ -105,7 +105,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return bimap;
   }
 
-  static final class BiEntry<K extends @Nullable Object, V extends @Nullable Object>
+  static final class BiEntry<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends ImmutableEntry<K, V> {
     final int keyHash;
     final int valueHash;
@@ -783,7 +783,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       }
     }
 
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new InverseSerializedForm<>(HashBiMap.this);
     }
 
@@ -804,7 +804,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       this.bimap = bimap;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return bimap.inverse();
     }
   }

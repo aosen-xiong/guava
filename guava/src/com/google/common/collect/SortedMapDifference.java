@@ -19,6 +19,7 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import java.util.SortedMap;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 
@@ -30,6 +31,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface SortedMapDifference<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends MapDifference<K, V> {
 

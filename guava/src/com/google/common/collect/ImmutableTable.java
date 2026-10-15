@@ -433,7 +433,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final void putAll(Table<? extends R, ? extends C, ? extends V> table) {
+  public final void putAll(@Readonly Table<? extends R, ? extends C, ? extends V> table) {
     throw new UnsupportedOperationException();
   }
 
@@ -448,7 +448,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
   @CheckForNull
-  public final V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public final V remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     throw new UnsupportedOperationException();
   }
 
@@ -465,6 +465,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
     private final int[] cellRowIndices;
     private final int[] cellColumnIndices;
 
+    @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     private SerializedForm(
         Object[] rowKeys,
         Object[] columnKeys,

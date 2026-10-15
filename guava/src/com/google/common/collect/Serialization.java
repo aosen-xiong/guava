@@ -149,8 +149,9 @@ final class Serialization {
    * <p>The serialized output consists of the number of distinct keys, and then for each distinct
    * key: the key, the number of values for that key, and the key's values.
    */
+  @SuppressWarnings("mutability:enhancedfor.type.incompatible") // lost-in-type-argument: @Lost inside Map<K, @Lost Collection<V>>
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> void writeMultimap(
-      Multimap<K, V> multimap, ObjectOutputStream stream) throws IOException {
+      @Readonly Multimap<K, V> multimap, ObjectOutputStream stream) throws IOException {
     stream.writeInt(multimap.asMap().size());
     for (Map.Entry<K, Collection<V>> entry : multimap.asMap().entrySet()) {
       stream.writeObject(entry.getKey());

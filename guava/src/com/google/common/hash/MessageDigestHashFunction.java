@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * {@link HashFunction} adapter for {@link MessageDigest} instances.
@@ -117,14 +118,14 @@ final class MessageDigestHashFunction extends AbstractHashFunction implements Se
       this.toString = toString;
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return new MessageDigestHashFunction(algorithmName, bytes, toString);
     }
 
     private static final long serialVersionUID = 0;
   }
 
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm(prototype.getAlgorithm(), bytes, toString);
   }
 

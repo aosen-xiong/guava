@@ -306,7 +306,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean addAll(Collection<? extends E> newElements) {
+  public final boolean addAll(@Readonly Collection<? extends E> newElements) {
     throw new UnsupportedOperationException();
   }
 
@@ -320,7 +320,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean removeAll(Collection<?> oldElements) {
+  public final boolean removeAll(@Readonly Collection<?> oldElements) {
     throw new UnsupportedOperationException();
   }
 
@@ -347,7 +347,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean retainAll(Collection<?> elementsToKeep) {
+  public final boolean retainAll(@Readonly Collection<?> elementsToKeep) {
     throw new UnsupportedOperationException();
   }
 
@@ -407,7 +407,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     // We serialize by default to ImmutableList, the simplest thing that works.
     return new ImmutableList.SerializedForm(toArray());
   }
