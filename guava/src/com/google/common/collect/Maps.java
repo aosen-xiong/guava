@@ -111,18 +111,18 @@ import org.checkerframework.framework.qual.CFComment;
 public final class Maps {
   private Maps() {}
 
-  private enum EntryFunction implements Function<Entry<?, ?>, @Nullable @Readonly Object> {
+  private enum EntryFunction implements Function<@Readonly Entry<?, ?>, @Nullable @Readonly Object> {
     KEY {
       @Override
       @CheckForNull
-      public @Readonly Object apply(Entry<?, ?> entry) {
+      public @Readonly Object apply(@Readonly Entry<?, ?> entry) {
         return entry.getKey();
       }
     },
     VALUE {
       @Override
       @CheckForNull
-      public @Readonly Object apply(Entry<?, ?> entry) {
+      public @Readonly Object apply(@Readonly Entry<?, ?> entry) {
         return entry.getValue();
       }
     };
@@ -134,7 +134,7 @@ public final class Maps {
   }
 
   @SuppressWarnings("unchecked")
-  static <V extends @Nullable @Readonly Object> Function<Entry<?, V>, V> valueFunction() {
+  static <V extends @Nullable @Readonly Object> Function<@Readonly Entry<?, V>, V> valueFunction() {
     return (Function) EntryFunction.VALUE;
   }
 
@@ -2508,7 +2508,7 @@ public final class Maps {
     return compose(keyPredicate, Maps.<K>keyFunction());
   }
 
-  static <V extends @Nullable @Readonly Object> Predicate<Entry<?, V>> valuePredicateOnEntries(
+  static <V extends @Nullable @Readonly Object> Predicate<@Readonly Entry<?, V>> valuePredicateOnEntries(
       Predicate<? super V> valuePredicate) {
     return compose(valuePredicate, Maps.<V>valueFunction());
   }
