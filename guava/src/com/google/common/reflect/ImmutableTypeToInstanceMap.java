@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.DoNotCall;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A type-to-instance map backed by an {@link ImmutableMap}. See also {@link
@@ -168,12 +169,13 @@ public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public void putAll(Map<? extends TypeToken<? extends B>, ? extends B> map) {
+  public void putAll(@Readonly Map<? extends TypeToken<? extends B>, ? extends B> map) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  protected Map<TypeToken<? extends B>, B> delegate() {
+  @SuppressWarnings("mutability:override.return.invalid") // an @Immutable class cannot restate ForwardingObject's @PolyMutable delegate(): its receiver is always @Immutable, so the poly always means @Immutable
+  protected @Immutable Map<TypeToken<? extends B>, B> delegate() {
     return delegate;
   }
 
