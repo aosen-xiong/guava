@@ -327,7 +327,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    */
   public static <E extends @Immutable Comparable<? super E>> ImmutableList<E> sortedCopyOf(
       Iterable<? extends E> elements) {
-    Comparable<?>[] array = Iterables.toArray(elements, new Comparable<?>[0]);
+    @Readonly Comparable<?>[] array = Iterables.toArray(elements, new Comparable<?>[0]);
     checkElementsNotNull((Object[]) array);
     Arrays.sort(array);
     return asImmutableList(array);

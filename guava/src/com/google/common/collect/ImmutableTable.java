@@ -458,20 +458,20 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    */
   @Immutable
   static final class SerializedForm implements Serializable {
-    private final Object[] rowKeys;
-    private final Object[] columnKeys;
+    private final @Immutable Object[] rowKeys;
+    private final @Immutable Object[] columnKeys;
 
-    private final Object[] cellValues;
+    private final @Readonly Object[] cellValues;
     private final int[] cellRowIndices;
     private final int[] cellColumnIndices;
 
     @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     private SerializedForm(
-        Object[] rowKeys,
-        Object[] columnKeys,
-        Object[] cellValues,
-        int[] cellRowIndices,
-        int[] cellColumnIndices) {
+        @Immutable Object @Readonly [] rowKeys,
+        @Immutable Object @Readonly [] columnKeys,
+        @Readonly Object @Readonly [] cellValues,
+        int @Readonly [] cellRowIndices,
+        int @Readonly [] cellColumnIndices) {
       this.rowKeys = rowKeys;
       this.columnKeys = columnKeys;
       this.cellValues = cellValues;
@@ -480,7 +480,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
     }
 
     static SerializedForm create(
-        ImmutableTable<?, ?, ?> table, int[] cellRowIndices, int[] cellColumnIndices) {
+        ImmutableTable<?, ?, ?> table, int @Readonly [] cellRowIndices, int @Readonly [] cellColumnIndices) {
       return new SerializedForm(
           table.rowKeySet().toArray(),
           table.columnKeySet().toArray(),

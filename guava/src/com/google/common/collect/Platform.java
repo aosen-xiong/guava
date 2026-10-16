@@ -84,7 +84,7 @@ final class Platform {
    * Returns the platform preferred set implementation that preserves insertion order when used only
    * for insertions.
    */
-  static <E extends @Nullable Object> Set<E> preservesInsertionOrderOnAddsSet() {
+  static <E extends @Nullable @Readonly Object> Set<E> preservesInsertionOrderOnAddsSet() {
     return CompactHashSet.create();
   }
 
@@ -119,7 +119,7 @@ final class Platform {
    * likewise not type-checked)? Could our single caller do something different?
    */
   @SuppressWarnings({"nullness", "unchecked"})
-  static <T extends @Nullable Object> T[] copy(Object[] source, int from, int to, T[] arrayOfType) {
+  static <T extends @Nullable @Readonly Object> T[] copy(Object[] source, int from, int to, T[] arrayOfType) {
     return Arrays.copyOfRange(source, from, to, (Class<? extends T[]>) arrayOfType.getClass());
   }
 

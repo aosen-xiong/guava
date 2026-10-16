@@ -145,7 +145,8 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * {@link Collections#singletonMap} but will not accept a null key or value. It is preferable
    * mainly for consistency and maintainability of your code.
    */
-  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableMap<K, V> of(K k1, V v1) {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // a value of an ImmutableMap is never hashed: the ImmutableBiMap behind it exposes inverse() only after a downcast
+  public static <K extends @Immutable Object, V> ImmutableMap<K, V> of(K k1, V v1) {
     return ImmutableBiMap.of(k1, v1);
   }
 

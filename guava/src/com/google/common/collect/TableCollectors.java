@@ -36,7 +36,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 @ElementTypesAreNonnullByDefault
 final class TableCollectors {
 
-  static <T extends @Nullable Object, R extends @Immutable Object, C extends @Immutable Object, V>
+  static <T extends @Nullable @Readonly Object, R extends @Immutable Object, C extends @Immutable Object, V>
       Collector<T, ?, ImmutableTable<R, C, V>> toImmutableTable(
           Function<? super T, ? extends R> rowFunction,
           Function<? super T, ? extends C> columnFunction,
@@ -52,7 +52,7 @@ final class TableCollectors {
         ImmutableTable.Builder::build);
   }
 
-  static <T extends @Nullable Object, R extends @Immutable Object, C extends @Immutable Object, V>
+  static <T extends @Nullable @Readonly Object, R extends @Immutable Object, C extends @Immutable Object, V>
       Collector<T, ?, ImmutableTable<R, C, V>> toImmutableTable(
           Function<? super T, ? extends R> rowFunction,
           Function<? super T, ? extends C> columnFunction,

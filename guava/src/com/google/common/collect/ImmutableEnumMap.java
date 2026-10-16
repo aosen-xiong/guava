@@ -42,8 +42,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @SuppressWarnings("serial") // we're overriding default serialization
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> extends IteratorBasedImmutableMap<K, V> {
-  static <K extends Enum<K>, V extends @Immutable Object> ImmutableMap<K, V> asImmutable(EnumMap<K, V> map) {
+final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutableMap<K, V> {
+  static <K extends Enum<K>, V> ImmutableMap<K, V> asImmutable(EnumMap<K, V> map) {
     switch (map.size()) {
       case 0:
         return ImmutableMap.of();

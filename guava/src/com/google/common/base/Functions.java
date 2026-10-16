@@ -27,6 +27,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to {@code com.google.common.base.Function} instances; see that
@@ -359,12 +360,12 @@ public final class Functions {
    * @param value the constant value for the function to return
    * @return a function that always returns {@code value}
    */
-  public static <E extends @Nullable Object> Function<@Nullable Object, E> constant(
+  public static <E extends @Nullable @Readonly Object> Function<@Nullable Object, E> constant(
       @ParametricNullness E value) {
     return new ConstantFunction<>(value);
   }
 
-  private static class ConstantFunction<E extends @Nullable Object>
+  private static class ConstantFunction<E extends @Nullable @Readonly Object>
       implements Function<@Nullable Object, E>, Serializable {
     @ParametricNullness private final E value;
 

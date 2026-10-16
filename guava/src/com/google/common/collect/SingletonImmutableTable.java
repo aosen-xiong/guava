@@ -38,7 +38,7 @@ import org.checkerframework.framework.qual.CFComment;
 @ElementTypesAreNonnullByDefault
 @CFComment("Value need to be immutable because it is later used for constructing a bimap")
 @Immutable
-class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V extends @Immutable Object> extends ImmutableTable<R, C, V> {
+class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V> extends ImmutableTable<R, C, V> {
   final R singleRowKey;
   final C singleColumnKey;
   final V singleValue;

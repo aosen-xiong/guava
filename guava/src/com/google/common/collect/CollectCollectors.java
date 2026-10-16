@@ -199,7 +199,7 @@ final class CollectCollectors {
         ImmutableMap.Builder::buildOrThrow);
   }
 
-  static <T extends @Nullable Object, K extends @Immutable Object, V> Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
+  static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V> Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
       Function<? super T, ? extends K> keyFunction,
       Function<? super T, ? extends V> valueFunction,
       BinaryOperator<V> mergeFunction) {
@@ -247,7 +247,7 @@ final class CollectCollectors {
         ImmutableSortedMap::copyOfSorted);
   }
 
-  static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends Object> Collector<T, ?, ImmutableBiMap<K, V>> toImmutableBiMap(
+  static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object> Collector<T, ?, ImmutableBiMap<K, V>> toImmutableBiMap(
       Function<? super T, ? extends K> keyFunction,
       Function<? super T, ? extends V> valueFunction) {
     checkNotNull(keyFunction);
