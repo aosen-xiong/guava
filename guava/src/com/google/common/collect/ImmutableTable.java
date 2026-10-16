@@ -512,7 +512,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
 
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  abstract Object writeReplace();
+  abstract @Readonly Object writeReplace();
 
   @GwtIncompatible // serialization
   @J2ktIncompatible

@@ -62,7 +62,7 @@ final class RegularImmutableSortedMultiset<E extends @Immutable Object> extends 
 
   @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   RegularImmutableSortedMultiset(
-      RegularImmutableSortedSet<E> elementSet, long[] cumulativeCounts, int offset, int length) {
+      RegularImmutableSortedSet<E> elementSet, long @Readonly [] cumulativeCounts, int offset, int length) {
     this.elementSet = elementSet;
     this.cumulativeCounts = cumulativeCounts;
     this.offset = offset;

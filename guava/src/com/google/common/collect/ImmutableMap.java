@@ -1268,13 +1268,13 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     // TODO(b/160980469): remove support for the old serialization format after some time
     private static final boolean USE_LEGACY_SERIALIZATION = true;
 
-    private final Object keys;
-    private final Object values;
+    private final @Readonly Object keys;
+    private final @Readonly Object values;
 
     SerializedForm(ImmutableMap<K, V> map) {
       if (USE_LEGACY_SERIALIZATION) {
         Object[] keys = new Object[map.size()];
-        Object[] values = new Object[map.size()];
+        @Readonly Object[] values = new Object[map.size()];
         int i = 0;
         // "extends Object" works around https://github.com/typetools/checker-framework/issues/3013
         for (Entry<? extends Object, ? extends @Readonly Object> entry : map.entrySet()) {

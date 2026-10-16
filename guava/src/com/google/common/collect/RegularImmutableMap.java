@@ -283,7 +283,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   @CheckForNull
   static <V> V get(
       @CheckForNull @Readonly Object key,
-      @CheckForNull @Nullable ImmutableMapEntry<?, V>[] keyTable,
+      @CheckForNull @Nullable ImmutableMapEntry<?, V> @Readonly [] keyTable,
       int mask) {
     if (key == null || keyTable == null) {
       return null;

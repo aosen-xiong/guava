@@ -796,7 +796,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     @GwtIncompatible // not present in emulated superclass
     @Override
     int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
-      for (ImmutableCollection<V> valueCollection : multimap.map.values()) {
+      for (@Immutable ImmutableCollection<V> valueCollection : multimap.map.values()) {
         offset = valueCollection.copyIntoArray(dst, offset);
       }
       return offset;

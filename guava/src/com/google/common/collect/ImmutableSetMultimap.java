@@ -626,7 +626,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
   // Serialization type safety is at the caller's mercy.
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "mutability:argument.type.incompatible"}) // deserialized keys were this multimap's @Immutable keys when written
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     @Readonly Comparator<Object> valueComparator = (Comparator<Object>) stream.readObject();

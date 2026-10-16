@@ -216,5 +216,5 @@ abstract class RegularImmutableTable<R extends @Immutable Object, C extends @Imm
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  abstract Object writeReplace();
+  abstract @Readonly Object writeReplace();
 }

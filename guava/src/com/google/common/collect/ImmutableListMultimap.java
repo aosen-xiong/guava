@@ -472,6 +472,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
+  @SuppressWarnings("mutability:argument.type.incompatible") // deserialized keys were this multimap's @Immutable keys when written
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int keyCount = stream.readInt();

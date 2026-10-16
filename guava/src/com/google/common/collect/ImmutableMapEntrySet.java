@@ -47,7 +47,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
     private final transient ImmutableMap<K, V> map;
     private final transient ImmutableList<@Immutable Entry<K, V>> entries;
 
-    RegularEntrySet(ImmutableMap<K, V> map, @Immutable Entry<K, V>[] entries) {
+    RegularEntrySet(ImmutableMap<K, V> map, @Immutable Entry<K, V> @Readonly [] entries) {
       this(map, ImmutableList.<@Immutable Entry<K, V>>asImmutableList(entries));
     }
 

@@ -59,7 +59,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
   @SuppressWarnings("Immutable") // We don't modify this after construction.
   private final int[] cellColumnIndices;
 
-  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
+  @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:illegal.array.write"}) // freeze: @Unique @Mutable to @Immutable; construction: the constructor fills its own rowCounts and columnCounts
   DenseImmutableTable(
       ImmutableList<Cell<R, C, V>> cellList,
       ImmutableSet<R> rowSpace,

@@ -125,7 +125,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    */
   private static final @Readonly Comparator<?> NATURAL_ORDER = Ordering.natural();
 
-  private static final ImmutableSortedMap<@Immutable Comparable<?>, Object> NATURAL_EMPTY_MAP =
+  private static final ImmutableSortedMap<@Immutable Comparable<?>, @Readonly Object> NATURAL_EMPTY_MAP =
       new ImmutableSortedMap<>(
           ImmutableSortedSet.emptySet(Ordering.natural()), ImmutableList.<@Readonly Object>of());
 

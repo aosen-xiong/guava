@@ -114,7 +114,7 @@ public interface BiMap<K extends @Nullable @Immutable Object, V extends @Nullabl
    * java.util.Collection} specified in the {@link Map} interface.
    */
   @Override
-  Set<V> values(@ReceiverDependentMutable BiMap<K,V> this);
+  @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable BiMap<K,V> this);
 
   /**
    * Returns the inverse view of this bimap, which maps each of this bimap's values to its
