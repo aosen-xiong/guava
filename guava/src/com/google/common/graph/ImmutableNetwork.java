@@ -47,7 +47,7 @@ import java.util.Map;
 @Immutable(containerOf = {"N", "E"})
 @SuppressWarnings("Immutable") // Extends StandardNetwork but uses ImmutableMaps.
 @ElementTypesAreNonnullByDefault
-public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
+public final class ImmutableNetwork<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> extends StandardNetwork<N, E> {
 
   private ImmutableNetwork(Network<N, E> network) {
     super(
@@ -55,7 +55,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
   }
 
   /** Returns an immutable copy of {@code network}. */
-  public static <N, E> ImmutableNetwork<N, E> copyOf(Network<N, E> network) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> ImmutableNetwork<N, E> copyOf(Network<N, E> network) {
     return (network instanceof ImmutableNetwork)
         ? (ImmutableNetwork<N, E>) network
         : new ImmutableNetwork<N, E>(network);
@@ -67,7 +67,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
    * @deprecated no need to use this
    */
   @Deprecated
-  public static <N, E> ImmutableNetwork<N, E> copyOf(ImmutableNetwork<N, E> network) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> ImmutableNetwork<N, E> copyOf(ImmutableNetwork<N, E> network) {
     return checkNotNull(network);
   }
 
@@ -76,7 +76,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
     return new ImmutableGraph<>(super.asGraph()); // safe because the view is effectively immutable
   }
 
-  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> Map<N, NetworkConnections<N, E>> getNodeConnections(Network<N, E> network) {
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> @org.checkerframework.checker.mutability.qual.Immutable Map<N, NetworkConnections<N, E>> getNodeConnections(Network<N, E> network) {
     // ImmutableMap.Builder maintains the order of the elements as inserted, so the map will have
     // whatever ordering the network's nodes do, so ImmutableSortedMap is unnecessary even if the
     // input nodes are sorted.
@@ -87,7 +87,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
     return nodeConnections.buildOrThrow();
   }
 
-  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> Map<E, N> getEdgeToReferenceNode(Network<N, E> network) {
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> @org.checkerframework.checker.mutability.qual.Immutable Map<E, N> getEdgeToReferenceNode(Network<N, E> network) {
     // ImmutableMap.Builder maintains the order of the elements as inserted, so the map will have
     // whatever ordering the network's edges do, so ImmutableSortedMap is unnecessary even if the
     // input edges are sorted.
@@ -150,7 +150,7 @@ public final class ImmutableNetwork<N, E> extends StandardNetwork<N, E> {
    *
    * @since 28.0
    */
-  public static class Builder<N, E> {
+  public static class Builder<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> {
 
     private final MutableNetwork<N, E> mutableNetwork;
 

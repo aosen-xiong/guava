@@ -45,14 +45,14 @@ import com.google.errorprone.annotations.Immutable;
 @Immutable(containerOf = {"N", "V"})
 @SuppressWarnings("Immutable") // Extends StandardValueGraph but uses ImmutableMaps.
 @ElementTypesAreNonnullByDefault
-public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
+public final class ImmutableValueGraph<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> extends StandardValueGraph<N, V> {
 
   private ImmutableValueGraph(ValueGraph<N, V> graph) {
     super(ValueGraphBuilder.from(graph), getNodeConnections(graph), graph.edges().size());
   }
 
   /** Returns an immutable copy of {@code graph}. */
-  public static <N, V> ImmutableValueGraph<N, V> copyOf(ValueGraph<N, V> graph) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> ImmutableValueGraph<N, V> copyOf(ValueGraph<N, V> graph) {
     return (graph instanceof ImmutableValueGraph)
         ? (ImmutableValueGraph<N, V>) graph
         : new ImmutableValueGraph<N, V>(graph);
@@ -64,7 +64,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
    * @deprecated no need to use this
    */
   @Deprecated
-  public static <N, V> ImmutableValueGraph<N, V> copyOf(ImmutableValueGraph<N, V> graph) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> ImmutableValueGraph<N, V> copyOf(ImmutableValueGraph<N, V> graph) {
     return checkNotNull(graph);
   }
 
@@ -123,7 +123,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
    *
    * @since 28.0
    */
-  public static class Builder<N, V> {
+  public static class Builder<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> {
 
     private final MutableValueGraph<N, V> mutableValueGraph;
 
