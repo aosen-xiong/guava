@@ -563,16 +563,16 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  public SortedMultiset<E> headMultiset(@ParametricNullness E upperBound, BoundType boundType) {
-    return new TreeMultiset<E>(
+  public @ReceiverDependentMutable SortedMultiset<E> headMultiset(@ReceiverDependentMutable TreeMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType) {
+    return new @ReceiverDependentMutable TreeMultiset<E>(
         rootReference,
         range.intersect(GeneralRange.upTo(comparator(), upperBound, boundType)),
         header);
   }
 
   @Override
-  public SortedMultiset<E> tailMultiset(@ParametricNullness E lowerBound, BoundType boundType) {
-    return new TreeMultiset<E>(
+  public @ReceiverDependentMutable SortedMultiset<E> tailMultiset(@ReceiverDependentMutable TreeMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType) {
+    return new @ReceiverDependentMutable TreeMultiset<E>(
         rootReference,
         range.intersect(GeneralRange.downTo(comparator(), lowerBound, boundType)),
         header);

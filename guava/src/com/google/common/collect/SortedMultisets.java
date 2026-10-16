@@ -186,7 +186,7 @@ final class SortedMultisets {
   }
 
   @CheckForNull
-  private static <E extends @Nullable @Readonly Object> E getElementOrNull(@CheckForNull Entry<E> entry) {
+  private static <E extends @Nullable @Readonly Object> E getElementOrNull(@CheckForNull @Readonly Entry<E> entry) {
     return (entry == null) ? null : entry.getElement();
   }
 }
