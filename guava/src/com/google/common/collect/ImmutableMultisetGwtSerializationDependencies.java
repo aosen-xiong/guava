@@ -40,4 +40,4 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
 @Immutable
-abstract class ImmutableMultisetGwtSerializationDependencies<E> extends ImmutableCollection<E> {}
+abstract class ImmutableMultisetGwtSerializationDependencies<E extends @Immutable Object> extends ImmutableCollection<E> {}

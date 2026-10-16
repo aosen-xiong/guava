@@ -41,7 +41,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
+final class RegularImmutableSortedMultiset<E extends @Immutable Object> extends ImmutableSortedMultiset<E> {
   private static final long[] ZERO_CUMULATIVE_COUNTS = {0};
 
   static final ImmutableSortedMultiset<?> NATURAL_EMPTY_MULTISET =

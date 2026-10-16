@@ -47,11 +47,11 @@ import org.checkerframework.framework.qual.CFComment;
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
 @Immutable
-class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
+class RegularImmutableMultiset<E extends @Immutable Object> extends ImmutableMultiset<E> {
   private static final ImmutableEntry<?>[] EMPTY_ARRAY = new ImmutableEntry<?>[0];
-  static final ImmutableMultiset<Object> EMPTY = create(ImmutableList.<@Immutable Entry<Object>>of());
+  static final ImmutableMultiset<@Immutable Object> EMPTY = create(ImmutableList.<@Immutable Entry<@Immutable Object>>of());
 
-  static <E> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
+  static <E extends @Immutable Object> ImmutableMultiset<E> create(@Readonly Collection<? extends @Readonly Entry<? extends E>> entries) {
     int distinct = entries.size();
     @SuppressWarnings({"unchecked", "rawtypes"})
     ImmutableEntry<E>[] entryArray = new ImmutableEntry[distinct];
@@ -67,9 +67,9 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
     int index = 0;
     int hashCode = 0;
     long size = 0;
-    for (Entry<? extends E> entryWithWildcard : entries) {
+    for (@Readonly Entry<? extends E> entryWithWildcard : entries) {
       @SuppressWarnings("unchecked") // safe because we only read from it
-      @Immutable Entry<E> entry = (@Immutable Entry<E>) entryWithWildcard;
+      @Readonly Entry<E> entry = (@Readonly Entry<E>) entryWithWildcard;
       E element = checkNotNull(entry.getElement());
       int count = entry.getCount();
       int hash = element.hashCode();

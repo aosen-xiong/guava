@@ -33,7 +33,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
+final class DescendingImmutableSortedMultiset<E extends @Immutable Object> extends ImmutableSortedMultiset<E> {
   private final transient ImmutableSortedMultiset<E> forward;
 
   DescendingImmutableSortedMultiset(ImmutableSortedMultiset<E> forward) {

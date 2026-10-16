@@ -153,7 +153,7 @@ final class CollectCollectors {
 
   // Multisets
 
-  static <T extends @Nullable @Readonly Object, E> Collector<T, ?, ImmutableMultiset<E>> toImmutableMultiset(
+  static <T extends @Nullable @Readonly Object, E extends @Immutable Object> Collector<T, ?, ImmutableMultiset<E>> toImmutableMultiset(
       Function<? super T, ? extends E> elementFunction, ToIntFunction<? super T> countFunction) {
     checkNotNull(elementFunction);
     checkNotNull(countFunction);

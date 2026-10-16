@@ -48,13 +48,13 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
   private final ImmutableList<@Immutable Entry<E>> entries;
   private final long size;
 
-  static <E extends @Immutable Object> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
+  static <E extends @Immutable Object> ImmutableMultiset<E> create(@Readonly Collection<? extends @Readonly Entry<? extends E>> entries) {
     @SuppressWarnings("unchecked")
-    @Immutable Entry<E>[] entriesArray = entries.toArray((@Immutable Entry<E>[]) new Entry<?>[0]);
+    @Readonly Entry<E>[] entriesArray = entries.toArray((@Readonly Entry<E>[]) new Entry<?>[0]);
     Map<E, Integer> delegateMap = Maps.newHashMapWithExpectedSize(entriesArray.length);
     long size = 0;
     for (int i = 0; i < entriesArray.length; i++) {
-      @Immutable Entry<E> entry = entriesArray[i];
+      @Readonly Entry<E> entry = entriesArray[i];
       int count = entry.getCount();
       size += count;
       E element = checkNotNull(entry.getElement());
@@ -67,6 +67,7 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
         delegateMap, ImmutableList.asImmutableList(entriesArray), size);
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private JdkBackedImmutableMultiset(
       Map<E, Integer> delegateMap, ImmutableList<@Immutable Entry<E>> entries, long size) {
     this.delegateMap = delegateMap;
