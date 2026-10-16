@@ -33,6 +33,7 @@ import java.util.TreeMap;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -396,7 +397,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
                   .iterator();
         }
       }
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
         protected Entry<Cut<C>, Range<C>> computeNext() {
@@ -430,7 +431,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
           && upperBoundWindow.upperBound.isLessThan(backingItr.peek().upperBound)) {
         backingItr.next();
       }
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
         protected Entry<Cut<C>, Range<C>> computeNext() {
@@ -550,7 +551,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       } else {
         return Iterators.emptyIterator();
       }
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         Cut<C> nextComplementRangeLowerBound = firstComplementRangeLowerBound;
 
         @Override
@@ -611,7 +612,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
         cut = positiveRangesByLowerBound.higherKey(Cut.<C>belowAll());
       }
       Cut<C> firstComplementRangeUpperBound = MoreObjects.firstNonNull(cut, Cut.<C>aboveAll());
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         Cut<C> nextComplementRangeUpperBound = firstComplementRangeUpperBound;
 
         @Override
@@ -817,7 +818,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       Cut<Cut<C>> upperBoundOnLowerBounds =
           Ordering.<Cut<Cut<C>>>natural()
               .min(lowerBoundWindow.upperBound, Cut.belowValue(restriction.upperBound));
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
         protected Entry<Cut<C>, Range<C>> computeNext() {
@@ -851,7 +852,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
               .descendingMap()
               .values()
               .iterator();
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
         protected Entry<Cut<C>, Range<C>> computeNext() {

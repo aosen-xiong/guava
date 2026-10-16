@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
@@ -54,10 +56,10 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
   protected ForwardingSortedMultiset() {}
 
   @Override
-  protected abstract SortedMultiset<E> delegate();
+  protected abstract @PolyMutable SortedMultiset<E> delegate(@PolyMutable ForwardingSortedMultiset<E> this);
 
   @Override
-  public NavigableSet<E> elementSet() {
+  public @ReceiverDependentMutable NavigableSet<E> elementSet(@ReceiverDependentMutable ForwardingSortedMultiset<E> this) {
     return delegate().elementSet();
   }
 
@@ -83,12 +85,12 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
   }
 
   @Override
-  public Comparator<? super E> comparator() {
+  public @Readonly Comparator<? super E> comparator() {
     return delegate().comparator();
   }
 
   @Override
-  public SortedMultiset<E> descendingMultiset() {
+  public @ReceiverDependentMutable SortedMultiset<E> descendingMultiset(@ReceiverDependentMutable ForwardingSortedMultiset<E> this) {
     return delegate().descendingMultiset();
   }
 
@@ -110,14 +112,15 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
     public StandardDescendingMultiset() {}
 
     @Override
-    SortedMultiset<E> forwardMultiset() {
+    @SuppressWarnings("mutability:return.type.incompatible") // the descending view has its forwarding multiset's mutability, which an inner class cannot declare
+    @ReceiverDependentMutable SortedMultiset<E> forwardMultiset() {
       return ForwardingSortedMultiset.this;
     }
   }
 
   @Override
   @CheckForNull
-  public Entry<E> firstEntry() {
+  public @Readonly Entry<E> firstEntry() {
     return delegate().firstEntry();
   }
 
@@ -139,7 +142,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
 
   @Override
   @CheckForNull
-  public Entry<E> lastEntry() {
+  public @Readonly Entry<E> lastEntry() {
     return delegate().lastEntry();
   }
 
@@ -152,7 +155,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    */
   @CheckForNull
   protected Entry<E> standardLastEntry() {
-    Iterator<Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
+    Iterator<@ReceiverDependentMutable Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
     }
@@ -162,7 +165,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
 
   @Override
   @CheckForNull
-  public Entry<E> pollFirstEntry() {
+  public @Readonly Entry<E> pollFirstEntry() {
     return delegate().pollFirstEntry();
   }
 
@@ -186,7 +189,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
 
   @Override
   @CheckForNull
-  public Entry<E> pollLastEntry() {
+  public @Readonly Entry<E> pollLastEntry() {
     return delegate().pollLastEntry();
   }
 
@@ -198,7 +201,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    * override {@link #pollLastEntry()} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<E> standardPollLastEntry() {
+  protected Entry<E> standardPollLastEntry(@Mutable ForwardingSortedMultiset<E> this) {
     Iterator<Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
@@ -210,12 +213,12 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
   }
 
   @Override
-  public SortedMultiset<E> headMultiset(@ParametricNullness E upperBound, BoundType boundType) {
+  public @ReceiverDependentMutable SortedMultiset<E> headMultiset(@ReceiverDependentMutable ForwardingSortedMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType) {
     return delegate().headMultiset(upperBound, boundType);
   }
 
   @Override
-  public SortedMultiset<E> subMultiset(
+  public @ReceiverDependentMutable SortedMultiset<E> subMultiset(@ReceiverDependentMutable ForwardingSortedMultiset<E> this,
       @ParametricNullness E lowerBound,
       BoundType lowerBoundType,
       @ParametricNullness E upperBound,
@@ -231,7 +234,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    * <p>If you override either of these methods, you may wish to override {@link
    * #subMultiset(Object, BoundType, Object, BoundType)} to forward to this implementation.
    */
-  protected SortedMultiset<E> standardSubMultiset(
+  protected @ReceiverDependentMutable SortedMultiset<E> standardSubMultiset(@ReceiverDependentMutable ForwardingSortedMultiset<E> this,
       @ParametricNullness E lowerBound,
       BoundType lowerBoundType,
       @ParametricNullness E upperBound,
@@ -240,7 +243,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
   }
 
   @Override
-  public SortedMultiset<E> tailMultiset(@ParametricNullness E lowerBound, BoundType boundType) {
+  public @ReceiverDependentMutable SortedMultiset<E> tailMultiset(@ReceiverDependentMutable ForwardingSortedMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType) {
     return delegate().tailMultiset(lowerBound, boundType);
   }
 }

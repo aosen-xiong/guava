@@ -523,7 +523,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
     // AbstractIterator makes this fairly clean, but it doesn't support remove(). To support
     // remove(), we create an AbstractIterator, and then use ForwardingIterator to delegate to it.
     Iterator<Entry<E>> readOnlyIterator =
-        new AbstractIterator<Entry<E>>() {
+        new @Mutable AbstractIterator<Entry<E>>() {
           private final Iterator<Map.Entry<E, AtomicInteger>> mapEntries =
               countMap.entrySet().iterator();
 

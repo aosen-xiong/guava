@@ -96,8 +96,8 @@ public final class Iterators {
    * <p>The {@link Iterable} equivalent of this method is {@link ImmutableSet#of()}.
    */
   // Casting to any type is safe since there are no actual elements.
-  @SuppressWarnings("unchecked")
-  static <T extends @Nullable @Readonly Object> @Readonly UnmodifiableListIterator<T> emptyListIterator() {
+  @SuppressWarnings({"unchecked", "mutability:return.type.incompatible"}) // stateless: no elements and every mutator throws, so any qualifier the caller needs is sound
+  static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableListIterator<T> emptyListIterator() {
     return (@Readonly UnmodifiableListIterator<T>) ArrayItr.EMPTY;
   }
 
@@ -135,8 +135,9 @@ public final class Iterators {
   }
 
   /** Returns an unmodifiable view of {@code iterator}. */
+  @SuppressWarnings("mutability:return.type.incompatible") // the wrapper only reads iterator and its remove() throws, so any qualifier the caller needs is sound
   public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> unmodifiableIterator(
-          @PolyMutable Iterator<? extends T> iterator) {
+          @Readonly Iterator<? extends T> iterator) {
     checkNotNull(iterator);
     if (iterator instanceof UnmodifiableIterator) {
       @SuppressWarnings("unchecked") // Since it's unmodifiable, the covariant cast is safe
@@ -676,7 +677,7 @@ public final class Iterators {
       Iterator<T> unfiltered, Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
-    return new AbstractIterator<T>() {
+    return new @Mutable AbstractIterator<T>() {
       @Override
       @CheckForNull
       protected T computeNext() {
@@ -1078,6 +1079,7 @@ public final class Iterators {
    * <p>The {@code Iterable} equivalent of this method is {@code
    * Arrays.asList(array).listIterator(position)}.
    */
+  @SuppressWarnings("mutability:return.type.incompatible") // a fresh iterator over array whose mutators throw, so any qualifier the caller needs is sound
   static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableListIterator<T> forArrayWithPosition(
       T @PolyMutable [] array, int position) {
     if (array.length == 0) {
@@ -1092,9 +1094,9 @@ public final class Iterators {
       extends AbstractIndexedListIterator<T> {
     static final UnmodifiableListIterator<Object> EMPTY = new ArrayItr<>(new Object[0], 0);
 
-    private final T[] array;
+    private final T @Readonly [] array;
 
-    ArrayItr(T[] array, int position) {
+    ArrayItr(T @Readonly [] array, int position) {
       super(array.length, position);
       this.array = array;
     }
@@ -1111,6 +1113,7 @@ public final class Iterators {
    *
    * <p>The {@link Iterable} equivalent of this method is {@link Collections#singleton}.
    */
+  @SuppressWarnings("mutability:return.type.incompatible") // a fresh iterator over one element whose remove() throws, so any qualifier the caller needs is sound
   public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> singletonIterator(
       @ParametricNullness T value) {
     return new SingletonIterator<>(value);

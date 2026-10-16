@@ -35,6 +35,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
@@ -328,7 +329,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
                 backingMap.values(), (Map<C, V> input) -> input.keySet().iterator()),
             comparator);
 
-    return new AbstractIterator<C>() {
+    return new @Mutable AbstractIterator<C>() {
       @CheckForNull C lastValue;
 
       @Override

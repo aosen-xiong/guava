@@ -37,6 +37,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -261,7 +262,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
 
         @Override
         public Iterator<Entry<K, Collection<V>>> iterator() {
-          return new AbstractIterator<Entry<K, Collection<V>>>() {
+          return new @Mutable AbstractIterator<Entry<K, Collection<V>>>() {
             final Iterator<Entry<K, Collection<V>>> backingIterator =
                 unfiltered.asMap().entrySet().iterator();
 

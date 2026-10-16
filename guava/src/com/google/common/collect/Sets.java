@@ -919,7 +919,7 @@ public final class Sets {
     return new SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
-        return new AbstractIterator<E>() {
+        return new @Mutable AbstractIterator<E>() {
           final Iterator<E> itr = set1.iterator();
 
           @Override
@@ -990,7 +990,7 @@ public final class Sets {
       public UnmodifiableIterator<E> iterator() {
         final Iterator<? extends E> itr1 = set1.iterator();
         final Iterator<? extends E> itr2 = set2.iterator();
-        return new AbstractIterator<E>() {
+        return new @Mutable AbstractIterator<E>() {
           @Override
           @CheckForNull
           public E computeNext() {
@@ -1721,7 +1721,7 @@ public final class Sets {
 
       @Override
       public Iterator<Set<E>> iterator() {
-        return new AbstractIterator<Set<E>>() {
+        return new @Mutable AbstractIterator<Set<E>>() {
           final BitSet bits = new BitSet(index.size());
 
           @Override
@@ -1764,7 +1764,7 @@ public final class Sets {
 
               @Override
               public Iterator<E> iterator() {
-                return new AbstractIterator<E>() {
+                return new @Mutable AbstractIterator<E>() {
                   int i = -1;
 
                   @Override
