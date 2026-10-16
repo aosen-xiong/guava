@@ -260,11 +260,11 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * @throws NullPointerException if any of {@code elements} is null
    * @since 3.0
    */
-  public static <E> ImmutableSet<E> copyOf(E[] elements) {
+  public static <E> ImmutableSet<E> copyOf(E @Readonly [] elements) {
     return fromArrayWithExpectedSize(elements, estimatedSizeForUnknownDuplication(elements.length));
   }
 
-  private static <E> ImmutableSet<E> fromArrayWithExpectedSize(E[] elements, int expectedSize) {
+  private static <E> ImmutableSet<E> fromArrayWithExpectedSize(E @Readonly [] elements, int expectedSize) {
     switch (elements.length) {
       case 0:
         return of();

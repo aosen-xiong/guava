@@ -1067,7 +1067,7 @@ public final class Iterators {
    * {@link ImmutableList#copyOf(Object[])}}, or {@link ImmutableList#of}.
    */
   @SafeVarargs
-  public static <T extends @Nullable Object> @PolyMutable UnmodifiableIterator<T> forArray(T @PolyMutable ... array) {
+  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> forArray(T @PolyMutable ... array) {
     return forArrayWithPosition(array, 0);
   }
 
@@ -1078,7 +1078,7 @@ public final class Iterators {
    * <p>The {@code Iterable} equivalent of this method is {@code
    * Arrays.asList(array).listIterator(position)}.
    */
-  static <T extends @Nullable Object> @PolyMutable UnmodifiableListIterator<T> forArrayWithPosition(
+  static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableListIterator<T> forArrayWithPosition(
       T @PolyMutable [] array, int position) {
     if (array.length == 0) {
       Preconditions.checkPositionIndex(position, array.length); // otherwise checked in ArrayItr

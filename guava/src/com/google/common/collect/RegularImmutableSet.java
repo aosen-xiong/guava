@@ -46,15 +46,15 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   static final RegularImmutableSet<Object> EMPTY =
       new RegularImmutableSet<>(EMPTY_ARRAY, 0, EMPTY_ARRAY, 0);
 
-  private final transient Object[] elements;
+  private final transient @Readonly Object[] elements;
   private final transient int hashCode;
   // the same values as `elements` in hashed positions (plus nulls)
-  @VisibleForTesting final transient @Nullable Object[] table;
+  @VisibleForTesting final transient @Nullable @Readonly Object[] table;
   // 'and' with an int to get a valid table index.
   private final transient int mask;
 
   @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
-  RegularImmutableSet(Object @Readonly [] elements, int hashCode, @Nullable Object[] table, int mask) {
+  RegularImmutableSet(@Readonly Object @Readonly [] elements, int hashCode, @Nullable @Readonly Object @Readonly [] table, int mask) {
     this.elements = elements;
     this.hashCode = hashCode;
     this.table = table;
@@ -64,7 +64,7 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   @Pure
   @Override
   public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
-    @Nullable Object[] table = this.table;
+    @Nullable @Readonly Object[] table = this.table;
     if (target == null || table.length == 0) {
       return false;
     }
@@ -93,12 +93,13 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   }
 
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // the array holds this collection's E elements, typed as @Readonly Object, so a spliterator over it yields E
   public Spliterator<E> spliterator() {
     return Spliterators.spliterator(elements, SPLITERATOR_CHARACTERISTICS);
   }
 
   @Override
-  Object[] internalArray() {
+  @Readonly Object @Readonly [] internalArray() {
     return elements;
   }
 

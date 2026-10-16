@@ -42,6 +42,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -206,7 +207,8 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
-  public final @PolyNull @PolySigned Object[] toArray() {
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // toArray(T[]) fills the array with this collection's elements, of the receiver's @PolyMutable E, but infers its T from EMPTY_ARRAY
+  public final @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly ImmutableCollection<@PolyMutable E> this) {
     return toArray(EMPTY_ARRAY);
   }
 
@@ -230,7 +232,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
     int size = size();
 
     if (other.length < size) {
-      Object[] internal = internalArray();
+      @Readonly Object @Readonly [] internal = internalArray();
       if (internal != null) {
         return Platform.copy(internal, internalArrayStart(), internalArrayEnd(), other);
       }
@@ -244,7 +246,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   /** If this collection is backed by an array of its elements in insertion order, returns it. */
   @CheckForNull
-  Object[] internalArray() {
+  @Readonly Object @Readonly [] internalArray() {
     return null;
   }
 

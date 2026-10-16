@@ -850,9 +850,9 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
   @J2ktIncompatible // serialization
   private static class SerializedForm<E> implements Serializable {
     final @Readonly Comparator<? super E> comparator;
-    final Object[] elements;
+    final @Readonly Object[] elements;
 
-    public SerializedForm(@Readonly Comparator<? super E> comparator, Object[] elements) {
+    public SerializedForm(@Readonly Comparator<? super E> comparator, @Readonly Object[] elements) {
       this.comparator = comparator;
       this.elements = elements;
     }

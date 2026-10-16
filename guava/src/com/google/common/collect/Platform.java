@@ -119,7 +119,7 @@ final class Platform {
    * likewise not type-checked)? Could our single caller do something different?
    */
   @SuppressWarnings({"nullness", "unchecked"})
-  static <T extends @Nullable @Readonly Object> T[] copy(Object[] source, int from, int to, T[] arrayOfType) {
+  static <T extends @Nullable @Readonly Object> T[] copy(@Readonly Object @Readonly [] source, int from, int to, T[] arrayOfType) {
     return Arrays.copyOfRange(source, from, to, (Class<? extends T[]>) arrayOfType.getClass());
   }
 

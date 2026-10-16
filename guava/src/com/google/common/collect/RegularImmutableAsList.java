@@ -46,7 +46,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
     this.delegateList = delegateList;
   }
 
-  RegularImmutableAsList(ImmutableCollection<E> delegate, Object @Readonly [] array) {
+  RegularImmutableAsList(ImmutableCollection<E> delegate, @Readonly Object @Readonly [] array) {
     this(delegate, ImmutableList.<E>asImmutableList(array));
   }
 
@@ -80,7 +80,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
 
   @Override
   @CheckForNull
-  Object[] internalArray() {
+  @Readonly Object @Readonly [] internalArray() {
     return delegateList.internalArray();
   }
 

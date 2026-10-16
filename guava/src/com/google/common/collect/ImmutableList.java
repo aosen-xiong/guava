@@ -743,9 +743,9 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    */
   @J2ktIncompatible // serialization
   static class SerializedForm implements Serializable {
-    final Object @Readonly [] elements;
+    final @Readonly Object @Readonly [] elements;
 
-    SerializedForm(Object @Readonly [] elements) {
+    SerializedForm(@Readonly Object @Readonly [] elements) {
       this.elements = elements;
     }
 
@@ -873,7 +873,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
       return this;
     }
 
-    private void add(@Nullable Object[] elements, int n) {
+    private void add(@Nullable @Readonly Object @Readonly [] elements, int n) {
       getReadyToExpandTo(size + n);
       /*
        * The following call is not statically checked, since arraycopy accepts plain Object for its

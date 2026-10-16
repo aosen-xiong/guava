@@ -519,7 +519,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
         @Immutable Entry<K, V> onlyEntry = requireNonNull(entryArray[0]);
         return of(comparator, onlyEntry.getKey(), onlyEntry.getValue());
       default:
-        @Immutable Object[] keys = new Object[size];
+        @Immutable Object[] keys = new @Immutable Object[size];
         @Readonly Object[] values = new Object[size];
         if (sameComparator) {
           // Need to check for nulls, but don't need to sort or validate.

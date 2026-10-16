@@ -44,9 +44,10 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 class RegularImmutableList<E> extends ImmutableList<E> {
   static final ImmutableList<@Readonly Object> EMPTY = new RegularImmutableList<>(new Object[0]);
 
-  @VisibleForTesting final transient Object[] array;
+  @VisibleForTesting final transient @Readonly Object[] array;
 
-  RegularImmutableList(Object @Immutable [] array) {
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
+  RegularImmutableList(@Readonly Object @Readonly [] array) {
     this.array = array;
   }
 
@@ -62,7 +63,7 @@ class RegularImmutableList<E> extends ImmutableList<E> {
   }
 
   @Override
-  Object[] internalArray() {
+  @Readonly Object @Readonly [] internalArray() {
     return array;
   }
 
@@ -98,6 +99,7 @@ class RegularImmutableList<E> extends ImmutableList<E> {
   }
 
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // the array holds this collection's E elements, typed as @Readonly Object, so a spliterator over it yields E
   public Spliterator<E> spliterator() {
     return Spliterators.spliterator(array, SPLITERATOR_CHARACTERISTICS);
   }
