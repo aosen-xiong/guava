@@ -79,13 +79,13 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     return elements.iterator();
   }
 
   @GwtIncompatible // NavigableSet
   @Override
-  public UnmodifiableIterator<E> descendingIterator() {
+  public @Immutable UnmodifiableIterator<E> descendingIterator() {
     return elements.reverse().iterator();
   }
 

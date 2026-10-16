@@ -195,7 +195,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   /** Returns an unmodifiable iterator across the elements in this collection. */
   @Override
-  public abstract UnmodifiableIterator<E> iterator();
+  public abstract @Immutable UnmodifiableIterator<E> iterator();
 
   @Override
   public Spliterator<E> spliterator() {

@@ -21,7 +21,7 @@ set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 : "${CHECKERFRAMEWORK:=/Users/aosenxiong/cf-pico-move}"
 : "${JAVA_HOME:=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home}"
-: "${ANNOTATED_JDK:=/Users/aosenxiong/pico-artifact/jdk/src/java.base/share/classes}"
+: "${ANNOTATED_JDK:=/Users/aosenxiong/jdk/src/java.base/share/classes}"  # the annotated JDK of aosen-xiong/jdk#4, the same one checker.jar must bundle
 export JAVA_HOME
 
 CP="$(cat "${ROOT}/guava-cp.txt")"

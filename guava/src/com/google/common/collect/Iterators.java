@@ -86,7 +86,7 @@ public final class Iterators {
    *
    * <p>The {@link Iterable} equivalent of this method is {@link ImmutableSet#of()}.
    */
-  static <T extends @Nullable @Readonly Object> @Readonly UnmodifiableIterator<T> emptyIterator() {
+  static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> emptyIterator() {
     return emptyListIterator();
   }
 
@@ -135,8 +135,8 @@ public final class Iterators {
   }
 
   /** Returns an unmodifiable view of {@code iterator}. */
-  public static <T extends @Nullable @Readonly Object> @Readonly UnmodifiableIterator<T> unmodifiableIterator(
-          @Readonly Iterator<? extends T> iterator) {
+  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> unmodifiableIterator(
+          @PolyMutable Iterator<? extends T> iterator) {
     checkNotNull(iterator);
     if (iterator instanceof UnmodifiableIterator) {
       @SuppressWarnings("unchecked") // Since it's unmodifiable, the covariant cast is safe
@@ -164,8 +164,8 @@ public final class Iterators {
    * @since 10.0
    */
   @Deprecated
-  public static <T extends @Nullable @Readonly Object> @Readonly UnmodifiableIterator<T> unmodifiableIterator(
-          @Readonly UnmodifiableIterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> unmodifiableIterator(
+          @PolyMutable UnmodifiableIterator<T> iterator) {
     return checkNotNull(iterator);
   }
 
@@ -184,7 +184,7 @@ public final class Iterators {
 
   /** Returns {@code true} if {@code iterator} contains {@code element}. */
   @Pure
-  public static boolean contains(Iterator<?> iterator, @CheckForNull @UnknownSignedness @Readonly Object element) {
+  public static boolean contains(@Readonly Iterator<?> iterator, @CheckForNull @UnknownSignedness @Readonly Object element) {
     if (element == null) {
       while (iterator.hasNext()) {
         if (iterator.next() == null) {
@@ -903,7 +903,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getNext(
-      Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
+      @Readonly Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
     return iterator.hasNext() ? iterator.next() : defaultValue;
   }
 
@@ -1067,7 +1067,7 @@ public final class Iterators {
    * {@link ImmutableList#copyOf(Object[])}}, or {@link ImmutableList#of}.
    */
   @SafeVarargs
-  public static <T extends @Nullable Object> UnmodifiableIterator<T> forArray(T... array) {
+  public static <T extends @Nullable Object> @PolyMutable UnmodifiableIterator<T> forArray(T @PolyMutable ... array) {
     return forArrayWithPosition(array, 0);
   }
 
@@ -1078,8 +1078,8 @@ public final class Iterators {
    * <p>The {@code Iterable} equivalent of this method is {@code
    * Arrays.asList(array).listIterator(position)}.
    */
-  static <T extends @Nullable Object> UnmodifiableListIterator<T> forArrayWithPosition(
-      T[] array, int position) {
+  static <T extends @Nullable Object> @PolyMutable UnmodifiableListIterator<T> forArrayWithPosition(
+      T @PolyMutable [] array, int position) {
     if (array.length == 0) {
       Preconditions.checkPositionIndex(position, array.length); // otherwise checked in ArrayItr
       return emptyListIterator();
@@ -1111,7 +1111,7 @@ public final class Iterators {
    *
    * <p>The {@link Iterable} equivalent of this method is {@link Collections#singleton}.
    */
-  public static <T extends @Nullable @Readonly Object> UnmodifiableIterator<T> singletonIterator(
+  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> singletonIterator(
       @ParametricNullness T value) {
     return new SingletonIterator<>(value);
   }

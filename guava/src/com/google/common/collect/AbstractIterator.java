@@ -119,7 +119,7 @@ public abstract class AbstractIterator<T extends @Nullable @Readonly Object> ext
    *     IllegalStateException}.
    */
   @CheckForNull
-  protected abstract T computeNext(@Mutable AbstractIterator<T> this);
+  protected abstract T computeNext(@Readonly AbstractIterator<T> this);
 
   /**
    * Implementations of {@link #computeNext} <b>must</b> invoke this method when there are no
@@ -130,7 +130,7 @@ public abstract class AbstractIterator<T extends @Nullable @Readonly Object> ext
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  protected final T endOfData(@Mutable AbstractIterator<T> this) {
+  protected final T endOfData(@Readonly AbstractIterator<T> this) {
     state = State.DONE;
     return null;
   }

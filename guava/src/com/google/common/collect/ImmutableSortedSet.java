@@ -626,7 +626,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
   }
 
   @Override // needed to unify the iterator() methods in Collection and SortedIterable
-  public abstract UnmodifiableIterator<E> iterator();
+  public abstract @Immutable UnmodifiableIterator<E> iterator();
 
   /**
    * {@inheritDoc}
@@ -814,7 +814,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
   public Spliterator<E> spliterator() {
     return new Spliterators.AbstractSpliterator<E>(
         size(), SPLITERATOR_CHARACTERISTICS | Spliterator.SIZED) {
-      final UnmodifiableIterator<E> iterator = iterator();
+      final @Immutable UnmodifiableIterator<E> iterator = iterator();
 
       @Override
       public boolean tryAdvance(Consumer<? super E> action) {
@@ -836,7 +836,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
   /** @since 12.0 */
   @GwtIncompatible // NavigableSet
   @Override
-  public abstract UnmodifiableIterator<E> descendingIterator();
+  public abstract @Immutable UnmodifiableIterator<E> descendingIterator();
 
   /** Returns the position of an element within the set, or -1 if not present. */
   abstract int indexOf(@CheckForNull @Readonly Object target);

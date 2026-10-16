@@ -68,7 +68,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
     }
 
     @Override
-    public UnmodifiableIterator<Entry<K, V>> iterator() {
+    public @Immutable UnmodifiableIterator<Entry<K, V>> iterator() {
       return entries.iterator();
     }
 

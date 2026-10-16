@@ -412,7 +412,7 @@ public interface Multiset<E extends @Readonly @Nullable Object> extends Collecti
    * iterator, though not necessarily sequentially.
    */
   @Override
-  Iterator<E> iterator(@Readonly Multiset<E> this);
+  @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable Multiset<E> this);
 
   /**
    * Determines whether this multiset contains the specified element.

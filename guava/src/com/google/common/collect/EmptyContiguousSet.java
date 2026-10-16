@@ -99,13 +99,13 @@ final class EmptyContiguousSet<C extends @Immutable Comparable> extends Contiguo
   }
 
   @Override
-  public UnmodifiableIterator<C> iterator() {
+  public @Immutable UnmodifiableIterator<C> iterator() {
     return Iterators.emptyIterator();
   }
 
   @GwtIncompatible // NavigableSet
   @Override
-  public UnmodifiableIterator<C> descendingIterator() {
+  public @Immutable UnmodifiableIterator<C> descendingIterator() {
     return Iterators.emptyIterator();
   }
 

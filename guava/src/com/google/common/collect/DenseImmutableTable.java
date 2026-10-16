@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -135,9 +136,9 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     }
 
     @Override
-    UnmodifiableIterator<Entry<K, V>> entryIterator() {
-      return new AbstractIterator<Entry<K, V>>() {
-        private int index = -1;
+    @Immutable UnmodifiableIterator<Entry<K, V>> entryIterator() {
+      return new @Immutable AbstractIterator<Entry<K, V>>() {
+        private @Assignable int index = -1;
         private final int maxIndex = keyToIndex().size();
 
         @Override

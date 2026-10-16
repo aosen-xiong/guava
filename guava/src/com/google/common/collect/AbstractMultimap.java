@@ -175,7 +175,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
     }
   }
 
-  abstract Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this);
+  abstract @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
   Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Spliterators.spliterator(
@@ -249,7 +249,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
     }
   }
 
-  Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
+  @ReceiverDependentMutable Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Maps.valueIterator(entries().iterator());
   }
 

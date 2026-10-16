@@ -55,8 +55,8 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
   }
 
   @Override
-  public @Readonly UnmodifiableIterator<V> iterator() {
-    return new UnmodifiableIterator<V>() {
+  public @Immutable UnmodifiableIterator<V> iterator() {
+    return new @Immutable UnmodifiableIterator<V>() {
       final UnmodifiableIterator<Entry<K, V>> entryItr = map.entrySet().iterator();
 
       @Override

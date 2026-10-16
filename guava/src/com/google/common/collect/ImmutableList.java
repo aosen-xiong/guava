@@ -405,17 +405,17 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   // This declaration is needed to make List.iterator() and
   // ImmutableCollection.iterator() consistent.
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     return listIterator();
   }
 
   @Override
-  public UnmodifiableListIterator<E> listIterator() {
+  public @Immutable UnmodifiableListIterator<E> listIterator() {
     return listIterator(0);
   }
 
   @Override
-  public UnmodifiableListIterator<E> listIterator(int index) {
+  public @Immutable UnmodifiableListIterator<E> listIterator(int index) {
     return new @Immutable AbstractIndexedListIterator<E>(size(), index) {
       @Override
       protected E get(int index) {

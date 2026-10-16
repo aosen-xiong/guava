@@ -61,8 +61,8 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
 
   @SuppressWarnings("unchecked") // safe covariant cast!
   @Override
-  public UnmodifiableListIterator<E> listIterator(int index) {
-    return (UnmodifiableListIterator<E>) delegateList.listIterator(index);
+  public @Immutable UnmodifiableListIterator<E> listIterator(int index) {
+    return (@Immutable UnmodifiableListIterator<E>) delegateList.listIterator(index);
   }
 
   @GwtIncompatible // not present in emulated superclass

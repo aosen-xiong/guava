@@ -108,7 +108,7 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * comparator.
    */
   @Override
-  Iterator<E> iterator();
+  @ReceiverDependentMutable Iterator<E> iterator();
 
   /**
    * Returns a descending view of this multiset. Modifications made to either map will be reflected

@@ -53,7 +53,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     return forward.descendingIterator();
   }
 
@@ -81,7 +81,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Override
   @GwtIncompatible("NavigableSet")
-  public UnmodifiableIterator<E> descendingIterator() {
+  public @Immutable UnmodifiableIterator<E> descendingIterator() {
     return forward.iterator();
   }
 

@@ -52,7 +52,7 @@ final class ImmutableMapKeySet<K extends @Immutable Object, V> extends IndexedIm
   }
 
   @Override
-  public UnmodifiableIterator<K> iterator() {
+  public @Immutable UnmodifiableIterator<K> iterator() {
     return map.keyIterator();
   }
 

@@ -606,10 +606,10 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
     }
 
     @Override
-    public UnmodifiableIterator<C> iterator() {
-      return new AbstractIterator<C>() {
+    public @Immutable UnmodifiableIterator<C> iterator() {
+      return new @Immutable AbstractIterator<C>() {
         final Iterator<Range<C>> rangeItr = ranges.iterator();
-        Iterator<C> elemItr = Iterators.emptyIterator();
+        @Assignable Iterator<C> elemItr = Iterators.emptyIterator();
 
         @Override
         @CheckForNull
@@ -628,10 +628,10 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
 
     @Override
     @GwtIncompatible("NavigableSet")
-    public UnmodifiableIterator<C> descendingIterator() {
-      return new AbstractIterator<C>() {
+    public @Immutable UnmodifiableIterator<C> descendingIterator() {
+      return new @Immutable AbstractIterator<C>() {
         final Iterator<Range<C>> rangeItr = ranges.reverse().iterator();
-        Iterator<C> elemItr = Iterators.emptyIterator();
+        @Assignable Iterator<C> elemItr = Iterators.emptyIterator();
 
         @Override
         @CheckForNull

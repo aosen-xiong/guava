@@ -316,7 +316,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   // This declaration is needed to make Set.iterator() and
   // ImmutableCollection.iterator() consistent.
   @Override
-  public abstract UnmodifiableIterator<E> iterator();
+  public abstract @Immutable UnmodifiableIterator<E> iterator();
 
   @GwtCompatible
   @Immutable
@@ -352,7 +352,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     abstract E get(int index);
 
     @Override
-    public UnmodifiableIterator<E> iterator() {
+    public @Immutable UnmodifiableIterator<E> iterator() {
       return asList().iterator();
     }
 

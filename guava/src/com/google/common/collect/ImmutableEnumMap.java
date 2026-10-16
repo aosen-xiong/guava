@@ -63,7 +63,7 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
   }
 
   @Override
-  UnmodifiableIterator<K> keyIterator() {
+  @Immutable UnmodifiableIterator<K> keyIterator() {
     return Iterators.unmodifiableIterator(delegate.keySet().iterator());
   }
 
@@ -100,7 +100,7 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
   }
 
   @Override
-  UnmodifiableIterator<Entry<K, V>> entryIterator() {
+  @Immutable UnmodifiableIterator<Entry<K, V>> entryIterator() {
     return Maps.unmodifiableEntryIterator(delegate.entrySet().iterator());
   }
 

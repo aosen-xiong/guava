@@ -241,11 +241,11 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
   ImmutableMultiset() {}
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     final Iterator<Entry<E>> entryIterator = entrySet().iterator();
-    return new UnmodifiableIterator<E>() {
-      int remaining;
-      @CheckForNull E element;
+    return new @Immutable UnmodifiableIterator<E>() {
+      @Assignable int remaining;
+      @Assignable @CheckForNull E element;
 
       @Override
       public boolean hasNext() {

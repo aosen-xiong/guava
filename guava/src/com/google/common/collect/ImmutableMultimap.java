@@ -45,6 +45,7 @@ import java.util.function.BiConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -571,7 +572,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     }
 
     @Override
-    public UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
+    public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
       return multimap.entryIterator();
     }
 
@@ -609,12 +610,12 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   }
 
   @Override
-  UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
-    return new UnmodifiableIterator<@Immutable Entry<K, V>>() {
+  @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
+    return new @Immutable UnmodifiableIterator<@Immutable Entry<K, V>>() {
       final Iterator<? extends @Immutable Entry<K, ? extends ImmutableCollection<V>>> asMapItr =
           map.entrySet().iterator();
-      @CheckForNull K currentKey = null;
-      Iterator<V> valueItr = Iterators.emptyIterator();
+      @Assignable @CheckForNull K currentKey = null;
+      @Assignable Iterator<V> valueItr = Iterators.emptyIterator();
 
       @Override
       public boolean hasNext() {
@@ -754,10 +755,10 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   }
 
   @Override
-  UnmodifiableIterator<V> valueIterator() {
-    return new UnmodifiableIterator<V>() {
+  @Immutable UnmodifiableIterator<V> valueIterator() {
+    return new @Immutable UnmodifiableIterator<V>() {
       Iterator<? extends ImmutableCollection<V>> valueCollectionItr = map.values().iterator();
-      Iterator<V> valueItr = Iterators.emptyIterator();
+      @Assignable Iterator<V> valueItr = Iterators.emptyIterator();
 
       @Override
       public boolean hasNext() {
@@ -788,7 +789,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     }
 
     @Override
-    public UnmodifiableIterator<V> iterator() {
+    public @Immutable UnmodifiableIterator<V> iterator() {
       return multimap.valueIterator();
     }
 

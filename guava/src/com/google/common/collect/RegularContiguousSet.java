@@ -94,7 +94,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
   }
 
   @Override
-  public UnmodifiableIterator<C> iterator() {
+  public @Immutable UnmodifiableIterator<C> iterator() {
     return new AbstractSequentialIterator<C>(first()) {
       final C last = last();
 
@@ -108,7 +108,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
 
   @GwtIncompatible // NavigableSet
   @Override
-  public UnmodifiableIterator<C> descendingIterator() {
+  public @Immutable UnmodifiableIterator<C> descendingIterator() {
     return new AbstractSequentialIterator<C>(last()) {
       final C first = first();
 

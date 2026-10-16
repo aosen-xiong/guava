@@ -58,7 +58,7 @@ final class SingletonImmutableList<E> extends ImmutableList<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     return Iterators.singletonIterator(element);
   }
 

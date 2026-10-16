@@ -752,7 +752,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
 
   @Immutable
   abstract static class IteratorBasedImmutableMap<K extends @Immutable Object, V> extends ImmutableMap<K, V> {
-    abstract UnmodifiableIterator<Entry<K, V>> entryIterator();
+    abstract @Immutable UnmodifiableIterator<Entry<K, V>> entryIterator();
 
     Spliterator<Entry<K, V>> entrySpliterator() {
       return Spliterators.spliterator(
@@ -776,7 +776,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
         }
 
         @Override
-        public UnmodifiableIterator<Entry<K, V>> iterator() {
+        public @Immutable UnmodifiableIterator<Entry<K, V>> iterator() {
           return entryIterator();
         }
 
@@ -1090,9 +1090,9 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    */
   abstract ImmutableSet<K> createKeySet();
 
-  UnmodifiableIterator<K> keyIterator() {
+  @Immutable UnmodifiableIterator<K> keyIterator() {
     final UnmodifiableIterator<Entry<K, V>> entryIterator = entrySet().iterator();
-    return new UnmodifiableIterator<K>() {
+    return new @Immutable UnmodifiableIterator<K>() {
       @Override
       public boolean hasNext() {
         return entryIterator.hasNext();
@@ -1193,9 +1193,9 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     }
 
     @Override
-    UnmodifiableIterator<Entry<K, ImmutableSet<V>>> entryIterator() {
+    @Immutable UnmodifiableIterator<Entry<K, ImmutableSet<V>>> entryIterator() {
       final Iterator<Entry<K, V>> backingIterator = ImmutableMap.this.entrySet().iterator();
-      return new UnmodifiableIterator<Entry<K, ImmutableSet<V>>>() {
+      return new @Immutable UnmodifiableIterator<Entry<K, ImmutableSet<V>>>() {
         @Override
         public boolean hasNext() {
           return backingIterator.hasNext();

@@ -557,7 +557,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     }
 
     @Override
-    public UnmodifiableIterator<Entry<K, V>> iterator() {
+    public @Immutable UnmodifiableIterator<Entry<K, V>> iterator() {
       return multimap.entryIterator();
     }
 

@@ -91,10 +91,10 @@ class RegularImmutableList<E> extends ImmutableList<E> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public UnmodifiableListIterator<E> listIterator(int index) {
+  public @Immutable UnmodifiableListIterator<E> listIterator(int index) {
     // for performance
     // The fake cast to E is safe because the creation methods only allow E's
-    return (UnmodifiableListIterator<E>) Iterators.forArrayWithPosition(array, index);
+    return (@Immutable UnmodifiableListIterator<E>) Iterators.forArrayWithPosition(array, index);
   }
 
   @Override
