@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+
 /**
  * A sorted set of contiguous values in a given {@link DiscreteDomain}. Example:
  *
@@ -51,6 +53,7 @@ import java.util.Set;
 @GwtCompatible(emulated = true)
 @SuppressWarnings("rawtypes") // allow ungenerified Comparable types
 @ElementTypesAreNonnullByDefault
+@Immutable
 public abstract class ContiguousSet<C extends Comparable> extends ImmutableSortedSet<C> {
   /**
    * Returns a {@code ContiguousSet} containing the same values in the given domain {@linkplain

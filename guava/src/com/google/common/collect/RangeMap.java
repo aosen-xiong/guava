@@ -25,7 +25,13 @@ import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A mapping from disjoint nonempty ranges to non-null values. Queries look up the value associated
@@ -41,7 +47,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @DoNotMock("Use ImmutableRangeMap or TreeRangeMap")
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-public interface RangeMap<K extends Comparable, V> {
+@ReceiverDependentMutable
+public interface RangeMap<K extends @Immutable Comparable, V> {
   /*
    * TODO(cpovirk): These docs sometimes say "map" and sometimes say "range map." Pick one, or at
    * least decide on a policy for when to use which.
@@ -54,14 +61,14 @@ public interface RangeMap<K extends Comparable, V> {
    * associated with that range is returned.
    */
   @CheckForNull
-  V get(K key);
+  V get(@Readonly RangeMap<K, V> this, K key);
 
   /**
    * Returns the range containing this key and its associated value, if such a range is present in
    * the range map, or {@code null} otherwise.
    */
   @CheckForNull
-  Entry<Range<K>, V> getEntry(K key);
+  @PolyMutable Entry<Range<K>, V> getEntry(@PolyMutable RangeMap<K, V> this, K key);
 
   /**
    * Returns the minimal range {@linkplain Range#encloses(Range) enclosing} the ranges in this
@@ -69,7 +76,7 @@ public interface RangeMap<K extends Comparable, V> {
    *
    * @throws NoSuchElementException if this range map is empty
    */
-  Range<K> span();
+  Range<K> span(@Readonly RangeMap<K, V> this);
 
   /**
    * Maps a range to a specified value (optional operation).
@@ -80,7 +87,7 @@ public interface RangeMap<K extends Comparable, V> {
    *
    * <p>If {@code range} {@linkplain Range#isEmpty() is empty}, then this is a no-op.
    */
-  void put(Range<K> range, V value);
+  void put(@Mutable RangeMap<K, V> this, Range<K> range, V value);
 
   /**
    * Maps a range to a specified value, coalescing this range with any existing ranges with the same
@@ -100,13 +107,13 @@ public interface RangeMap<K extends Comparable, V> {
    *
    * @since 22.0
    */
-  void putCoalescing(Range<K> range, V value);
+  void putCoalescing(@Mutable RangeMap<K, V> this, Range<K> range, V value);
 
   /** Puts all the associations from {@code rangeMap} into this range map (optional operation). */
   void putAll(RangeMap<K, ? extends V> rangeMap);
 
   /** Removes all associations from this range map (optional operation). */
-  void clear();
+  void clear(@Mutable RangeMap<K, V> this);
 
   /**
    * Removes all associations from this range map in the specified range (optional operation).
@@ -115,7 +122,7 @@ public interface RangeMap<K extends Comparable, V> {
    * before and after a call to {@code remove(range)}. If {@code range.contains(k)}, then after a
    * call to {@code remove(range)}, {@code get(k)} will return {@code null}.
    */
-  void remove(Range<K> range);
+  void remove(@Mutable RangeMap<K, V> this, Range<K> range);
 
   /**
    * Merges a value into a part of the map by applying a remapping function.
@@ -136,6 +143,7 @@ public interface RangeMap<K extends Comparable, V> {
    * @since 28.1
    */
   void merge(
+          @Mutable RangeMap<K, V> this,
       Range<K> range,
       @CheckForNull V value,
       BiFunction<? super V, ? super @Nullable V, ? extends @Nullable V> remappingFunction);
@@ -149,7 +157,7 @@ public interface RangeMap<K extends Comparable, V> {
    *
    * <p>It is guaranteed that no empty ranges will be in the returned {@code Map}.
    */
-  Map<Range<K>, V> asMapOfRanges();
+  @PolyMutable Map<Range<K>, V> asMapOfRanges(@PolyMutable RangeMap<K, V> this);
 
   /**
    * Returns a view of this range map as an unmodifiable {@code Map<Range<K>, V>}. Modifications to
@@ -162,7 +170,7 @@ public interface RangeMap<K extends Comparable, V> {
    *
    * @since 19.0
    */
-  Map<Range<K>, V> asDescendingMapOfRanges();
+  @PolyMutable Map<Range<K>, V> asDescendingMapOfRanges(@PolyMutable RangeMap<K, V> this);
 
   /**
    * Returns a view of the part of this range map that intersects with {@code range}.
@@ -178,20 +186,20 @@ public interface RangeMap<K extends Comparable, V> {
    * insert a range not {@linkplain Range#encloses(Range) enclosed} by {@code range}.
    */
   // TODO(cpovirk): Consider documenting that IAE on the various methods that can throw it.
-  RangeMap<K, V> subRangeMap(Range<K> range);
+  @PolyMutable RangeMap<K, V> subRangeMap(@PolyMutable RangeMap<K, V> this, Range<K> range);
 
   /**
    * Returns {@code true} if {@code obj} is another {@code RangeMap} that has an equivalent {@link
    * #asMapOfRanges()}.
    */
   @Override
-  boolean equals(@CheckForNull Object o);
+  boolean equals(@Readonly RangeMap<K, V> this, @CheckForNull @Readonly Object o);
 
   /** Returns {@code asMapOfRanges().hashCode()}. */
   @Override
-  int hashCode(@UnknownSignedness RangeMap<K, V> this);
+  int hashCode(@UnknownSignedness @Readonly RangeMap<K, V> this);
 
   /** Returns a readable string representation of this range map. */
   @Override
-  String toString();
+  String toString(@Readonly RangeMap<K, V> this);
 }

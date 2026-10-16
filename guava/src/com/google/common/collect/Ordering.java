@@ -41,8 +41,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * A comparator, with additional methods to support common operations. This is an "enriched" version
@@ -147,10 +151,10 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Kevin Bourrillion
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class Ordering<T extends @Nullable Object> implements Comparator<T> {
+public abstract class Ordering<T extends @Nullable @Readonly Object> implements Comparator<T> {
   // Natural order
 
   /**
@@ -188,7 +192,7 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
    *     wraps that comparator
    */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable Object> Ordering<T> from(Comparator<T> comparator) {
+  public static <T extends @Nullable @Readonly Object> Ordering<T> from(Comparator<T> comparator) {
     return (comparator instanceof Ordering)
         ? (Ordering<T>) comparator
         : new ComparatorOrdering<T>(comparator);
@@ -201,7 +205,7 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
    */
   @GwtCompatible(serializable = true)
   @Deprecated
-  public static <T extends @Nullable Object> Ordering<T> from(Ordering<T> ordering) {
+  public static <T extends @Nullable @Readonly Object> Ordering<T> from(Ordering<T> ordering) {
     return checkNotNull(ordering);
   }
 
@@ -226,7 +230,8 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
    */
   // TODO(kevinb): provide replacement
   @GwtCompatible(serializable = true)
-  public static <T> Ordering<T> explicit(List<T> valuesInOrder) {
+  @CFComment("T is Immutable because ExplicitOrdering requires an immutable T")
+  public static <T extends @Immutable Object> Ordering<T> explicit(List<T> valuesInOrder) {
     return new ExplicitOrdering<T>(valuesInOrder);
   }
 
@@ -300,7 +305,7 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
    * <p><b>Java 8+ users:</b> Use {@code Comparator.comparing(Object::toString)} instead.
    */
   @GwtCompatible(serializable = true)
-  public static Ordering<Object> usingToString() {
+  public static Ordering<@Readonly Object> usingToString() {
     return UsingToStringOrdering.INSTANCE;
   }
 
@@ -327,18 +332,18 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
 
   @J2ktIncompatible // MapMaker
   private static class ArbitraryOrderingHolder {
-    static final Ordering<@Nullable Object> ARBITRARY_ORDERING = new ArbitraryOrdering();
+    static final Ordering<@Nullable @Readonly Object> ARBITRARY_ORDERING = new ArbitraryOrdering();
   }
 
   @J2ktIncompatible // MapMaker
   @VisibleForTesting
-  static class ArbitraryOrdering extends Ordering<@Nullable Object> {
+  static class ArbitraryOrdering extends Ordering<@Nullable @Readonly Object> {
 
     private final AtomicInteger counter = new AtomicInteger(0);
-    private final ConcurrentMap<Object, Integer> uids =
+    private final ConcurrentMap<@Immutable Object, Integer> uids =
         Platform.tryWeakKeys(new MapMaker()).makeMap();
 
-    private Integer getUid(Object obj) {
+    private Integer getUid(@Readonly Object obj) {
       Integer uid = uids.get(obj);
       if (uid == null) {
         // One or more integer values could be skipped in the event of a race
@@ -354,7 +359,7 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
     }
 
     @Override
-    public int compare(@CheckForNull Object left, @CheckForNull Object right) {
+    public int compare(@CheckForNull @Readonly Object left, @CheckForNull @Readonly Object right) {
       if (left == right) {
         return 0;
       } else if (left == null) {
@@ -389,7 +394,7 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
      * recognize that the call is 1-morphic and should still be willing to
      * inline it if necessary.
      */
-    int identityHashCode(Object object) {
+    int identityHashCode(@Readonly Object object) {
       return System.identityHashCode(object);
     }
   }
@@ -461,11 +466,11 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
    * (you can omit the comparator if it is the natural order).
    */
   @GwtCompatible(serializable = true)
-  public <F extends @Nullable Object> Ordering<F> onResultOf(Function<F, ? extends T> function) {
+  public <F extends @Nullable @Readonly Object> Ordering<F> onResultOf(Function<F, ? extends T> function) {
     return new ByFunctionOrdering<>(function, this);
   }
 
-  <T2 extends T> Ordering<Entry<T2, ?>> onKeys() {
+  <T2 extends @Immutable T> Ordering<Entry<T2, ?>> onKeys() {
     return onResultOf(Maps.<T2>keyFunction());
   }
 
@@ -512,7 +517,7 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
    * @param comparators the comparators to try in order
    */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable Object> Ordering<T> compound(
+  public static <T extends @Nullable @Readonly Object> Ordering<T> compound(
       Iterable<? extends Comparator<? super T>> comparators) {
     return new CompoundOrdering<T>(comparators);
   }
@@ -965,10 +970,11 @@ public abstract class Ordering<T extends @Nullable Object> implements Comparator
    * Extending {@link ClassCastException} may seem odd, but it is required.
    */
   @VisibleForTesting
+  @ReceiverDependentMutable
   static class IncomparableValueException extends ClassCastException {
     final Object value;
 
-    IncomparableValueException(Object value) {
+    IncomparableValueException(@ReceiverDependentMutable Object value) {
       super("Cannot compare value: " + value);
       this.value = value;
     }

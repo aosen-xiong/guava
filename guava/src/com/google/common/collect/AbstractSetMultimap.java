@@ -25,6 +25,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -36,31 +41,32 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  *
  * @author Jared Levy
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractMapBasedMultimap<K, V> implements SetMultimap<K, V> {
   /**
    * Creates a new multimap that uses the provided map.
    *
    * @param map place to store the mapping from each key to its corresponding values
    */
-  protected AbstractSetMultimap(Map<K, Collection<V>> map) {
+  protected AbstractSetMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map) {
     super(map);
   }
 
   @Override
-  abstract Set<V> createCollection();
+  abstract @PolyMutable Set<V> createCollection(@PolyMutable AbstractSetMultimap<K, V> this);
 
   @Override
-  Set<V> createUnmodifiableEmptyCollection() {
+  @Readonly Set<V> createUnmodifiableEmptyCollection() {
     return Collections.emptySet();
   }
 
   @Override
-  <E extends @Nullable Object> Collection<E> unmodifiableCollectionSubclass(
-      Collection<E> collection) {
+  <E extends @Nullable @Readonly Object> @Readonly Collection<E> unmodifiableCollectionSubclass(
+      @Readonly Collection<E> collection) {
     return Collections.unmodifiableSet((Set<E>) collection);
   }
 
@@ -78,8 +84,8 @@ abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullab
    * {@link Set}, instead of the {@link Collection} specified in the {@link Multimap} interface.
    */
   @Override
-  public Set<V> get(@ParametricNullness K key) {
-    return (Set<V>) super.get(key);
+  public @PolyMutable Set<V> get(@PolyMutable AbstractSetMultimap<K, V> this, @ParametricNullness K key) {
+    return (@PolyMutable Set<V>) super.get(key);
   }
 
   /**
@@ -90,8 +96,8 @@ abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullab
    */
   @SideEffectFree
   @Override
-  public Set<Entry<K, V>> entries() {
-    return (Set<Entry<K, V>>) super.entries();
+  public @PolyMutable Set<@PolyMutable Entry<K, V>> entries(@PolyMutable AbstractSetMultimap<K, V> this) {
+    return (@PolyMutable Set<@PolyMutable Entry<K, V>>) super.entries();
   }
 
   /**
@@ -102,8 +108,8 @@ abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullab
    */
   @CanIgnoreReturnValue
   @Override
-  public Set<V> removeAll(@CheckForNull Object key) {
-    return (Set<V>) super.removeAll(key);
+  public @Readonly Set<V> removeAll(@Mutable AbstractSetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    return (@Readonly Set<V>) super.removeAll(key);
   }
 
   /**
@@ -116,8 +122,8 @@ abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullab
    */
   @CanIgnoreReturnValue
   @Override
-  public Set<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
-    return (Set<V>) super.replaceValues(key, values);
+  public @Readonly Set<V> replaceValues(@Mutable AbstractSetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+    return (@Readonly Set<V>) super.replaceValues(key, values);
   }
 
   /**
@@ -127,7 +133,7 @@ abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullab
    * values.
    */
   @Override
-  public Map<K, Collection<V>> asMap() {
+  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractSetMultimap<K, V> this) {
     return super.asMap();
   }
 
@@ -141,7 +147,7 @@ abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullab
    */
   @CanIgnoreReturnValue
   @Override
-  public boolean put(@ParametricNullness K key, @ParametricNullness V value) {
+  public boolean put(@Mutable AbstractSetMultimap<K, V> this, @ParametricNullness K key, @ParametricNullness V value) {
     return super.put(key, value);
   }
 
@@ -153,7 +159,7 @@ abstract class AbstractSetMultimap<K extends @Nullable Object, V extends @Nullab
    */
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@Readonly AbstractSetMultimap<K, V> this,  @CheckForNull @Readonly Object object) {
     return super.equals(object);
   }
 

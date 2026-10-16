@@ -22,6 +22,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A set multimap which forwards all its method calls to another set multimap. Subclasses should
@@ -37,7 +40,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingSetMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+public abstract class ForwardingSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends ForwardingMultimap<K, V> implements SetMultimap<K, V> {
 
   @Override
@@ -55,7 +59,7 @@ public abstract class ForwardingSetMultimap<K extends @Nullable Object, V extend
 
   @CanIgnoreReturnValue
   @Override
-  public Set<V> removeAll(@CheckForNull Object key) {
+  public Set<V> removeAll(@CheckForNull @Readonly Object key) {
     return delegate().removeAll(key);
   }
 

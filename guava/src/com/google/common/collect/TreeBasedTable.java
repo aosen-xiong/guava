@@ -34,6 +34,9 @@ import java.util.TreeMap;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * Implementation of {@code Table} whose row keys and column keys are ordered by their natural
@@ -69,10 +72,11 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-public class TreeBasedTable<R, C, V> extends StandardRowSortedTable<R, C, V> {
+@ReceiverDependentMutable
+public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Object, V> extends StandardRowSortedTable<R, C, V> {
   private final Comparator<? super C> columnComparator;
 
-  private static class Factory<C, V> implements Supplier<TreeMap<C, V>>, Serializable {
+  private static class Factory<C extends @Immutable Object, V> implements Supplier<TreeMap<C, V>>, Serializable {
     final Comparator<? super C> comparator;
 
     Factory(Comparator<? super C> comparator) {
@@ -106,7 +110,7 @@ public class TreeBasedTable<R, C, V> extends StandardRowSortedTable<R, C, V> {
    * @param rowComparator the comparator that orders the row keys
    * @param columnComparator the comparator that orders the column keys
    */
-  public static <R, C, V> TreeBasedTable<R, C, V> create(
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> TreeBasedTable<R, C, V> create(
       Comparator<? super R> rowComparator, Comparator<? super C> columnComparator) {
     checkNotNull(rowComparator);
     checkNotNull(columnComparator);
@@ -117,7 +121,7 @@ public class TreeBasedTable<R, C, V> extends StandardRowSortedTable<R, C, V> {
    * Creates a {@code TreeBasedTable} with the same mappings and sort order as the specified {@code
    * TreeBasedTable}.
    */
-  public static <R, C, V> TreeBasedTable<R, C, V> create(TreeBasedTable<R, C, ? extends V> table) {
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> TreeBasedTable<R, C, V> create(TreeBasedTable<R, C, ? extends V> table) {
     TreeBasedTable<R, C, V> result =
         new TreeBasedTable<>(table.rowComparator(), table.columnComparator());
     result.putAll(table);
@@ -176,6 +180,7 @@ public class TreeBasedTable<R, C, V> extends StandardRowSortedTable<R, C, V> {
     return new TreeRow(rowKey);
   }
 
+  @ReceiverDependentMutable
   private class TreeRow extends Row implements SortedMap<C, V> {
     @CheckForNull final C lowerBound;
     @CheckForNull final C upperBound;
@@ -209,7 +214,7 @@ public class TreeBasedTable<R, C, V> extends StandardRowSortedTable<R, C, V> {
       return cmp.compare(a, b);
     }
 
-    boolean rangeContains(@CheckForNull Object o) {
+    boolean rangeContains(@CheckForNull @Readonly Object o) {
       return o != null
           && (lowerBound == null || compare(lowerBound, o) <= 0)
           && (upperBound == null || compare(upperBound, o) > 0);
@@ -288,7 +293,7 @@ public class TreeBasedTable<R, C, V> extends StandardRowSortedTable<R, C, V> {
     }
 
     @Override
-    public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+    public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
       return rangeContains(key) && super.containsKey(key);
     }
 

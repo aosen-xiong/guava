@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Dummy class that makes the GWT serialization policy happy. It isn't used on the server-side.
@@ -25,6 +26,7 @@ import com.google.common.annotations.GwtCompatible;
  */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
+@Immutable
 class ForwardingImmutableCollection {
   private ForwardingImmutableCollection() {}
 }

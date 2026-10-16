@@ -39,6 +39,10 @@ import java.util.function.ObjIntConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -55,7 +59,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-abstract class AbstractMapBasedMultiset<E extends @Nullable Object> extends AbstractMultiset<E>
+@ReceiverDependentMutable
+abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> extends AbstractMultiset<E>
     implements Serializable {
   // TODO(lowasser): consider overhauling this back to Map<E, Integer>
   private transient Map<E, Count> backingMap;
@@ -68,13 +73,13 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable Object> extends Abst
   private transient long size;
 
   /** Standard constructor. */
-  protected AbstractMapBasedMultiset(Map<E, Count> backingMap) {
+  protected AbstractMapBasedMultiset(@ReceiverDependentMutable Map<E, Count> backingMap) {
     checkArgument(backingMap.isEmpty());
     this.backingMap = backingMap;
   }
 
   /** Used during deserialization only. The backing map must be empty. */
-  void setBackingMap(Map<E, Count> backingMap) {
+  void setBackingMap(@ReceiverDependentMutable Map<E, Count> backingMap) {
     this.backingMap = backingMap;
   }
 
@@ -206,6 +211,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable Object> extends Abst
    * retrieve the Map.Entry<E, Count> entry, which can then be used for
    * a more efficient remove() call.
    */
+  @ReceiverDependentMutable
   private class MapBasedMultisetIterator implements Iterator<E> {
     final Iterator<Map.Entry<E, Count>> entryIterator;
     @CheckForNull Map.Entry<E, Count> currentEntry;
@@ -257,7 +263,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable Object> extends Abst
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@Readonly AbstractMapBasedMultiset<E> this, @CheckForNull @UnknownSignedness @Readonly Object element) {
     Count frequency = Maps.safeGet(backingMap, element);
     return (frequency == null) ? 0 : frequency.get();
   }
@@ -272,7 +278,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable Object> extends Abst
    */
   @CanIgnoreReturnValue
   @Override
-  public int add(@ParametricNullness E element, int occurrences) {
+  public int add(@Mutable AbstractMapBasedMultiset<E> this, @ParametricNullness E element, int occurrences) {
     if (occurrences == 0) {
       return count(element);
     }
@@ -294,7 +300,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable Object> extends Abst
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable AbstractMapBasedMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
     if (occurrences == 0) {
       return count(element);
     }
@@ -322,7 +328,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable Object> extends Abst
   // Roughly a 33% performance improvement over AbstractMultiset.setCount().
   @CanIgnoreReturnValue
   @Override
-  public int setCount(@ParametricNullness E element, int count) {
+  public int setCount(@Mutable AbstractMapBasedMultiset<E> this, @ParametricNullness E element, int count) {
     checkNonnegative(count, "count");
 
     Count existingCounter;

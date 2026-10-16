@@ -22,6 +22,9 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
@@ -36,9 +39,10 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  */
 @DoNotMock("Use Iterators.peekingIterator")
 @GwtCompatible
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @ElementTypesAreNonnullByDefault
-public interface PeekingIterator<E extends @Nullable Object> extends Iterator<E> {
+@ReceiverDependentMutable
+public interface PeekingIterator<E extends @Nullable @Readonly Object> extends Iterator<E> {
   /**
    * Returns the next element in the iteration, without advancing the iteration.
    *
@@ -49,7 +53,7 @@ public interface PeekingIterator<E extends @Nullable Object> extends Iterator<E>
    *     #hasNext()}
    */
   @ParametricNullness
-  E peek();
+  E peek(@Readonly PeekingIterator<E> this);
 
   /**
    * {@inheritDoc}
@@ -60,7 +64,7 @@ public interface PeekingIterator<E extends @Nullable Object> extends Iterator<E>
   @CanIgnoreReturnValue
   @Override
   @ParametricNullness
-  E next();
+  E next(@Mutable PeekingIterator<E> this);
 
   /**
    * {@inheritDoc}
@@ -73,5 +77,5 @@ public interface PeekingIterator<E extends @Nullable Object> extends Iterator<E>
    *     (optional)
    */
   @Override
-  void remove();
+  void remove(@Mutable PeekingIterator<E> this);
 }

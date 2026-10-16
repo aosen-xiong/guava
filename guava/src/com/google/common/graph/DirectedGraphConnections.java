@@ -42,6 +42,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -53,7 +55,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @param <V> Value parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
+@SuppressWarnings("mutability")
+final class DirectedGraphConnections<N extends @Immutable Object, V> implements GraphConnections<N, V> {
   /**
    * A wrapper class to indicate a node is both a predecessor and successor while still providing
    * the successor value.
@@ -85,7 +88,7 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
       }
 
       @Override
-      public boolean equals(@CheckForNull Object that) {
+      public boolean equals(@CheckForNull @Readonly Object that) {
         if (that instanceof Pred) {
           return this.node.equals(((Pred<?>) that).node);
         } else {
@@ -94,7 +97,7 @@ final class DirectedGraphConnections<N, V> implements GraphConnections<N, V> {
       }
 
       @Override
-      public int hashCode(@UnknownSignedness Pred<N> this) {
+      public int hashCode(@UnknownSignedness @Readonly Pred<N> this) {
         // Adding the class hashCode to avoid a clash with Succ instances.
         return Pred.class.hashCode() + node.hashCode();
       }

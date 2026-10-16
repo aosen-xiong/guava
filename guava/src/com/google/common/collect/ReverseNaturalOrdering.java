@@ -21,15 +21,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 import java.util.Iterator;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /** An ordering that uses the reverse of the natural order of the values. */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true)
 @SuppressWarnings({"unchecked", "rawtypes"}) // TODO(kevinb): the right way to explain this??
 @ElementTypesAreNonnullByDefault
-final class ReverseNaturalOrdering extends Ordering<Comparable<?>> implements Serializable {
+final class ReverseNaturalOrdering extends Ordering<@Readonly Comparable<?>> implements Serializable {
   static final ReverseNaturalOrdering INSTANCE = new ReverseNaturalOrdering();
 
   @Pure
@@ -40,53 +41,53 @@ final class ReverseNaturalOrdering extends Ordering<Comparable<?>> implements Se
       return 0;
     }
 
-    return ((Comparable<Object>) right).compareTo(left);
+    return ((Comparable<@Readonly Object>) right).compareTo(left);
   }
 
   @Override
-  public <S extends Comparable<?>> Ordering<S> reverse() {
+  public <S extends @Readonly Comparable<?>> Ordering<S> reverse() {
     return Ordering.natural();
   }
 
   // Override the min/max methods to "hoist" delegation outside loops
 
   @Override
-  public <E extends Comparable<?>> E min(E a, E b) {
+  public <E extends @Readonly Comparable<?>> E min(E a, E b) {
     return NaturalOrdering.INSTANCE.max(a, b);
   }
 
   @Override
-  public <E extends Comparable<?>> E min(E a, E b, E c, E... rest) {
+  public <E extends @Readonly Comparable<?>> E min(E a, E b, E c, E... rest) {
     return NaturalOrdering.INSTANCE.max(a, b, c, rest);
   }
 
   @Override
-  public <E extends Comparable<?>> E min(Iterator<E> iterator) {
+  public <E extends @Readonly Comparable<?>> E min(Iterator<E> iterator) {
     return NaturalOrdering.INSTANCE.max(iterator);
   }
 
   @Override
-  public <E extends Comparable<?>> E min(Iterable<E> iterable) {
+  public <E extends @Readonly Comparable<?>> E min(Iterable<E> iterable) {
     return NaturalOrdering.INSTANCE.max(iterable);
   }
 
   @Override
-  public <E extends Comparable<?>> E max(E a, E b) {
+  public <E extends @Readonly Comparable<?>> E max(E a, E b) {
     return NaturalOrdering.INSTANCE.min(a, b);
   }
 
   @Override
-  public <E extends Comparable<?>> E max(E a, E b, E c, E... rest) {
+  public <E extends @Readonly Comparable<?>> E max(E a, E b, E c, E... rest) {
     return NaturalOrdering.INSTANCE.min(a, b, c, rest);
   }
 
   @Override
-  public <E extends Comparable<?>> E max(Iterator<E> iterator) {
+  public <E extends @Readonly Comparable<?>> E max(Iterator<E> iterator) {
     return NaturalOrdering.INSTANCE.min(iterator);
   }
 
   @Override
-  public <E extends Comparable<?>> E max(Iterable<E> iterable) {
+  public <E extends @Readonly Comparable<?>> E max(Iterable<E> iterable) {
     return NaturalOrdering.INSTANCE.min(iterable);
   }
 

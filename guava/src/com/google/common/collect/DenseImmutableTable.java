@@ -20,19 +20,22 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.collect.ImmutableMap.IteratorBasedImmutableMap;
-import com.google.errorprone.annotations.Immutable;
+//import com.google.errorprone.annotations.Immutable;
 import com.google.j2objc.annotations.WeakOuter;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /** A {@code RegularImmutableTable} optimized for dense data. */
 @GwtCompatible
-@Immutable(containerOf = {"R", "C", "V"})
+//@Immutable(containerOf = {"R", "C", "V"})
 @ElementTypesAreNonnullByDefault
-final class DenseImmutableTable<R, C, V> extends RegularImmutableTable<R, C, V> {
+@Immutable
+final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V> extends RegularImmutableTable<R, C, V> {
   private final ImmutableMap<R, Integer> rowKeyToIndex;
   private final ImmutableMap<C, Integer> columnKeyToIndex;
   private final ImmutableMap<R, ImmutableMap<C, V>> rowMap;
@@ -91,7 +94,8 @@ final class DenseImmutableTable<R, C, V> extends RegularImmutableTable<R, C, V> 
   }
 
   /** An immutable map implementation backed by an indexed nullable array. */
-  private abstract static class ImmutableArrayMap<K, V> extends IteratorBasedImmutableMap<K, V> {
+  @Immutable
+  private abstract static class ImmutableArrayMap<K extends @Immutable Object, V> extends IteratorBasedImmutableMap<K, V> {
     private final int size;
 
     ImmutableArrayMap(int size) {
@@ -124,7 +128,7 @@ final class DenseImmutableTable<R, C, V> extends RegularImmutableTable<R, C, V> 
 
     @Override
     @CheckForNull
-    public V get(@CheckForNull @UnknownSignedness Object key) {
+    public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
       Integer keyIndex = keyToIndex().get(key);
       return (keyIndex == null) ? null : getValue(keyIndex);
     }
@@ -159,6 +163,7 @@ final class DenseImmutableTable<R, C, V> extends RegularImmutableTable<R, C, V> 
     }
   }
 
+  @Immutable
   private final class Row extends ImmutableArrayMap<C, V> {
     private final int rowIndex;
 
@@ -193,6 +198,7 @@ final class DenseImmutableTable<R, C, V> extends RegularImmutableTable<R, C, V> 
     }
   }
 
+  @Immutable
   private final class Column extends ImmutableArrayMap<R, V> {
     private final int columnIndex;
 
@@ -228,6 +234,7 @@ final class DenseImmutableTable<R, C, V> extends RegularImmutableTable<R, C, V> 
   }
 
   @WeakOuter
+  @Immutable
   private final class RowMap extends ImmutableArrayMap<R, ImmutableMap<C, V>> {
     private RowMap() {
       super(rowCounts.length);
@@ -259,6 +266,7 @@ final class DenseImmutableTable<R, C, V> extends RegularImmutableTable<R, C, V> 
   }
 
   @WeakOuter
+  @Immutable
   private final class ColumnMap extends ImmutableArrayMap<C, ImmutableMap<R, V>> {
     private ColumnMap() {
       super(columnCounts.length);

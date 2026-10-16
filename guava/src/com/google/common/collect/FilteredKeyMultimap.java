@@ -32,6 +32,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -41,7 +44,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractMultimap<K, V> implements FilteredMultimap<K, V> {
   final Multimap<K, V> unfiltered;
   final Predicate<? super K> keyPredicate;
@@ -71,7 +75,7 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
   }
 
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (unfiltered.containsKey(key)) {
       @SuppressWarnings("unchecked") // k is equal to a K, if not one itself
       K k = (K) key;
@@ -81,11 +85,11 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
   }
 
   @Override
-  public Collection<V> removeAll(@CheckForNull Object key) {
+  public Collection<V> removeAll(@CheckForNull @Readonly Object key) {
     return containsKey(key) ? unfiltered.removeAll(key) : unmodifiableEmptyCollection();
   }
 
-  Collection<V> unmodifiableEmptyCollection() {
+  @Immutable Collection<V> unmodifiableEmptyCollection() {
     if (unfiltered instanceof SetMultimap) {
       return emptySet();
     } else {
@@ -114,7 +118,7 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
     }
   }
 
-  static class AddRejectingSet<K extends @Nullable Object, V extends @Nullable Object>
+  static class AddRejectingSet<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends ForwardingSet<V> {
     @ParametricNullness final K key;
 
@@ -139,7 +143,7 @@ class FilteredKeyMultimap<K extends @Nullable Object, V extends @Nullable Object
     }
   }
 
-  static class AddRejectingList<K extends @Nullable Object, V extends @Nullable Object>
+  static class AddRejectingList<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingList<V> {
     @ParametricNullness final K key;
 

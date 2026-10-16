@@ -25,6 +25,10 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -38,10 +42,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
-public final class HashMultiset<E extends @Nullable Object> extends AbstractMapBasedMultiset<E> {
+@ReceiverDependentMutable
+public final class HashMultiset<E extends @Nullable @Immutable Object> extends AbstractMapBasedMultiset<E> {
 
   /** Creates a new, empty {@code HashMultiset} using the default initial capacity. */
-  public static <E extends @Nullable Object> HashMultiset<E> create() {
+  public static <E extends @Nullable @Immutable Object> HashMultiset<E> create() {
     return new HashMultiset<E>();
   }
 
@@ -52,7 +57,7 @@ public final class HashMultiset<E extends @Nullable Object> extends AbstractMapB
    * @param distinctElements the expected number of distinct elements
    * @throws IllegalArgumentException if {@code distinctElements} is negative
    */
-  public static <E extends @Nullable Object> HashMultiset<E> create(int distinctElements) {
+  public static <E extends @Nullable @Immutable Object> HashMultiset<E> create(int distinctElements) {
     return new HashMultiset<E>(distinctElements);
   }
 
@@ -63,8 +68,8 @@ public final class HashMultiset<E extends @Nullable Object> extends AbstractMapB
    *
    * @param elements the elements that the multiset should contain
    */
-  public static <E extends @Nullable Object> HashMultiset<E> create(
-      Iterable<? extends E> elements) {
+  public static <E extends @Nullable @Immutable Object> HashMultiset<E> create(
+      @Readonly Iterable<? extends E> elements) {
     HashMultiset<E> multiset = create(Multisets.inferDistinctElements(elements));
     Iterables.addAll(multiset, elements);
     return multiset;
@@ -103,11 +108,11 @@ public final class HashMultiset<E extends @Nullable Object> extends AbstractMapB
   private static final long serialVersionUID = 0;
 
 @Override
-public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super.contains(arg0); }
+public boolean contains(@Readonly HashMultiset<E> this, @Nullable @UnknownSignedness @Readonly Object arg0) { return super.contains(arg0); }
 
 @Override
-public @NonNegative int count(@Nullable @UnknownSignedness Object arg0) { return super.count(arg0); }
+public @NonNegative int count(@Readonly HashMultiset<E> this, @Nullable @UnknownSignedness @Readonly Object arg0) { return super.count(arg0); }
 
 @Override
-public int remove(@Nullable Object arg0, int arg1) { return super.remove(arg0, arg1); }
+public int remove(@Mutable HashMultiset<E> this, @Nullable @Readonly Object arg0, int arg1) { return super.remove(arg0, arg1); }
 }

@@ -24,6 +24,8 @@ import java.util.NavigableSet;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A {@link Multiset} which maintains the ordering of its elements, according to either their
@@ -44,7 +46,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-public interface SortedMultiset<E extends @Nullable Object>
+@ReceiverDependentMutable
+public interface SortedMultiset<E extends @Nullable @Readonly Object>
     extends SortedMultisetBridge<E>, SortedIterable<E> {
   /**
    * Returns the comparator that orders this multiset, or {@link Ordering#natural()} if the natural

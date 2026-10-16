@@ -22,14 +22,17 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /** Precondition checks useful in collection implementations. */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@AnnotatedFor("mutability")
 final class CollectPreconditions {
 
-  static void checkEntryNotNull(@UnknownSignedness Object key, @UnknownSignedness Object value) {
+  static void checkEntryNotNull(@UnknownSignedness @Readonly Object key, @UnknownSignedness @Readonly Object value) {
     if (key == null) {
       throw new NullPointerException("null key in entry: null=" + value);
     } else if (value == null) {

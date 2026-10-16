@@ -16,7 +16,11 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtIncompatible;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A skeletal implementation of {@code RangeSet}.
@@ -26,63 +30,64 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-abstract class AbstractRangeSet<C extends Comparable> implements RangeSet<C> {
+@ReceiverDependentMutable
+abstract class AbstractRangeSet<C extends @Readonly Comparable> implements RangeSet<C> {
   AbstractRangeSet() {}
 
   @Override
-  public boolean contains(C value) {
+  public boolean contains(@Readonly AbstractRangeSet<C> this, C value) {
     return rangeContaining(value) != null;
   }
 
   @Override
   @CheckForNull
-  public abstract Range<C> rangeContaining(C value);
+  public abstract Range<C> rangeContaining(@Readonly AbstractRangeSet<C> this, C value);
 
   @Override
-  public boolean isEmpty() {
+  public boolean isEmpty(@Readonly AbstractRangeSet<C> this) {
     return asRanges().isEmpty();
   }
 
   @Override
-  public void add(Range<C> range) {
+  public void add(@Mutable AbstractRangeSet<C> this, @Readonly Range<C> range) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void remove(Range<C> range) {
+  public void remove(@Mutable AbstractRangeSet<C> this, @Readonly Range<C> range) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable AbstractRangeSet<C> this) {
     remove(Range.<C>all());
   }
 
   @Override
-  public boolean enclosesAll(RangeSet<C> other) {
+  public boolean enclosesAll(@Mutable AbstractRangeSet<C> this, @Readonly RangeSet<C> other) {
     return enclosesAll(other.asRanges());
   }
 
   @Override
-  public void addAll(RangeSet<C> other) {
+  public void addAll(@Mutable AbstractRangeSet<C> this, @Readonly RangeSet<C> other) {
     addAll(other.asRanges());
   }
 
   @Override
-  public void removeAll(RangeSet<C> other) {
+  public void removeAll(@Mutable AbstractRangeSet<C> this, @Readonly RangeSet<C> other) {
     removeAll(other.asRanges());
   }
 
   @Override
-  public boolean intersects(Range<C> otherRange) {
+  public boolean intersects(@Mutable AbstractRangeSet<C> this, @Readonly Range<C> otherRange) {
     return !subRangeSet(otherRange).isEmpty();
   }
 
   @Override
-  public abstract boolean encloses(Range<C> otherRange);
+  public abstract boolean encloses(@Mutable AbstractRangeSet<C> this, @Readonly Range<C> otherRange);
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@Readonly AbstractRangeSet<C> this, @CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof RangeSet) {
@@ -93,12 +98,12 @@ abstract class AbstractRangeSet<C extends Comparable> implements RangeSet<C> {
   }
 
   @Override
-  public final int hashCode(@UnknownSignedness AbstractRangeSet<C> this) {
+  public final int hashCode(@UnknownSignedness @Readonly AbstractRangeSet<C> this) {
     return asRanges().hashCode();
   }
 
   @Override
-  public final String toString() {
+  public final String toString(@Readonly AbstractRangeSet<C> this) {
     return asRanges().toString();
   }
 }

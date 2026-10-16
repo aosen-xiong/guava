@@ -19,6 +19,7 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.primitives.Ints;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -55,7 +56,7 @@ final class Hashing {
     return (int) (C2 * Integer.rotateLeft((int) (hashCode * C1), 15));
   }
 
-  static int smearedHash(@CheckForNull Object o) {
+  static int smearedHash(@CheckForNull @Readonly Object o) {
     return smear((o == null) ? 0 : o.hashCode());
   }
 

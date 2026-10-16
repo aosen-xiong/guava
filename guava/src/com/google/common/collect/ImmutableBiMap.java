@@ -37,6 +37,8 @@ import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -65,7 +67,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K, V>
+  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableBiMap<K, V>> toImmutableBiMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -79,12 +81,12 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    */
   // Casting to any type is safe because the set will never hold any elements.
   @SuppressWarnings("unchecked")
-  public static <K, V> ImmutableBiMap<K, V> of() {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of() {
     return (ImmutableBiMap<K, V>) RegularImmutableBiMap.EMPTY;
   }
 
   /** Returns an immutable bimap containing a single entry. */
-  public static <K, V> ImmutableBiMap<K, V> of(K k1, V v1) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(K k1, V v1) {
     return new SingletonImmutableBiMap<>(k1, v1);
   }
 
@@ -93,7 +95,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @throws IllegalArgumentException if duplicate keys or values are added
    */
-  public static <K, V> ImmutableBiMap<K, V> of(K k1, V v1, K k2, V v2) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(K k1, V v1, K k2, V v2) {
     return RegularImmutableBiMap.fromEntries(entryOf(k1, v1), entryOf(k2, v2));
   }
 
@@ -102,7 +104,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @throws IllegalArgumentException if duplicate keys or values are added
    */
-  public static <K, V> ImmutableBiMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
     return RegularImmutableBiMap.fromEntries(entryOf(k1, v1), entryOf(k2, v2), entryOf(k3, v3));
   }
 
@@ -111,7 +113,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @throws IllegalArgumentException if duplicate keys or values are added
    */
-  public static <K, V> ImmutableBiMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
     return RegularImmutableBiMap.fromEntries(
         entryOf(k1, v1), entryOf(k2, v2), entryOf(k3, v3), entryOf(k4, v4));
   }
@@ -121,7 +123,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @throws IllegalArgumentException if duplicate keys or values are added
    */
-  public static <K, V> ImmutableBiMap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
     return RegularImmutableBiMap.fromEntries(
         entryOf(k1, v1), entryOf(k2, v2), entryOf(k3, v3), entryOf(k4, v4), entryOf(k5, v5));
@@ -133,7 +135,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @throws IllegalArgumentException if duplicate keys or values are added
    * @since 31.0
    */
-  public static <K, V> ImmutableBiMap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
     return RegularImmutableBiMap.fromEntries(
         entryOf(k1, v1),
@@ -150,7 +152,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @throws IllegalArgumentException if duplicate keys or values are added
    * @since 31.0
    */
-  public static <K, V> ImmutableBiMap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
     return RegularImmutableBiMap.fromEntries(
         entryOf(k1, v1),
@@ -168,7 +170,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @throws IllegalArgumentException if duplicate keys or values are added
    * @since 31.0
    */
-  public static <K, V> ImmutableBiMap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -202,7 +204,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @throws IllegalArgumentException if duplicate keys or values are added
    * @since 31.0
    */
-  public static <K, V> ImmutableBiMap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -238,7 +240,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @throws IllegalArgumentException if duplicate keys or values are added
    * @since 31.0
    */
-  public static <K, V> ImmutableBiMap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> of(
       K k1,
       V v1,
       K k2,
@@ -281,7 +283,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @since 31.0
    */
   @SafeVarargs
-  public static <K, V> ImmutableBiMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     @SuppressWarnings("unchecked") // we will only ever read these
     Entry<K, V>[] entries2 = (Entry<K, V>[]) entries;
     return RegularImmutableBiMap.fromEntries(entries2);
@@ -291,7 +293,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * Returns a new builder. The generated builder is equivalent to the builder created by the {@link
    * Builder} constructor.
    */
-  public static <K, V> Builder<K, V> builder() {
+  public static <K extends @Immutable Object, V extends @Immutable Object> Builder<K, V> builder() {
     return new Builder<>();
   }
 
@@ -340,7 +342,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @since 2.0
    */
-  public static final class Builder<K, V> extends ImmutableMap.Builder<K, V> {
+  public static final @Mutable class Builder<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableMap.Builder<K, V> {
 
     /**
      * Creates a new builder. The returned builder is equivalent to the builder generated by {@link
@@ -535,7 +537,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *     key
    * @throws NullPointerException if any key or value in {@code map} is null
    */
-  public static <K, V> ImmutableBiMap<K, V> copyOf(Map<? extends K, ? extends V> map) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> copyOf(Map<? extends K, ? extends V> map) {
     if (map instanceof ImmutableBiMap) {
       @SuppressWarnings("unchecked") // safe since map is not writable
       ImmutableBiMap<K, V> bimap = (ImmutableBiMap<K, V>) map;

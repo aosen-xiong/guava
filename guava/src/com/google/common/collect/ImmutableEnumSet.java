@@ -28,6 +28,7 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -41,6 +42,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // we're overriding default serialization
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   static <E extends Enum<E>> ImmutableSet<E> asImmutable(EnumSet<E> set) {
     switch (set.size()) {
@@ -63,7 +65,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
    */
   private final transient EnumSet<E> delegate;
 
-  private ImmutableEnumSet(EnumSet<E> delegate) {
+  private ImmutableEnumSet(@Immutable EnumSet<E> delegate) {
     this.delegate = delegate;
   }
 

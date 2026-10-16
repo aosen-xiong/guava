@@ -24,6 +24,8 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -34,16 +36,17 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  *
  * @author Kevin Bourrillion
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
+@Immutable
 class RegularImmutableList<E> extends ImmutableList<E> {
-  static final ImmutableList<Object> EMPTY = new RegularImmutableList<>(new Object[0]);
+  static final ImmutableList<@Readonly Object> EMPTY = new RegularImmutableList<>(new Object[0]);
 
   @VisibleForTesting final transient Object[] array;
 
-  RegularImmutableList(Object[] array) {
+  RegularImmutableList(Object @Immutable [] array) {
     this.array = array;
   }
 

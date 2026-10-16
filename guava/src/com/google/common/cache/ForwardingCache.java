@@ -24,6 +24,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import javax.annotation.CheckForNull;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+
 /**
  * A cache which forwards all its method calls to another cache. Subclasses should override one or
  * more methods to modify the behavior of the backing cache as desired per the <a
@@ -34,7 +36,7 @@ import javax.annotation.CheckForNull;
  */
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingCache<K, V> extends ForwardingObject implements Cache<K, V> {
+public abstract class ForwardingCache<K extends @Immutable Object, V> extends ForwardingObject implements Cache<K, V> {
 
   /** Constructor for use by subclasses. */
   protected ForwardingCache() {}
@@ -120,7 +122,8 @@ public abstract class ForwardingCache<K, V> extends ForwardingObject implements 
    *
    * @since 10.0
    */
-  public abstract static class SimpleForwardingCache<K, V> extends ForwardingCache<K, V> {
+
+  public abstract static class SimpleForwardingCache<K extends @Immutable Object, V> extends ForwardingCache<K, V> {
     private final Cache<K, V> delegate;
 
     protected SimpleForwardingCache(Cache<K, V> delegate) {

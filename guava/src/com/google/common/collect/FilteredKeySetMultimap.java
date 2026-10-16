@@ -22,6 +22,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -31,7 +33,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class FilteredKeySetMultimap<K extends @Nullable Object, V extends @Nullable Object>
+final class FilteredKeySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends FilteredKeyMultimap<K, V> implements FilteredSetMultimap<K, V> {
 
   FilteredKeySetMultimap(SetMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
@@ -49,7 +51,7 @@ final class FilteredKeySetMultimap<K extends @Nullable Object, V extends @Nullab
   }
 
   @Override
-  public Set<V> removeAll(@CheckForNull Object key) {
+  public Set<V> removeAll(@CheckForNull @Readonly Object key) {
     return (Set<V>) super.removeAll(key);
   }
 

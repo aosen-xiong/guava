@@ -17,6 +17,7 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A dummy superclass to support GWT serialization of the element type of an {@link
@@ -38,4 +39,5 @@ import com.google.common.annotations.GwtCompatible;
  */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
+@Immutable
 abstract class ImmutableMultisetGwtSerializationDependencies<E> extends ImmutableCollection<E> {}

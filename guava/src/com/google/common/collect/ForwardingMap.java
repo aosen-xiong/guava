@@ -27,6 +27,11 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -60,10 +65,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Louis Wasserman
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends ForwardingObject implements Map<K, V> {
   // TODO(lowasser): identify places where thread safety is actually lost
 
@@ -71,18 +77,18 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
   protected ForwardingMap() {}
 
   @Override
-  protected abstract Map<K, V> delegate();
+  protected abstract @PolyMutable Map<K, V> delegate(@PolyMutable ForwardingMap<K, V> this);
 
   @Pure
   @Override
   @SuppressWarnings("index:overriding.return")
-  public @NonNegative int size() {
+  public @NonNegative int size(@Readonly ForwardingMap<K, V> this) {
     return delegate().size();
   }
 
   @Pure
   @Override
-  public boolean isEmpty() {
+  public boolean isEmpty(@Readonly ForwardingMap<K, V> this) {
     return delegate().isEmpty();
   }
 
@@ -90,75 +96,75 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
   @Override
   @SuppressWarnings("nullness:argument") // Suppressed due to annotations on remove in Java.Map
   @CheckForNull
-  public V remove(@CheckForNull @UnknownSignedness Object key) {
+  public V remove(@Mutable ForwardingMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
     return delegate().remove(key);
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable ForwardingMap<K, V> this) {
     delegate().clear();
   }
 
   @Pure
   @Override
   @SuppressWarnings("nullness:argument") // Suppressed due to annotations on containsKey in Java.Map
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@Readonly ForwardingMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
     return delegate().containsKey(key);
   }
 
   @Pure
   @Override
   @SuppressWarnings("nullness:argument") // Suppressed due to annotations on containsValue in Java.Map
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@Readonly ForwardingMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object value) {
     return delegate().containsValue(value);
   }
 
   @Override
   @SuppressWarnings("nullness:argument") // Suppressed due to annotations on get in Java.Map
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@Readonly ForwardingMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
     return delegate().get(key);
   }
 
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V put(@ParametricNullness K key, @ParametricNullness V value) {
+  public V put(@Mutable ForwardingMap<K, V> this, @ParametricNullness K key, @ParametricNullness V value) {
     return delegate().put(key, value);
   }
 
   @Override
-  public void putAll(Map<? extends K, ? extends V> map) {
+  public void putAll(@Mutable ForwardingMap<K, V> this, @Readonly Map<? extends K, ? extends V> map) {
     delegate().putAll(map);
   }
 
   @SideEffectFree
   @Override
-  public Set<@KeyFor({"this"}) K> keySet() {
+  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable ForwardingMap<K, V> this) {
     return delegate().keySet();
   }
 
   @SideEffectFree
   @Override
-  public Collection<V> values() {
+  public @PolyMutable Collection<V> values(@PolyMutable ForwardingMap<K, V> this) {
     return delegate().values();
   }
 
   @SideEffectFree
   @Override
-  public Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public @PolyMutable Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable ForwardingMap<K, V> this) {
     return delegate().entrySet();
   }
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@Readonly ForwardingMap<K, V> this, @CheckForNull @Readonly Object object) {
     return object == this || delegate().equals(object);
   }
 
   @Pure
   @Override
-  public int hashCode(@UnknownSignedness ForwardingMap<K, V> this) {
+  public int hashCode(@UnknownSignedness @Readonly ForwardingMap<K, V> this) {
     return delegate().hashCode();
   }
 
@@ -169,7 +175,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    *
    * @since 7.0
    */
-  protected void standardPutAll(Map<? extends K, ? extends V> map) {
+  protected void standardPutAll(@Mutable ForwardingMap<K, V> this, @Readonly Map<? extends K, ? extends V> map) {
     Maps.putAllImpl(this, map);
   }
 
@@ -184,7 +190,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    * @since 7.0
    */
   @CheckForNull
-  protected V standardRemove(@CheckForNull Object key) {
+  protected V standardRemove(@Mutable ForwardingMap<K, V> this, @CheckForNull @Readonly Object key) {
     Iterator<Entry<K, V>> entryIterator = entrySet().iterator();
     while (entryIterator.hasNext()) {
       Entry<K, V> entry = entryIterator.next();
@@ -204,7 +210,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    *
    * @since 7.0
    */
-  protected void standardClear() {
+  protected void standardClear(@Mutable ForwardingMap<K, V> this) {
     Iterators.clear(entrySet().iterator());
   }
 
@@ -258,7 +264,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    *
    * @since 7.0
    */
-  protected boolean standardContainsValue(@CheckForNull Object value) {
+  protected boolean standardContainsValue(@Readonly ForwardingMap<K, V> this, @CheckForNull @Readonly Object value) {
     return Maps.containsValueImpl(this, value);
   }
 
@@ -288,7 +294,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    *
    * @since 7.0
    */
-  protected boolean standardIsEmpty() {
+  protected boolean standardIsEmpty(@Readonly ForwardingMap<K, V> this) {
     return !entrySet().iterator().hasNext();
   }
 
@@ -299,7 +305,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    *
    * @since 7.0
    */
-  protected boolean standardEquals(@CheckForNull Object object) {
+  protected boolean standardEquals(@Readonly ForwardingMap<K, V> this, @CheckForNull @Readonly Object object) {
     return Maps.equalsImpl(this, object);
   }
 
@@ -310,7 +316,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    *
    * @since 7.0
    */
-  protected int standardHashCode() {
+  protected int standardHashCode(@Readonly ForwardingMap<K, V> this) {
     return Sets.hashCodeImpl(entrySet());
   }
 
@@ -321,7 +327,7 @@ public abstract class ForwardingMap<K extends @Nullable Object, V extends @Nulla
    *
    * @since 7.0
    */
-  protected String standardToString() {
+  protected String standardToString(@Readonly ForwardingMap<K, V> this) {
     return Maps.toStringImpl(this);
   }
 }

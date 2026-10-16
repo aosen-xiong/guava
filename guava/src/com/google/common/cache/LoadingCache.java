@@ -23,6 +23,13 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
+
 /**
  * A semi-persistent mapping from keys to values. Values are automatically loaded by the cache, and
  * are stored in the cache until either evicted or manually invalidated. The common way to build
@@ -39,9 +46,11 @@ import java.util.concurrent.ExecutionException;
  * @author Charles Fry
  * @since 11.0
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public interface LoadingCache<K, V> extends Cache<K, V>, Function<K, V> {
+@ReceiverDependentMutable
+public interface LoadingCache<K extends @Immutable Object, V> extends Cache<K, V>, Function<K, V> {
 
   /**
    * Returns the value associated with {@code key} in this cache, first loading that value if
@@ -134,7 +143,7 @@ public interface LoadingCache<K, V> extends Cache<K, V>, Function<K, V> {
    */
   @Deprecated
   @Override
-  V apply(K key);
+  V apply(@Readonly LoadingCache<K, V> this, K key);
 
   /**
    * Loads a new value for {@code key}, possibly asynchronously. While the new value is loading the
@@ -154,7 +163,7 @@ public interface LoadingCache<K, V> extends Cache<K, V>, Function<K, V> {
    *
    * @since 11.0
    */
-  void refresh(K key);
+  void refresh(@Mutable LoadingCache<K, V> this, K key);
 
   /**
    * {@inheritDoc}
@@ -163,5 +172,5 @@ public interface LoadingCache<K, V> extends Cache<K, V>, Function<K, V> {
    * cause entries to be automatically loaded.</b>
    */
   @Override
-  ConcurrentMap<K, V> asMap();
+  @PolyMutable ConcurrentMap<K, V> asMap(@PolyMutable LoadingCache<K, V> this);
 }

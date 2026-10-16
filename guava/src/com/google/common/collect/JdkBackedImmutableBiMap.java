@@ -29,16 +29,21 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * Implementation of ImmutableBiMap backed by a pair of JDK HashMaps, which have smartness
  * protecting against hash flooding.
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-final class JdkBackedImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
+@Immutable
+final class JdkBackedImmutableBiMap<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableBiMap<K, V> {
   @VisibleForTesting
-  static <K, V> ImmutableBiMap<K, V> create(int n, @Nullable Entry<K, V>[] entryArray) {
+  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> create(int n, @Nullable Entry<K, V>[] entryArray) {
     Map<K, V> forwardDelegate = Maps.newHashMapWithExpectedSize(n);
     Map<V, K> backwardDelegate = Maps.newHashMapWithExpectedSize(n);
     for (int i = 0; i < n; i++) {
@@ -90,6 +95,7 @@ final class JdkBackedImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   }
 
   @WeakOuter
+  @Immutable
   private final class InverseEntries extends ImmutableList<Entry<V, K>> {
     @Override
     public Entry<V, K> get(int index) {
@@ -119,12 +125,12 @@ final class JdkBackedImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return forwardDelegate.get(key);
   }
 
   @Override
-  ImmutableSet<Entry<K, V>> createEntrySet() {
+  ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     return new ImmutableMapEntrySet.RegularEntrySet<>(this, entries);
   }
 

@@ -21,24 +21,27 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * An ordering that treats all references as equals, even nulls.
  *
  * @author Emily Soldal
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-final class AllEqualOrdering extends Ordering<@Nullable Object> implements Serializable {
+final class AllEqualOrdering extends Ordering<@Nullable @Readonly Object> implements Serializable {
   static final AllEqualOrdering INSTANCE = new AllEqualOrdering();
 
   @Override
-  public int compare(@CheckForNull Object left, @CheckForNull Object right) {
+  public int compare(@CheckForNull @Readonly Object left, @CheckForNull @Readonly Object right) {
     return 0;
   }
 
   @Override
-  public <E extends @Nullable Object> List<E> sortedCopy(Iterable<E> iterable) {
+  public <E extends @Nullable @Readonly Object> List<E> sortedCopy(Iterable<E> iterable) {
     return Lists.newArrayList(iterable);
   }
 
@@ -49,7 +52,7 @@ final class AllEqualOrdering extends Ordering<@Nullable Object> implements Seria
 
   @SuppressWarnings("unchecked")
   @Override
-  public <S extends @Nullable Object> Ordering<S> reverse() {
+  public <S extends @Nullable @Readonly Object> Ordering<S> reverse() {
     return (Ordering<S>) this;
   }
 

@@ -42,6 +42,11 @@ import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.index.qual.SubstringIndexFor;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.IntRange;
@@ -120,7 +125,7 @@ public final class Longs {
    * @param target a primitive {@code long} value
    * @return {@code true} if {@code array[i] == target} for some value of {@code i}
    */
-  public static boolean contains(long[] array, long target) {
+  public static boolean contains(long @Readonly [] array, long target) {
     for (long value : array) {
       if (value == target) {
         return true;
@@ -137,12 +142,12 @@ public final class Longs {
    * @return the least index {@code i} for which {@code array[i] == target}, or {@code -1} if no
    *     such index exists.
    */
-  public static @IndexOrLow("#1") int indexOf(long[] array, long target) {
+  public static @IndexOrLow("#1") int indexOf(long @Readonly [] array, long target) {
     return indexOf(array, target, 0, array.length);
   }
 
   // TODO(kevinb): consider making this public
-  private static @IndexOrLow("#1") @LessThan("#4") int indexOf(long[] array, long target, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
+  private static @IndexOrLow("#1") @LessThan("#4") int indexOf(long @Readonly [] array, long target, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
     for (int i = start; i < end; i++) {
       if (array[i] == target) {
         return i;
@@ -161,7 +166,7 @@ public final class Longs {
    * @param array the array to search for the sequence {@code target}
    * @param target the array to search for as a sub-sequence of {@code array}
    */
-  public static @LTEqLengthOf("#1") @SubstringIndexFor(value = "#1", offset="#2.length - 1") int indexOf(long[] array, long[] target) {
+  public static @LTEqLengthOf("#1") @SubstringIndexFor(value = "#1", offset="#2.length - 1") int indexOf(long @Readonly [] array, long @Readonly [] target) {
     checkNotNull(array, "array");
     checkNotNull(target, "target");
     if (target.length == 0) {
@@ -188,12 +193,12 @@ public final class Longs {
    * @return the greatest index {@code i} for which {@code array[i] == target}, or {@code -1} if no
    *     such index exists.
    */
-  public static @IndexOrLow("#1") int lastIndexOf(long[] array, long target) {
+  public static @IndexOrLow("#1") int lastIndexOf(long @Readonly [] array, long target) {
     return lastIndexOf(array, target, 0, array.length);
   }
 
   // TODO(kevinb): consider making this public
-  private static @IndexOrLow("#1") @LessThan("#4") int lastIndexOf(long[] array, long target, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
+  private static @IndexOrLow("#1") @LessThan("#4") int lastIndexOf(long @Readonly [] array, long target, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
     for (int i = end - 1; i >= start; i--) {
       if (array[i] == target) {
         return i;
@@ -210,7 +215,7 @@ public final class Longs {
    *     the array
    * @throws IllegalArgumentException if {@code array} is empty
    */
-  public static long min(long @MinLen(1)... array) {
+  public static long min(long @MinLen(1) @Readonly... array) {
     checkArgument(array.length > 0);
     long min = array[0];
     for (int i = 1; i < array.length; i++) {
@@ -229,7 +234,7 @@ public final class Longs {
    *     in the array
    * @throws IllegalArgumentException if {@code array} is empty
    */
-  public static long max(long @MinLen(1)... array) {
+  public static long max(long @MinLen(1) @Readonly ... array) {
     checkArgument(array.length > 0);
     long max = array[0];
     for (int i = 1; i < array.length; i++) {
@@ -328,7 +333,7 @@ public final class Longs {
    *
    * @throws IllegalArgumentException if {@code bytes} has fewer than 8 elements
    */
-  public static long fromByteArray(byte @MinLen(Longs.BYTES)[] bytes) {
+  public static long fromByteArray(byte @MinLen(Longs.BYTES) @Readonly [] bytes) {
     checkArgument(bytes.length >= BYTES, "array too small: %s < %s", bytes.length, BYTES);
     return fromBytes(
         bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]);
@@ -519,7 +524,7 @@ public final class Longs {
    * @return an array containing the values of {@code array}, with guaranteed minimum length {@code
    *     minLength}
    */
-  public static long[] ensureCapacity(long[] array, @NonNegative int minLength, @NonNegative int padding) {
+  public static long[] ensureCapacity(long @Readonly [] array, @NonNegative int minLength, @NonNegative int padding) {
     checkArgument(minLength >= 0, "Invalid minLength: %s", minLength);
     checkArgument(padding >= 0, "Invalid padding: %s", padding);
     return (array.length < minLength) ? Arrays.copyOf(array, minLength + padding) : array;
@@ -561,15 +566,15 @@ public final class Longs {
    *
    * @since 2.0
    */
-  public static Comparator<long[]> lexicographicalComparator() {
+  public static @Immutable Comparator<long[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
-  private enum LexicographicalComparator implements Comparator<long[]> {
+  private enum LexicographicalComparator implements Comparator<long @Readonly []> {
     INSTANCE;
 
     @Override
-    public int compare(long[] left, long[] right) {
+    public int compare(long @Readonly [] left, long @Readonly [] right) {
       int minLength = Math.min(left.length, right.length);
       for (int i = 0; i < minLength; i++) {
         int result = Longs.compare(left[i], right[i]);
@@ -745,6 +750,7 @@ public final class Longs {
   @CFComment({"signedness: A non-generic container class permits only signed values.",
               "Clients must suppress warnings when storing unsigned values."})
   @GwtCompatible
+  @ReceiverDependentMutable
   private static class LongArrayAsList extends AbstractList<Long>
       implements RandomAccess, Serializable {
     @HasSubsequence(subsequence="this", from="this.start", to="this.end")
@@ -752,7 +758,7 @@ public final class Longs {
     final @IndexFor("array") @LessThan("this.end") int start;
     final @IndexOrHigh("array") int end;
 
-    LongArrayAsList(long @MinLen(1)[] array) {
+    LongArrayAsList(long @MinLen(1) @ReceiverDependentMutable [] array) {
       this(array, 0, array.length);
     }
 
@@ -761,43 +767,43 @@ public final class Longs {
     // leads to the first two issuing errors - since each field is dependent on
     // at least one of the others
     )
-    LongArrayAsList(long @MinLen(1)[] array, @IndexFor("#1") @LessThan("#3") int start, @IndexOrHigh("#1") int end) {
+    LongArrayAsList(long @MinLen(1) @ReceiverDependentMutable [] array, @IndexFor("#1") @LessThan("#3") int start, @IndexOrHigh("#1") int end) {
       this.array = array;
       this.start = start;
       this.end = end;
     }
 
     @Override
-    public @Positive @LTLengthOf(value = {"this","array"}, offset={"-1","start - 1"}) int size() { // INDEX: Annotation on a public method refers to private member.
+    public @Positive @LTLengthOf(value = {"this","array"}, offset={"-1","start - 1"}) int size(@Readonly LongArrayAsList this) { // INDEX: Annotation on a public method refers to private member.
         return end - start;
     }
 
     @Override
-    public boolean isEmpty() {
+    public boolean isEmpty(@Readonly LongArrayAsList this) {
       return false;
     }
 
     @Override
-    public Long get(@IndexFor("this") int index) {
+    public Long get(@Readonly LongArrayAsList this, @IndexFor("this") int index) {
       checkElementIndex(index, size());
       return array[start + index];
     }
 
     @Override
-    public Spliterator.OfLong spliterator() {
+    public Spliterator.OfLong spliterator(@Readonly LongArrayAsList this) {
       return Spliterators.spliterator(array, start, end, 0);
     }
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@Readonly LongArrayAsList this, @CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Long) && Longs.indexOf(array, (@Signed Long) target, start, end) != -1;
     }
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@Readonly LongArrayAsList this, @CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Long) {
         int i = Longs.indexOf(array, (@Signed Long) target, start, end);
@@ -810,7 +816,7 @@ public final class Longs {
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@Readonly LongArrayAsList this, @CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Long) {
         int i = Longs.lastIndexOf(array, (@Signed Long) target, start, end);
@@ -822,7 +828,7 @@ public final class Longs {
     }
 
     @Override
-    public Long set(@IndexFor("this") int index, Long element) {
+    public Long set(@Mutable LongArrayAsList this, @IndexFor("this") int index, Long element) {
       checkElementIndex(index, size());
       long oldValue = array[start + index];
       // checkNotNull for GWT (do not optimize)
@@ -832,7 +838,7 @@ public final class Longs {
 
     @Override
     @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
-    public List<Long> subList(@IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
+    public @PolyMutable List<Long> subList(@PolyMutable LongArrayAsList this, @IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
       if (fromIndex == toIndex) {
@@ -842,7 +848,7 @@ public final class Longs {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@Readonly LongArrayAsList this, @CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }
@@ -863,7 +869,7 @@ public final class Longs {
     }
 
     @Override
-    public int hashCode(@UnknownSignedness LongArrayAsList this) {
+    public int hashCode(@UnknownSignedness @Readonly LongArrayAsList this) {
       int result = 1;
       for (int i = start; i < end; i++) {
         result = 31 * result + Longs.hashCode(array[i]);
@@ -872,7 +878,7 @@ public final class Longs {
     }
 
     @Override
-    public String toString() {
+    public String toString(@Readonly LongArrayAsList this) {
       StringBuilder builder = new StringBuilder(size() * 10);
       builder.append('[').append(array[start]);
       for (int i = start + 1; i < end; i++) {

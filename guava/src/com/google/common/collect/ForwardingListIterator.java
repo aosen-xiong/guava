@@ -20,6 +20,9 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.ListIterator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
@@ -40,7 +43,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingListIterator<E extends @Nullable Object>
+@ReceiverDependentMutable
+public abstract class ForwardingListIterator<E extends @Nullable @Readonly Object>
     extends ForwardingIterator<E> implements ListIterator<E> {
 
   /** Constructor for use by subclasses. */
@@ -50,7 +54,7 @@ public abstract class ForwardingListIterator<E extends @Nullable Object>
   protected abstract ListIterator<E> delegate();
 
   @Override
-  public void add(@ParametricNullness E element) {
+  public void add(@Mutable ForwardingListIterator<E> this, @ParametricNullness E element) {
     delegate().add(element);
   }
 
@@ -79,7 +83,7 @@ public abstract class ForwardingListIterator<E extends @Nullable Object>
   }
 
   @Override
-  public void set(@ParametricNullness E element) {
+  public void set(@Mutable ForwardingListIterator<E> this, @ParametricNullness E element) {
     delegate().set(element);
   }
 }

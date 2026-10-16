@@ -20,6 +20,9 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.concurrent.ConcurrentMap;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -41,7 +44,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingConcurrentMap<K, V> extends ForwardingMap<K, V>
+@ReceiverDependentMutable
+public abstract class ForwardingConcurrentMap<K extends @Immutable Object, V> extends ForwardingMap<K, V>
     implements ConcurrentMap<K, V> {
 
   /** Constructor for use by subclasses. */
@@ -61,7 +65,7 @@ public abstract class ForwardingConcurrentMap<K, V> extends ForwardingMap<K, V>
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:argument")
-  public boolean remove(@CheckForNull @UnknownSignedness Object key, @CheckForNull @UnknownSignedness Object value) {
+  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
     return delegate().remove(key, value);
   }
 

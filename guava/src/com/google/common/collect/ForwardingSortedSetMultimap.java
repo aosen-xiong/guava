@@ -21,6 +21,10 @@ import java.util.Comparator;
 import java.util.SortedSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A sorted set multimap which forwards all its method calls to another sorted set multimap.
@@ -36,8 +40,9 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public abstract class ForwardingSortedSetMultimap<
-        K extends @Nullable Object, V extends @Nullable Object>
+        K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends ForwardingSetMultimap<K, V> implements SortedSetMultimap<K, V> {
 
   /** Constructor for use by subclasses. */
@@ -47,17 +52,17 @@ public abstract class ForwardingSortedSetMultimap<
   protected abstract SortedSetMultimap<K, V> delegate();
 
   @Override
-  public SortedSet<V> get(@ParametricNullness K key) {
+  public SortedSet<V> get(@Readonly ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key) {
     return delegate().get(key);
   }
 
   @Override
-  public SortedSet<V> removeAll(@CheckForNull Object key) {
+  public SortedSet<V> removeAll(@Mutable ForwardingSortedSetMultimap<K,V> this, @CheckForNull @Mutable Object key) {
     return delegate().removeAll(key);
   }
 
   @Override
-  public SortedSet<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+  public SortedSet<V> replaceValues(@Mutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 

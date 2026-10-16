@@ -22,12 +22,13 @@ import java.util.Comparator;
 import java.util.Iterator;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /** An ordering which sorts iterables by comparing corresponding elements pairwise. */
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-final class LexicographicalOrdering<T extends @Nullable Object> extends Ordering<Iterable<T>>
+final class LexicographicalOrdering<T extends @Nullable @Readonly Object> extends Ordering<Iterable<T>>
     implements Serializable {
   final Comparator<? super T> elementOrder;
 

@@ -27,6 +27,9 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * Collectors not present in {@code java.util.stream.Collectors} that are not otherwise associated
@@ -35,6 +38,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Louis Wasserman
  * @since 21.0
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 public final class MoreCollectors {
@@ -43,7 +47,7 @@ public final class MoreCollectors {
    * TODO(lowasser): figure out if we can convert this to a concurrent AtomicReference-based
    * collector without breaking j2cl?
    */
-  private static final Collector<Object, ?, Optional<Object>> TO_OPTIONAL =
+  private static final Collector<@Readonly Object, ?, Optional<@Readonly Object>> TO_OPTIONAL =
       Collector.of(
           ToOptionalState::new,
           ToOptionalState::add,
@@ -66,8 +70,8 @@ public final class MoreCollectors {
 
   private static final Object NULL_PLACEHOLDER = new Object();
 
-  private static final Collector<@Nullable Object, ?, @Nullable Object> ONLY_ELEMENT =
-      Collector.<@Nullable Object, ToOptionalState, @Nullable Object>of(
+  private static final Collector<@Nullable @Readonly Object, ?, @Nullable @Readonly Object> ONLY_ELEMENT =
+      Collector.<@Nullable @Readonly Object, ToOptionalState, @Nullable @Readonly Object>of(
           ToOptionalState::new,
           (state, o) -> state.add((o == null) ? NULL_PLACEHOLDER : o),
           ToOptionalState::combine,
@@ -83,7 +87,7 @@ public final class MoreCollectors {
    * more elements, and a {@code NoSuchElementException} if the stream is empty.
    */
   @SuppressWarnings("unchecked")
-  public static <T extends @Nullable Object> Collector<T, ?, T> onlyElement() {
+  public static <T extends @Nullable @Readonly Object> Collector<T, ?, T> onlyElement() {
     return (Collector) ONLY_ELEMENT;
   }
 
@@ -102,6 +106,7 @@ public final class MoreCollectors {
       extras = emptyList();
     }
 
+    @SuppressWarnings("mutability") // Replaced as mutable list
     IllegalArgumentException multiples(boolean overflow) {
       StringBuilder sb =
           new StringBuilder().append("expected one element but was: <").append(element);
@@ -115,6 +120,7 @@ public final class MoreCollectors {
       throw new IllegalArgumentException(sb.toString());
     }
 
+    @SuppressWarnings("mutability") // Replaced as mutable list
     void add(Object o) {
       checkNotNull(o);
       if (element == null) {
@@ -130,6 +136,7 @@ public final class MoreCollectors {
       }
     }
 
+    @SuppressWarnings("mutability") // Replaced as mutable list
     ToOptionalState combine(ToOptionalState other) {
       if (element == null) {
         return other;

@@ -18,7 +18,10 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A descending wrapper around an {@code ImmutableSortedMultiset}
@@ -26,8 +29,10 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @author Louis Wasserman
  */
 @SuppressWarnings("serial") // uses writeReplace, not default serialization
+@AnnotatedFor("mutability")
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
   private final transient ImmutableSortedMultiset<E> forward;
 
@@ -36,7 +41,7 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     return forward.count(element);
   }
 

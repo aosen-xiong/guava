@@ -34,29 +34,37 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * A skeleton {@code Multimap} implementation, not necessarily in terms of a {@code Map}.
  *
  * @author Louis Wasserman
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class AbstractMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     implements Multimap<K, V> {
   @Pure
   @Override
-  public boolean isEmpty() {
+  public boolean isEmpty(@Readonly AbstractMultimap<K, V> this) {
     return size() == 0;
   }
 
   @Pure
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@Readonly AbstractMultimap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object value) {
     for (Collection<V> collection : asMap().values()) {
       if (collection.contains(value)) {
         return true;
@@ -68,27 +76,27 @@ abstract class AbstractMultimap<K extends @Nullable Object, V extends @Nullable 
 
   @Pure
   @Override
-  public boolean containsEntry(@CheckForNull Object key, @CheckForNull Object value) {
+  public boolean containsEntry(@Readonly AbstractMultimap<K, V> this, @CheckForNull @Readonly Object key, @CheckForNull @Readonly Object value) {
     Collection<V> collection = asMap().get(key);
     return collection != null && collection.contains(value);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull Object key, @CheckForNull Object value) {
+  public boolean remove(@Mutable AbstractMultimap<K, V> this, @CheckForNull @Readonly Object key, @CheckForNull @Readonly Object value) {
     Collection<V> collection = asMap().get(key);
     return collection != null && collection.remove(value);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean put(@ParametricNullness K key, @ParametricNullness V value) {
+  public boolean put(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, @ParametricNullness V value) {
     return get(key).add(value);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean putAll(@ParametricNullness K key, Iterable<? extends V> values) {
+  public boolean putAll(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     checkNotNull(values);
     // make sure we only call values.iterator() once
     // and we only call get(key) if values is nonempty
@@ -103,7 +111,7 @@ abstract class AbstractMultimap<K extends @Nullable Object, V extends @Nullable 
 
   @CanIgnoreReturnValue
   @Override
-  public boolean putAll(Multimap<? extends K, ? extends V> multimap) {
+  public boolean putAll(@Mutable AbstractMultimap<K, V> this, Multimap<? extends K, ? extends V> multimap) {
     boolean changed = false;
     for (Entry<? extends K, ? extends V> entry : multimap.entries()) {
       changed |= put(entry.getKey(), entry.getValue());
@@ -113,150 +121,157 @@ abstract class AbstractMultimap<K extends @Nullable Object, V extends @Nullable 
 
   @CanIgnoreReturnValue
   @Override
-  public Collection<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+  public Collection<V> replaceValues(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     checkNotNull(values);
     Collection<V> result = removeAll(key);
     putAll(key, values);
     return result;
   }
 
-  @LazyInit @CheckForNull private transient Collection<Entry<K, V>> entries;
+  @CFComment("Change to @LazyFinal later")
+  @LazyInit @CheckForNull private transient @Assignable Collection<@ReceiverDependentMutable Entry<K, V>> entries;
 
   @SideEffectFree
   @Override
-  public Collection<Entry<K, V>> entries() {
-    Collection<Entry<K, V>> result = entries;
+  public @PolyMutable Collection<@PolyMutable Entry<K, V>> entries(@PolyMutable AbstractMultimap<K, V> this) {
+    Collection<@PolyMutable Entry<K, V>> result = entries;
     return (result == null) ? entries = createEntries() : result;
   }
 
-  abstract Collection<Entry<K, V>> createEntries();
+  abstract @PolyMutable Collection<@PolyMutable Entry<K, V>> createEntries(@PolyMutable AbstractMultimap<K, V> this);
 
   @WeakOuter
+  @ReceiverDependentMutable
   class Entries extends Multimaps.Entries<K, V> {
     @Override
-    Multimap<K, V> multimap() {
+    @PolyMutable Multimap<K, V> multimap(@PolyMutable AbstractMultimap<K,V>.Entries this) {
       return AbstractMultimap.this;
     }
 
     @Override
-    public Iterator<Entry<K, V>> iterator() {
+    public Iterator<@PolyMutable Entry<K, V>> iterator(@PolyMutable AbstractMultimap<K,V>.Entries this) {
       return entryIterator();
     }
 
     @Override
-    public Spliterator<Entry<K, V>> spliterator() {
+    public Spliterator<@PolyMutable Entry<K, V>> spliterator(@PolyMutable AbstractMultimap<K,V>.Entries this) {
       return entrySpliterator();
     }
   }
 
   @WeakOuter
-  class EntrySet extends Entries implements Set<Entry<K, V>> {
+  @ReceiverDependentMutable
+  class EntrySet extends Entries implements Set<@ReceiverDependentMutable Entry<K, V>> {
     @Pure
     @Override
-    public int hashCode(@UnknownSignedness EntrySet this) {
+    public int hashCode(@UnknownSignedness @Readonly EntrySet this) {
       return Sets.hashCodeImpl(this);
     }
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object obj) {
+    public boolean equals(@Readonly EntrySet this, @CheckForNull @UnknownSignedness @Readonly Object obj) {
       return Sets.equalsImpl(this, obj);
     }
   }
 
-  abstract Iterator<Entry<K, V>> entryIterator();
+  abstract Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable AbstractMultimap<K, V> this);
 
-  Spliterator<Entry<K, V>> entrySpliterator() {
+  Spliterator<@PolyMutable Entry<K, V>> entrySpliterator(@PolyMutable AbstractMultimap<K, V> this) {
     return Spliterators.spliterator(
         entryIterator(), size(), (this instanceof SetMultimap) ? Spliterator.DISTINCT : 0);
   }
 
-  @LazyInit @CheckForNull private transient Set<K> keySet;
+  @CFComment("Change to @LazyFinal later")
+  @LazyInit @CheckForNull private transient @Assignable Set<K> keySet;
 
   @SideEffectFree
   @Override
-  public Set<K> keySet() {
+  public @PolyMutable Set<K> keySet(@PolyMutable AbstractMultimap<K, V> this) {
     Set<K> result = keySet;
     return (result == null) ? keySet = createKeySet() : result;
   }
 
   @SideEffectFree
-  abstract Set<K> createKeySet();
+  abstract @PolyMutable Set<K> createKeySet(@PolyMutable AbstractMultimap<K, V> this);
 
-  @LazyInit @CheckForNull private transient Multiset<K> keys;
+  @CFComment("Change to @LazyFinal later")
+  @LazyInit @CheckForNull private transient @Assignable Multiset<K> keys;
 
   @Override
-  public Multiset<K> keys() {
+  public @PolyMutable Multiset<K> keys(@PolyMutable AbstractMultimap<K, V> this) {
     Multiset<K> result = keys;
     return (result == null) ? keys = createKeys() : result;
   }
 
-  abstract Multiset<K> createKeys();
+  abstract @PolyMutable Multiset<K> createKeys(@PolyMutable AbstractMultimap<K, V> this);
 
-  @LazyInit @CheckForNull private transient Collection<V> values;
+  @CFComment("Change to @LazyFinal later")
+  @LazyInit @CheckForNull private transient @Assignable Collection<V> values;
 
   @SideEffectFree
   @Override
-  public Collection<V> values() {
+  public @PolyMutable Collection<V> values(@PolyMutable AbstractMultimap<K, V> this) {
     Collection<V> result = values;
     return (result == null) ? values = createValues() : result;
   }
 
-  abstract Collection<V> createValues();
+  abstract @PolyMutable Collection<V> createValues(@PolyMutable AbstractMultimap<K, V> this);
 
   @WeakOuter
+  @ReceiverDependentMutable
   class Values extends AbstractCollection<V> {
     @Override
-    public Iterator<V> iterator() {
+    public Iterator<V> iterator(@Readonly Values this) {
       return valueIterator();
     }
 
     @Pure
     @Override
-    public Spliterator<V> spliterator() {
+    public Spliterator<V> spliterator(@Readonly Values this) {
       return valueSpliterator();
     }
 
     @Override
-    public @NonNegative int size() {
+    public @NonNegative int size(@Readonly Values this) {
       return AbstractMultimap.this.size();
     }
 
     @Pure
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+    public boolean contains(@Readonly Values this, @CheckForNull @UnknownSignedness @Readonly Object o) {
       return AbstractMultimap.this.containsValue(o);
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable Values this) {
       AbstractMultimap.this.clear();
     }
   }
 
-  Iterator<V> valueIterator() {
+  Iterator<V> valueIterator(@PolyMutable AbstractMultimap<K, V> this) {
     return Maps.valueIterator(entries().iterator());
   }
 
-  Spliterator<V> valueSpliterator() {
+  Spliterator<V> valueSpliterator(@PolyMutable AbstractMultimap<K, V> this) {
     return Spliterators.spliterator(valueIterator(), size(), 0);
   }
 
-  @LazyInit @CheckForNull private transient Map<K, Collection<V>> asMap;
+  @LazyInit @CheckForNull private transient @Assignable Map<K, @ReceiverDependentMutable Collection<V>> asMap;
 
   @Override
-  public Map<K, Collection<V>> asMap() {
-    Map<K, Collection<V>> result = asMap;
+  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractMultimap<K, V> this) {
+    Map<K, @PolyMutable Collection<V>> result = asMap;
     return (result == null) ? asMap = createAsMap() : result;
   }
 
-  abstract Map<K, Collection<V>> createAsMap();
+  abstract @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable AbstractMultimap<K, V> this);
 
   // Comparison and hashing
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@Readonly AbstractMultimap<K, V> this, @CheckForNull @Readonly Object object) {
     return Multimaps.equalsImpl(this, object);
   }
 
@@ -270,7 +285,7 @@ abstract class AbstractMultimap<K extends @Nullable Object, V extends @Nullable 
    */
   @Pure
   @Override
-  public int hashCode(@UnknownSignedness AbstractMultimap<K, V> this) {
+  public int hashCode(@UnknownSignedness @Readonly AbstractMultimap<K, V> this) {
     return asMap().hashCode();
   }
 
@@ -282,7 +297,7 @@ abstract class AbstractMultimap<K extends @Nullable Object, V extends @Nullable 
    */
   @Pure
   @Override
-  public String toString() {
+  public String toString(@Readonly AbstractMultimap<K, V> this) {
     return asMap().toString();
   }
 }

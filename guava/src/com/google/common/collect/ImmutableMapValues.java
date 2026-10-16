@@ -27,7 +27,10 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * {@code values()} implementation for {@link ImmutableMap}.
@@ -35,9 +38,11 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @author Jesse Wilson
  * @author Kevin Bourrillion
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-final class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
+@Immutable
+final class ImmutableMapValues<K extends @Immutable Object, V> extends ImmutableCollection<V> {
   private final ImmutableMap<K, V> map;
 
   ImmutableMapValues(ImmutableMap<K, V> map) {
@@ -50,7 +55,7 @@ final class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
   }
 
   @Override
-  public UnmodifiableIterator<V> iterator() {
+  public @Readonly UnmodifiableIterator<V> iterator() {
     return new UnmodifiableIterator<V>() {
       final UnmodifiableIterator<Entry<K, V>> entryItr = map.entrySet().iterator();
 
@@ -72,7 +77,7 @@ final class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return object != null && Iterators.contains(iterator(), object);
   }
 
@@ -133,7 +138,7 @@ final class ImmutableMapValues<K, V> extends ImmutableCollection<V> {
       this.map = map;
     }
 
-    Object readResolve() {
+    @Immutable Object readResolve() {
       return map.values();
     }
 

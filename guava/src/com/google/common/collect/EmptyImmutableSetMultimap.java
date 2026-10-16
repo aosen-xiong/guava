@@ -18,6 +18,8 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import java.util.Collection;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
@@ -28,11 +30,12 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-class EmptyImmutableSetMultimap extends ImmutableSetMultimap<Object, Object> {
+@Immutable
+class EmptyImmutableSetMultimap extends ImmutableSetMultimap<@Immutable Object, @Readonly Object> {
   static final EmptyImmutableSetMultimap INSTANCE = new EmptyImmutableSetMultimap();
 
   private EmptyImmutableSetMultimap() {
-    super(ImmutableMap.<Object, ImmutableSet<Object>>of(), 0, null);
+    super(ImmutableMap.<@Immutable Object, ImmutableSet<Object>>of(), 0, null);
   }
 
   /*

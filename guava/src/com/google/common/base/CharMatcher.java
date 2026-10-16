@@ -24,6 +24,7 @@ import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Arrays;
 import java.util.BitSet;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.IndexOrLow;
@@ -321,7 +322,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * The CharSequence is not mutated, therefore after checking its length,
    * accesses to lower indices are safe.
    */
-  public static CharMatcher anyOf(final CharSequence sequence) {
+  public static CharMatcher anyOf(final @Readonly CharSequence sequence) {
     switch (sequence.length()) {
       case 0:
         return none();
@@ -340,7 +341,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * Returns a {@code char} matcher that matches any BMP character not present in the given
    * character sequence. Returns a bogus matcher if the sequence contains supplementary characters.
    */
-  public static CharMatcher noneOf(CharSequence sequence) {
+  public static CharMatcher noneOf(@Readonly CharSequence sequence) {
     return anyOf(sequence).negate();
   }
 
@@ -504,7 +505,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @return {@code true} if this matcher matches at least one character in the sequence
    * @since 8.0
    */
-  public boolean matchesAnyOf(CharSequence sequence) {
+  public boolean matchesAnyOf(@Readonly CharSequence sequence) {
     return !matchesNoneOf(sequence);
   }
 
@@ -518,7 +519,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @return {@code true} if this matcher matches every character in the sequence, including when
    *     the sequence is empty
    */
-  public boolean matchesAllOf(CharSequence sequence) {
+  public boolean matchesAllOf(@Readonly CharSequence sequence) {
     for (int i = sequence.length() - 1; i >= 0; i--) {
       if (!matches(sequence.charAt(i))) {
         return false;
@@ -538,7 +539,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @return {@code true} if this matcher matches no characters in the sequence, including when the
    *     sequence is empty
    */
-  public boolean matchesNoneOf(CharSequence sequence) {
+  public boolean matchesNoneOf(@Readonly CharSequence sequence) {
     return indexIn(sequence) == -1;
   }
 
@@ -552,7 +553,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @param sequence the character sequence to examine from the beginning
    * @return an index, or {@code -1} if no character matches
    */
-  public @IndexOrLow("#1") int indexIn(CharSequence sequence) {
+  public @IndexOrLow("#1") int indexIn(@Readonly CharSequence sequence) {
     return indexIn(sequence, 0);
   }
 
@@ -571,7 +572,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @throws IndexOutOfBoundsException if start is negative or greater than {@code
    *     sequence.length()}
    */
-  public @IndexOrLow("#1") int indexIn(CharSequence sequence, @IndexOrHigh("#1") int start) {
+  public @IndexOrLow("#1") int indexIn(@Readonly CharSequence sequence, @IndexOrHigh("#1") int start) {
     int length = sequence.length();
     checkPositionIndex(start, length);
     for (int i = start; i < length; i++) {
@@ -592,7 +593,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * @param sequence the character sequence to examine from the end
    * @return an index, or {@code -1} if no character matches
    */
-  public @IndexOrLow("#1") int lastIndexIn(CharSequence sequence) {
+  public @IndexOrLow("#1") int lastIndexIn(@Readonly CharSequence sequence) {
     for (int i = sequence.length() - 1; i >= 0; i--) {
       if (matches(sequence.charAt(i))) {
         return i;
@@ -609,7 +610,7 @@ public abstract class CharMatcher implements Predicate<Character> {
   /*
    * count is incremented at most sequence.length() times
    */
-  public @IndexOrHigh("#1") int countIn(CharSequence sequence) {
+  public @IndexOrHigh("#1") int countIn(@Readonly CharSequence sequence) {
     @IndexOrHigh("#1") int count = 0;
     for (int i = 0; i < sequence.length(); i++) {
       if (matches(sequence.charAt(i))) {
@@ -629,7 +630,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "bzr"}.
    */
-  public String removeFrom(CharSequence sequence) {
+  public String removeFrom(@Readonly  CharSequence sequence) {
     String string = sequence.toString();
     @GTENegativeOne @LTEqLengthOf("string") int pos = indexIn(string);
     if (pos == -1) {
@@ -668,7 +669,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "aaa"}.
    */
-  public String retainFrom(CharSequence sequence) {
+  public String retainFrom(@Readonly CharSequence sequence) {
     return negate().removeFrom(sequence);
   }
 
@@ -691,7 +692,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *     character in {@code sequence}
    * @return the new string
    */
-  public String replaceFrom(CharSequence sequence, char replacement) {
+  public String replaceFrom(@Readonly CharSequence sequence, char replacement) {
     String string = sequence.toString();
     int pos = indexIn(string);
     if (pos == -1) {
@@ -730,7 +731,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    * replacementLen should be @IndexOrHigh("replacement")
    * indexIn should return @IndexOrLow("#1")
    */
-  public String replaceFrom(CharSequence sequence, CharSequence replacement) {
+  public String replaceFrom(@Readonly CharSequence sequence, @Readonly CharSequence replacement) {
     int replacementLen = replacement.length();
     if (replacementLen == 0) {
       return removeFrom(sequence);
@@ -778,7 +779,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... is equivalent to {@link String#trim()}.
    */
-  public String trimFrom(CharSequence sequence) {
+  public String trimFrom(@Readonly CharSequence sequence) {
     int len = sequence.length();
     @IndexOrHigh("sequence") int first;
     int last;
@@ -807,7 +808,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "catbab"}.
    */
-  public String trimLeadingFrom(CharSequence sequence) {
+  public String trimLeadingFrom(@Readonly CharSequence sequence) {
     int len = sequence.length();
     for (int first = 0; first < len; first++) {
       if (!matches(sequence.charAt(first))) {
@@ -827,7 +828,7 @@ public abstract class CharMatcher implements Predicate<Character> {
    *
    * ... returns {@code "abacat"}.
    */
-  public String trimTrailingFrom(CharSequence sequence) {
+  public String trimTrailingFrom(@Readonly CharSequence sequence) {
     int len = sequence.length();
     for (int last = len - 1; last >= 0; last--) {
       if (!matches(sequence.charAt(last))) {

@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
@@ -281,7 +282,7 @@ public final class MapMaker {
    *
    * @return a serializable concurrent map having the requested features
    */
-  public <K, V> ConcurrentMap<K, V> makeMap() {
+  public <K extends @Immutable Object, V> ConcurrentMap<K, V> makeMap() {
     if (!useCustomMap) {
       return new ConcurrentHashMap<>(getInitialCapacity(), 0.75f, getConcurrencyLevel());
     }

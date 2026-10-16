@@ -22,6 +22,10 @@ import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -31,31 +35,32 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  *
  * @author Jared Levy
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class AbstractMapEntry<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+abstract class AbstractMapEntry<K extends @Nullable @Immutable Object, V extends @Readonly @Nullable Object>
     implements Entry<K, V> {
 
   @Pure
   @Override
   @ParametricNullness
-  public abstract K getKey();
+  public abstract K getKey(@Readonly AbstractMapEntry<K, V> this);
 
   @Pure
   @Override
   @ParametricNullness
-  public abstract V getValue();
+  public abstract V getValue(@Readonly AbstractMapEntry<K, V> this);
 
   @Override
   @ParametricNullness
-  public V setValue(@ParametricNullness V value) {
+  public V setValue(@Mutable AbstractMapEntry<K, V> this, @ParametricNullness V value) {
     throw new UnsupportedOperationException();
   }
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@Readonly AbstractMapEntry<K, V> this, @CheckForNull @Readonly Object object) {
     if (object instanceof Entry) {
       Entry<?, ?> that = (Entry<?, ?>) object;
       return Objects.equal(this.getKey(), that.getKey())
@@ -66,7 +71,7 @@ abstract class AbstractMapEntry<K extends @Nullable Object, V extends @Nullable 
 
   @Pure
   @Override
-  public int hashCode(@UnknownSignedness AbstractMapEntry<K, V> this) {
+  public int hashCode(@UnknownSignedness @Readonly AbstractMapEntry<K, V> this) {
     K k = getKey();
     V v = getValue();
     return ((k == null) ? 0 : k.hashCode()) ^ ((v == null) ? 0 : v.hashCode());
@@ -75,7 +80,7 @@ abstract class AbstractMapEntry<K extends @Nullable Object, V extends @Nullable 
   /** Returns a string representation of the form {@code {key}={value}}. */
   @Pure
   @Override
-  public String toString() {
+  public String toString(@Readonly AbstractMapEntry<K, V> this) {
     return getKey() + "=" + getValue();
   }
 }

@@ -23,14 +23,21 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import java.util.Map;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
+
 /**
  * An implementation of {@link ImmutableTable} that holds a single cell.
  *
  * @author Gregory Kick
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-class SingletonImmutableTable<R, C, V> extends ImmutableTable<R, C, V> {
+@CFComment("Value need to be immutable because it is later used for constructing a bimap")
+@Immutable
+class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V extends @Immutable Object> extends ImmutableTable<R, C, V> {
   final R singleRowKey;
   final C singleColumnKey;
   final V singleValue;

@@ -22,6 +22,8 @@ import java.util.NavigableSet;
 import java.util.SortedSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A navigable set which forwards all its method calls to another navigable set. Subclasses should
@@ -51,7 +53,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingNavigableSet<E extends @Nullable Object>
+@ReceiverDependentMutable
+public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Object>
     extends ForwardingSortedSet<E> implements NavigableSet<E> {
 
   /** Constructor for use by subclasses. */

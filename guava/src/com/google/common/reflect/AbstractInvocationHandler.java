@@ -20,6 +20,7 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -61,7 +62,7 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    */
   @Override
   @CheckForNull
-  public final Object invoke(Object proxy, Method method, @CheckForNull @Nullable Object[] args)
+  public final @Readonly Object invoke(Object proxy, Method method, @CheckForNull @Nullable @Readonly Object[] args)
       throws Throwable {
     if (args == null) {
       args = NO_ARGS;

@@ -24,6 +24,11 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -38,14 +43,15 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractMapBasedMultimap<K, V> implements ListMultimap<K, V> {
   /**
    * Creates a new multimap that uses the provided map.
    *
    * @param map place to store the mapping from each key to its corresponding values
    */
-  protected AbstractListMultimap(Map<K, Collection<V>> map) {
+  protected AbstractListMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map) {
     super(map);
   }
 
@@ -53,12 +59,12 @@ abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nulla
   abstract List<V> createCollection();
 
   @Override
-  List<V> createUnmodifiableEmptyCollection() {
+  @Immutable List<V> createUnmodifiableEmptyCollection() {
     return Collections.emptyList();
   }
 
   @Override
-  <E extends @Nullable Object> Collection<E> unmodifiableCollectionSubclass(
+  <E extends @Nullable @Readonly Object> @Immutable Collection<E> unmodifiableCollectionSubclass(
       Collection<E> collection) {
     return Collections.unmodifiableList((List<E>) collection);
   }
@@ -78,8 +84,8 @@ abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nulla
    * Multimap} interface.
    */
   @Override
-  public List<V> get(@ParametricNullness K key) {
-    return (List<V>) super.get(key);
+  public @PolyMutable List<V> get(@PolyMutable AbstractListMultimap<K,V> this, @ParametricNullness K key) {
+    return (@PolyMutable List<V>) super.get(key);
   }
 
   /**
@@ -91,8 +97,8 @@ abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nulla
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> removeAll(@CheckForNull Object key) {
-    return (List<V>) super.removeAll(key);
+  public @Readonly List<V> removeAll(@Mutable AbstractListMultimap<K,V> this, @CheckForNull @Readonly Object key) {
+    return (@Readonly List<V>) super.removeAll(key);
   }
 
   /**
@@ -104,8 +110,8 @@ abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nulla
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
-    return (List<V>) super.replaceValues(key, values);
+  public @Readonly List<V> replaceValues(@Mutable AbstractListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+    return (@Readonly List<V>) super.replaceValues(key, values);
   }
 
   /**
@@ -117,7 +123,7 @@ abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nulla
    */
   @CanIgnoreReturnValue
   @Override
-  public boolean put(@ParametricNullness K key, @ParametricNullness V value) {
+  public boolean put(@Mutable AbstractListMultimap<K,V> this, @ParametricNullness K key, @ParametricNullness V value) {
     return super.put(key, value);
   }
 
@@ -128,7 +134,7 @@ abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nulla
    * values.
    */
   @Override
-  public Map<K, Collection<V>> asMap() {
+  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractListMultimap<K,V> this) {
     return super.asMap();
   }
 
@@ -140,7 +146,7 @@ abstract class AbstractListMultimap<K extends @Nullable Object, V extends @Nulla
    */
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@Readonly AbstractListMultimap<K,V> this, @CheckForNull @Readonly Object object) {
     return super.equals(object);
   }
 

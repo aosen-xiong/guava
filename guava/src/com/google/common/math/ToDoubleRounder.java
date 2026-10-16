@@ -20,13 +20,17 @@ import static com.google.common.math.MathPreconditions.checkRoundingUnnecessary;
 import com.google.common.annotations.GwtIncompatible;
 import java.math.RoundingMode;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.framework.qual.CFComment;
+
 /**
  * Helper type to implement rounding {@code X} to a representable {@code double} value according to
  * a {@link RoundingMode}.
  */
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-abstract class ToDoubleRounder<X extends Number & Comparable<X>> {
+@CFComment("mutability: explicit argument to avoid type annotation invalidate error")
+abstract class ToDoubleRounder<X extends @Immutable Number & Comparable<X>> {
   /**
    * Returns x rounded to either the greatest double less than or equal to the precise value of x,
    * or the least double greater than or equal to the precise value of x.

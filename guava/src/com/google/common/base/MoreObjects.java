@@ -26,6 +26,7 @@ import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Helper functions that operate on any {@code Object}, and are not already provided in {@link
@@ -111,7 +112,7 @@ public final class MoreObjects {
    *     class name
    * @since 18.0 (since 2.0 as {@code Objects.toStringHelper()}).
    */
-  public static ToStringHelper toStringHelper(Object self) {
+  public static ToStringHelper toStringHelper(@Readonly Object self) {
     return new ToStringHelper(self.getClass().getSimpleName());
   }
 
@@ -441,7 +442,7 @@ public final class MoreObjects {
     // Holder object for values that might be null and/or empty.
     static class ValueHolder {
       @CheckForNull String name;
-      @CheckForNull Object value;
+      @CheckForNull @Readonly Object value;
       @CheckForNull ValueHolder next;
     }
 

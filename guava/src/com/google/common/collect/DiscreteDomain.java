@@ -27,6 +27,10 @@ import java.math.BigInteger;
 import java.util.NoSuchElementException;
 import javax.annotation.CheckForNull;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
+
 /**
  * A descriptor for a <i>discrete</i> {@code Comparable} domain such as all {@link Integer}
  * instances. A discrete domain is one that supports the three basic operations: {@link #next},
@@ -46,7 +50,8 @@ import javax.annotation.CheckForNull;
 @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class DiscreteDomain<C extends Comparable> {
+@Immutable
+public abstract class DiscreteDomain<C extends @Readonly Comparable> {
 
   /**
    * Returns the discrete domain for values of type {@code Integer}.
@@ -60,6 +65,7 @@ public abstract class DiscreteDomain<C extends Comparable> {
     return IntegerDomain.INSTANCE;
   }
 
+  @Immutable
   private static final class IntegerDomain extends DiscreteDomain<Integer> implements Serializable {
     private static final IntegerDomain INSTANCE = new IntegerDomain();
 
@@ -127,6 +133,7 @@ public abstract class DiscreteDomain<C extends Comparable> {
     return LongDomain.INSTANCE;
   }
 
+  @Immutable
   private static final class LongDomain extends DiscreteDomain<Long> implements Serializable {
     private static final LongDomain INSTANCE = new LongDomain();
 
@@ -204,6 +211,7 @@ public abstract class DiscreteDomain<C extends Comparable> {
     return BigIntegerDomain.INSTANCE;
   }
 
+  @Immutable
   private static final class BigIntegerDomain extends DiscreteDomain<BigInteger>
       implements Serializable {
     private static final BigIntegerDomain INSTANCE = new BigIntegerDomain();

@@ -27,6 +27,13 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import javax.annotation.CheckForNull;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
+
 /**
  * A semi-persistent mapping from keys to values. Cache entries are manually added using {@link
  * #get(Object, Callable)} or {@link #put(Object, Object)}, and are stored in the cache until either
@@ -40,10 +47,12 @@ import javax.annotation.CheckForNull;
  * @author Charles Fry
  * @since 10.0
  */
+@AnnotatedFor("mutability")
 @DoNotMock("Use CacheBuilder.newBuilder().build()")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public interface Cache<K, V> {
+@ReceiverDependentMutable
+public interface Cache<K extends @Immutable Object, V> {
 
   /**
    * Returns the value associated with {@code key} in this cache, or {@code null} if there is no
@@ -114,7 +123,7 @@ public interface Cache<K, V> {
    * <? extends Object> is mostly the same as <?> to plain Java. But to nullness checkers, they
    * differ: <? extends Object> means "non-null types," while <?> means "all types."
    */
-  ImmutableMap<K, V> getAllPresent(Iterable<? extends Object> keys);
+  ImmutableMap<K, V> getAllPresent(@Readonly Cache<K, V> this, @Readonly Iterable<? extends Object> keys);
 
   /**
    * Associates {@code value} with {@code key} in this cache. If the cache previously contained a
@@ -125,7 +134,7 @@ public interface Cache<K, V> {
    *
    * @since 11.0
    */
-  void put(K key, V value);
+  void put(@Mutable Cache<K, V> this, K key, V value);
 
   /**
    * Copies all of the mappings from the specified map to the cache. The effect of this call is
@@ -135,10 +144,10 @@ public interface Cache<K, V> {
    *
    * @since 12.0
    */
-  void putAll(Map<? extends K, ? extends V> m);
+  void putAll(@Mutable Cache<K, V> this,  @Readonly Map<? extends K, ? extends V> m);
 
   /** Discards any cached value for key {@code key}. */
-  void invalidate(@CompatibleWith("K") Object key);
+  void invalidate(@Mutable Cache<K, V> this, @CompatibleWith("K") @Readonly Object key);
 
   /**
    * Discards any cached values for keys {@code keys}.
@@ -146,10 +155,10 @@ public interface Cache<K, V> {
    * @since 11.0
    */
   // For discussion of <? extends Object>, see getAllPresent.
-  void invalidateAll(Iterable<? extends Object> keys);
+  void invalidateAll(@Mutable Cache<K, V> this, @Readonly Iterable<? extends Object> keys);
 
   /** Discards all entries in the cache. */
-  void invalidateAll();
+  void invalidateAll(@Mutable Cache<K, V> this);
 
   /** Returns the approximate number of entries in this cache. */
   long size();
@@ -181,5 +190,5 @@ public interface Cache<K, V> {
    * Performs any pending maintenance operations needed by the cache. Exactly which activities are
    * performed -- if any -- is implementation-dependent.
    */
-  void cleanUp();
+  void cleanUp(@Mutable Cache<K, V> this);
 }

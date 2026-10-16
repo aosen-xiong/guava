@@ -21,6 +21,8 @@ import com.google.common.base.Function;
 import java.util.ListIterator;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An iterator that transforms a backing list iterator; for internal use. This avoids the object
@@ -30,9 +32,10 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class TransformedListIterator<F extends @Nullable Object, T extends @Nullable Object>
+@ReceiverDependentMutable
+abstract class TransformedListIterator<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
     extends TransformedIterator<F, T> implements ListIterator<T> {
-  TransformedListIterator(ListIterator<? extends F> backingIterator) {
+  TransformedListIterator(@ReceiverDependentMutable ListIterator<? extends F> backingIterator) {
     super(backingIterator);
   }
 

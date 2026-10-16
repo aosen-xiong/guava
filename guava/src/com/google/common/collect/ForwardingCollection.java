@@ -25,6 +25,10 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -52,10 +56,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Louis Wasserman
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingCollection<E extends @Nullable Object> extends ForwardingObject
+@ReceiverDependentMutable
+public abstract class ForwardingCollection<E extends @Nullable @Readonly Object> extends ForwardingObject
     implements Collection<E> {
   // TODO(lowasser): identify places where thread safety is actually lost
 
@@ -63,83 +68,83 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
   protected ForwardingCollection() {}
 
   @Override
-  protected abstract Collection<E> delegate();
+  protected abstract @PolyMutable Collection<E> delegate(@PolyMutable ForwardingCollection<E> this);
 
   @Override
-  public Iterator<E> iterator() {
+  public Iterator<E> iterator(@Readonly ForwardingCollection<E> this) {
     return delegate().iterator();
   }
 
   @Pure
   @Override
-  public @NonNegative int size() {
+  public @NonNegative int size(@Readonly ForwardingCollection<E> this) {
     return delegate().size();
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean removeAll(Collection<?> collection) {
+  public boolean removeAll(@Mutable ForwardingCollection<E> this, Collection<?> collection) {
     return delegate().removeAll(collection);
   }
 
   @Pure
   @Override
-  public boolean isEmpty() {
+  public boolean isEmpty(@Readonly ForwardingCollection<E> this) {
     return delegate().isEmpty();
   }
 
   @Pure
   @Override
   @SuppressWarnings("nullness:argument")
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@Readonly ForwardingCollection<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     return delegate().contains(object);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean add(@ParametricNullness E element) {
+  public boolean add(@Mutable ForwardingCollection<E> this, @ParametricNullness E element) {
     return delegate().add(element);
   }
 
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:argument")
-  public boolean remove(@CheckForNull @UnknownSignedness Object object) {
+  public boolean remove(@Mutable ForwardingCollection<E> this, @CheckForNull @UnknownSignedness Object object) {
     return delegate().remove(object);
   }
 
   @Pure
   @Override
-  public boolean containsAll(Collection<?> collection) {
+  public boolean containsAll(@Readonly ForwardingCollection<E> this, @Readonly Collection<?> collection) {
     return delegate().containsAll(collection);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean addAll(Collection<? extends E> collection) {
+  public boolean addAll(@Mutable ForwardingCollection<E> this, @Readonly Collection<? extends E> collection) {
     return delegate().addAll(collection);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean retainAll(Collection<?> collection) {
+  public boolean retainAll(@Mutable ForwardingCollection<E> this, @Readonly Collection<?> collection) {
     return delegate().retainAll(collection);
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable ForwardingCollection<E> this) {
     delegate().clear();
   }
 
   @Override
-  public @PolyNull @PolySigned Object[] toArray(ForwardingCollection<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object @ReceiverDependentMutable [] toArray(ForwardingCollection<@PolyNull @PolySigned @PolyMutable E> this) {
     return delegate().toArray();
   }
 
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:return")
-  public <T extends @Nullable @UnknownSignedness Object> T[] toArray(@PolyNull T[] array) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T @ReceiverDependentMutable [] toArray(@ReceiverDependentMutable ForwardingCollection<E> this, @PolyNull T @ReceiverDependentMutable[] array) {
     return delegate().toArray(array);
   }
 
@@ -150,7 +155,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected boolean standardContains(@CheckForNull Object object) {
+  protected boolean standardContains(@Readonly ForwardingCollection<E> this, @CheckForNull @Readonly Object object) {
     return Iterators.contains(iterator(), object);
   }
 
@@ -161,7 +166,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected boolean standardContainsAll(Collection<?> collection) {
+  protected boolean standardContainsAll(@Readonly ForwardingCollection<E> this, @Readonly Collection<?> collection) {
     return Collections2.containsAllImpl(this, collection);
   }
 
@@ -171,7 +176,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected boolean standardAddAll(Collection<? extends E> collection) {
+  protected boolean standardAddAll(@Mutable ForwardingCollection<E> this, @Readonly Collection<? extends E> collection) {
     return Iterators.addAll(this, collection.iterator());
   }
 
@@ -182,7 +187,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected boolean standardRemove(@CheckForNull Object object) {
+  protected boolean standardRemove(@Mutable ForwardingCollection<E> this, @CheckForNull @Readonly Object object) {
     Iterator<E> iterator = iterator();
     while (iterator.hasNext()) {
       if (Objects.equal(iterator.next(), object)) {
@@ -200,7 +205,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected boolean standardRemoveAll(Collection<?> collection) {
+  protected boolean standardRemoveAll(@Mutable ForwardingCollection<E> this, @Readonly Collection<?> collection) {
     return Iterators.removeAll(iterator(), collection);
   }
 
@@ -211,7 +216,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected boolean standardRetainAll(Collection<?> collection) {
+  protected boolean standardRetainAll(@Mutable ForwardingCollection<E> this, @Readonly Collection<?> collection) {
     return Iterators.retainAll(iterator(), collection);
   }
 
@@ -222,7 +227,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected void standardClear() {
+  protected void standardClear(@Mutable ForwardingCollection<E> this) {
     Iterators.clear(iterator());
   }
 
@@ -233,7 +238,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected boolean standardIsEmpty() {
+  protected boolean standardIsEmpty(@Readonly ForwardingCollection<E> this) {
     return !iterator().hasNext();
   }
 
@@ -244,7 +249,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected String standardToString() {
+  protected String standardToString(@Readonly ForwardingCollection<E> this) {
     return Collections2.toStringImpl(this);
   }
 
@@ -255,8 +260,8 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected @Nullable Object[] standardToArray() {
-    @Nullable Object[] newArray = new @Nullable Object[size()];
+  protected @Nullable @PolyMutable Object @ReceiverDependentMutable [] standardToArray(ForwardingCollection<@PolyMutable E> this) {
+    @Nullable @PolyMutable Object @ReceiverDependentMutable [] newArray = new @Nullable @PolyMutable Object @ReceiverDependentMutable [size()];
     return toArray(newArray);
   }
 
@@ -267,7 +272,7 @@ public abstract class ForwardingCollection<E extends @Nullable Object> extends F
    *
    * @since 7.0
    */
-  protected <T extends @Nullable Object> T[] standardToArray(T[] array) {
+  protected <T extends @Nullable @Readonly Object> T[] standardToArray(T @ReceiverDependentMutable [] array) {
     return ObjectArrays.toArrayImpl(this, array);
   }
 }

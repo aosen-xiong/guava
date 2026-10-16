@@ -42,6 +42,10 @@ import java.util.function.ObjIntConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -66,7 +70,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-public final class TreeMultiset<E extends @Nullable Object> extends AbstractSortedMultiset<E>
+@ReceiverDependentMutable
+public final class TreeMultiset<E extends @Readonly @Nullable Object> extends AbstractSortedMultiset<E>
     implements Serializable {
 
   /**
@@ -98,7 +103,7 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
    *     indicates that the elements' <i>natural ordering</i> should be used.
    */
   @SuppressWarnings("unchecked")
-  public static <E extends @Nullable Object> TreeMultiset<E> create(
+  public static <E extends @Nullable @Readonly Object> TreeMultiset<E> create(
       @CheckForNull Comparator<? super E> comparator) {
     return (comparator == null)
         ? new TreeMultiset<E>((Comparator) Ordering.natural())
@@ -266,7 +271,7 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
 
   @CanIgnoreReturnValue
   @Override
-  public int add(@ParametricNullness E element, int occurrences) {
+  public int add(@Mutable TreeMultiset<E> this, @ParametricNullness E element, int occurrences) {
     checkNonnegative(occurrences, "occurrences");
     if (occurrences == 0) {
       return count(element);
@@ -288,7 +293,7 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable TreeMultiset<E> this, @CheckForNull Object element, int occurrences) {
     checkNonnegative(occurrences, "occurrences");
     if (occurrences == 0) {
       return count(element);
@@ -312,7 +317,7 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
 
   @CanIgnoreReturnValue
   @Override
-  public int setCount(@ParametricNullness E element, int count) {
+  public int setCount(@Mutable TreeMultiset<E> this, @ParametricNullness E element, int count) {
     checkNonnegative(count, "count");
     if (!range.contains(element)) {
       checkArgument(count == 0);
@@ -334,7 +339,7 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
 
   @CanIgnoreReturnValue
   @Override
-  public boolean setCount(@ParametricNullness E element, int oldCount, int newCount) {
+  public boolean setCount(@Mutable TreeMultiset<E> this, @ParametricNullness E element, int oldCount, int newCount) {
     checkNonnegative(newCount, "newCount");
     checkNonnegative(oldCount, "oldCount");
     checkArgument(range.contains(element));
@@ -357,7 +362,7 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable TreeMultiset<E> this) {
     if (!range.hasLowerBound() && !range.hasUpperBound()) {
       // We can do this in O(n) rather than removing one by one, which could force rebalancing.
       for (AvlNode<E> current = header.succ(); current != header; ) {
@@ -592,7 +597,7 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
     }
   }
 
-  private static final class AvlNode<E extends @Nullable Object> {
+  private @ReceiverDependentMutable static final class AvlNode<E extends @Readonly @Nullable Object> {
     /*
      * For "normal" nodes, the type of this field is `E`, not `@Nullable E` (though note that E is a
      * type that can include null, as in a TreeMultiset<@Nullable String>).
@@ -606,11 +611,11 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
     @CheckForNull private final E elem;
 
     // elemCount is 0 iff this node has been deleted.
-    private int elemCount;
+    private @Assignable int elemCount;
 
-    private int distinctElements;
-    private long totalCount;
-    private int height;
+    private @Assignable int distinctElements;
+    private @Assignable long totalCount;
+    private @Assignable int height;
     @CheckForNull private AvlNode<E> left;
     @CheckForNull private AvlNode<E> right;
     /*
@@ -1062,12 +1067,12 @@ public final class TreeMultiset<E extends @Nullable Object> extends AbstractSort
     }
   }
 
-  private static <T extends @Nullable Object> void successor(AvlNode<T> a, AvlNode<T> b) {
+  private static <T extends @Nullable @Readonly Object> void successor(AvlNode<T> a, AvlNode<T> b) {
     a.succ = b;
     b.pred = a;
   }
 
-  private static <T extends @Nullable Object> void successor(
+  private static <T extends @Nullable @Readonly Object> void successor(
       AvlNode<T> a, AvlNode<T> b, AvlNode<T> c) {
     successor(a, b);
     successor(b, c);

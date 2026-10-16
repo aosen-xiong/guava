@@ -30,6 +30,8 @@ import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * Provides static utility methods for creating and working with {@link SortedMultiset} instances.
@@ -43,7 +45,8 @@ final class SortedMultisets {
 
   /** A skeleton implementation for {@link SortedMultiset#elementSet}. */
   @SuppressWarnings("JdkObsolete") // TODO(b/6160855): Switch GWT emulations to NavigableSet.
-  static class ElementSet<E extends @Nullable Object> extends Multisets.ElementSet<E>
+  @ReceiverDependentMutable
+  static class ElementSet<E extends @Nullable @Readonly Object> extends Multisets.ElementSet<E>
       implements SortedSet<E> {
     @Weak private final SortedMultiset<E> multiset;
 
@@ -96,7 +99,8 @@ final class SortedMultisets {
 
   /** A skeleton navigable implementation for {@link SortedMultiset#elementSet}. */
   @GwtIncompatible // Navigable
-  static class NavigableElementSet<E extends @Nullable Object> extends ElementSet<E>
+  @ReceiverDependentMutable
+  static class NavigableElementSet<E extends @Nullable @Readonly Object> extends ElementSet<E>
       implements NavigableSet<E> {
     NavigableElementSet(SortedMultiset<E> multiset) {
       super(multiset);
@@ -182,7 +186,7 @@ final class SortedMultisets {
   }
 
   @CheckForNull
-  private static <E extends @Nullable Object> E getElementOrNull(@CheckForNull Entry<E> entry) {
+  private static <E extends @Nullable @Readonly Object> E getElementOrNull(@CheckForNull Entry<E> entry) {
     return (entry == null) ? null : entry.getElement();
   }
 }

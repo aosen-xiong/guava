@@ -29,22 +29,28 @@ import java.util.function.BiConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * Implementation of ImmutableMap backed by a JDK HashMap, which has smartness protecting against
  * hash flooding.
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-final class JdkBackedImmutableMap<K, V> extends ImmutableMap<K, V> {
+@Immutable
+final class JdkBackedImmutableMap<K extends @Immutable Object, V> extends ImmutableMap<K, V> {
   /**
    * Creates an {@code ImmutableMap} backed by a JDK HashMap. Used when probable hash flooding is
    * detected. This implementation may replace the entries in entryArray with its own entry objects
    * (though they will have the same key/value contents), and will take ownership of entryArray.
    */
-  static <K, V> ImmutableMap<K, V> create(
-      int n, @Nullable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys) {
+  static <K extends @Immutable Object, V> ImmutableMap<K, V> create(
+      int n, @Nullable @Immutable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys) {
     Map<K, V> delegateMap = Maps.newHashMapWithExpectedSize(n);
     // If duplicates are allowed, this map will track the last value for each duplicated key.
     // A second pass will retain only the first entry for that key, but with this last value. The
@@ -71,7 +77,7 @@ final class JdkBackedImmutableMap<K, V> extends ImmutableMap<K, V> {
     }
     if (duplicates != null) {
       @SuppressWarnings({"rawtypes", "unchecked"})
-      Entry<K, V>[] newEntryArray = new Entry[n - dupCount];
+      @Immutable Entry<K, V>[] newEntryArray = new @Immutable Entry[n - dupCount];
       for (int inI = 0, outI = 0; inI < n; inI++) {
         Entry<K, V> entry = requireNonNull(entryArray[inI]);
         K key = entry.getKey();
@@ -93,7 +99,7 @@ final class JdkBackedImmutableMap<K, V> extends ImmutableMap<K, V> {
   private final transient Map<K, V> delegateMap;
   private final transient ImmutableList<Entry<K, V>> entries;
 
-  JdkBackedImmutableMap(Map<K, V> delegateMap, ImmutableList<Entry<K, V>> entries) {
+  JdkBackedImmutableMap(@Immutable Map<K, V> delegateMap, ImmutableList<Entry<K, V>> entries) {
     this.delegateMap = delegateMap;
     this.entries = entries;
   }
@@ -105,7 +111,7 @@ final class JdkBackedImmutableMap<K, V> extends ImmutableMap<K, V> {
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return delegateMap.get(key);
   }
 

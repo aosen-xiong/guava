@@ -27,7 +27,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A map-like data structure that wraps a backing map and caches values while iterating through
@@ -43,8 +48,10 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  *
  * @author James Sexton
  */
+@AnnotatedFor("mutability")
 @ElementTypesAreNonnullByDefault
-class MapIteratorCache<K, V> {
+@ReceiverDependentMutable
+class MapIteratorCache<K extends @Immutable Object, V> {
   private final Map<K, V> backingMap;
 
   /*
@@ -58,13 +65,13 @@ class MapIteratorCache<K, V> {
    */
   @CheckForNull private transient volatile Entry<K, V> cacheEntry;
 
-  MapIteratorCache(Map<K, V> backingMap) {
+  MapIteratorCache(@ReceiverDependentMutable Map<K, V> backingMap) {
     this.backingMap = checkNotNull(backingMap);
   }
 
   @CanIgnoreReturnValue
   @CheckForNull
-  final V put(K key, V value) {
+  final V put(@Mutable MapIteratorCache<K, V> this, K key, V value) {
     checkNotNull(key);
     checkNotNull(value);
     clearCache();
@@ -73,19 +80,19 @@ class MapIteratorCache<K, V> {
 
   @CanIgnoreReturnValue
   @CheckForNull
-  final V remove(Object key) {
+  final V remove(@Mutable MapIteratorCache<K, V> this, @Readonly Object key) {
     checkNotNull(key);
     clearCache();
     return backingMap.remove(key);
   }
 
-  final void clear() {
+  final void clear(@Mutable MapIteratorCache<K, V> this) {
     clearCache();
     backingMap.clear();
   }
 
   @CheckForNull
-  V get(Object key) {
+  V get(@Readonly MapIteratorCache<K, V> this, @Readonly Object key) {
     checkNotNull(key);
     V value = getIfCached(key);
     // TODO(b/192579700): Use a ternary once it no longer confuses our nullness checker.
@@ -97,16 +104,16 @@ class MapIteratorCache<K, V> {
   }
 
   @CheckForNull
-  final V getWithoutCaching(Object key) {
+  final V getWithoutCaching(@Readonly MapIteratorCache<K, V> this, @Readonly Object key) {
     checkNotNull(key);
     return backingMap.get(key);
   }
 
-  final boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  final boolean containsKey(@Readonly MapIteratorCache<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
     return getIfCached(key) != null || backingMap.containsKey(key);
   }
 
-  final Set<K> unmodifiableKeySet() {
+  final @Readonly Set<K> unmodifiableKeySet() {
     return new AbstractSet<K>() {
       @Override
       public UnmodifiableIterator<K> iterator() {
@@ -133,7 +140,7 @@ class MapIteratorCache<K, V> {
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object key) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object key) {
         return containsKey(key);
       }
     };
@@ -142,7 +149,7 @@ class MapIteratorCache<K, V> {
   // Internal methods (package-visible, but treat as only subclass-visible)
 
   @CheckForNull
-  V getIfCached(@CheckForNull Object key) {
+  V getIfCached(@Readonly MapIteratorCache<K, V> this, @CheckForNull @Readonly Object key) {
     Entry<K, V> entry = cacheEntry; // store local reference for thread-safety
 
     // Check cache. We use == on purpose because it's cheaper and a cache miss is ok.
@@ -152,7 +159,7 @@ class MapIteratorCache<K, V> {
     return null;
   }
 
-  void clearCache() {
+  void clearCache(@Mutable MapIteratorCache<K, V> this) {
     cacheEntry = null;
   }
 }

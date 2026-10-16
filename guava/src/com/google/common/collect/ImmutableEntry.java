@@ -19,6 +19,8 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -30,7 +32,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-class ImmutableEntry<K extends @Nullable Object, V extends @Nullable Object>
+@Immutable
+class ImmutableEntry<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractMapEntry<K, V> implements Serializable {
   @ParametricNullness final K key;
   @ParametricNullness final V value;

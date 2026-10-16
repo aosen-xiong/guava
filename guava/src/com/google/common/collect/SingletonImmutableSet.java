@@ -22,6 +22,8 @@ import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Preconditions;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -33,10 +35,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Kevin Bourrillion
  * @author Nick Kralevich
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class SingletonImmutableSet<E> extends ImmutableSet<E> {
   // We deliberately avoid caching the asList and hashCode here, to ensure that with
   // compressed oops, a SingletonImmutableSet packs all the way down to the optimal 16 bytes.
@@ -55,7 +58,7 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
 
   @Pure
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
     return element.equals(target);
   }
 
@@ -75,7 +78,7 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
   }
 
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
     dst[offset] = element;
     return offset + 1;
   }
@@ -102,5 +105,5 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
   }
 
 @Pure
-public boolean equals(@Nullable @UnknownSignedness Object arg0) { return super.equals(arg0); }
+public boolean equals(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.equals(arg0); }
 }

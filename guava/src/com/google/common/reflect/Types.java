@@ -46,6 +46,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 
@@ -521,7 +522,7 @@ final class Types {
     private static final long serialVersionUID = 0;
   }
 
-  private static Type[] toArray(Collection<Type> types) {
+  private static Type[] toArray(@Readonly Collection<Type> types) {
     return types.toArray(new Type[0]);
   }
 

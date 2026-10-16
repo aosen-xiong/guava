@@ -23,6 +23,11 @@ import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * This class provides a skeletal implementation of the {@link ListIterator} interface across a
@@ -31,16 +36,19 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Jared Levy
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class AbstractIndexedListIterator<E extends @Nullable Object>
+@CFComment("AOSEN: Is this a design issue?")
+@ReceiverDependentMutable
+abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
     extends UnmodifiableListIterator<E> {
   private final int size;
   private int position;
 
   /** Returns the element with the specified index. This method is called by {@link #next()}. */
   @ParametricNullness
-  protected abstract E get(int index);
+  protected abstract E get(@Readonly AbstractIndexedListIterator<E> this, int index);
 
   /**
    * Constructs an iterator across a sequence of the given size whose initial position is 0. That
@@ -70,13 +78,13 @@ abstract class AbstractIndexedListIterator<E extends @Nullable Object>
   }
 
   @Override
-  public final boolean hasNext() {
+  public final boolean hasNext(@Readonly AbstractIndexedListIterator<E> this) {
     return position < size;
   }
 
   @Override
   @ParametricNullness
-  public final E next() {
+  public final E next(@Mutable AbstractIndexedListIterator<E> this) {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
@@ -84,18 +92,18 @@ abstract class AbstractIndexedListIterator<E extends @Nullable Object>
   }
 
   @Override
-  public final @NonNegative int nextIndex() {
+  public final @NonNegative int nextIndex(@Readonly AbstractIndexedListIterator<E> this) {
     return position;
   }
 
   @Override
-  public final boolean hasPrevious() {
+  public final boolean hasPrevious(@Readonly AbstractIndexedListIterator<E> this) {
     return position > 0;
   }
 
   @Override
   @ParametricNullness
-  public final E previous() {
+  public final E previous(@Mutable AbstractIndexedListIterator<E> this) {
     if (!hasPrevious()) {
       throw new NoSuchElementException();
     }
@@ -103,7 +111,7 @@ abstract class AbstractIndexedListIterator<E extends @Nullable Object>
   }
 
   @Override
-  public final @NonNegative int previousIndex() {
+  public final @NonNegative int previousIndex(@Readonly AbstractIndexedListIterator<E> this) {
     return position - 1;
   }
 }

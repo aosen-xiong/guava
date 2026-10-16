@@ -33,6 +33,8 @@ import java.util.Spliterators;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.CFComment;
@@ -60,12 +62,13 @@ import org.checkerframework.framework.qual.CFComment;
 @J2ktIncompatible // no support for access-order mode in LinkedHashMap delegate
 @GwtIncompatible // not worth using in GWT for now
 @ElementTypesAreNonnullByDefault
-class CompactLinkedHashMap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
     extends CompactHashMap<K, V> {
   // TODO(lowasser): implement removeEldestEntry so this can be used as a drop-in replacement
 
   /** Creates an empty {@code CompactLinkedHashMap} instance. */
-  public static <K extends @Nullable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
       CompactLinkedHashMap<K, V> create() {
     return new CompactLinkedHashMap<>();
   }
@@ -79,7 +82,7 @@ class CompactLinkedHashMap<K extends @Nullable Object, V extends @Nullable Objec
    *     expectedSize} elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <K extends @Nullable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
       CompactLinkedHashMap<K, V> createWithExpectedSize(int expectedSize) {
     return new CompactLinkedHashMap<>(expectedSize);
   }

@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.RandomAccess;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static methods pertaining to sorted {@link List} instances.
@@ -233,7 +234,7 @@ final class SortedLists {
    * KeyAbsentBehavior)} using {@link Lists#transform(List, Function) Lists.transform(list,
    * keyFunction)}.
    */
-  public static <E extends @Nullable Object, K extends @Nullable Object> int binarySearch(
+  public static <E extends @Nullable Object, K extends @Nullable @Immutable Object> int binarySearch(
       List<E> list,
       Function<? super E, K> keyFunction,
       @ParametricNullness K key,

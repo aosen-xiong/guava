@@ -19,6 +19,9 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+
 /**
  * A dummy superclass to support GWT serialization of the element type of a {@link Range}. The GWT
  * supersource for this class contains a field of type {@code C}.
@@ -30,4 +33,5 @@ import java.io.Serializable;
  */
 @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
 @GwtCompatible(emulated = true)
-abstract class RangeGwtSerializationDependencies<C extends Comparable> implements Serializable {}
+@Immutable
+abstract class RangeGwtSerializationDependencies<C extends @Readonly Comparable> implements Serializable {}

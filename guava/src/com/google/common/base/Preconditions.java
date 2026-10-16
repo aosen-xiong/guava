@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.AssertMethod;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -149,7 +150,7 @@ public final class Preconditions {
    */
   @AssertMethod(IllegalArgumentException.class)
   @Pure
-  public static void checkArgument(boolean expression, @CheckForNull Object errorMessage) {
+  public static void checkArgument(boolean expression, @CheckForNull @Readonly Object errorMessage) {
     if (!expression) {
       throw new IllegalArgumentException(String.valueOf(errorMessage));
     }
@@ -173,7 +174,7 @@ public final class Preconditions {
   public static void checkArgument(
       boolean expression,
       String errorMessageTemplate,
-      @CheckForNull @Nullable Object... errorMessageArgs) {
+      @CheckForNull @Nullable @Readonly Object... errorMessageArgs) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, errorMessageArgs));
     }
@@ -569,7 +570,7 @@ public final class Preconditions {
    */
   @AssertMethod(IllegalStateException.class)
   @Pure
-  public static void checkState(boolean expression, @CheckForNull Object errorMessage) {
+  public static void checkState(boolean expression, @CheckForNull @Readonly Object errorMessage) {
     if (!expression) {
       throw new IllegalStateException(String.valueOf(errorMessage));
     }
@@ -603,7 +604,7 @@ public final class Preconditions {
        * that user first.
        */
       @CheckForNull String errorMessageTemplate,
-      @CheckForNull @Nullable Object... errorMessageArgs) {
+      @CheckForNull @Nullable @Readonly Object... errorMessageArgs) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, errorMessageArgs));
     }
@@ -1026,7 +1027,7 @@ public final class Preconditions {
    */
   @CanIgnoreReturnValue
   @Pure
-  public static <T> T checkNotNull(@CheckForNull T reference, @CheckForNull Object errorMessage) {
+  public static <T> T checkNotNull(@CheckForNull T reference, @CheckForNull @Readonly Object errorMessage) {
     if (reference == null) {
       throw new NullPointerException(String.valueOf(errorMessage));
     }
@@ -1053,7 +1054,7 @@ public final class Preconditions {
   public static <T> T checkNotNull(
       @CheckForNull T reference,
       String errorMessageTemplate,
-      @CheckForNull @Nullable Object... errorMessageArgs) {
+      @CheckForNull @Nullable @Readonly Object... errorMessageArgs) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, errorMessageArgs));
     }

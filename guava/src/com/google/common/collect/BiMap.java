@@ -22,7 +22,13 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * A bimap (or "bidirectional map") is a map that preserves the uniqueness of its values as well as
@@ -45,9 +51,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @since 2.0
  */
 @GwtCompatible
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @ElementTypesAreNonnullByDefault
-public interface BiMap<K extends @Nullable Object, V extends @Nullable Object> extends Map<K, V> {
+@CFComment("PICO: BiMap both key and value type are immutable")
+@ReceiverDependentMutable
+public interface BiMap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> extends Map<K, V> {
   // Modification Operations
 
   /**
@@ -60,7 +68,7 @@ public interface BiMap<K extends @Nullable Object, V extends @Nullable Object> e
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  V put(@ParametricNullness K key, @ParametricNullness V value);
+  V put(@Mutable BiMap<K,V> this, @ParametricNullness K key, @ParametricNullness V value);
 
   /**
    * An alternate form of {@code put} that silently removes any existing entry with the value {@code
@@ -82,7 +90,7 @@ public interface BiMap<K extends @Nullable Object, V extends @Nullable Object> e
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  V forcePut(@ParametricNullness K key, @ParametricNullness V value);
+  V forcePut(@Mutable BiMap<K,V> this, @ParametricNullness K key, @ParametricNullness V value);
 
   // Bulk Operations
 
@@ -96,7 +104,7 @@ public interface BiMap<K extends @Nullable Object, V extends @Nullable Object> e
    *     map entries may have been added to the bimap before the exception was thrown.
    */
   @Override
-  void putAll(Map<? extends K, ? extends V> map);
+  void putAll(@Mutable BiMap<K,V> this, @Readonly Map<? extends K, ? extends V> map);
 
   // Views
 
@@ -107,7 +115,7 @@ public interface BiMap<K extends @Nullable Object, V extends @Nullable Object> e
    * java.util.Collection} specified in the {@link Map} interface.
    */
   @Override
-  Set<V> values();
+  Set<V> values(@PolyMutable BiMap<K,V> this);
 
   /**
    * Returns the inverse view of this bimap, which maps each of this bimap's values to its
@@ -119,5 +127,5 @@ public interface BiMap<K extends @Nullable Object, V extends @Nullable Object> e
    *
    * @return the inverse view of this bimap
    */
-  BiMap<V, K> inverse();
+  @PolyMutable BiMap<V, K> inverse(@PolyMutable BiMap<K,V> this);
 }

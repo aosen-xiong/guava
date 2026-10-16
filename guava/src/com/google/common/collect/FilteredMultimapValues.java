@@ -28,6 +28,10 @@ import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -37,11 +41,12 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class FilteredMultimapValues<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+final class FilteredMultimapValues<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractCollection<V> {
   @Weak private final FilteredMultimap<K, V> multimap;
 
-  FilteredMultimapValues(FilteredMultimap<K, V> multimap) {
+  FilteredMultimapValues(@ReceiverDependentMutable FilteredMultimap<K, V> multimap) {
     this.multimap = checkNotNull(multimap);
   }
 
@@ -51,17 +56,17 @@ final class FilteredMultimapValues<K extends @Nullable Object, V extends @Nullab
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+  public boolean contains(@Readonly FilteredMultimapValues<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
     return multimap.containsValue(o);
   }
 
   @Override
-  public @NonNegative int size() {
+  public @NonNegative int size(@Readonly FilteredMultimapValues<K, V> this) {
     return multimap.size();
   }
 
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+  public boolean remove(@Mutable FilteredMultimapValues<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
     Predicate<? super Entry<K, V>> entryPredicate = multimap.entryPredicate();
     for (Iterator<Entry<K, V>> unfilteredItr = multimap.unfiltered().entries().iterator();
         unfilteredItr.hasNext(); ) {
@@ -75,7 +80,7 @@ final class FilteredMultimapValues<K extends @Nullable Object, V extends @Nullab
   }
 
   @Override
-  public boolean removeAll(Collection<?> c) {
+  public boolean removeAll(@Mutable FilteredMultimapValues<K, V> this, @Readonly Collection<?> c) {
     return Iterables.removeIf(
         multimap.unfiltered().entries(),
         // explicit <Entry<K, V>> is required to build with JDK6
@@ -84,7 +89,7 @@ final class FilteredMultimapValues<K extends @Nullable Object, V extends @Nullab
   }
 
   @Override
-  public boolean retainAll(Collection<?> c) {
+  public boolean retainAll(@Mutable FilteredMultimapValues<K, V> this, @Readonly Collection<?> c) {
     return Iterables.removeIf(
         multimap.unfiltered().entries(),
         // explicit <Entry<K, V>> is required to build with JDK6
@@ -94,7 +99,7 @@ final class FilteredMultimapValues<K extends @Nullable Object, V extends @Nullab
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable FilteredMultimapValues<K, V> this) {
     multimap.clear();
   }
 }

@@ -92,6 +92,8 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -108,10 +110,11 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @SuppressWarnings({
   "GoodTime", // lots of violations (nanosecond math)
   "nullness", // too much trouble for the payoff
+        "mutability"
 })
 @GwtCompatible(emulated = true)
 // TODO(cpovirk): Annotate for nullness.
-class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> {
+class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> {
 
   /*
    * The basic strategy is to subdivide the table among Segments, each of which itself is a
@@ -407,7 +410,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
     },
     SOFT {
       @Override
-      <K, V> ValueReference<K, V> referenceValue(
+      <K extends @Immutable Object, V> ValueReference<K, V> referenceValue(
           Segment<K, V> segment, ReferenceEntry<K, V> entry, V value, int weight) {
         return (weight == 1)
             ? new SoftValueReference<K, V>(segment.valueReferenceQueue, value, entry)
@@ -422,7 +425,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
     },
     WEAK {
       @Override
-      <K, V> ValueReference<K, V> referenceValue(
+      <K extends @Immutable Object, V> ValueReference<K, V> referenceValue(
           Segment<K, V> segment, ReferenceEntry<K, V> entry, V value, int weight) {
         return (weight == 1)
             ? new WeakValueReference<K, V>(segment.valueReferenceQueue, value, entry)
@@ -431,13 +434,13 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
       }
 
       @Override
-      Equivalence<Object> defaultEquivalence() {
+      Equivalence<@Readonly Object> defaultEquivalence() {
         return Equivalence.identity();
       }
     };
 
     /** Creates a reference for the given value according to this value strength. */
-    abstract <K, V> ValueReference<K, V> referenceValue(
+    abstract <K extends @Immutable Object, V> ValueReference<K, V> referenceValue(
         Segment<K, V> segment, ReferenceEntry<K, V> entry, V value, int weight);
 
     /**
@@ -445,7 +448,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
      * at this strength. This strategy will be used unless the user explicitly specifies an
      * alternate strategy.
      */
-    abstract Equivalence<Object> defaultEquivalence();
+    abstract Equivalence<@Readonly Object> defaultEquivalence();
   }
 
   /** Creates new entries. */
@@ -631,7 +634,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
     }
 
     // Guarded By Segment.this
-    <K, V> void copyAccessEntry(ReferenceEntry<K, V> original, ReferenceEntry<K, V> newEntry) {
+    <K extends @Immutable Object, V> void copyAccessEntry(ReferenceEntry<K, V> original, ReferenceEntry<K, V> newEntry) {
       // TODO(fry): when we link values instead of entries this method can go
       // away, as can connectAccessOrder, nullifyAccessOrder.
       newEntry.setAccessTime(original.getAccessTime());
@@ -643,7 +646,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
     }
 
     // Guarded By Segment.this
-    <K, V> void copyWriteEntry(ReferenceEntry<K, V> original, ReferenceEntry<K, V> newEntry) {
+    <K extends @Immutable Object, V> void copyWriteEntry(ReferenceEntry<K, V> original, ReferenceEntry<K, V> newEntry) {
       // TODO(fry): when we link values instead of entries this method can go
       // away, as can connectWriteOrder, nullifyWriteOrder.
       newEntry.setWriteTime(original.getWriteTime());
@@ -656,7 +659,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
   }
 
   /** A reference to a value. */
-  interface ValueReference<K, V> {
+  interface ValueReference<K extends @Immutable Object, V> {
     /** Returns the value. Does not block or throw exceptions. */
     @CheckForNull
     V get();
@@ -1534,7 +1537,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
   }
 
   /** References a soft value. */
-  static class SoftValueReference<K, V> extends SoftReference<V> implements ValueReference<K, V> {
+  static class SoftValueReference<K extends @Immutable Object, V> extends SoftReference<V> implements ValueReference<K, V> {
     final ReferenceEntry<K, V> entry;
 
     SoftValueReference(ReferenceQueue<V> queue, V referent, ReferenceEntry<K, V> entry) {
@@ -1872,7 +1875,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
    * opportunistically, just to simplify some locking and avoid separate construction.
    */
   @SuppressWarnings("serial") // This class is never serialized.
-  static class Segment<K, V> extends ReentrantLock {
+  static class Segment<K extends @Immutable Object, V> extends ReentrantLock {
 
     /*
      * TODO(fry): Consider copying variables (like evictsBySize) from outer class into this class.

@@ -17,6 +17,8 @@ package com.google.common.base;
 import com.google.common.annotations.GwtCompatible;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -42,11 +44,13 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Kevin Bourrillion
  * @since 2.0
  */
+@SuppressWarnings("mutability")
 @FunctionalInterface
 @GwtCompatible
 @AnnotatedFor({"nullness"})
 @ElementTypesAreNonnullByDefault
-public interface Predicate<T extends @Nullable Object> extends java.util.function.Predicate<T> {
+@ReceiverDependentMutable
+public interface Predicate<T extends @Nullable @Readonly Object> extends java.util.function.Predicate<T> {
   /**
    * Returns the result of applying this predicate to {@code input} (Java 8+ users, see notes in the
    * class documentation above). This method is <i>generally expected</i>, but not absolutely
@@ -76,7 +80,7 @@ public interface Predicate<T extends @Nullable Object> extends java.util.functio
    */
   @Pure
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   @Override
   default boolean test(@ParametricNullness T input) {

@@ -18,6 +18,7 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Arrays;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -54,7 +55,7 @@ public final class Objects extends ExtraObjectsMethodsForWeb {
    * <p><b>Java 7+ users:</b> This method should be treated as deprecated; use {@link
    * java.util.Objects#equals} instead.
    */
-  public static boolean equal(@CheckForNull @PolySigned Object a, @CheckForNull @PolySigned Object b) {
+  public static boolean equal(@CheckForNull @PolySigned @Readonly Object a, @CheckForNull @PolySigned @Readonly Object b) {
     return a == b || (a != null && a.equals(b));
   }
 
@@ -80,7 +81,7 @@ public final class Objects extends ExtraObjectsMethodsForWeb {
    * java.util.Objects#hash} instead.
    */
   @Pure
-  public static int hashCode(@CheckForNull @Nullable Object... objects) {
+  public static int hashCode(@CheckForNull @Nullable @Readonly Object @Readonly ... objects) {
     return Arrays.hashCode(objects);
   }
 }

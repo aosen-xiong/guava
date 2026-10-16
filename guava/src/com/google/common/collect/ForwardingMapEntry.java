@@ -23,6 +23,11 @@ import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -49,10 +54,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Louis Wasserman
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingMapEntry<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+public abstract class ForwardingMapEntry<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends ForwardingObject implements Map.Entry<K, V> {
   // TODO(lowasser): identify places where thread safety is actually lost
 
@@ -60,37 +66,37 @@ public abstract class ForwardingMapEntry<K extends @Nullable Object, V extends @
   protected ForwardingMapEntry() {}
 
   @Override
-  protected abstract Entry<K, V> delegate();
+  protected abstract @PolyMutable Entry<K, V> delegate(@PolyMutable ForwardingMapEntry<K, V> this);
 
   @Pure
   @Override
   @ParametricNullness
-  public K getKey() {
+  public K getKey(@Readonly ForwardingMapEntry<K, V> this) {
     return delegate().getKey();
   }
 
   @Pure
   @Override
   @ParametricNullness
-  public V getValue() {
+  public V getValue(@Readonly ForwardingMapEntry<K, V> this) {
     return delegate().getValue();
   }
 
   @Override
   @ParametricNullness
-  public V setValue(@ParametricNullness V value) {
+  public V setValue(@Mutable ForwardingMapEntry<K, V> this, @ParametricNullness V value) {
     return delegate().setValue(value);
   }
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@Readonly ForwardingMapEntry<K, V> this, @CheckForNull @Readonly Object object) {
     return delegate().equals(object);
   }
 
   @Pure
   @Override
-  public int hashCode(@UnknownSignedness ForwardingMapEntry<K, V> this) {
+  public int hashCode(@UnknownSignedness @Readonly ForwardingMapEntry<K, V> this) {
     return delegate().hashCode();
   }
 
@@ -101,7 +107,7 @@ public abstract class ForwardingMapEntry<K extends @Nullable Object, V extends @
    *
    * @since 7.0
    */
-  protected boolean standardEquals(@CheckForNull Object object) {
+  protected boolean standardEquals(@Readonly ForwardingMapEntry<K, V> this, @CheckForNull @Readonly Object object) {
     if (object instanceof Entry) {
       Entry<?, ?> that = (Entry<?, ?>) object;
       return Objects.equal(this.getKey(), that.getKey())
@@ -117,7 +123,7 @@ public abstract class ForwardingMapEntry<K extends @Nullable Object, V extends @
    *
    * @since 7.0
    */
-  protected int standardHashCode() {
+  protected int standardHashCode(@Readonly ForwardingMapEntry<K, V> this) {
     K k = getKey();
     V v = getValue();
     return ((k == null) ? 0 : k.hashCode()) ^ ((v == null) ? 0 : v.hashCode());

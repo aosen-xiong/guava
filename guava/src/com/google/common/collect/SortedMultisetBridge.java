@@ -19,6 +19,8 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtIncompatible;
 import java.util.SortedSet;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * Superinterface of {@link SortedMultiset} to introduce a bridge method for {@code elementSet()},
@@ -29,7 +31,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-interface SortedMultisetBridge<E extends @Nullable Object> extends Multiset<E> {
+@ReceiverDependentMutable
+interface SortedMultisetBridge<E extends @Nullable @Readonly Object> extends Multiset<E> {
   @Override
   SortedSet<E> elementSet();
 }

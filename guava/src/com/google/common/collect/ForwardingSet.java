@@ -23,6 +23,9 @@ import java.util.Collection;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -52,7 +55,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingSet<E extends @Nullable Object> extends ForwardingCollection<E>
+@ReceiverDependentMutable
+public abstract class ForwardingSet<E extends @Nullable @Readonly Object> extends ForwardingCollection<E>
     implements Set<E> {
   // TODO(lowasser): identify places where thread safety is actually lost
 
@@ -60,17 +64,18 @@ public abstract class ForwardingSet<E extends @Nullable Object> extends Forwardi
   protected ForwardingSet() {}
 
   @Override
-  protected abstract Set<E> delegate();
+  // TODO(aosen): If I make poly on both, how to avoid rep exposure and type confusion?
+  protected abstract Set<E> delegate(@Readonly ForwardingSet<E> this);
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@Readonly ForwardingSet<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     return object == this || delegate().equals(object);
   }
 
   @Pure
   @Override
-  public int hashCode(@UnknownSignedness ForwardingSet<E> this) {
+  public int hashCode(@UnknownSignedness @Readonly ForwardingSet<E> this) {
     return delegate().hashCode();
   }
 
@@ -82,7 +87,7 @@ public abstract class ForwardingSet<E extends @Nullable Object> extends Forwardi
    * @since 7.0 (this version overrides the {@code ForwardingCollection} version as of 12.0)
    */
   @Override
-  protected boolean standardRemoveAll(Collection<?> collection) {
+  protected boolean standardRemoveAll(@Mutable ForwardingSet<E> this, @Readonly Collection<?> collection) {
     return Sets.removeAllImpl(this, checkNotNull(collection)); // for GWT
   }
 
@@ -93,7 +98,7 @@ public abstract class ForwardingSet<E extends @Nullable Object> extends Forwardi
    *
    * @since 7.0
    */
-  protected boolean standardEquals(@CheckForNull Object object) {
+  protected boolean standardEquals(@Readonly ForwardingSet<E> this, @CheckForNull @Readonly Object object) {
     return Sets.equalsImpl(this, object);
   }
 
@@ -103,7 +108,7 @@ public abstract class ForwardingSet<E extends @Nullable Object> extends Forwardi
    *
    * @since 7.0
    */
-  protected int standardHashCode() {
+  protected int standardHashCode(@Readonly ForwardingSet<E> this) {
     return Sets.hashCodeImpl(this);
   }
 }

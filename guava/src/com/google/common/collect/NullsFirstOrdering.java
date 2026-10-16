@@ -21,15 +21,16 @@ import java.io.Serializable;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /** An ordering that treats {@code null} as less than all other values. */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-final class NullsFirstOrdering<T extends @Nullable Object> extends Ordering<@Nullable T>
+final class NullsFirstOrdering<T extends @Nullable @Readonly Object> extends Ordering<@Nullable T>
     implements Serializable {
   final Ordering<? super T> ordering;
 
@@ -72,7 +73,7 @@ final class NullsFirstOrdering<T extends @Nullable Object> extends Ordering<@Nul
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

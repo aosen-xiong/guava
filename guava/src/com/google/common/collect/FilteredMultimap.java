@@ -20,17 +20,24 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Predicate;
 import java.util.Map.Entry;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * An interface for all filtered multimap types.
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-interface FilteredMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+interface FilteredMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends Multimap<K, V> {
-  Multimap<K, V> unfiltered();
+  @PolyMutable Multimap<K, V> unfiltered(@PolyMutable FilteredMultimap<K, V> this);
 
-  Predicate<? super Entry<K, V>> entryPredicate();
+  Predicate<? super Entry<K, V>> entryPredicate(@Readonly FilteredMultimap<K, V> this);
 }

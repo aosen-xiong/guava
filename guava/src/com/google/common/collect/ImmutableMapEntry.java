@@ -20,6 +20,8 @@ import static com.google.common.collect.CollectPreconditions.checkEntryNotNull;
 
 import com.google.common.annotations.GwtIncompatible;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * Implementation of {@code Entry} for {@link ImmutableMap} that adds extra methods to traverse hash
@@ -32,9 +34,11 @@ import javax.annotation.CheckForNull;
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtIncompatible // unnecessary
 @ElementTypesAreNonnullByDefault
-class ImmutableMapEntry<K, V> extends ImmutableEntry<K, V> {
+@Immutable
+class ImmutableMapEntry<K extends @Immutable Object, V> extends ImmutableEntry<K, V> {
   /**
    * Creates an {@code ImmutableMapEntry} array to hold parameterized entries. The result must never
    * be upcast back to ImmutableMapEntry[] (or Object[], etc.), or allowed to escape the class.
@@ -77,7 +81,8 @@ class ImmutableMapEntry<K, V> extends ImmutableEntry<K, V> {
     return true;
   }
 
-  static class NonTerminalImmutableMapEntry<K, V> extends ImmutableMapEntry<K, V> {
+  @Immutable
+  static class NonTerminalImmutableMapEntry<K extends @Immutable Object, V> extends ImmutableMapEntry<K, V> {
     /*
      * Yes, we sometimes set nextInKeyBucket to null, even for this "non-terminal" entry. We don't
      * do that with a plain NonTerminalImmutableMapEntry, but we do it with the BiMap-specific
@@ -104,7 +109,8 @@ class ImmutableMapEntry<K, V> extends ImmutableEntry<K, V> {
     }
   }
 
-  static final class NonTerminalImmutableBiMapEntry<K, V>
+  @Immutable
+  static final class NonTerminalImmutableBiMapEntry<K extends @Immutable Object, V extends @Immutable Object>
       extends NonTerminalImmutableMapEntry<K, V> {
     @CheckForNull private final transient ImmutableMapEntry<K, V> nextInValueBucket;
 

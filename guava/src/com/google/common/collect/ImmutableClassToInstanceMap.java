@@ -22,10 +22,13 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.primitives.Primitives;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.DoNotCall;
-import com.google.errorprone.annotations.Immutable;
+//import com.google.errorprone.annotations.Immutable;
 import java.io.Serializable;
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -36,8 +39,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Kevin Bourrillion
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
-@Immutable(containerOf = "B")
+@AnnotatedFor({"nullness", "mutability"})
+//@Immutable(containerOf = "B")
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 // TODO(b/278589132): Remove the redundant "@NonNull" on B once it's no longer required by J2KT.
@@ -45,7 +48,7 @@ public final class ImmutableClassToInstanceMap<B>
     extends ForwardingMap<Class<? extends @NonNull B>, B>
     implements ClassToInstanceMap<B>, Serializable {
 
-  private static final ImmutableClassToInstanceMap<Object> EMPTY =
+  private static final ImmutableClassToInstanceMap<@Readonly Object> EMPTY =
       new ImmutableClassToInstanceMap<>(ImmutableMap.<Class<?>, Object>of());
 
   /**
@@ -65,8 +68,8 @@ public final class ImmutableClassToInstanceMap<B>
    *
    * @since 19.0
    */
-  public static <B, T extends B> ImmutableClassToInstanceMap<B> of(Class<T> type, T value) {
-    ImmutableMap<Class<? extends B>, B> map = ImmutableMap.<Class<? extends B>, B>of(type, value);
+  public static <B extends @Immutable Object, T extends B> ImmutableClassToInstanceMap<B> of(@Immutable Class<T> type, T value) {
+    ImmutableMap<@Immutable Class<? extends B>, B> map = ImmutableMap.<@Immutable Class<? extends B>, B>of(type, value);
     return new ImmutableClassToInstanceMap<>(map);
   }
 
@@ -95,7 +98,7 @@ public final class ImmutableClassToInstanceMap<B>
    *
    * @since 2.0
    */
-  public static final class Builder<B> {
+  public static final @Mutable class Builder<B> {
     private final ImmutableMap.Builder<Class<? extends B>, B> mapBuilder = ImmutableMap.builder();
 
     /**
@@ -175,7 +178,7 @@ public final class ImmutableClassToInstanceMap<B>
   }
 
   @Override
-  protected Map<Class<? extends B>, B> delegate() {
+  protected @Immutable Map<Class<? extends B>, B> delegate() {
     return delegate;
   }
 
@@ -201,7 +204,7 @@ public final class ImmutableClassToInstanceMap<B>
     throw new UnsupportedOperationException();
   }
 
-  Object readResolve() {
+  @Immutable Object readResolve() {
     return isEmpty() ? of() : this;
   }
 }

@@ -36,6 +36,9 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -46,7 +49,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-class FilteredEntryMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractMultimap<K, V> implements FilteredMultimap<K, V> {
   final Multimap<K, V> unfiltered;
   final Predicate<? super Entry<K, V>> predicate;
@@ -88,7 +92,7 @@ class FilteredEntryMultimap<K extends @Nullable Object, V extends @Nullable Obje
     }
   }
 
-  static <E extends @Nullable Object> Collection<E> filterCollection(
+  static <E extends @Nullable @Readonly Object> Collection<E> filterCollection(
       Collection<E> collection, Predicate<? super E> predicate) {
     if (collection instanceof Set) {
       return Sets.filter((Set<E>) collection, predicate);
@@ -98,12 +102,12 @@ class FilteredEntryMultimap<K extends @Nullable Object, V extends @Nullable Obje
   }
 
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return asMap().get(key) != null;
   }
 
   @Override
-  public Collection<V> removeAll(@CheckForNull Object key) {
+  public Collection<V> removeAll(@CheckForNull @Readonly Object key) {
     return MoreObjects.firstNonNull(asMap().remove(key), unmodifiableEmptyCollection());
   }
 
@@ -171,7 +175,7 @@ class FilteredEntryMultimap<K extends @Nullable Object, V extends @Nullable Obje
   @WeakOuter
   class AsMap extends ViewCachingAbstractMap<K, Collection<V>> {
     @Override
-    public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+    public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
       return get(key) != null;
     }
 
@@ -182,7 +186,7 @@ class FilteredEntryMultimap<K extends @Nullable Object, V extends @Nullable Obje
 
     @Override
     @CheckForNull
-    public Collection<V> get(@CheckForNull @UnknownSignedness Object key) {
+    public Collection<V> get(@CheckForNull @UnknownSignedness @Readonly Object key) {
       Collection<V> result = unfiltered.asMap().get(key);
       if (result == null) {
         return null;
@@ -195,7 +199,7 @@ class FilteredEntryMultimap<K extends @Nullable Object, V extends @Nullable Obje
 
     @Override
     @CheckForNull
-    public Collection<V> remove(@CheckForNull @UnknownSignedness Object key) {
+    public @Immutable Collection<V> remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
       Collection<V> collection = unfiltered.asMap().get(key);
       if (collection == null) {
         return null;
@@ -354,7 +358,7 @@ class FilteredEntryMultimap<K extends @Nullable Object, V extends @Nullable Obje
     }
 
     @Override
-    public int remove(@CheckForNull Object key, int occurrences) {
+    public int remove(@CheckForNull @Readonly Object key, int occurrences) {
       checkNonnegative(occurrences, "occurrences");
       if (occurrences == 0) {
         return count(key);

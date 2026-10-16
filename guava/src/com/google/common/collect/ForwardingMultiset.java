@@ -24,6 +24,10 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -52,68 +56,69 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Louis Wasserman
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingMultiset<E extends @Nullable Object> extends ForwardingCollection<E>
+@ReceiverDependentMutable
+public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> extends ForwardingCollection<E>
     implements Multiset<E> {
 
   /** Constructor for use by subclasses. */
   protected ForwardingMultiset() {}
 
   @Override
-  protected abstract Multiset<E> delegate();
+  protected abstract @PolyMutable Multiset<E> delegate(@PolyMutable ForwardingMultiset<E> this);
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     return delegate().count(element);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public int add(@ParametricNullness E element, int occurrences) {
+  public int add(@Mutable ForwardingMultiset<E> this, @ParametricNullness E element, int occurrences) {
     return delegate().add(element, occurrences);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable ForwardingMultiset<E> this, @CheckForNull Object element, int occurrences) {
     return delegate().remove(element, occurrences);
   }
 
   @SideEffectFree
   @Override
-  public Set<E> elementSet() {
+  public @PolyMutable Set<E> elementSet(@PolyMutable ForwardingMultiset<E> this) {
     return delegate().elementSet();
   }
 
   @SideEffectFree
   @Override
-  public Set<Entry<E>> entrySet() {
+  public @PolyMutable Set<@PolyMutable Entry<E>> entrySet(@PolyMutable ForwardingMultiset<E> this) {
     return delegate().entrySet();
   }
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@Readonly ForwardingMultiset<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     return object == this || delegate().equals(object);
   }
 
   @Pure
   @Override
-  public int hashCode(@UnknownSignedness ForwardingMultiset<E> this) {
+  public int hashCode(@UnknownSignedness @Readonly ForwardingMultiset<E> this) {
     return delegate().hashCode();
   }
 
   @CanIgnoreReturnValue
   @Override
-  public int setCount(@ParametricNullness E element, int count) {
+  public int setCount(@Mutable ForwardingMultiset<E> this, @ParametricNullness E element, int count) {
     return delegate().setCount(element, count);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean setCount(@ParametricNullness E element, int oldCount, int newCount) {
+  public boolean setCount(@Mutable ForwardingMultiset<E> this, @ParametricNullness E element, int oldCount, int newCount) {
     return delegate().setCount(element, oldCount, newCount);
   }
 
@@ -124,7 +129,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    * @since 7.0
    */
   @Override
-  protected boolean standardContains(@CheckForNull Object object) {
+  protected boolean standardContains(@Readonly ForwardingMultiset<E> this, @CheckForNull @Readonly Object object) {
     return count(object) > 0;
   }
 
@@ -136,7 +141,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    * @since 7.0
    */
   @Override
-  protected void standardClear() {
+  protected void standardClear(@Mutable ForwardingMultiset<E> this) {
     Iterators.clear(entrySet().iterator());
   }
 
@@ -163,7 +168,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    *
    * @since 7.0
    */
-  protected boolean standardAdd(@ParametricNullness E element) {
+  protected boolean standardAdd(@Mutable ForwardingMultiset<E> this, @ParametricNullness E element) {
     add(element, 1);
     return true;
   }
@@ -176,7 +181,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    * @since 7.0
    */
   @Override
-  protected boolean standardAddAll(Collection<? extends E> elementsToAdd) {
+  protected boolean standardAddAll(@Mutable ForwardingMultiset<E> this, @Readonly Collection<? extends E> elementsToAdd) {
     return Multisets.addAllImpl(this, elementsToAdd);
   }
 
@@ -188,7 +193,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    * @since 7.0
    */
   @Override
-  protected boolean standardRemove(@CheckForNull Object element) {
+  protected boolean standardRemove(@Mutable ForwardingMultiset<E> this, @CheckForNull @Readonly Object element) {
     return remove(element, 1) > 0;
   }
 
@@ -200,7 +205,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    * @since 7.0
    */
   @Override
-  protected boolean standardRemoveAll(Collection<?> elementsToRemove) {
+  protected boolean standardRemoveAll(@Mutable ForwardingMultiset<E> this, @Readonly Collection<?> elementsToRemove) {
     return Multisets.removeAllImpl(this, elementsToRemove);
   }
 
@@ -212,7 +217,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    * @since 7.0
    */
   @Override
-  protected boolean standardRetainAll(Collection<?> elementsToRetain) {
+  protected boolean standardRetainAll(@Mutable ForwardingMultiset<E> this, @Readonly Collection<?> elementsToRetain) {
     return Multisets.retainAllImpl(this, elementsToRetain);
   }
 
@@ -224,7 +229,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    *
    * @since 7.0
    */
-  protected int standardSetCount(@ParametricNullness E element, int count) {
+  protected int standardSetCount(@Mutable ForwardingMultiset<E> this, @ParametricNullness E element, int count) {
     return Multisets.setCountImpl(this, element, count);
   }
 
@@ -235,7 +240,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    *
    * @since 7.0
    */
-  protected boolean standardSetCount(@ParametricNullness E element, int oldCount, int newCount) {
+  protected boolean standardSetCount(@Mutable ForwardingMultiset<E> this, @ParametricNullness E element, int oldCount, int newCount) {
     return Multisets.setCountImpl(this, element, oldCount, newCount);
   }
 
@@ -255,12 +260,12 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
     public StandardElementSet() {}
 
     @Override
-    Multiset<E> multiset() {
+    Multiset<E> multiset(@PolyMutable ForwardingMultiset<E>.StandardElementSet this) {
       return ForwardingMultiset.this;
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public Iterator<E> iterator(@Readonly StandardElementSet this) {
       return Multisets.elementIterator(multiset().entrySet().iterator());
     }
   }
@@ -272,7 +277,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    *
    * @since 7.0
    */
-  protected Iterator<E> standardIterator() {
+  protected Iterator<E> standardIterator(@Readonly ForwardingMultiset<E> this) {
     return Multisets.iteratorImpl(this);
   }
 
@@ -283,7 +288,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    *
    * @since 7.0
    */
-  protected int standardSize() {
+  protected int standardSize(@Readonly ForwardingMultiset<E> this) {
     return Multisets.linearTimeSizeImpl(this);
   }
 
@@ -294,7 +299,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    *
    * @since 7.0
    */
-  protected boolean standardEquals(@CheckForNull Object object) {
+  protected boolean standardEquals(@Readonly ForwardingMultiset<E> this, @CheckForNull @Readonly Object object) {
     return Multisets.equalsImpl(this, object);
   }
 
@@ -305,7 +310,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    *
    * @since 7.0
    */
-  protected int standardHashCode() {
+  protected int standardHashCode(@Readonly ForwardingMultiset<E> this) {
     return entrySet().hashCode();
   }
 
@@ -317,7 +322,7 @@ public abstract class ForwardingMultiset<E extends @Nullable Object> extends For
    * @since 7.0
    */
   @Override
-  protected String standardToString() {
+  protected String standardToString(@Readonly ForwardingMultiset<E> this) {
     return entrySet().toString();
   }
 }

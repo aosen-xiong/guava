@@ -24,6 +24,10 @@ import java.util.List;
 import java.util.ListIterator;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -54,10 +58,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Louis Wasserman
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingList<E extends @Nullable Object> extends ForwardingCollection<E>
+@ReceiverDependentMutable
+public abstract class ForwardingList<E extends @Nullable @Readonly Object> extends ForwardingCollection<E>
     implements List<E> {
   // TODO(lowasser): identify places where thread safety is actually lost
 
@@ -65,78 +70,78 @@ public abstract class ForwardingList<E extends @Nullable Object> extends Forward
   protected ForwardingList() {}
 
   @Override
-  protected abstract List<E> delegate();
+  protected abstract @PolyMutable List<E> delegate(@PolyMutable ForwardingList<E> this);
 
   @Override
-  public void add(int index, @ParametricNullness E element) {
+  public void add(@Mutable ForwardingList<E> this, int index, @ParametricNullness E element) {
     delegate().add(index, element);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean addAll(int index, Collection<? extends E> elements) {
+  public boolean addAll(@Mutable ForwardingList<E> this, int index, @Readonly Collection<? extends E> elements) {
     return delegate().addAll(index, elements);
   }
 
   @Override
   @ParametricNullness
-  public E get(int index) {
+  public E get(@Readonly ForwardingList<E> this, int index) {
     return delegate().get(index);
   }
 
   @Pure
   @Override
   @SuppressWarnings("nullness:argument")
-  public int indexOf(@CheckForNull @UnknownSignedness Object element) {
+  public int indexOf(@Readonly ForwardingList<E> this, @CheckForNull @UnknownSignedness @Readonly Object element) {
     return delegate().indexOf(element);
   }
 
   @Pure
   @Override
   @SuppressWarnings("nullness:argument")
-  public int lastIndexOf(@CheckForNull @UnknownSignedness Object element) {
+  public int lastIndexOf(@Readonly ForwardingList<E> this, @CheckForNull @UnknownSignedness @Readonly Object element) {
     return delegate().lastIndexOf(element);
   }
 
   @Override
-  public ListIterator<E> listIterator() {
+  public ListIterator<E> listIterator(@Readonly ForwardingList<E> this) {
     return delegate().listIterator();
   }
 
   @Override
-  public ListIterator<E> listIterator(int index) {
+  public ListIterator<E> listIterator(@Readonly ForwardingList<E> this, int index) {
     return delegate().listIterator(index);
   }
 
   @CanIgnoreReturnValue
   @Override
   @ParametricNullness
-  public E remove(int index) {
+  public E remove(@Mutable ForwardingList<E> this, int index) {
     return delegate().remove(index);
   }
 
   @CanIgnoreReturnValue
   @Override
   @ParametricNullness
-  public E set(int index, @ParametricNullness E element) {
+  public E set(@Mutable ForwardingList<E> this, int index, @ParametricNullness E element) {
     return delegate().set(index, element);
   }
 
   @SideEffectFree
   @Override
-  public List<E> subList(int fromIndex, int toIndex) {
+  public @PolyMutable List<E> subList(@PolyMutable ForwardingList<E> this, int fromIndex, int toIndex) {
     return delegate().subList(fromIndex, toIndex);
   }
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@Readonly ForwardingList<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     return object == this || delegate().equals(object);
   }
 
   @Pure
   @Override
-  public int hashCode(@UnknownSignedness ForwardingList<E> this) {
+  public int hashCode(@UnknownSignedness @Readonly ForwardingList<E> this) {
     return delegate().hashCode();
   }
 
@@ -147,7 +152,7 @@ public abstract class ForwardingList<E extends @Nullable Object> extends Forward
    *
    * @since 7.0
    */
-  protected boolean standardAdd(@ParametricNullness E element) {
+  protected boolean standardAdd(@Mutable ForwardingList<E> this, @ParametricNullness E element) {
     add(size(), element);
     return true;
   }
@@ -159,7 +164,7 @@ public abstract class ForwardingList<E extends @Nullable Object> extends Forward
    *
    * @since 7.0
    */
-  protected boolean standardAddAll(int index, Iterable<? extends E> elements) {
+  protected boolean standardAddAll(@Mutable ForwardingList<E> this, int index, Iterable<? extends E> elements) {
     return Lists.addAllImpl(this, index, elements);
   }
 
@@ -170,7 +175,7 @@ public abstract class ForwardingList<E extends @Nullable Object> extends Forward
    *
    * @since 7.0
    */
-  protected int standardIndexOf(@CheckForNull Object element) {
+  protected int standardIndexOf(@Readonly ForwardingList<E> this, @CheckForNull @Readonly Object element) {
     return Lists.indexOfImpl(this, element);
   }
 
@@ -181,7 +186,7 @@ public abstract class ForwardingList<E extends @Nullable Object> extends Forward
    *
    * @since 7.0
    */
-  protected int standardLastIndexOf(@CheckForNull Object element) {
+  protected int standardLastIndexOf(@Readonly ForwardingList<E> this, @CheckForNull @Readonly Object element) {
     return Lists.lastIndexOfImpl(this, element);
   }
 
@@ -192,7 +197,7 @@ public abstract class ForwardingList<E extends @Nullable Object> extends Forward
    *
    * @since 7.0
    */
-  protected Iterator<E> standardIterator() {
+  protected Iterator<E> standardIterator(@Readonly ForwardingList<E> this) {
     return listIterator();
   }
 
@@ -203,7 +208,7 @@ public abstract class ForwardingList<E extends @Nullable Object> extends Forward
    *
    * @since 7.0
    */
-  protected ListIterator<E> standardListIterator() {
+  protected ListIterator<E> standardListIterator(@Readonly ForwardingList<E> this) {
     return listIterator(0);
   }
 

@@ -25,6 +25,8 @@ import java.util.Spliterators;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -34,10 +36,11 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  *
  * @author Kevin Bourrillion
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   private static final Object[] EMPTY_ARRAY = new Object[0];
   static final RegularImmutableSet<Object> EMPTY =
@@ -50,7 +53,7 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   // 'and' with an int to get a valid table index.
   private final transient int mask;
 
-  RegularImmutableSet(Object[] elements, int hashCode, @Nullable Object[] table, int mask) {
+  RegularImmutableSet(Object @Readonly [] elements, int hashCode, @Nullable Object[] table, int mask) {
     this.elements = elements;
     this.hashCode = hashCode;
     this.table = table;

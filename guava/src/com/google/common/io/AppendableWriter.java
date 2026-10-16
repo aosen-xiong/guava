@@ -26,6 +26,8 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Writer that places all output on an {@link Appendable} target. If the target is {@link Flushable}
@@ -56,7 +58,7 @@ class AppendableWriter extends Writer {
    */
 
   @Override
-  public void write(char[] cbuf, @IndexOrHigh("#1") int off, @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int len) throws IOException {
+  public void write(char @Immutable [] cbuf, @IndexOrHigh("#1") int off, @NonNegative @LTLengthOf(value = "#1", offset = "#2 - 1") int len) throws IOException {
     checkNotClosed();
     // It turns out that creating a new String is usually as fast, or faster
     // than wrapping cbuf in a light-weight CharSequence.
@@ -112,14 +114,14 @@ class AppendableWriter extends Writer {
   }
 
   @Override
-  public Writer append(@CheckForNull CharSequence charSeq) throws IOException {
+  public Writer append(@CheckForNull @Readonly CharSequence charSeq) throws IOException {
     checkNotClosed();
     target.append(charSeq);
     return this;
   }
 
   @Override
-  public Writer append(@CheckForNull CharSequence charSeq, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) throws IOException {
+  public Writer append(@CheckForNull @Readonly CharSequence charSeq, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) throws IOException {
     checkNotClosed();
     target.append(charSeq, start, end);
     return this;

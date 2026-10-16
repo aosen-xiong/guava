@@ -25,9 +25,14 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
+@AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
+@Immutable
 abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   abstract E get(int index);
 
@@ -52,7 +57,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
 
   @Override
   @GwtIncompatible
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
     return asList().copyIntoArray(dst, offset);
   }
 

@@ -18,9 +18,12 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /** An ordering that uses the natural order of the string representation of the values. */
+@AnnotatedFor("mutability")
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
 final class UsingToStringOrdering extends Ordering<Object> implements Serializable {
@@ -28,7 +31,7 @@ final class UsingToStringOrdering extends Ordering<Object> implements Serializab
 
   @Pure
   @Override
-  public int compare(Object left, Object right) {
+  public int compare(@Readonly Object left, @Readonly Object right) {
     return left.toString().compareTo(right.toString());
   }
 

@@ -26,6 +26,7 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -36,7 +37,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-final class ImmutableMapKeySet<K, V> extends IndexedImmutableSet<K> {
+@Immutable
+final class ImmutableMapKeySet<K extends @Immutable Object, V> extends IndexedImmutableSet<K> {
   private final ImmutableMap<K, V> map;
 
   ImmutableMapKeySet(ImmutableMap<K, V> map) {
@@ -92,7 +94,7 @@ final class ImmutableMapKeySet<K, V> extends IndexedImmutableSet<K> {
   @GwtIncompatible // serialization
   @J2ktIncompatible
   @SuppressWarnings("unused")
-  private static class KeySetSerializedForm<K> implements Serializable {
+  private static class KeySetSerializedForm<K extends @Immutable Object> implements Serializable {
     final ImmutableMap<K, ?> map;
 
     KeySetSerializedForm(ImmutableMap<K, ?> map) {

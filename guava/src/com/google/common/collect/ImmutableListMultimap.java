@@ -38,6 +38,8 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
@@ -53,7 +55,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
-public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
+@Immutable
+public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableMultimap<K, V>
     implements ListMultimap<K, V> {
   /**
    * Returns a {@link Collector} that accumulates elements into an {@code ImmutableListMultimap}
@@ -83,7 +86,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K, V>
+  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableListMultimap<K, V>> toImmutableListMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -121,7 +124,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K, V>
+  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableListMultimap<K, V>> flatteningToImmutableListMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends Stream<? extends V>> valuesFunction) {
@@ -135,19 +138,19 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
    */
   // Casting is safe because the multimap will never hold any elements.
   @SuppressWarnings("unchecked")
-  public static <K, V> ImmutableListMultimap<K, V> of() {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> of() {
     return (ImmutableListMultimap<K, V>) EmptyImmutableListMultimap.INSTANCE;
   }
 
   /** Returns an immutable multimap containing a single entry. */
-  public static <K, V> ImmutableListMultimap<K, V> of(K k1, V v1) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> of(K k1, V v1) {
     ImmutableListMultimap.Builder<K, V> builder = ImmutableListMultimap.builder();
     builder.put(k1, v1);
     return builder.build();
   }
 
   /** Returns an immutable multimap containing the given entries, in order. */
-  public static <K, V> ImmutableListMultimap<K, V> of(K k1, V v1, K k2, V v2) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> of(K k1, V v1, K k2, V v2) {
     ImmutableListMultimap.Builder<K, V> builder = ImmutableListMultimap.builder();
     builder.put(k1, v1);
     builder.put(k2, v2);
@@ -155,7 +158,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
   }
 
   /** Returns an immutable multimap containing the given entries, in order. */
-  public static <K, V> ImmutableListMultimap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
     ImmutableListMultimap.Builder<K, V> builder = ImmutableListMultimap.builder();
     builder.put(k1, v1);
     builder.put(k2, v2);
@@ -164,7 +167,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
   }
 
   /** Returns an immutable multimap containing the given entries, in order. */
-  public static <K, V> ImmutableListMultimap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
     ImmutableListMultimap.Builder<K, V> builder = ImmutableListMultimap.builder();
     builder.put(k1, v1);
@@ -175,7 +178,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
   }
 
   /** Returns an immutable multimap containing the given entries, in order. */
-  public static <K, V> ImmutableListMultimap<K, V> of(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> of(
       K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
     ImmutableListMultimap.Builder<K, V> builder = ImmutableListMultimap.builder();
     builder.put(k1, v1);
@@ -192,7 +195,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
    * Returns a new builder. The generated builder is equivalent to the builder created by the {@link
    * Builder} constructor.
    */
-  public static <K, V> Builder<K, V> builder() {
+  public static <K extends @Immutable Object, V extends @Immutable Object> Builder<K, V> builder() {
     return new Builder<>();
   }
 
@@ -215,7 +218,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
    *
    * @since 2.0
    */
-  public static final class Builder<K, V> extends ImmutableMultimap.Builder<K, V> {
+  public static final @Mutable class Builder<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableMultimap.Builder<K, V> {
     /**
      * Creates a new builder. The returned builder is equivalent to the builder generated by {@link
      * ImmutableListMultimap#builder}.
@@ -323,7 +326,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
    *
    * @throws NullPointerException if any key or value in {@code multimap} is null
    */
-  public static <K, V> ImmutableListMultimap<K, V> copyOf(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> copyOf(
       Multimap<? extends K, ? extends V> multimap) {
     if (multimap.isEmpty()) {
       return of();
@@ -355,7 +358,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
   }
 
   /** Creates an ImmutableListMultimap from an asMap.entrySet. */
-  static <K, V> ImmutableListMultimap<K, V> fromMapEntries(
+  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> fromMapEntries(
       Collection<? extends Map.Entry<? extends K, ? extends Collection<? extends V>>> mapEntries,
       @CheckForNull Comparator<? super V> valueComparator) {
     if (mapEntries.isEmpty()) {
@@ -473,7 +476,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
     if (keyCount < 0) {
       throw new InvalidObjectException("Invalid key count " + keyCount);
     }
-    ImmutableMap.Builder<Object, ImmutableList<Object>> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<@Immutable Object, ImmutableList<Object>> builder = ImmutableMap.builder();
     int tmpSize = 0;
 
     for (int i = 0; i < keyCount; i++) {
@@ -491,7 +494,7 @@ public class ImmutableListMultimap<K, V> extends ImmutableMultimap<K, V>
       tmpSize += valueCount;
     }
 
-    ImmutableMap<Object, ImmutableList<Object>> tmpMap;
+    ImmutableMap<@Immutable Object, ImmutableList<Object>> tmpMap;
     try {
       tmpMap = builder.buildOrThrow();
     } catch (IllegalArgumentException e) {

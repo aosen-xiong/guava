@@ -45,6 +45,11 @@ import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
@@ -104,7 +109,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
-public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractMultimap<K, V> implements ListMultimap<K, V>, Serializable {
   /*
    * Order is maintained using a linked list containing all key-value pairs. In
@@ -148,7 +154,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
     }
   }
 
-  private static class KeyList<K extends @Nullable Object, V extends @Nullable Object> {
+  @ReceiverDependentMutable private static class KeyList<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> {
     Node<K, V> head;
     Node<K, V> tail;
     int count;
@@ -175,7 +181,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
   private transient int modCount;
 
   /** Creates a new, empty {@code LinkedListMultimap} with the default initial capacity. */
-  public static <K extends @Nullable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       LinkedListMultimap<K, V> create() {
     return new LinkedListMultimap<>();
   }
@@ -187,7 +193,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
    * @param expectedKeys the expected number of distinct keys
    * @throws IllegalArgumentException if {@code expectedKeys} is negative
    */
-  public static <K extends @Nullable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       LinkedListMultimap<K, V> create(int expectedKeys) {
     return new LinkedListMultimap<>(expectedKeys);
   }
@@ -199,7 +205,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
    *
    * @param multimap the multimap whose contents are copied to this multimap
    */
-  public static <K extends @Nullable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       LinkedListMultimap<K, V> create(Multimap<? extends K, ? extends V> multimap) {
     return new LinkedListMultimap<>(multimap);
   }
@@ -224,6 +230,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
    */
   @CanIgnoreReturnValue
   private Node<K, V> addNode(
+      @Mutable LinkedListMultimap<K,V> this,
       @ParametricNullness K key,
       @ParametricNullness V value,
       @CheckForNull Node<K, V> nextSibling) {
@@ -281,7 +288,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
    * Removes the specified node from the linked list. This method is only intended to be used from
    * the {@code Iterator} classes. See also {@link LinkedListMultimap#removeAllNodes(Object)}.
    */
-  private void removeNode(Node<K, V> node) {
+  private void removeNode(@Mutable LinkedListMultimap<K,V> this, @Readonly Node<K, V> node) {
     if (node.previous != null) {
       node.previous.next = node.next;
     } else { // node was head
@@ -324,16 +331,17 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
   }
 
   /** Removes all nodes for the specified key. */
-  private void removeAllNodes(@ParametricNullness K key) {
+  private void removeAllNodes(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key) {
     Iterators.clear(new ValueForKeyIterator(key));
   }
 
   /** An {@code Iterator} over all nodes. */
+  @ReceiverDependentMutable
   private class NodeIterator implements ListIterator<Entry<K, V>> {
     int nextIndex;
-    @CheckForNull Node<K, V> next;
-    @CheckForNull Node<K, V> current;
-    @CheckForNull Node<K, V> previous;
+    @CheckForNull @Assignable Node<K, V> next;
+    @CheckForNull @Assignable Node<K, V> current;
+    @CheckForNull @Assignable Node<K, V> previous;
     int expectedModCount = modCount;
 
     NodeIterator(int index) {
@@ -380,7 +388,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable NodeIterator this) {
       checkForConcurrentModification();
       checkState(current != null, "no calls to next() since the last call to remove()");
       if (current != next) { // after call to next()
@@ -424,12 +432,12 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
     }
 
     @Override
-    public void set(Entry<K, V> e) {
+    public void set(@Mutable NodeIterator this, Entry<K, V> e) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void add(Entry<K, V> e) {
+    public void add(@Mutable NodeIterator this, Entry<K, V> e) {
       throw new UnsupportedOperationException();
     }
 
@@ -440,10 +448,10 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
   }
 
   /** An {@code Iterator} over distinct keys in key head order. */
-  private class DistinctKeyIterator implements Iterator<K> {
+  @ReceiverDependentMutable private class DistinctKeyIterator implements Iterator<K> {
     final Set<K> seenKeys = Sets.<K>newHashSetWithExpectedSize(keySet().size());
-    @CheckForNull Node<K, V> next = head;
-    @CheckForNull Node<K, V> current;
+    @CheckForNull @Assignable Node<K, V> next = head;
+    @CheckForNull @Assignable Node<K, V> current;
     int expectedModCount = modCount;
 
     private void checkForConcurrentModification() {
@@ -487,9 +495,9 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
   private class ValueForKeyIterator implements ListIterator<V> {
     @ParametricNullness final K key;
     int nextIndex;
-    @CheckForNull Node<K, V> next;
-    @CheckForNull Node<K, V> current;
-    @CheckForNull Node<K, V> previous;
+    @CheckForNull @Assignable Node<K, V> next;
+    @CheckForNull @Assignable Node<K, V> current;
+    @CheckForNull @Assignable Node<K, V> previous;
 
     /** Constructs a new iterator over all values for the specified key. */
     ValueForKeyIterator(@ParametricNullness K key) {
@@ -636,7 +644,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
    */
   @CanIgnoreReturnValue
   @Override
-  public boolean put(@ParametricNullness K key, @ParametricNullness V value) {
+  public boolean put(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, @ParametricNullness V value) {
     addNode(key, value, null);
     return true;
   }
@@ -653,7 +661,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+  public List<V> replaceValues(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     List<V> oldValues = getCopy(key);
     ListIterator<V> keyValues = new ValueForKeyIterator(key);
     Iterator<? extends V> newValues = values.iterator();
@@ -703,7 +711,7 @@ public class LinkedListMultimap<K extends @Nullable Object, V extends @Nullable 
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable LinkedListMultimap<K,V> this) {
     head = null;
     tail = null;
     keyToKeyList.clear();
@@ -916,8 +924,8 @@ public boolean containsEntry(@Nullable Object arg0, @Nullable Object arg1) { ret
 public boolean equals(@Nullable Object arg0) { return super.equals(arg0); }
 
 @Override
-public boolean remove(@Nullable Object arg0, @Nullable Object arg1) { return super.remove(arg0, arg1); }
+public boolean remove(@Mutable LinkedListMultimap<K,V> this, @Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.remove(arg0, arg1); }
 
 @Override
-public Map<K, Collection<V>> asMap() { return super.asMap(); }
+public @ReceiverDependentMutable Map<K, Collection<V>> asMap() { return super.asMap(); }
 }

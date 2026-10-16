@@ -17,14 +17,18 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * Unused stub class, unreferenced under Java and manually emulated under GWT.
  *
  * @author Chris Povirk
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
+@Immutable
 abstract class ForwardingImmutableSet<E> {
   private ForwardingImmutableSet() {}
 }

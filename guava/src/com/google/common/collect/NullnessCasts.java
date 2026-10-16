@@ -17,6 +17,7 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** A utility method to perform unchecked casts to suppress errors produced by nullness analyses. */
 @GwtCompatible
@@ -52,7 +53,7 @@ final class NullnessCasts {
    */
   @ParametricNullness
   @SuppressWarnings("nullness")
-  static <T extends @Nullable Object> T uncheckedCastNullableTToT(@CheckForNull T t) {
+  static <T extends @Nullable @Readonly Object> T uncheckedCastNullableTToT(@CheckForNull T t) {
     return t;
   }
 
@@ -60,7 +61,7 @@ final class NullnessCasts {
   @SuppressWarnings({"nullness", "TypeParameterUnusedInFormals", "ReturnMissingNullable"})
   // The warnings are legitimate. Each time we use this method, we document why.
   @ParametricNullness
-  static <T extends @Nullable Object> T unsafeNull() {
+  static <T extends @Nullable @Readonly Object> T unsafeNull() {
     return null;
   }
 

@@ -24,14 +24,15 @@ import java.util.Iterator;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /** An ordering that uses the reverse of a given order. */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-final class ReverseOrdering<T extends @Nullable Object> extends Ordering<T>
+final class ReverseOrdering<T extends @Nullable @Readonly Object> extends Ordering<T>
     implements Serializable {
   final Ordering<? super T> forwardOrder;
 
@@ -103,7 +104,7 @@ final class ReverseOrdering<T extends @Nullable Object> extends Ordering<T>
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

@@ -20,7 +20,9 @@ import com.google.common.annotations.J2ktIncompatible;
 import java.util.Comparator;
 import java.util.Spliterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * List returned by {@code ImmutableSortedSet.asList()} when the set isn't empty.
@@ -28,9 +30,11 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @author Jared Levy
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @SuppressWarnings("serial")
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
     implements SortedIterable<E> {
   ImmutableSortedAsList(ImmutableSortedSet<E> backingSet, ImmutableList<E> backingList) {

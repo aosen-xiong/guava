@@ -26,22 +26,27 @@ import java.util.ListIterator;
 import java.util.RandomAccess;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * Implementation of {@link Lists#cartesianProduct(List)}.
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class CartesianList<E> extends AbstractList<List<E>> implements RandomAccess {
 
   private final transient ImmutableList<List<E>> axes;
   private final transient int[] axesSizeProduct;
 
-  static <E> List<List<E>> create(List<? extends List<? extends E>> lists) {
-    ImmutableList.Builder<List<E>> axesBuilder = new ImmutableList.Builder<>(lists.size());
+  static <E> @Immutable List<List<E>> create(@Immutable List<? extends List<? extends E>> lists) {
+    ImmutableList.Builder<@Immutable List<E>> axesBuilder = new ImmutableList.Builder<>(lists.size());
     for (List<? extends E> list : lists) {
       List<E> copy = ImmutableList.copyOf(list);
       if (copy.isEmpty()) {
@@ -52,7 +57,8 @@ final class CartesianList<E> extends AbstractList<List<E>> implements RandomAcce
     return new CartesianList<>(axesBuilder.build());
   }
 
-  CartesianList(ImmutableList<List<E>> axes) {
+  @SuppressWarnings("mutability:assignment.type.incompatible") // cast from @Unique @Mutable to @Immutable
+  CartesianList(ImmutableList<@Immutable List<E>> axes) {
     this.axes = axes;
     int[] axesSizeProduct = new int[axes.size() + 1];
     axesSizeProduct[axes.size()] = 1;
@@ -72,11 +78,11 @@ final class CartesianList<E> extends AbstractList<List<E>> implements RandomAcce
   }
 
   @Override
-  public int indexOf(@CheckForNull @UnknownSignedness Object o) {
+  public int indexOf(@CheckForNull @UnknownSignedness @Readonly Object o) {
     if (!(o instanceof List)) {
       return -1;
     }
-    List<?> list = (List<?>) o;
+    List<?> list = (@Readonly List<?>) o;
     if (list.size() != axes.size()) {
       return -1;
     }
@@ -94,11 +100,11 @@ final class CartesianList<E> extends AbstractList<List<E>> implements RandomAcce
   }
 
   @Override
-  public int lastIndexOf(@CheckForNull @UnknownSignedness Object o) {
+  public int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object o) {
     if (!(o instanceof List)) {
       return -1;
     }
-    List<?> list = (List<?>) o;
+    List<?> list = (@Readonly List<?>) o;
     if (list.size() != axes.size()) {
       return -1;
     }
@@ -118,7 +124,7 @@ final class CartesianList<E> extends AbstractList<List<E>> implements RandomAcce
   @Override
   public ImmutableList<E> get(int index) {
     checkElementIndex(index, size());
-    return new ImmutableList<E>() {
+    return new @Immutable ImmutableList<E>() {
 
       @Override
       public @NonNegative int size() {
@@ -154,11 +160,11 @@ final class CartesianList<E> extends AbstractList<List<E>> implements RandomAcce
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (!(object instanceof List)) {
       return false;
     }
-    List<?> list = (List<?>) object;
+    List<?> list = (@Readonly List<?>) object;
     if (list.size() != axes.size()) {
       return false;
     }

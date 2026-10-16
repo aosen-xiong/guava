@@ -18,6 +18,8 @@ import com.google.common.annotations.Beta;
 import com.google.errorprone.annotations.DoNotMock;
 import java.io.Serializable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * An object which can send data from an object of type {@code T} into a {@code PrimitiveSink}.
@@ -42,10 +44,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author Dimitris Andreou
  * @since 11.0
  */
+@AnnotatedFor("mutability")
 @Beta
 @DoNotMock("Implement with a lambda")
 @ElementTypesAreNonnullByDefault
-public interface Funnel<T extends @Nullable Object> extends Serializable {
+public interface Funnel<T extends @Nullable @Readonly Object> extends Serializable {
 
   /**
    * Sends a stream of data from the {@code from} object into the sink {@code into}. There is no

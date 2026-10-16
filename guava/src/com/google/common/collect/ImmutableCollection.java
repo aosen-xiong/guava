@@ -40,10 +40,14 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * A {@link Collection} whose contents will never change, and which offers a few additional
@@ -177,7 +181,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 // TODO(kevinb): I think we should push everything down to "BaseImmutableCollection" or something,
 // just to do everything we can to emphasize the "practically an interface" nature of this class.
-public abstract class ImmutableCollection<E extends @NonNull Object> extends AbstractCollection<E> implements Serializable {
+@Immutable
+public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> extends AbstractCollection<E> implements Serializable {
   /*
    * We expect SIZED (and SUBSIZED, if applicable) to be added by the spliterator factory methods.
    * These are properties of the collection as a whole; SIZED and SUBSIZED are more properties of
@@ -196,8 +201,8 @@ public abstract class ImmutableCollection<E extends @NonNull Object> extends Abs
   public Spliterator<E> spliterator() {
     return Spliterators.spliterator(this, SPLITERATOR_CHARACTERISTICS);
   }
-
-  private static final Object[] EMPTY_ARRAY = {};
+  @CFComment("Not sure how to annotate {} directly")
+  private static final Object @Mutable [] EMPTY_ARRAY = new Object @Mutable [0];
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
@@ -220,7 +225,7 @@ public abstract class ImmutableCollection<E extends @NonNull Object> extends Abs
    * nullness perspective. The signature below at least has the virtue of being relatively simple.
    */
   @SuppressWarnings({"nullness:return", "nullness:assignment"})
-  public final <T extends @Nullable @UnknownSignedness Object> T[] toArray(@PolyNull T[] other) {
+  public final <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] other) {
     checkNotNull(other);
     int size = size();
 
@@ -261,7 +266,7 @@ public abstract class ImmutableCollection<E extends @NonNull Object> extends Abs
 
   @Pure
   @Override
-  public abstract boolean contains(@CheckForNull @UnknownSignedness Object object);
+  public abstract boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object);
 
   /**
    * Guaranteed to throw an exception and leave the collection unmodified.
@@ -287,7 +292,7 @@ public abstract class ImmutableCollection<E extends @NonNull Object> extends Abs
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean remove(@CheckForNull @UnknownSignedness Object object) {
+  public final boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
     throw new UnsupportedOperationException();
   }
 
@@ -393,7 +398,7 @@ public abstract class ImmutableCollection<E extends @NonNull Object> extends Abs
    * offset. Returns {@code offset + size()}.
    */
   @CanIgnoreReturnValue
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object @Mutable [] dst, int offset) {
     for (E e : this) {
       dst[offset++] = e;
     }

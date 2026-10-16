@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An accumulator that selects the "top" {@code k} elements added to it, relative to a provided
@@ -56,7 +57,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 final class TopKSelector<
-    T extends @Nullable Object> {
+    T extends @Nullable @Readonly Object> {
 
   /**
    * Returns a {@code TopKSelector} that collects the lowest {@code k} elements added to it,
@@ -75,7 +76,7 @@ final class TopKSelector<
    *
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
-  public static <T extends @Nullable Object> TopKSelector<T> least(
+  public static <T extends @Nullable @Readonly Object> TopKSelector<T> least(
       int k, Comparator<? super T> comparator) {
     return new TopKSelector<T>(comparator, k);
   }

@@ -22,6 +22,9 @@ import com.google.common.annotations.J2ktIncompatible;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * An {@link ImmutableAsList} implementation specialized for when the delegate collection is already
@@ -29,9 +32,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @SuppressWarnings("serial") // uses writeReplace, not default serialization
 @ElementTypesAreNonnullByDefault
+@Immutable
 class RegularImmutableAsList<E> extends ImmutableAsList<E> {
   private final ImmutableCollection<E> delegate;
   private final ImmutableList<? extends E> delegateList;
@@ -41,7 +46,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
     this.delegateList = delegateList;
   }
 
-  RegularImmutableAsList(ImmutableCollection<E> delegate, Object[] array) {
+  RegularImmutableAsList(ImmutableCollection<E> delegate, Object @Readonly [] array) {
     this(delegate, ImmutableList.<E>asImmutableList(array));
   }
 
@@ -69,7 +74,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
 
   @GwtIncompatible // not present in emulated superclass
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
     return delegateList.copyIntoArray(dst, offset);
   }
 

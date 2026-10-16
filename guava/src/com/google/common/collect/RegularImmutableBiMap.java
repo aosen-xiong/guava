@@ -40,6 +40,10 @@ import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -48,7 +52,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  *
  * @author Louis Wasserman
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
@@ -56,26 +60,26 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   @SuppressWarnings("unchecked") // TODO(cpovirk): Consider storing Entry<?, ?>[] instead.
   static final RegularImmutableBiMap<Object, Object> EMPTY =
       new RegularImmutableBiMap<>(
-          null, null, (Entry<Object, Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, 0, 0);
+          null, null, (Entry<@Immutable Object, @Immutable Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, 0, 0);
 
   static final double MAX_LOAD_FACTOR = 1.2;
 
-  @CheckForNull private final transient @Nullable ImmutableMapEntry<K, V>[] keyTable;
-  @CheckForNull private final transient @Nullable ImmutableMapEntry<K, V>[] valueTable;
-  @VisibleForTesting final transient Entry<K, V>[] entries;
+  @CheckForNull private final transient @Nullable ImmutableMapEntry<K, V> @Immutable [] keyTable;
+  @CheckForNull private final transient @Nullable ImmutableMapEntry<K, V> @Immutable [] valueTable;
+  @VisibleForTesting final transient @Immutable Entry<K, V> @Immutable [] entries;
   private final transient int mask;
   private final transient int hashCode;
 
-  static <K, V> ImmutableBiMap<K, V> fromEntries(Entry<K, V>... entries) {
+  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntries(@Immutable Entry<K, V>... entries) {
     return fromEntryArray(entries.length, entries);
   }
 
-  static <K, V> ImmutableBiMap<K, V> fromEntryArray(int n, @Nullable Entry<K, V>[] entryArray) {
+  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntryArray(int n, @Nullable @Immutable Entry<K, V> @Immutable [] entryArray) {
     checkPositionIndex(n, entryArray.length);
     int tableSize = Hashing.closedTableSize(n, MAX_LOAD_FACTOR);
     int mask = tableSize - 1;
-    @Nullable ImmutableMapEntry<K, V>[] keyTable = createEntryArray(tableSize);
-    @Nullable ImmutableMapEntry<K, V>[] valueTable = createEntryArray(tableSize);
+    @Nullable ImmutableMapEntry<K, V> @Mutable [] keyTable = createEntryArray(tableSize);
+    @Nullable ImmutableMapEntry<K, V> @Mutable [] valueTable = createEntryArray(tableSize);
     /*
      * The cast is safe: n==entryArray.length means that we have filled the whole array with Entry
      * instances, in which case it is safe to cast it from an array of nullable entries to an array
@@ -119,9 +123,9 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   }
 
   private RegularImmutableBiMap(
-      @CheckForNull @Nullable ImmutableMapEntry<K, V>[] keyTable,
-      @CheckForNull @Nullable ImmutableMapEntry<K, V>[] valueTable,
-      Entry<K, V>[] entries,
+      @CheckForNull @Nullable ImmutableMapEntry<K, V> @Immutable  [] keyTable,
+      @CheckForNull @Nullable ImmutableMapEntry<K, V> @Immutable  [] valueTable,
+      @Immutable  Entry<K, V> @Immutable  [] entries,
       int mask,
       int hashCode) {
     this.keyTable = keyTable;
@@ -139,7 +143,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
    *     flooding attack
    */
   private static void checkNoConflictInValueBucket(
-      Object value, Entry<?, ?> entry, @CheckForNull ImmutableMapEntry<?, ?> valueBucketHead)
+      @Readonly Object value, @Readonly Entry<?, ?> entry, @CheckForNull ImmutableMapEntry<?, ?> valueBucketHead)
       throws BucketOverflowException {
     int bucketSize = 0;
     for (; valueBucketHead != null; valueBucketHead = valueBucketHead.getNextInValueBucket()) {
@@ -152,14 +156,14 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return RegularImmutableMap.get(key, keyTable, mask);
   }
 
   @Override
-  ImmutableSet<Entry<K, V>> createEntrySet() {
+  ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     return isEmpty()
-        ? ImmutableSet.<Entry<K, V>>of()
+        ? ImmutableSet.<@Immutable Entry<K, V>>of()
         : new ImmutableMapEntrySet.RegularEntrySet<K, V>(this, entries);
   }
 
@@ -182,7 +186,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   }
 
   @Override
-  public int hashCode(@UnknownSignedness RegularImmutableBiMap<K, V> this) {
+  public int hashCode(@UnknownSignedness @Readonly RegularImmutableBiMap<K, V> this) {
     return hashCode;
   }
 
@@ -196,7 +200,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
     return entries.length;
   }
 
-  @LazyInit @RetainedWith @CheckForNull private transient ImmutableBiMap<V, K> inverse;
+  @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableBiMap<V, K> inverse;
 
   @Override
   public ImmutableBiMap<V, K> inverse() {
@@ -207,6 +211,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
     return (result == null) ? inverse = new Inverse() : result;
   }
 
+  @Immutable
   private final class Inverse extends ImmutableBiMap<V, K> {
 
     @Override
@@ -227,7 +232,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
 
     @Override
     @CheckForNull
-    public K get(@CheckForNull @UnknownSignedness Object value) {
+    public K get(@CheckForNull @UnknownSignedness @Readonly Object value) {
       if (value == null || valueTable == null) {
         return null;
       }
@@ -248,10 +253,11 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
     }
 
     @Override
-    ImmutableSet<Entry<V, K>> createEntrySet() {
+    ImmutableSet<@Immutable  Entry<V, K>> createEntrySet() {
       return new InverseEntrySet();
     }
 
+    @Immutable
     final class InverseEntrySet extends ImmutableMapEntrySet<V, K> {
       @Override
       ImmutableMap<V, K> map() {
@@ -264,7 +270,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
       }
 
       @Override
-      public int hashCode(@UnknownSignedness InverseEntrySet this) {
+      public int hashCode(@UnknownSignedness @Readonly InverseEntrySet this) {
         return hashCode;
       }
 
@@ -339,7 +345,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
       this.forward = forward;
     }
 
-    Object readResolve() {
+    @Immutable Object readResolve() {
       return forward.inverse();
     }
 

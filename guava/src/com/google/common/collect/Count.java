@@ -17,13 +17,16 @@ package com.google.common.collect;
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A mutable value of type {@code int}, for multisets to use in tracking counts of values.
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 final class Count implements Serializable {
@@ -61,7 +64,7 @@ final class Count implements Serializable {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     return obj instanceof Count && ((Count) obj).value == value;
   }
 

@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -122,7 +123,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
 @Immutable(containerOf = "C")
 @ElementTypesAreNonnullByDefault
-public final class Range<C extends Comparable> extends RangeGwtSerializationDependencies
+@org.checkerframework.checker.mutability.qual.Immutable
+public final class Range<C extends @Readonly Comparable> extends RangeGwtSerializationDependencies
     implements Predicate<C>, Serializable {
   @SuppressWarnings("unchecked")
   static <C extends Comparable<?>> Ordering<Range<C>> rangeLexOrdering() {
@@ -649,7 +651,7 @@ public final class Range<C extends Comparable> extends RangeGwtSerializationDepe
    * {@code [3..3)}, {@code (3..3]}, {@code (4..4]} are all unequal.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object instanceof Range) {
       Range<?> other = (Range<?>) object;
       return lowerBound.equals(other.lowerBound) && upperBound.equals(other.upperBound);
@@ -699,7 +701,7 @@ public final class Range<C extends Comparable> extends RangeGwtSerializationDepe
   }
 
   @SuppressWarnings("unchecked") // this method may throw CCE
-  static int compareOrThrow(Comparable left, Comparable right) {
+  static int compareOrThrow(@Readonly Comparable left, @Readonly Comparable right) {
     return left.compareTo(right);
   }
 

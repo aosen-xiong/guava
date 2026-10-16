@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -53,13 +54,13 @@ public final class Predicates {
 
   /** Returns a predicate that always evaluates to {@code true}. */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable Object> Predicate<T> alwaysTrue() {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> alwaysTrue() {
     return ObjectPredicate.ALWAYS_TRUE.withNarrowedType();
   }
 
   /** Returns a predicate that always evaluates to {@code false}. */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable Object> Predicate<T> alwaysFalse() {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> alwaysFalse() {
     return ObjectPredicate.ALWAYS_FALSE.withNarrowedType();
   }
 
@@ -68,7 +69,7 @@ public final class Predicates {
    * null.
    */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable Object> Predicate<T> isNull() {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> isNull() {
     return ObjectPredicate.IS_NULL.withNarrowedType();
   }
 
@@ -77,7 +78,7 @@ public final class Predicates {
    * null.
    */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable Object> Predicate<T> notNull() {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> notNull() {
     return ObjectPredicate.NOT_NULL.withNarrowedType();
   }
 
@@ -85,7 +86,7 @@ public final class Predicates {
    * Returns a predicate that evaluates to {@code true} if the given predicate evaluates to {@code
    * false}.
    */
-  public static <T extends @Nullable Object> Predicate<T> not(Predicate<T> predicate) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> not(Predicate<T> predicate) {
     return new NotPredicate<>(predicate);
   }
 
@@ -96,7 +97,7 @@ public final class Predicates {
    * changes to it won't alter the behavior of this predicate. If {@code components} is empty, the
    * returned predicate will always evaluate to {@code true}.
    */
-  public static <T extends @Nullable Object> Predicate<T> and(
+  public static <T extends @Nullable @Readonly Object> Predicate<T> and(
       Iterable<? extends Predicate<? super T>> components) {
     return new AndPredicate<>(defensiveCopy(components));
   }
@@ -109,7 +110,7 @@ public final class Predicates {
    * returned predicate will always evaluate to {@code true}.
    */
   @SafeVarargs
-  public static <T extends @Nullable Object> Predicate<T> and(Predicate<? super T>... components) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> and(Predicate<? super T>... components) {
     return new AndPredicate<T>(defensiveCopy(components));
   }
 
@@ -118,7 +119,7 @@ public final class Predicates {
    * true}. The components are evaluated in order, and evaluation will be "short-circuited" as soon
    * as a false predicate is found.
    */
-  public static <T extends @Nullable Object> Predicate<T> and(
+  public static <T extends @Nullable @Readonly Object> Predicate<T> and(
       Predicate<? super T> first, Predicate<? super T> second) {
     return new AndPredicate<>(Predicates.<T>asList(checkNotNull(first), checkNotNull(second)));
   }
@@ -130,7 +131,7 @@ public final class Predicates {
    * changes to it won't alter the behavior of this predicate. If {@code components} is empty, the
    * returned predicate will always evaluate to {@code false}.
    */
-  public static <T extends @Nullable Object> Predicate<T> or(
+  public static <T extends @Nullable @Readonly Object> Predicate<T> or(
       Iterable<? extends Predicate<? super T>> components) {
     return new OrPredicate<>(defensiveCopy(components));
   }
@@ -143,7 +144,7 @@ public final class Predicates {
    * returned predicate will always evaluate to {@code false}.
    */
   @SafeVarargs
-  public static <T extends @Nullable Object> Predicate<T> or(Predicate<? super T>... components) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> or(Predicate<? super T>... components) {
     return new OrPredicate<T>(defensiveCopy(components));
   }
 
@@ -152,7 +153,7 @@ public final class Predicates {
    * {@code true}. The components are evaluated in order, and evaluation will be "short-circuited"
    * as soon as a true predicate is found.
    */
-  public static <T extends @Nullable Object> Predicate<T> or(
+  public static <T extends @Nullable @Readonly Object> Predicate<T> or(
       Predicate<? super T> first, Predicate<? super T> second) {
     return new OrPredicate<>(Predicates.<T>asList(checkNotNull(first), checkNotNull(second)));
   }
@@ -161,7 +162,7 @@ public final class Predicates {
    * Returns a predicate that evaluates to {@code true} if the object being tested {@code equals()}
    * the given target or both are null.
    */
-  public static <T extends @Nullable Object> Predicate<T> equalTo(@ParametricNullness T target) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> equalTo(@ParametricNullness T target) {
     return (target == null)
         ? Predicates.<T>isNull()
         : new IsEqualToPredicate(target).withNarrowedType();
@@ -181,7 +182,7 @@ public final class Predicates {
    * instances {@code Lists.newArrayList(1)} and {@code Arrays.asList(1)}.
    */
   @GwtIncompatible // Class.isInstance
-  public static <T extends @Nullable Object> Predicate<T> instanceOf(Class<?> clazz) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> instanceOf(Class<?> clazz) {
     return new InstanceOfPredicate<>(clazz);
   }
 
@@ -216,7 +217,7 @@ public final class Predicates {
    *
    * @param target the collection that may contain the function input
    */
-  public static <T extends @Nullable Object> Predicate<T> in(Collection<? extends T> target) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> in(Collection<? extends T> target) {
     return new InPredicate<>(target);
   }
 
@@ -226,7 +227,7 @@ public final class Predicates {
    *
    * @return the composition of the provided function and predicate
    */
-  public static <A extends @Nullable Object, B extends @Nullable Object> Predicate<A> compose(
+  public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object> Predicate<A> compose(
       Predicate<B> predicate, Function<A, ? extends B> function) {
     return new CompositionPredicate<>(predicate, function);
   }
@@ -310,13 +311,13 @@ public final class Predicates {
     };
 
     @SuppressWarnings("unchecked") // safe contravariant cast
-    <T extends @Nullable Object> Predicate<T> withNarrowedType() {
+    <T extends @Nullable @Readonly Object> Predicate<T> withNarrowedType() {
       return (Predicate<T>) this;
     }
   }
 
   /** @see Predicates#not(Predicate) */
-  private static class NotPredicate<T extends @Nullable Object>
+  private static class NotPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
     final Predicate<T> predicate;
 
@@ -355,7 +356,7 @@ public final class Predicates {
   }
 
   /** @see Predicates#and(Iterable) */
-  private static class AndPredicate<T extends @Nullable Object>
+  private static class AndPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
     private final List<? extends Predicate<? super T>> components;
 
@@ -401,7 +402,7 @@ public final class Predicates {
   }
 
   /** @see Predicates#or(Iterable) */
-  private static class OrPredicate<T extends @Nullable Object>
+  private static class OrPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
     private final List<? extends Predicate<? super T>> components;
 
@@ -497,7 +498,7 @@ public final class Predicates {
     private static final long serialVersionUID = 0;
 
     @SuppressWarnings("unchecked") // safe contravariant cast
-    <T extends @Nullable Object> Predicate<T> withNarrowedType() {
+    <T extends @Nullable @Readonly Object> Predicate<T> withNarrowedType() {
       return (Predicate<T>) this;
     }
   }
@@ -506,7 +507,7 @@ public final class Predicates {
    * @see Predicates#instanceOf(Class)
    */
   @GwtIncompatible // Class.isInstance
-  private static class InstanceOfPredicate<T extends @Nullable Object>
+  private static class InstanceOfPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
     private final Class<?> clazz;
 
@@ -584,7 +585,7 @@ public final class Predicates {
   }
 
   /** @see Predicates#in(Collection) */
-  private static class InPredicate<T extends @Nullable Object>
+  private static class InPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
     private final Collection<?> target;
 
@@ -627,7 +628,7 @@ public final class Predicates {
   }
 
   /** @see Predicates#compose(Predicate, Function) */
-  private static class CompositionPredicate<A extends @Nullable Object, B extends @Nullable Object>
+  private static class CompositionPredicate<A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object>
       implements Predicate<A>, Serializable {
     final Predicate<B> p;
     final Function<A, ? extends B> f;
@@ -736,7 +737,7 @@ public final class Predicates {
     private static final long serialVersionUID = 0;
   }
 
-  private static <T extends @Nullable Object> List<Predicate<? super T>> asList(
+  private static <T extends @Nullable @Readonly Object> List<Predicate<? super T>> asList(
       Predicate<? super T> first, Predicate<? super T> second) {
     // TODO(kevinb): understand why we still get a warning despite @SafeVarargs!
     return Arrays.<Predicate<? super T>>asList(first, second);

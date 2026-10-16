@@ -18,16 +18,23 @@ package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A supertype for filtered {@link SetMultimap} implementations.
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-interface FilteredSetMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+interface FilteredSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends FilteredMultimap<K, V>, SetMultimap<K, V> {
   @Override
-  SetMultimap<K, V> unfiltered();
+  @PolyMutable SetMultimap<K, V> unfiltered(@PolyMutable FilteredSetMultimap<K, V> this);
 }

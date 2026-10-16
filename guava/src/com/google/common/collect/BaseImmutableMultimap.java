@@ -16,11 +16,15 @@
 package com.google.common.collect;
 
 import com.google.common.annotations.GwtCompatible;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A dummy superclass of {@link ImmutableMultimap} that can be instanceof'd without ProGuard
  * retaining additional implementation details of {@link ImmutableMultimap}.
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class BaseImmutableMultimap<K, V> extends AbstractMultimap<K, V> {}
+@Immutable
+abstract class BaseImmutableMultimap<K extends @Immutable Object, V> extends AbstractMultimap<K, V> {}

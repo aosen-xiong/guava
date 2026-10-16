@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A sorted multiset which forwards all its method calls to another sorted multiset. Subclasses
@@ -45,7 +47,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingSortedMultiset<E extends @Nullable Object>
+@ReceiverDependentMutable
+public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Object>
     extends ForwardingMultiset<E> implements SortedMultiset<E> {
   /** Constructor for use by subclasses. */
   protected ForwardingSortedMultiset() {}
@@ -71,6 +74,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable Object>
    *
    * @since 15.0
    */
+  @ReceiverDependentMutable
   protected class StandardElementSet extends SortedMultisets.NavigableElementSet<E> {
     /** Constructor for use by subclasses. */
     public StandardElementSet() {
@@ -100,6 +104,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable Object>
    *
    * @since 15.0
    */
+  @ReceiverDependentMutable
   protected abstract class StandardDescendingMultiset extends DescendingMultiset<E> {
     /** Constructor for use by subclasses. */
     public StandardDescendingMultiset() {}

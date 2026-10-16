@@ -33,6 +33,8 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to {@link Queue} and {@link Deque} instances. Also see this
@@ -454,7 +456,7 @@ public final class Queues {
    * @return a synchronized view of the specified queue
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Queue<E> synchronizedQueue(Queue<E> queue) {
+  public static <E extends @Nullable @Readonly Object> Queue<E> synchronizedQueue(Queue<E> queue) {
     return Synchronized.queue(queue, null);
   }
 
@@ -487,7 +489,7 @@ public final class Queues {
    * @return a synchronized view of the specified deque
    * @since 15.0
    */
-  public static <E extends @Nullable Object> Deque<E> synchronizedDeque(Deque<E> deque) {
+  public static <E extends @Nullable @Readonly Object> Deque<E> synchronizedDeque(Deque<E> deque) {
     return Synchronized.deque(deque, null);
   }
 }

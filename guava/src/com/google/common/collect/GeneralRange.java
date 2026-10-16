@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -40,7 +41,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-final class GeneralRange<T extends @Nullable Object> implements Serializable {
+final class GeneralRange<T extends @Nullable @Readonly Object> implements Serializable {
   /** Converts a Range to a GeneralRange. */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
   static <T extends Comparable> GeneralRange<T> from(Range<T> range) {
@@ -60,7 +61,7 @@ final class GeneralRange<T extends @Nullable Object> implements Serializable {
   }
 
   /** Returns the whole range relative to the specified comparator. */
-  static <T extends @Nullable Object> GeneralRange<T> all(Comparator<? super T> comparator) {
+  static <T extends @Nullable @Readonly Object> GeneralRange<T> all(Comparator<? super T> comparator) {
     return new GeneralRange<>(comparator, false, null, OPEN, false, null, OPEN);
   }
 
@@ -68,7 +69,7 @@ final class GeneralRange<T extends @Nullable Object> implements Serializable {
    * Returns everything above the endpoint relative to the specified comparator, with the specified
    * endpoint behavior.
    */
-  static <T extends @Nullable Object> GeneralRange<T> downTo(
+  static <T extends @Nullable @Readonly Object> GeneralRange<T> downTo(
       Comparator<? super T> comparator, @ParametricNullness T endpoint, BoundType boundType) {
     return new GeneralRange<>(comparator, true, endpoint, boundType, false, null, OPEN);
   }
@@ -77,7 +78,7 @@ final class GeneralRange<T extends @Nullable Object> implements Serializable {
    * Returns everything below the endpoint relative to the specified comparator, with the specified
    * endpoint behavior.
    */
-  static <T extends @Nullable Object> GeneralRange<T> upTo(
+  static <T extends @Nullable @Readonly Object> GeneralRange<T> upTo(
       Comparator<? super T> comparator, @ParametricNullness T endpoint, BoundType boundType) {
     return new GeneralRange<>(comparator, false, null, OPEN, true, endpoint, boundType);
   }
@@ -86,7 +87,7 @@ final class GeneralRange<T extends @Nullable Object> implements Serializable {
    * Returns everything between the endpoints relative to the specified comparator, with the
    * specified endpoint behavior.
    */
-  static <T extends @Nullable Object> GeneralRange<T> range(
+  static <T extends @Nullable @Readonly Object> GeneralRange<T> range(
       Comparator<? super T> comparator,
       @ParametricNullness T lower,
       BoundType lowerType,
@@ -242,7 +243,7 @@ final class GeneralRange<T extends @Nullable Object> implements Serializable {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj instanceof GeneralRange) {
       GeneralRange<?> r = (GeneralRange<?>) obj;
       return comparator.equals(r.comparator)

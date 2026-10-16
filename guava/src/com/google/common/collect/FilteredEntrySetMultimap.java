@@ -22,48 +22,56 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * Implementation of {@link Multimaps#filterEntries(SetMultimap, Predicate)}.
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class FilteredEntrySetMultimap<K extends @Nullable Object, V extends @Nullable Object>
+@ReceiverDependentMutable
+final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends FilteredEntryMultimap<K, V> implements FilteredSetMultimap<K, V> {
 
-  FilteredEntrySetMultimap(SetMultimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+  FilteredEntrySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
     super(unfiltered, predicate);
   }
 
   @Override
-  public SetMultimap<K, V> unfiltered() {
-    return (SetMultimap<K, V>) unfiltered;
+  public @PolyMutable SetMultimap<K, V> unfiltered(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
+    return (@PolyMutable SetMultimap<K, V>) unfiltered;
   }
 
   @Override
-  public Set<V> get(@ParametricNullness K key) {
-    return (Set<V>) super.get(key);
+  public @PolyMutable Set<V> get(@PolyMutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key) {
+    return (@PolyMutable Set<V>) super.get(key);
   }
 
   @Override
-  public Set<V> removeAll(@CheckForNull Object key) {
-    return (Set<V>) super.removeAll(key);
+  public @Readonly Set<V> removeAll(@Mutable FilteredEntrySetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    return (@Readonly Set<V>) super.removeAll(key);
   }
 
   @Override
-  public Set<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+  public Set<V> replaceValues(@Mutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     return (Set<V>) super.replaceValues(key, values);
   }
 
   @Override
-  Set<Entry<K, V>> createEntries() {
+  @PolyMutable Set<@PolyMutable Entry<K, V>> createEntries(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
     return Sets.filter(unfiltered().entries(), entryPredicate());
   }
 
   @Override
-  public Set<Entry<K, V>> entries() {
-    return (Set<Entry<K, V>>) super.entries();
+  public @PolyMutable Set<@PolyMutable Entry<K, V>> entries(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
+    return (@PolyMutable Set<@PolyMutable Entry<K, V>>) super.entries();
   }
 }

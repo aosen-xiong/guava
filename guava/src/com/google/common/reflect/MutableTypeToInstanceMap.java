@@ -31,8 +31,10 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A mutable type-to-instance map. See also {@link ImmutableTypeToInstanceMap}.
@@ -155,7 +157,7 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
 
         @Override
         @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-        public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] array) {
+        public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] array) {
           return standardToArray(array);
         }
       };

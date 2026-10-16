@@ -24,6 +24,7 @@ import com.google.common.base.Objects;
 import java.util.concurrent.Callable;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Statistics about the performance of a {@link Cache}. Instances of this class are immutable.
@@ -59,6 +60,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class CacheStats {
   private final long hitCount;
   private final long missCount;

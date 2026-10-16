@@ -667,7 +667,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
           if (localValue instanceof SetFuture) {
             // propagate cancellation to the future set in setfuture, this is racy, and we don't
             // care if we are successful or not.
-            ListenableFuture<?> futureToPropagateTo = ((SetFuture) localValue).future;
+            ListenableFuture<?> futureToPropagateTo = ((SetFuture<?>) localValue).future;
             if (futureToPropagateTo instanceof Trusted) {
               // If the future is a TrustedFuture then we specifically avoid calling cancel()
               // this has 2 benefits

@@ -38,7 +38,11 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * A {@link Table} whose contents will never change, with many other important properties detailed
@@ -52,7 +56,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
+@AnnotatedFor("mutability")
+@Immutable
+public abstract class ImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V> extends AbstractTable<R, C, V>
     implements Serializable {
 
   /**
@@ -65,7 +71,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, R, C, V>
+  public static <T extends @Nullable @Readonly Object, R extends @Immutable Object, C extends @Immutable Object, V>
       Collector<T, ?, ImmutableTable<R, C, V>> toImmutableTable(
           Function<? super T, ? extends R> rowFunction,
           Function<? super T, ? extends C> columnFunction,
@@ -84,7 +90,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, R, C, V>
+  public static <T extends @Nullable @Readonly Object, R extends @Immutable Object, C extends @Immutable Object, V>
       Collector<T, ?, ImmutableTable<R, C, V>> toImmutableTable(
           Function<? super T, ? extends R> rowFunction,
           Function<? super T, ? extends C> columnFunction,
@@ -100,12 +106,12 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    * <p><b>Performance note:</b> the instance returned is a singleton.
    */
   @SuppressWarnings("unchecked")
-  public static <R, C, V> ImmutableTable<R, C, V> of() {
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> of() {
     return (ImmutableTable<R, C, V>) SparseImmutableTable.EMPTY;
   }
 
   /** Returns an immutable table containing a single cell. */
-  public static <R, C, V> ImmutableTable<R, C, V> of(R rowKey, C columnKey, V value) {
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> of(R rowKey, C columnKey, V value) {
     return new SingletonImmutableTable<>(rowKey, columnKey, value);
   }
 
@@ -122,7 +128,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    * safe to do so. The exact circumstances under which a copy will or will not be performed are
    * undocumented and subject to change.
    */
-  public static <R, C, V> ImmutableTable<R, C, V> copyOf(
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> copyOf(
       Table<? extends R, ? extends C, ? extends V> table) {
     if (table instanceof ImmutableTable) {
       @SuppressWarnings("unchecked")
@@ -133,7 +139,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
     }
   }
 
-  static <R, C, V> ImmutableTable<R, C, V> copyOf(
+  static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> copyOf(
       Iterable<? extends Cell<? extends R, ? extends C, ? extends V>> cells) {
     ImmutableTable.Builder<R, C, V> builder = ImmutableTable.builder();
     for (Cell<? extends R, ? extends C, ? extends V> cell : cells) {
@@ -146,7 +152,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    * Returns a new builder. The generated builder is equivalent to the builder created by the {@link
    * Builder#Builder() ImmutableTable.Builder()} constructor.
    */
-  public static <R, C, V> Builder<R, C, V> builder() {
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> Builder<R, C, V> builder() {
     return new Builder<>();
   }
 
@@ -154,7 +160,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    * Verifies that {@code rowKey}, {@code columnKey} and {@code value} are non-null, and returns a
    * new entry with those values.
    */
-  static <R, C, V> Cell<R, C, V> cellOf(R rowKey, C columnKey, V value) {
+  static <R extends @Immutable Object, C extends @Immutable Object, V> Cell<R, C, V> cellOf(R rowKey, C columnKey, V value) {
     return Tables.immutableCell(
         checkNotNull(rowKey, "rowKey"),
         checkNotNull(columnKey, "columnKey"),
@@ -188,7 +194,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    * @since 11.0
    */
   @DoNotMock
-  public static final class Builder<R, C, V> {
+  public static final @Mutable class Builder<R extends @Immutable Object, C extends @Immutable Object, V> {
     private final List<Cell<R, C, V>> cells = Lists.newArrayList();
     @CheckForNull private Comparator<? super R> rowComparator;
     @CheckForNull private Comparator<? super C> columnComparator;
@@ -381,12 +387,12 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
   public abstract ImmutableMap<R, Map<C, V>> rowMap();
 
   @Override
-  public boolean contains(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public boolean contains(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     return get(rowKey, columnKey) != null;
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     return values().contains(value);
   }
 
@@ -450,6 +456,7 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
    * Serialized type for all ImmutableTable instances. It captures the logical contents and
    * preserves iteration order of all views.
    */
+  @Immutable
   static final class SerializedForm implements Serializable {
     private final Object[] rowKeys;
     private final Object[] columnKeys;
@@ -481,14 +488,14 @@ public abstract class ImmutableTable<R, C, V> extends AbstractTable<R, C, V>
           cellColumnIndices);
     }
 
-    Object readResolve() {
+    @Immutable Object readResolve() {
       if (cellValues.length == 0) {
         return of();
       }
       if (cellValues.length == 1) {
         return of(rowKeys[0], columnKeys[0], cellValues[0]);
       }
-      ImmutableList.Builder<Cell<Object, Object, Object>> cellListBuilder =
+      ImmutableList.Builder<Cell<@Immutable Object, @Immutable Object, @Readonly Object>> cellListBuilder =
           new ImmutableList.Builder<>(cellValues.length);
       for (int i = 0; i < cellValues.length; i++) {
         cellListBuilder.add(

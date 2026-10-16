@@ -26,6 +26,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -61,7 +63,7 @@ public final class ObjectArrays {
    * @param reference any array of the desired type
    * @param length the length of the new array
    */
-  public static <T extends @Nullable Object> T[] newArray(T[] reference, int length) {
+  public static <T extends @Nullable @Readonly Object> T @Mutable [] newArray(T @Readonly [] reference, int length) {
     return Platform.newArray(reference, length);
   }
 
@@ -89,7 +91,7 @@ public final class ObjectArrays {
    * @return an array whose size is one larger than {@code array}, with {@code element} occupying
    *     the first position, and the elements of {@code array} occupying the remaining elements.
    */
-  public static <T extends @Nullable Object> T[] concat(@ParametricNullness T element, T[] array) {
+  public static <T extends @Nullable @Readonly Object> T[] concat(@ParametricNullness T element, T[] array) {
     T[] result = newArray(array, array.length + 1);
     result[0] = element;
     System.arraycopy(array, 0, result, 1, array.length);
@@ -104,7 +106,7 @@ public final class ObjectArrays {
    * @return an array whose size is one larger than {@code array}, with the same contents as {@code
    *     array}, plus {@code element} occupying the last position.
    */
-  public static <T extends @Nullable Object> T[] concat(T[] array, @ParametricNullness T element) {
+  public static <T extends @Nullable @Readonly Object> T[] concat(T[] array, @ParametricNullness T element) {
     T[] result = Arrays.copyOf(array, array.length + 1);
     result[array.length] = element;
     return result;
@@ -131,7 +133,7 @@ public final class ObjectArrays {
    * @throws ArrayStoreException if the runtime type of the specified array is not a supertype of
    *     the runtime type of every element in the specified collection
    */
-  static <T extends @Nullable Object> T[] toArrayImpl(Collection<?> c, T[] array) {
+  static <T extends @Nullable @Readonly Object> T @Mutable [] toArrayImpl(@Readonly Collection<?> c, T @Readonly [] array) {
     int size = c.size();
     if (array.length < size) {
       array = newArray(array, size);
@@ -155,7 +157,7 @@ public final class ObjectArrays {
    * collection is set to {@code null}. This is useful in determining the length of the collection
    * <i>only</i> if the caller knows that the collection does not contain any null elements.
    */
-  static <T extends @Nullable Object> T[] toArrayImpl(
+  static <T extends @Nullable @Readonly Object> T[] toArrayImpl(
       @Nullable Object[] src, int offset, int len, T[] dst) {
     checkPositionIndexes(offset, offset + len, src.length);
     if (dst.length < len) {
@@ -199,7 +201,7 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  private static @Nullable Object[] fillArray(Iterable<?> elements, @Nullable Object[] array) {
+  private static @Nullable Object [] fillArray(Iterable<?> elements, @Nullable Object [] array) {
     int i = 0;
     for (Object element : elements) {
       array[i++] = element;
@@ -208,19 +210,19 @@ public final class ObjectArrays {
   }
 
   /** Swaps {@code array[i]} with {@code array[j]}. */
-  static void swap(Object[] array, int i, int j) {
+  static void swap(@Readonly Object @Mutable [] array, int i, int j) {
     Object temp = array[i];
     array[i] = array[j];
     array[j] = temp;
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned Object[] checkElementsNotNull(@PolySigned Object... array) {
+  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly ... array) {
     return checkElementsNotNull(array, array.length);
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned Object[] checkElementsNotNull(@PolySigned Object[] array, int length) {
+  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
     for (int i = 0; i < length; i++) {
       checkElementNotNull(array[i], i);
     }
@@ -230,7 +232,7 @@ public final class ObjectArrays {
   // We do this instead of Preconditions.checkNotNull to save boxing and array
   // creation cost.
   @CanIgnoreReturnValue
-  static @PolySigned Object checkElementNotNull(@PolySigned Object element, int index) {
+  static @PolySigned Object checkElementNotNull(@PolySigned @Readonly Object element, int index) {
     if (element == null) {
       throw new NullPointerException("at index " + index);
     }

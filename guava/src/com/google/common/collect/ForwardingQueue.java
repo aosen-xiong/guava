@@ -22,6 +22,8 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
@@ -49,7 +51,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingQueue<E extends @Nullable Object> extends ForwardingCollection<E>
+@ReceiverDependentMutable
+public abstract class ForwardingQueue<E extends @Nullable @Readonly Object> extends ForwardingCollection<E>
     implements Queue<E> {
 
   /** Constructor for use by subclasses. */

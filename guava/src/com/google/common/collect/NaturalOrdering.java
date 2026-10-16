@@ -23,15 +23,16 @@ import com.google.errorprone.annotations.concurrent.LazyInit;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
 /** An ordering that uses the natural order of the values. */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true)
 @SuppressWarnings({"unchecked", "rawtypes"}) // TODO(kevinb): the right way to explain this??
 @ElementTypesAreNonnullByDefault
-final class NaturalOrdering extends Ordering<Comparable<?>> implements Serializable {
+final class NaturalOrdering extends Ordering<@Readonly Comparable<?>> implements Serializable {
   static final NaturalOrdering INSTANCE = new NaturalOrdering();
 
   // TODO: b/287198172 - Consider eagerly initializing these (but think about serialization).
@@ -40,32 +41,32 @@ final class NaturalOrdering extends Ordering<Comparable<?>> implements Serializa
 
   @Pure
   @Override
-  public int compare(Comparable<?> left, Comparable<?> right) {
+  public int compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right) {
     checkNotNull(left); // for GWT
     checkNotNull(right);
-    return ((Comparable<Object>) left).compareTo(right);
+    return ((Comparable<@Readonly Object>) left).compareTo(right);
   }
 
   @Override
-  public <S extends Comparable<?>> Ordering<@Nullable S> nullsFirst() {
-    Ordering<@Nullable Comparable<?>> result = nullsFirst;
+  public <S extends @Readonly Comparable<?>> Ordering<@Nullable S> nullsFirst() {
+    Ordering<@Nullable @Readonly Comparable<?>> result = nullsFirst;
     if (result == null) {
-      result = nullsFirst = super.<Comparable<?>>nullsFirst();
+      result = nullsFirst = super.<@Readonly Comparable<?>>nullsFirst();
     }
     return (Ordering<@Nullable S>) result;
   }
 
   @Override
-  public <S extends Comparable<?>> Ordering<@Nullable S> nullsLast() {
-    Ordering<@Nullable Comparable<?>> result = nullsLast;
+  public <S extends @Readonly Comparable<?>> Ordering<@Nullable S> nullsLast() {
+    Ordering<@Nullable @Readonly Comparable<?>> result = nullsLast;
     if (result == null) {
-      result = nullsLast = super.<Comparable<?>>nullsLast();
+      result = nullsLast = super.<@Readonly Comparable<?>>nullsLast();
     }
     return (Ordering<@Nullable S>) result;
   }
 
   @Override
-  public <S extends Comparable<?>> Ordering<S> reverse() {
+  public <S extends @Readonly Comparable<?>> Ordering<S> reverse() {
     return (Ordering<S>) ReverseNaturalOrdering.INSTANCE;
   }
 

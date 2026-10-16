@@ -25,7 +25,10 @@ import java.util.Collection;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * An implementation of ImmutableMultiset backed by a JDK Map and a list of entries. Used to protect
@@ -33,14 +36,17 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  *
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class JdkBackedImmutableMultiset<E> extends ImmutableMultiset<E> {
-  private final Map<E, Integer> delegateMap;
+@CFComment("This E is used as Map key")
+@Immutable
+final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends ImmutableMultiset<E> {
+  private final @Immutable Map<E, Integer> delegateMap;
   private final ImmutableList<Entry<E>> entries;
   private final long size;
 
-  static <E> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
+  static <E extends @Immutable Object> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
     @SuppressWarnings("unchecked")
     Entry<E>[] entriesArray = entries.toArray((Entry<E>[]) new Entry<?>[0]);
     Map<E, Integer> delegateMap = Maps.newHashMapWithExpectedSize(entriesArray.length);

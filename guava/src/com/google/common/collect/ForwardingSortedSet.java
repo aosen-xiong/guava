@@ -25,6 +25,10 @@ import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -58,51 +62,52 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingSortedSet<E extends @Nullable Object> extends ForwardingSet<E>
+@ReceiverDependentMutable
+public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> extends ForwardingSet<E>
     implements SortedSet<E> {
 
   /** Constructor for use by subclasses. */
   protected ForwardingSortedSet() {}
 
   @Override
-  protected abstract SortedSet<E> delegate();
+  protected abstract @PolyMutable SortedSet<E> delegate(@PolyMutable ForwardingSortedSet<E> this);
 
   @SideEffectFree
   @Override
   @CheckForNull
-  public Comparator<? super E> comparator() {
+  public Comparator<? super E> comparator(@Readonly ForwardingSortedSet<E> this) {
     return delegate().comparator();
   }
 
   @SideEffectFree
   @Override
   @ParametricNullness
-  public E first() {
+  public E first(@Readonly ForwardingSortedSet<E> this) {
     return delegate().first();
   }
 
   @SideEffectFree
   @Override
-  public SortedSet<E> headSet(@ParametricNullness E toElement) {
+  public SortedSet<E> headSet(@Readonly ForwardingSortedSet<E> this, @ParametricNullness E toElement) {
     return delegate().headSet(toElement);
   }
 
   @SideEffectFree
   @Override
   @ParametricNullness
-  public E last() {
+  public E last(@Readonly ForwardingSortedSet<E> this) {
     return delegate().last();
   }
 
   @SideEffectFree
   @Override
-  public SortedSet<E> subSet(@ParametricNullness E fromElement, @ParametricNullness E toElement) {
+  public @PolyMutable SortedSet<E> subSet(@PolyMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
     return delegate().subSet(fromElement, toElement);
   }
 
   @SideEffectFree
   @Override
-  public SortedSet<E> tailSet(@ParametricNullness E fromElement) {
+  public @PolyMutable SortedSet<E> tailSet(@PolyMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement) {
     return delegate().tailSet(fromElement);
   }
 

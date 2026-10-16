@@ -30,6 +30,11 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -167,9 +172,10 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  */
 @DoNotMock("Use ImmutableMultimap, HashMultimap, or another implementation")
 @GwtCompatible
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @ElementTypesAreNonnullByDefault
-public interface Multimap<K extends @Nullable Object, V extends @Nullable Object> {
+@ReceiverDependentMutable
+public interface Multimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> {
   // Query Operations
 
   /**
@@ -179,37 +185,37 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * which is given by {@code keySet().size()} or {@code asMap().size()}. See the opening section of
    * the {@link Multimap} class documentation for clarification.
    */
-  int size();
+  int size(@Readonly Multimap<K, V> this);
 
   /**
    * Returns {@code true} if this multimap contains no key-value pairs. Equivalent to {@code size()
    * == 0}, but can in some cases be more efficient.
    */
   @Pure
-  boolean isEmpty();
+  boolean isEmpty(@Readonly Multimap<K, V> this);
 
   /**
    * Returns {@code true} if this multimap contains at least one key-value pair with the key {@code
    * key}.
    */
   @Pure
-  boolean containsKey(@CompatibleWith("K") @CheckForNull @UnknownSignedness Object key);
+  boolean containsKey(@Readonly Multimap<K, V> this, @CompatibleWith("K") @CheckForNull @UnknownSignedness @Readonly Object key);
 
   /**
    * Returns {@code true} if this multimap contains at least one key-value pair with the value
    * {@code value}.
    */
   @Pure
-  boolean containsValue(@CompatibleWith("V") @CheckForNull @UnknownSignedness Object value);
+  boolean containsValue(@Readonly Multimap<K, V> this, @CompatibleWith("V") @CheckForNull @UnknownSignedness @Readonly Object value);
 
   /**
    * Returns {@code true} if this multimap contains at least one key-value pair with the key {@code
    * key} and the value {@code value}.
    */
   @Pure
-  boolean containsEntry(
-      @CompatibleWith("K") @CheckForNull Object key,
-      @CompatibleWith("V") @CheckForNull Object value);
+  boolean containsEntry(@Readonly Multimap<K, V> this,
+      @CompatibleWith("K") @CheckForNull @Readonly Object key,
+      @CompatibleWith("V") @CheckForNull @Readonly Object value);
 
   // Modification Operations
 
@@ -224,7 +230,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    *     multimap already contained the key-value pair and doesn't allow duplicates
    */
   @CanIgnoreReturnValue
-  boolean put(@ParametricNullness K key, @ParametricNullness V value);
+  boolean put(@Mutable Multimap<K, V> this, @ParametricNullness K key, @ParametricNullness V value);
 
   /**
    * Removes a single key-value pair with the key {@code key} and the value {@code value} from this
@@ -235,8 +241,9 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    */
   @CanIgnoreReturnValue
   boolean remove(
-      @CompatibleWith("K") @CheckForNull Object key,
-      @CompatibleWith("V") @CheckForNull Object value);
+          @Mutable Multimap<K, V> this,
+      @CompatibleWith("K") @CheckForNull @Readonly Object key,
+      @CompatibleWith("V") @CheckForNull @Readonly Object value);
 
   // Bulk Operations
 
@@ -255,7 +262,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * @return {@code true} if the multimap changed
    */
   @CanIgnoreReturnValue
-  boolean putAll(@ParametricNullness K key, Iterable<? extends V> values);
+  boolean putAll(@Mutable Multimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
 
   /**
    * Stores all key-value pairs of {@code multimap} in this multimap, in the order returned by
@@ -264,7 +271,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * @return {@code true} if the multimap changed
    */
   @CanIgnoreReturnValue
-  boolean putAll(Multimap<? extends K, ? extends V> multimap);
+  boolean putAll(@Mutable Multimap<K, V> this, @Readonly Multimap<? extends K, ? extends V> multimap);
 
   /**
    * Stores a collection of values with the same key, replacing any existing values for that key.
@@ -276,7 +283,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    *     no effect on the multimap.
    */
   @CanIgnoreReturnValue
-  Collection<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values);
+  Collection<V> replaceValues(@Mutable Multimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
 
   /**
    * Removes all values associated with the key {@code key}.
@@ -288,10 +295,10 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    *     modifiable, but updating it will have no effect on the multimap.
    */
   @CanIgnoreReturnValue
-  Collection<V> removeAll(@CompatibleWith("K") @CheckForNull Object key);
+  Collection<V> removeAll(@Mutable Multimap<K, V> this, @CompatibleWith("K") @CheckForNull @Readonly Object key);
 
   /** Removes all key-value pairs from the multimap, leaving it {@linkplain #isEmpty empty}. */
-  void clear();
+  void clear(@Mutable Multimap<K, V> this);
 
   // Views
 
@@ -302,7 +309,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    *
    * <p>Changes to the returned collection will update the underlying multimap, and vice versa.
    */
-  Collection<V> get(@ParametricNullness K key);
+  @PolyMutable Collection<V> get(@PolyMutable Multimap<K, V> this, @ParametricNullness K key);
 
   /**
    * Returns a view collection of all <i>distinct</i> keys contained in this multimap. Note that the
@@ -311,7 +318,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * <p>Changes to the returned set will update the underlying multimap, and vice versa. However,
    * <i>adding</i> to the returned set is not possible.
    */
-  Set<K> keySet();
+  @PolyMutable Set<K> keySet(@PolyMutable Multimap<K,V> this);
 
   /**
    * Returns a view collection containing the key from each key-value pair in this multimap,
@@ -321,7 +328,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * <p>Changes to the returned multiset will update the underlying multimap, and vice versa.
    * However, <i>adding</i> to the returned collection is not possible.
    */
-  Multiset<K> keys();
+  @PolyMutable Multiset<K> keys(@PolyMutable Multimap<K,V> this);
 
   /**
    * Returns a view collection containing the <i>value</i> from each key-value pair contained in
@@ -330,7 +337,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * <p>Changes to the returned collection will update the underlying multimap, and vice versa.
    * However, <i>adding</i> to the returned collection is not possible.
    */
-  Collection<V> values();
+  @PolyMutable Collection<V> values(@PolyMutable Multimap<K,V> this);
 
   /**
    * Returns a view collection of all key-value pairs contained in this multimap, as {@link Entry}
@@ -339,7 +346,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * <p>Changes to the returned collection or the entries it contains will update the underlying
    * multimap, and vice versa. However, <i>adding</i> to the returned collection is not possible.
    */
-  Collection<Entry<K, V>> entries();
+  @PolyMutable Collection<@PolyMutable Entry<K, V>> entries(@PolyMutable Multimap<K,V> this);
 
   /**
    * Performs the given action for all key-value pairs contained in this multimap. If an ordering is
@@ -366,7 +373,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    * underlying multimap, and vice versa. The map does not support {@code put} or {@code putAll},
    * nor do its entries support {@link Entry#setValue setValue}.
    */
-  Map<K, Collection<V>> asMap();
+  @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable Multimap<K,V> this);
 
   // Comparison and hashing
 
@@ -385,7 +392,7 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    */
   @Pure
   @Override
-  boolean equals(@CheckForNull Object obj);
+  boolean equals(@Readonly Multimap<K, V> this, @CheckForNull @Readonly Object obj);
 
   /**
    * Returns the hash code for this multimap.
@@ -400,5 +407,5 @@ public interface Multimap<K extends @Nullable Object, V extends @Nullable Object
    */
   @Pure
   @Override
-  int hashCode(@UnknownSignedness Multimap<K, V> this);
+  int hashCode(@UnknownSignedness @Readonly Multimap<K, V> this);
 }

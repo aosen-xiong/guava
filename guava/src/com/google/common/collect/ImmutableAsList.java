@@ -24,7 +24,10 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * List returned by {@link ImmutableCollection#asList} that delegates {@code contains} checks to the
@@ -33,14 +36,16 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @author Jared Levy
  * @author Louis Wasserman
  */
+@AnnotatedFor("mutability")
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial")
 @ElementTypesAreNonnullByDefault
+@Immutable
 abstract class ImmutableAsList<E> extends ImmutableList<E> {
   abstract ImmutableCollection<E> delegateCollection();
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
     // The collection's contains() is at least as fast as ImmutableList's
     // and is often faster.
     return delegateCollection().contains(target);
@@ -71,7 +76,7 @@ abstract class ImmutableAsList<E> extends ImmutableList<E> {
       this.collection = collection;
     }
 
-    Object readResolve() {
+    @Immutable Object readResolve() {
       return collection.asList();
     }
 

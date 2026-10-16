@@ -24,7 +24,11 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.NoSuchElementException;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * This class provides a skeletal implementation of the {@code Iterator} interface, to make this
@@ -63,10 +67,12 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  */
 // When making changes to this class, please also update the copy at
 // com.google.common.base.AbstractIterator
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class AbstractIterator<T extends @Nullable Object> extends UnmodifiableIterator<T> {
+@CFComment("AOSEN: Is this a design issue?")
+@ReceiverDependentMutable
+public abstract class AbstractIterator<T extends @Nullable @Readonly Object> extends UnmodifiableIterator<T> {
   private State state = State.NOT_READY;
 
   /** Constructor for use by subclasses. */
@@ -113,7 +119,7 @@ public abstract class AbstractIterator<T extends @Nullable Object> extends Unmod
    *     IllegalStateException}.
    */
   @CheckForNull
-  protected abstract T computeNext();
+  protected abstract T computeNext(@Mutable AbstractIterator<T> this);
 
   /**
    * Implementations of {@link #computeNext} <b>must</b> invoke this method when there are no
@@ -124,13 +130,13 @@ public abstract class AbstractIterator<T extends @Nullable Object> extends Unmod
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  protected final T endOfData() {
+  protected final T endOfData(@Mutable AbstractIterator<T> this) {
     state = State.DONE;
     return null;
   }
 
   @Override
-  public final boolean hasNext() {
+  public final boolean hasNext(@Readonly AbstractIterator<T> this) {
     checkState(state != State.FAILED);
     switch (state) {
       case DONE:
@@ -142,7 +148,7 @@ public abstract class AbstractIterator<T extends @Nullable Object> extends Unmod
     return tryToComputeNext();
   }
 
-  private boolean tryToComputeNext() {
+  private boolean tryToComputeNext(@Mutable AbstractIterator<T> this) {
     state = State.FAILED; // temporary pessimism
     next = computeNext();
     if (state != State.DONE) {
@@ -155,7 +161,7 @@ public abstract class AbstractIterator<T extends @Nullable Object> extends Unmod
   @CanIgnoreReturnValue // TODO(kak): Should we remove this?
   @Override
   @ParametricNullness
-  public final T next() {
+  public final T next(@Mutable AbstractIterator<T> this) {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
@@ -174,7 +180,7 @@ public abstract class AbstractIterator<T extends @Nullable Object> extends Unmod
    * implement {@code PeekingIterator}.
    */
   @ParametricNullness
-  public final T peek() {
+  public final T peek(@Readonly AbstractIterator<T> this) {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }

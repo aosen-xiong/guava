@@ -23,6 +23,10 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -35,8 +39,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public abstract class ForwardingTable<
-        R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
+        R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends ForwardingObject implements Table<R, C, V> {
   /** Constructor for use by subclasses. */
   protected ForwardingTable() {}
@@ -45,12 +50,12 @@ public abstract class ForwardingTable<
   protected abstract Table<R, C, V> delegate();
 
   @Override
-  public Set<Cell<R, C, V>> cellSet() {
+  public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet() {
     return delegate().cellSet();
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable ForwardingTable<R, C, V> this) {
     delegate().clear();
   }
 
@@ -103,20 +108,20 @@ public abstract class ForwardingTable<
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V put(
+  public V put(@Mutable ForwardingTable<R, C, V> this,
       @ParametricNullness R rowKey, @ParametricNullness C columnKey, @ParametricNullness V value) {
     return delegate().put(rowKey, columnKey, value);
   }
 
   @Override
-  public void putAll(Table<? extends R, ? extends C, ? extends V> table) {
+  public void putAll(@Mutable ForwardingTable<R, C, V> this, Table<? extends R, ? extends C, ? extends V> table) {
     delegate().putAll(table);
   }
 
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V remove(@Mutable ForwardingTable<R, C, V> this, @CheckForNull Object rowKey, @CheckForNull Object columnKey) {
     return delegate().remove(rowKey, columnKey);
   }
 

@@ -28,11 +28,17 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.framework.qual.CFComment;
 
 /**
  * This class provides a skeletal implementation of the {@link Multiset} interface. A new multiset
@@ -47,60 +53,61 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Kevin Bourrillion
  * @author Louis Wasserman
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class AbstractMultiset<E extends @Nullable Object> extends AbstractCollection<E>
+@ReceiverDependentMutable
+abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends AbstractCollection<E>
     implements Multiset<E> {
   // Query Operations
 
   @Pure
   @Override
-  public boolean isEmpty() {
+  public boolean isEmpty(@Readonly AbstractMultiset<E> this) {
     return entrySet().isEmpty();
   }
 
   @Pure
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object element) {
+  public boolean contains(@Readonly AbstractMultiset<E> this, @CheckForNull @UnknownSignedness @Readonly Object element) {
     return count(element) > 0;
   }
 
   // Modification Operations
   @CanIgnoreReturnValue
   @Override
-  public final boolean add(@ParametricNullness E element) {
+  public final boolean add(@Mutable AbstractMultiset<E> this, @ParametricNullness E element) {
     add(element, 1);
     return true;
   }
 
   @CanIgnoreReturnValue
   @Override
-  public int add(@ParametricNullness E element, int occurrences) {
+  public int add(@Mutable AbstractMultiset<E> this, @ParametricNullness E element, int occurrences) {
     throw new UnsupportedOperationException();
   }
 
   @CanIgnoreReturnValue
   @Override
-  public final boolean remove(@CheckForNull @UnknownSignedness Object element) {
+  public final boolean remove(@Mutable AbstractMultiset<E> this, @CheckForNull @UnknownSignedness @Readonly Object element) {
     return remove(element, 1) > 0;
   }
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable AbstractMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
     throw new UnsupportedOperationException();
   }
 
   @CanIgnoreReturnValue
   @Override
-  public int setCount(@ParametricNullness E element, int count) {
+  public int setCount(@Mutable AbstractMultiset<E> this, @ParametricNullness E element, int count) {
     return setCountImpl(this, element, count);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean setCount(@ParametricNullness E element, int oldCount, int newCount) {
+  public boolean setCount(@Mutable AbstractMultiset<E> this, @ParametricNullness E element, int oldCount, int newCount) {
     return setCountImpl(this, element, oldCount, newCount);
   }
 
@@ -114,32 +121,32 @@ abstract class AbstractMultiset<E extends @Nullable Object> extends AbstractColl
    */
   @CanIgnoreReturnValue
   @Override
-  public final boolean addAll(Collection<? extends E> elementsToAdd) {
+  public final boolean addAll(@Mutable AbstractMultiset<E> this, @Readonly Collection<? extends E> elementsToAdd) {
     return Multisets.addAllImpl(this, elementsToAdd);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public final boolean removeAll(Collection<?> elementsToRemove) {
+  public final boolean removeAll(@Mutable AbstractMultiset<E> this, @Readonly Collection<?> elementsToRemove) {
     return Multisets.removeAllImpl(this, elementsToRemove);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public final boolean retainAll(Collection<?> elementsToRetain) {
+  public final boolean retainAll(@Mutable AbstractMultiset<E> this, @Readonly Collection<?> elementsToRetain) {
     return Multisets.retainAllImpl(this, elementsToRetain);
   }
 
   @Override
-  public abstract void clear();
+  public abstract void clear(@Mutable AbstractMultiset<E> this);
 
   // Views
 
-  @LazyInit @CheckForNull private transient Set<E> elementSet;
+  @LazyInit @CheckForNull private transient @Assignable Set<E> elementSet;
 
   @SideEffectFree
   @Override
-  public Set<E> elementSet() {
+  public @PolyMutable Set<E> elementSet(@PolyMutable AbstractMultiset<E> this) {
     Set<E> result = elementSet;
     if (result == null) {
       elementSet = result = createElementSet();
@@ -151,31 +158,33 @@ abstract class AbstractMultiset<E extends @Nullable Object> extends AbstractColl
    * Creates a new instance of this multiset's element set, which will be returned by {@link
    * #elementSet()}.
    */
-  Set<E> createElementSet() {
-    return new ElementSet();
+  @PolyMutable Set<E> createElementSet(@PolyMutable AbstractMultiset<E> this) {
+    return new @PolyMutable ElementSet();
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class ElementSet extends Multisets.ElementSet<E> {
     @Override
-    Multiset<E> multiset() {
+    @PolyMutable Multiset<E> multiset(@PolyMutable AbstractMultiset<E>.ElementSet this) {
       return AbstractMultiset.this;
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public Iterator<E> iterator(@Readonly ElementSet this) {
       return elementIterator();
     }
   }
 
-  abstract Iterator<E> elementIterator();
+  abstract Iterator<E> elementIterator(@Readonly AbstractMultiset<E> this);
 
-  @LazyInit @CheckForNull private transient Set<Entry<E>> entrySet;
+  @CFComment("Change to @LazyFinal later")
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<E>> entrySet;
 
   @SideEffectFree
   @Override
-  public Set<Entry<E>> entrySet() {
-    Set<Entry<E>> result = entrySet;
+  public @PolyMutable Set<@PolyMutable Entry<E>> entrySet(@PolyMutable AbstractMultiset<E> this) {
+    Set<@PolyMutable Entry<E>> result = entrySet;
     if (result == null) {
       entrySet = result = createEntrySet();
     }
@@ -183,30 +192,31 @@ abstract class AbstractMultiset<E extends @Nullable Object> extends AbstractColl
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class EntrySet extends Multisets.EntrySet<E> {
     @Override
-    Multiset<E> multiset() {
+    @PolyMutable  Multiset<E> multiset(@PolyMutable AbstractMultiset<E>.EntrySet this) {
       return AbstractMultiset.this;
     }
 
     @Override
-    public Iterator<Entry<E>> iterator() {
+    public Iterator<@PolyMutable Entry<E>> iterator(@PolyMutable AbstractMultiset<E>.EntrySet this) {
       return entryIterator();
     }
 
     @Override
-    public @NonNegative int size() {
+    public @NonNegative int size(@Readonly EntrySet this) {
       return distinctElements();
     }
   }
 
-  Set<Entry<E>> createEntrySet() {
+  @PolyMutable Set<@PolyMutable Entry<E>> createEntrySet(@PolyMutable AbstractMultiset<E> this) {
     return new EntrySet();
   }
 
-  abstract Iterator<Entry<E>> entryIterator();
+  abstract Iterator<@PolyMutable Entry<E>> entryIterator(@PolyMutable AbstractMultiset<E> this);
 
-  abstract int distinctElements();
+  abstract int distinctElements(@Readonly AbstractMultiset<E> this);
 
   // Object methods
 
@@ -218,7 +228,7 @@ abstract class AbstractMultiset<E extends @Nullable Object> extends AbstractColl
    */
   @Pure
   @Override
-  public final boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public final boolean equals(@Readonly AbstractMultiset<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     return Multisets.equalsImpl(this, object);
   }
 
@@ -229,7 +239,7 @@ abstract class AbstractMultiset<E extends @Nullable Object> extends AbstractColl
    */
   @Pure
   @Override
-  public final int hashCode(@UnknownSignedness AbstractMultiset<E> this) {
+  public final int hashCode(@Readonly @UnknownSignedness AbstractMultiset<E> this) {
     return entrySet().hashCode();
   }
 
@@ -241,7 +251,7 @@ abstract class AbstractMultiset<E extends @Nullable Object> extends AbstractColl
    */
   @Pure
   @Override
-  public final String toString() {
+  public final String toString(@Readonly AbstractMultiset<E> this) {
     return entrySet().toString();
   }
 }

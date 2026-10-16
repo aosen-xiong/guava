@@ -24,6 +24,8 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.framework.qual.AnnotatedFor;
 
 /**
  * An {@link Escaper} that converts literal text into a format safe for inclusion in a particular
@@ -55,6 +57,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * @author David Beaumont
  * @since 15.0
  */
+@AnnotatedFor("mutability")
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 public abstract class UnicodeEscaper extends Escaper {
@@ -134,7 +137,7 @@ public abstract class UnicodeEscaper extends Escaper {
    * @throws IllegalArgumentException if the scanned sub-sequence of {@code csq} contains invalid
    *     surrogate pairs
    */
-  protected @IndexOrHigh("#1") int nextEscapeIndex(CharSequence csq, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
+  protected @IndexOrHigh("#1") int nextEscapeIndex(@Readonly CharSequence csq, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
     @IndexOrHigh("#1") int index = start;
     while (index < end) {
       int cp = codePointAt(csq, index, end);
@@ -161,6 +164,7 @@ public abstract class UnicodeEscaper extends Escaper {
    * @throws NullPointerException if {@code string} is null
    * @throws IllegalArgumentException if invalid surrogate characters are encountered
    */
+  @SuppressWarnings("mutability:argument.type.incompatible") // cast from @Unique @Mutable to @Immutable
   protected final String escapeSlow(String s, @IndexOrHigh("#1") int index) {
     int end = s.length();
 

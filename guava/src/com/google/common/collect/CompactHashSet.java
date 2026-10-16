@@ -48,6 +48,8 @@ import java.util.Spliterators;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
@@ -82,11 +84,12 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtIncompatible // not worth using in GWT for now
 @ElementTypesAreNonnullByDefault
-class CompactHashSet<E extends @Nullable Object> extends AbstractSet<E> implements Serializable {
+@ReceiverDependentMutable
+class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E> implements Serializable {
   // TODO(user): cache all field accesses in local vars
 
   /** Creates an empty {@code CompactHashSet} instance. */
-  public static <E extends @Nullable Object> CompactHashSet<E> create() {
+  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> create() {
     return new CompactHashSet<>();
   }
 
@@ -97,7 +100,7 @@ class CompactHashSet<E extends @Nullable Object> extends AbstractSet<E> implemen
    * @param collection the elements that the set should contain
    * @return a new {@code CompactHashSet} containing those elements (minus duplicates)
    */
-  public static <E extends @Nullable Object> CompactHashSet<E> create(
+  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> create(
       Collection<? extends E> collection) {
     CompactHashSet<E> set = createWithExpectedSize(collection.size());
     set.addAll(collection);
@@ -456,7 +459,7 @@ class CompactHashSet<E extends @Nullable Object> extends AbstractSet<E> implemen
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness Object object) {
+  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (needsAllocArrays()) {
       return false;
     }

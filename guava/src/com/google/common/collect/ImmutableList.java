@@ -50,6 +50,9 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -66,11 +69,12 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @author Kevin Bourrillion
  * @since 2.0
  */
-@AnnotatedFor({"nullness"})
+@AnnotatedFor({"nullness", "mutability"})
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // we're overriding default serialization
 @ElementTypesAreNonnullByDefault
-public abstract class ImmutableList<E> extends ImmutableCollection<E>
+@Immutable
+public abstract class ImmutableList<E extends @Readonly Object> extends ImmutableCollection<E>
     implements List<E>, RandomAccess {
 
   /**
@@ -79,7 +83,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @since 21.0
    */
-  public static <E extends @NonNull Object> Collector<E, ?, ImmutableList<E>> toImmutableList() {
+  public static <E extends @NonNull @Readonly Object> Collector<E, ?, ImmutableList<E>> toImmutableList() {
     return CollectCollectors.toImmutableList();
   }
 
@@ -92,7 +96,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    */
   // Casting to any type is safe because the list will never hold any elements.
   @SuppressWarnings("unchecked")
-  public static <E extends @NonNull Object> ImmutableList<E> of() {
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of() {
     return (ImmutableList<E>) EMPTY;
   }
 
@@ -103,7 +107,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @throws NullPointerException if {@code element} is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E element) {
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(E element) {
     return new SingletonImmutableList<E>(element);
   }
 
@@ -112,7 +116,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2) {
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(E e1, E e2) {
     return construct(e1, e2);
   }
 
@@ -121,7 +125,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3) {
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3) {
     return construct(e1, e2, e3);
   }
 
@@ -130,7 +134,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4) {
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4) {
     return construct(e1, e2, e3, e4);
   }
 
@@ -139,7 +143,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5) {
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5) {
     return construct(e1, e2, e3, e4, e5);
   }
 
@@ -184,7 +188,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(
       E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
     return construct(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
   }
@@ -194,7 +198,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(
       E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11) {
     return construct(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
   }
@@ -211,11 +215,11 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    * @since 3.0 (source-compatible since 2.0)
    */
   @SafeVarargs // For Eclipse. For internal javac we have disabled this pointless type of warning.
-  public static <E extends @NonNull Object> ImmutableList<E> of(
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> of(
       E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10, E e11, E e12, E... others) {
     checkArgument(
         others.length <= Integer.MAX_VALUE - 12, "the total number of elements must fit in an int");
-    Object[] array = new Object[12 + others.length];
+    @Readonly Object[] array = new @Readonly Object[12 + others.length];
     array[0] = e1;
     array[1] = e2;
     array[2] = e3;
@@ -296,7 +300,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    * @throws NullPointerException if {@code elements} contains a null element
    * @since 3.0
    */
-  public static <E extends @NonNull Object> ImmutableList<E> copyOf(E[] elements) {
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> copyOf(E @Readonly [] elements) {
     switch (elements.length) {
       case 0:
         return of();
@@ -345,7 +349,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    * @throws NullPointerException if any element in the input is null
    * @since 21.0
    */
-  public static <E extends @NonNull Object> ImmutableList<E> sortedCopyOf(
+  public static <E extends @Readonly @NonNull Object> ImmutableList<E> sortedCopyOf(
       Comparator<? super E> comparator, Iterable<? extends E> elements) {
     checkNotNull(comparator);
     @SuppressWarnings("unchecked") // all supported methods are covariant
@@ -356,7 +360,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   }
 
   /** Views the array as an immutable list. Checks for nulls; does not copy. */
-  private static <E> ImmutableList<E> construct(Object... elements) {
+  private static <E> ImmutableList<E> construct(@Readonly Object @Readonly ... elements) {
     return asImmutableList(checkElementsNotNull(elements));
   }
 
@@ -365,7 +369,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    *
    * <p>The array must be internally created.
    */
-  static <E> ImmutableList<E> asImmutableList(Object[] elements) {
+  static <E> ImmutableList<E> asImmutableList(@Readonly Object @Readonly [] elements) {
     return asImmutableList(elements, elements.length);
   }
 
@@ -373,7 +377,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    * Views the array as an immutable list. Copies if the specified range does not cover the complete
    * array. Does not check for nulls.
    */
-  static <E> ImmutableList<E> asImmutableList(@Nullable Object[] elements, int length) {
+  static <E> ImmutableList<E> asImmutableList(@Nullable @Readonly Object @Readonly [] elements, int length) {
     switch (length) {
       case 0:
         return of();
@@ -391,7 +395,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
          * `length` array elements.
          */
         @SuppressWarnings("nullness")
-        Object[] elementsWithoutTrailingNulls =
+        @Readonly Object @Readonly [] elementsWithoutTrailingNulls =
             length < elements.length ? Arrays.copyOf(elements, length) : elements;
         return new RegularImmutableList<E>(elementsWithoutTrailingNulls);
     }
@@ -413,7 +417,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
 
   @Override
   public UnmodifiableListIterator<E> listIterator(int index) {
-    return new AbstractIndexedListIterator<E>(size(), index) {
+    return new @Immutable AbstractIndexedListIterator<E>(size(), index) {
       @Override
       protected E get(int index) {
         return ImmutableList.this.get(index);
@@ -432,18 +436,18 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   }
 
   @Override
-  public int indexOf(@CheckForNull @UnknownSignedness Object object) {
+  public int indexOf(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return (object == null) ? -1 : Lists.indexOfImpl(this, object);
   }
 
   @Pure
   @Override
-  public int lastIndexOf(@CheckForNull @UnknownSignedness Object object) {
+  public int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return (object == null) ? -1 : Lists.lastIndexOfImpl(this, object);
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return indexOf(object) >= 0;
   }
 
@@ -483,6 +487,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     return new SubList(fromIndex, toIndex - fromIndex);
   }
 
+  @Immutable
   class SubList extends ImmutableList<E> {
     final transient int offset;
     final transient int length;
@@ -625,7 +630,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   }
 
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object [] dst, int offset) {
     // this loop is faster for RandomAccess instances, which ImmutableLists are
     int size = size();
     for (int i = 0; i < size; i++) {
@@ -645,6 +650,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     return (size() <= 1) ? this : new ReverseImmutableList<E>(this);
   }
 
+  @Immutable
   private static class ReverseImmutableList<E> extends ImmutableList<E> {
     private final transient ImmutableList<E> forwardList;
 
@@ -666,18 +672,18 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
       return forwardList.contains(object);
     }
 
     @Override
-    public int indexOf(@CheckForNull @UnknownSignedness Object object) {
+    public int indexOf(@CheckForNull @UnknownSignedness @Readonly Object object) {
       int index = forwardList.lastIndexOf(object);
       return (index >= 0) ? reverseIndex(index) : -1;
     }
 
     @Override
-    public int lastIndexOf(@CheckForNull @UnknownSignedness Object object) {
+    public int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object object) {
       int index = forwardList.indexOf(object);
       return (index >= 0) ? reverseIndex(index) : -1;
     }
@@ -715,12 +721,12 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
   }
 
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object obj) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object obj) {
     return Lists.equalsImpl(this, obj);
   }
 
   @Override
-  public int hashCode(@UnknownSignedness ImmutableList<E> this) {
+  public int hashCode(@UnknownSignedness @Readonly ImmutableList<E> this) {
     int hashCode = 1;
     int n = size();
     for (int i = 0; i < n; i++) {
@@ -738,9 +744,9 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    */
   @J2ktIncompatible // serialization
   static class SerializedForm implements Serializable {
-    final Object[] elements;
+    final Object @Readonly [] elements;
 
-    SerializedForm(Object[] elements) {
+    SerializedForm(Object @Readonly [] elements) {
       this.elements = elements;
     }
 
@@ -810,7 +816,7 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E>
    */
   public static final class Builder<E> extends ImmutableCollection.Builder<E> {
     // The first `size` elements are non-null.
-    @VisibleForTesting @Nullable Object[] contents;
+    @VisibleForTesting @Nullable @Readonly Object[] contents;
     private int size;
     private boolean forceCopy;
 
