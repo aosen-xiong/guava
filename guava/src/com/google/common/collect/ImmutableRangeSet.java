@@ -689,7 +689,7 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
     }
 
     @Override
-    int indexOf(@CheckForNull Object target) {
+    int indexOf(@CheckForNull @Readonly Object target) {
       if (contains(target)) {
         @SuppressWarnings("unchecked") // if it's contained, it's definitely a C
         C c = (C) requireNonNull(target);
