@@ -39,7 +39,7 @@ final class SortedIterables {
   public static boolean hasSameComparator(@Readonly Comparator<?> comparator, @Readonly Iterable<?> elements) {
     checkNotNull(comparator);
     checkNotNull(elements);
-    Comparator<?> comparator2;
+    @Readonly Comparator<?> comparator2;
     if (elements instanceof SortedSet) {
       comparator2 = comparator((SortedSet<?>) elements);
     } else if (elements instanceof SortedIterable) {

@@ -65,7 +65,7 @@ final class SortedMultisets {
     }
 
     @Override
-    public Comparator<? super E> comparator() {
+    public @Readonly Comparator<? super E> comparator() {
       return multiset().comparator();
     }
 

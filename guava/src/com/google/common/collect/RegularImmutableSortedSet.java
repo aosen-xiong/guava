@@ -57,7 +57,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   private final transient ImmutableList<E> elements;
 
-  RegularImmutableSortedSet(ImmutableList<E> elements, Comparator<? super E> comparator) {
+  RegularImmutableSortedSet(ImmutableList<E> elements, @Readonly Comparator<? super E> comparator) {
     super(comparator);
     this.elements = elements;
   }
@@ -304,8 +304,8 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   // compare two elements, it'll throw a CCE. Only methods that are specified to
   // throw CCE should call this.
   @SuppressWarnings("unchecked")
-  Comparator<Object> unsafeComparator() {
-    return (Comparator<Object>) comparator;
+  @Readonly Comparator<@Readonly Object> unsafeComparator() {
+    return (@Readonly Comparator<@Readonly Object>) comparator;
   }
 
   RegularImmutableSortedSet<E> getSubSet(int newFromIndex, int newToIndex) {
@@ -340,7 +340,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Override
   ImmutableSortedSet<E> createDescendingSet() {
-    Comparator<? super E> reversedOrder = Collections.reverseOrder(comparator);
+    @Readonly Comparator<? super E> reversedOrder = Collections.reverseOrder(comparator);
     return isEmpty()
         ? emptySet(reversedOrder)
         : new RegularImmutableSortedSet<E>(elements.reverse(), reversedOrder);

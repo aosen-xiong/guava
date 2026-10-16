@@ -332,7 +332,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> orderKeysBy(Comparator<? super K> keyComparator) {
+    public Builder<K, V> orderKeysBy(@Readonly Comparator<? super K> keyComparator) {
       super.orderKeysBy(keyComparator);
       return this;
     }
@@ -350,7 +350,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     // TODO: Make serialization behavior consistent.
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> orderValuesBy(Comparator<? super V> valueComparator) {
+    public Builder<K, V> orderValuesBy(@Readonly Comparator<? super V> valueComparator) {
       super.orderValuesBy(valueComparator);
       return this;
     }
@@ -385,7 +385,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
 
   private static <K extends @Immutable Object, V extends @Immutable Object> ImmutableSetMultimap<K, V> copyOf(
       Multimap<? extends K, ? extends V> multimap,
-      @CheckForNull Comparator<? super V> valueComparator) {
+      @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     checkNotNull(multimap); // eager for GWT
     if (multimap.isEmpty() && valueComparator == null) {
       return of();
@@ -419,7 +419,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   /** Creates an ImmutableSetMultimap from an asMap.entrySet. */
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableSetMultimap<K, V> fromMapEntries(
       Collection<? extends Map.Entry<? extends K, ? extends Collection<? extends V>>> mapEntries,
-      @CheckForNull Comparator<? super V> valueComparator) {
+      @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     if (mapEntries.isEmpty()) {
       return of();
     }
@@ -449,7 +449,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   ImmutableSetMultimap(
       ImmutableMap<K, ImmutableSet<V>> map,
       int size,
-      @CheckForNull Comparator<? super V> valueComparator) {
+      @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     super(map, size);
     this.emptySet = emptySet(valueComparator);
   }
@@ -577,20 +577,20 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   }
 
   private static <V> ImmutableSet<V> valueSet(
-      @CheckForNull Comparator<? super V> valueComparator, Collection<? extends V> values) {
+      @CheckForNull @Readonly Comparator<? super V> valueComparator, Collection<? extends V> values) {
     return (valueComparator == null)
         ? ImmutableSet.copyOf(values)
         : ImmutableSortedSet.copyOf(valueComparator, values);
   }
 
-  private static <V> ImmutableSet<V> emptySet(@CheckForNull Comparator<? super V> valueComparator) {
+  private static <V> ImmutableSet<V> emptySet(@CheckForNull @Readonly Comparator<? super V> valueComparator) {
     return (valueComparator == null)
         ? ImmutableSet.<V>of()
         : ImmutableSortedSet.<V>emptySet(valueComparator);
   }
 
   private static <V> ImmutableSet.Builder<V> valuesBuilder(
-      @CheckForNull Comparator<? super V> valueComparator) {
+      @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     return (valueComparator == null)
         ? new ImmutableSet.Builder<V>()
         : new ImmutableSortedSet.Builder<V>(valueComparator);
@@ -609,7 +609,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   }
 
   @CheckForNull
-  Comparator<? super V> valueComparator() {
+  @Readonly Comparator<? super V> valueComparator() {
     return emptySet instanceof ImmutableSortedSet
         ? ((ImmutableSortedSet<V>) emptySet).comparator()
         : null;
@@ -629,7 +629,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   @SuppressWarnings("unchecked")
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
-    Comparator<Object> valueComparator = (Comparator<Object>) stream.readObject();
+    @Readonly Comparator<Object> valueComparator = (Comparator<Object>) stream.readObject();
     int keyCount = stream.readInt();
     if (keyCount < 0) {
       throw new InvalidObjectException("Invalid key count " + keyCount);

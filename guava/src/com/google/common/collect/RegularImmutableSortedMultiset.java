@@ -53,7 +53,7 @@ final class RegularImmutableSortedMultiset<E extends @Immutable Object> extends 
   private final transient int length;
 
   @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
-  RegularImmutableSortedMultiset(Comparator<? super E> comparator) {
+  RegularImmutableSortedMultiset(@Readonly Comparator<? super E> comparator) {
     this.elementSet = ImmutableSortedSet.emptySet(comparator);
     this.cumulativeCounts = ZERO_CUMULATIVE_COUNTS;
     this.offset = 0;

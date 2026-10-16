@@ -88,11 +88,11 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @since 21.0
    */
   public static <E> Collector<E, ?, ImmutableSortedSet<E>> toImmutableSortedSet(
-      Comparator<? super E> comparator) {
+      @Readonly Comparator<? super E> comparator) {
     return CollectCollectors.toImmutableSortedSet(comparator);
   }
 
-  static <E> RegularImmutableSortedSet<E> emptySet(Comparator<? super E> comparator) {
+  static <E> RegularImmutableSortedSet<E> emptySet(@Readonly Comparator<? super E> comparator) {
     if (Ordering.natural().equals(comparator)) {
       @SuppressWarnings("unchecked") // The natural-ordered empty set supports all types.
       RegularImmutableSortedSet<E> result =
@@ -174,7 +174,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
   @SuppressWarnings("unchecked")
   public static <E extends @Immutable Comparable<? super E>> ImmutableSortedSet<E> of(
       E e1, E e2, E e3, E e4, E e5, E e6, E... remaining) {
-    Comparable<?>[] contents = new Comparable<?>[6 + remaining.length];
+    @Readonly Comparable<?>[] contents = new Comparable<?>[6 + remaining.length];
     contents[0] = e1;
     contents[1] = e2;
     contents[2] = e3;
@@ -287,7 +287,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
   public static <E> ImmutableSortedSet<E> copyOf(
-      Comparator<? super E> comparator, Iterator<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, Iterator<? extends E> elements) {
     return new Builder<E>(comparator).addAll(elements).build();
   }
 
@@ -303,7 +303,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
   public static <E> ImmutableSortedSet<E> copyOf(
-      Comparator<? super E> comparator, Iterable<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, Iterable<? extends E> elements) {
     checkNotNull(comparator);
     boolean hasSameComparator = SortedIterables.hasSameComparator(comparator, elements);
 
@@ -335,7 +335,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @since 7.0 (source-compatible since 2.0)
    */
   public static <E> ImmutableSortedSet<E> copyOf(
-      Comparator<? super E> comparator, Collection<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, Collection<? extends E> elements) {
     return copyOf(comparator, (Iterable<? extends E>) elements);
   }
 
@@ -354,7 +354,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws NullPointerException if {@code sortedSet} or any of its elements is null
    */
   public static <E> ImmutableSortedSet<E> copyOfSorted(SortedSet<E> sortedSet) {
-    Comparator<? super E> comparator = SortedIterables.comparator(sortedSet);
+    @Readonly Comparator<? super E> comparator = SortedIterables.comparator(sortedSet);
     ImmutableList<E> list = ImmutableList.copyOf(sortedSet);
     if (list.isEmpty()) {
       return emptySet(comparator);
@@ -375,7 +375,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws NullPointerException if any of the first {@code n} elements of {@code contents} is null
    */
   static <E> ImmutableSortedSet<E> construct(
-      Comparator<? super E> comparator, int n, E... contents) {
+      @Readonly Comparator<? super E> comparator, int n, E... contents) {
     if (n == 0) {
       return emptySet(comparator);
     }
@@ -402,7 +402,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    *
    * @throws NullPointerException if {@code comparator} is null
    */
-  public static <E> Builder<E> orderedBy(Comparator<E> comparator) {
+  public static <E> Builder<E> orderedBy(@Readonly Comparator<E> comparator) {
     return new Builder<E>(comparator);
   }
 
@@ -442,7 +442,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @since 2.0
    */
   public static final @Mutable class Builder<E> extends ImmutableSet.Builder<E> {
-    private final Comparator<? super E> comparator;
+    private final @Readonly Comparator<? super E> comparator;
     private E[] elements;
     private int n;
 
@@ -458,7 +458,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
      * cl/592273615 and cl/592273683.)
      */
     @SuppressWarnings("unchecked")
-    public Builder(Comparator<? super E> comparator) {
+    public Builder(@Readonly Comparator<? super E> comparator) {
       super(true); // don't construct guts of hash-based set builder
       this.comparator = checkNotNull(comparator);
       this.elements = (E[]) new Object[ImmutableCollection.Builder.DEFAULT_INITIAL_CAPACITY];
@@ -599,18 +599,18 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
     return unsafeCompare(comparator, a, b);
   }
 
-  static int unsafeCompare(Comparator<?> comparator, @UnknownSignedness @Readonly Object a, @CheckForNull @UnknownSignedness @Readonly Object b) {
+  static int unsafeCompare(@Readonly Comparator<?> comparator, @UnknownSignedness @Readonly Object a, @CheckForNull @UnknownSignedness @Readonly Object b) {
     // Pretend the comparator can compare anything. If it turns out it can't
     // compare a and b, we should get a CCE or NPE on the subsequent line. Only methods
     // that are spec'd to throw CCE and NPE should call this.
     @SuppressWarnings({"unchecked", "nullness"})
-    Comparator<@Nullable Object> unsafeComparator = (Comparator<@Nullable Object>) comparator;
+    @Readonly Comparator<@Nullable @Readonly Object> unsafeComparator = (@Readonly Comparator<@Nullable @Readonly Object>) comparator;
     return unsafeComparator.compare(a, b);
   }
 
-  final transient Comparator<? super E> comparator;
+  final transient @Readonly Comparator<? super E> comparator;
 
-  ImmutableSortedSet(Comparator<? super E> comparator) {
+  ImmutableSortedSet(@Readonly Comparator<? super E> comparator) {
     this.comparator = comparator;
   }
 
@@ -621,7 +621,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    */
   @SideEffectFree
   @Override
-  public Comparator<? super E> comparator() {
+  public @Readonly Comparator<? super E> comparator() {
     return comparator;
   }
 
@@ -827,7 +827,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
       }
 
       @Override
-      public Comparator<? super E> getComparator() {
+      public @Readonly Comparator<? super E> getComparator() {
         return comparator;
       }
     };
@@ -849,10 +849,10 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    */
   @J2ktIncompatible // serialization
   private static class SerializedForm<E> implements Serializable {
-    final Comparator<? super E> comparator;
+    final @Readonly Comparator<? super E> comparator;
     final Object[] elements;
 
-    public SerializedForm(Comparator<? super E> comparator, Object[] elements) {
+    public SerializedForm(@Readonly Comparator<? super E> comparator, Object[] elements) {
       this.comparator = comparator;
       this.elements = elements;
     }

@@ -293,7 +293,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> orderKeysBy(Comparator<? super K> keyComparator) {
+    public Builder<K, V> orderKeysBy(@Readonly Comparator<? super K> keyComparator) {
       super.orderKeysBy(keyComparator);
       return this;
     }
@@ -305,7 +305,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> orderValuesBy(Comparator<? super V> valueComparator) {
+    public Builder<K, V> orderValuesBy(@Readonly Comparator<? super V> valueComparator) {
       super.orderValuesBy(valueComparator);
       return this;
     }
@@ -362,7 +362,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
   /** Creates an ImmutableListMultimap from an asMap.entrySet. */
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> fromMapEntries(
       Collection<? extends Map.Entry<? extends K, ? extends Collection<? extends V>>> mapEntries,
-      @CheckForNull Comparator<? super V> valueComparator) {
+      @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     if (mapEntries.isEmpty()) {
       return of();
     }

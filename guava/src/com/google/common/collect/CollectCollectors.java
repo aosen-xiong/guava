@@ -84,7 +84,7 @@ final class CollectCollectors {
   }
 
   static <E> Collector<E, ?, ImmutableSortedSet<E>> toImmutableSortedSet(
-      Comparator<? super E> comparator) {
+      @Readonly Comparator<? super E> comparator) {
     checkNotNull(comparator);
     return Collector.of(
         () -> new ImmutableSortedSet.Builder<E>(comparator),
@@ -213,7 +213,7 @@ final class CollectCollectors {
 
   static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-          Comparator<? super K> comparator,
+          @Readonly Comparator<? super K> comparator,
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
     checkNotNull(comparator);
@@ -233,7 +233,7 @@ final class CollectCollectors {
 
   static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-          Comparator<? super K> comparator,
+          @Readonly Comparator<? super K> comparator,
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction,
           BinaryOperator<V> mergeFunction) {

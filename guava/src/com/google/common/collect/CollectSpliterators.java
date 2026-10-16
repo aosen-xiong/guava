@@ -53,7 +53,7 @@ final class CollectSpliterators {
       int size,
       int extraCharacteristics,
       IntFunction<T> function,
-      @CheckForNull Comparator<? super T> comparator) {
+      @CheckForNull @Readonly Comparator<? super T> comparator) {
     if (comparator != null) {
       checkArgument((extraCharacteristics & Spliterator.SORTED) != 0);
     }
@@ -96,7 +96,7 @@ final class CollectSpliterators {
 
       @Override
       @CheckForNull
-      public Comparator<? super T> getComparator() {
+      public @Readonly Comparator<? super T> getComparator() {
         if (hasCharacteristics(Spliterator.SORTED)) {
           return comparator;
         } else {
@@ -194,7 +194,7 @@ final class CollectSpliterators {
 
       @Override
       @CheckForNull
-      public Comparator<? super T> getComparator() {
+      public @Readonly Comparator<? super T> getComparator() {
         return fromSpliterator.getComparator();
       }
 

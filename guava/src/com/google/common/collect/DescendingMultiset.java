@@ -46,11 +46,11 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
     implements SortedMultiset<E> {
   abstract SortedMultiset<E> forwardMultiset();
 
-  @LazyInit @CheckForNull private transient @Assignable Comparator<? super E> comparator;
+  @LazyInit @CheckForNull private transient @Assignable @Readonly Comparator<? super E> comparator;
 
   @Override
-  public Comparator<? super E> comparator() {
-    Comparator<? super E> result = comparator;
+  public @Readonly Comparator<? super E> comparator() {
+    @Readonly Comparator<? super E> result = comparator;
     if (result == null) {
       return comparator = Ordering.from(forwardMultiset().comparator()).<E>reverse();
     }

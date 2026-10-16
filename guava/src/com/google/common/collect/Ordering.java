@@ -192,7 +192,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    *     wraps that comparator
    */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable @Readonly Object> Ordering<T> from(Comparator<T> comparator) {
+  public static <T extends @Nullable @Readonly Object> Ordering<T> from(@Readonly Comparator<T> comparator) {
     return (comparator instanceof Ordering)
         ? (Ordering<T>) comparator
         : new ComparatorOrdering<T>(comparator);

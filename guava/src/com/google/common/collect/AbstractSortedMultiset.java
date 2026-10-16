@@ -42,7 +42,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @ReceiverDependentMutable
 abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> extends AbstractMultiset<E>
     implements SortedMultiset<E> {
-  @GwtTransient final Comparator<? super E> comparator;
+  @GwtTransient final @Readonly Comparator<? super E> comparator;
 
   // needed for serialization
   @SuppressWarnings("unchecked")
@@ -50,7 +50,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
     this((Comparator) Ordering.natural());
   }
 
-  AbstractSortedMultiset(Comparator<? super E> comparator) {
+  AbstractSortedMultiset(@Readonly Comparator<? super E> comparator) {
     this.comparator = checkNotNull(comparator);
   }
 
@@ -65,7 +65,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
   }
 
   @Override
-  public Comparator<? super E> comparator() {
+  public @Readonly Comparator<? super E> comparator() {
     return comparator;
   }
 

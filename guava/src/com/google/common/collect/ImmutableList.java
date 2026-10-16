@@ -349,7 +349,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    * @since 21.0
    */
   public static <E extends @Readonly @NonNull Object> ImmutableList<E> sortedCopyOf(
-      Comparator<? super E> comparator, Iterable<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, Iterable<? extends E> elements) {
     checkNotNull(comparator);
     @SuppressWarnings("unchecked") // all supported methods are covariant
     E[] array = (E[]) Iterables.toArray(elements);
@@ -605,7 +605,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final void sort(@Nullable Comparator<? super E> c) {
+  public final void sort(@Nullable @Readonly Comparator<? super E> c) {
     throw new UnsupportedOperationException();
   }
 

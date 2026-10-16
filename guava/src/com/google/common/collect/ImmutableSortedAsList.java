@@ -48,7 +48,7 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
   }
 
   @Override
-  public Comparator<? super E> comparator() {
+  public @Readonly Comparator<? super E> comparator() {
     return delegateCollection().comparator();
   }
 

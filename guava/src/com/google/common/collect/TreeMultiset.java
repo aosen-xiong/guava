@@ -105,7 +105,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
    */
   @SuppressWarnings("unchecked")
   public static <E extends @Nullable @Readonly Object> TreeMultiset<E> create(
-      @CheckForNull Comparator<? super E> comparator) {
+      @CheckForNull @Readonly Comparator<? super E> comparator) {
     return (comparator == null)
         ? new TreeMultiset<E>((Comparator) Ordering.natural())
         : new TreeMultiset<E>(comparator);
@@ -138,7 +138,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     this.header = endLink;
   }
 
-  TreeMultiset(Comparator<? super E> comparator) {
+  TreeMultiset(@Readonly Comparator<? super E> comparator) {
     super(comparator);
     this.range = GeneralRange.all(comparator);
     this.header = new AvlNode<>();
@@ -660,7 +660,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return requireNonNull(succ);
     }
 
-    int count(Comparator<? super E> comparator, @ParametricNullness E e) {
+    int count(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         return (left == null) ? 0 : left.count(comparator, e);
@@ -690,7 +690,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     AvlNode<E> add(
-        Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
+        @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       /*
        * It speeds things up considerably to unconditionally add count to totalCount here,
        * but that destroys failure atomicity in the case of count overflow. =(
@@ -737,7 +737,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     @CheckForNull
     AvlNode<E> remove(
-        Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
+        @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         AvlNode<E> initLeft = left;
@@ -790,7 +790,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     @CheckForNull
     AvlNode<E> setCount(
-        Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
+        @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         AvlNode<E> initLeft = left;
@@ -840,7 +840,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     @CheckForNull
     AvlNode<E> setCount(
-        Comparator<? super E> comparator,
+        @Readonly Comparator<? super E> comparator,
         @ParametricNullness E e,
         int expectedCount,
         int newCount,
@@ -1029,7 +1029,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    private AvlNode<E> ceiling(Comparator<? super E> comparator, @ParametricNullness E e) {
+    private AvlNode<E> ceiling(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         return (left == null) ? this : MoreObjects.firstNonNull(left.ceiling(comparator, e), this);
@@ -1041,7 +1041,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    private AvlNode<E> floor(Comparator<? super E> comparator, @ParametricNullness E e) {
+    private AvlNode<E> floor(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp > 0) {
         return (right == null) ? this : MoreObjects.firstNonNull(right.floor(comparator, e), this);
@@ -1103,7 +1103,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     stream.defaultReadObject();
     @SuppressWarnings("unchecked")
     // reading data stored by writeObject
-    Comparator<? super E> comparator = (Comparator<? super E>) requireNonNull(stream.readObject());
+    @Readonly Comparator<? super E> comparator = (Comparator<? super E>) requireNonNull(stream.readObject());
     Serialization.getFieldSetter(AbstractSortedMultiset.class, "comparator").set(this, comparator);
     Serialization.getFieldSetter(TreeMultiset.class, "range")
         .set(this, GeneralRange.all(comparator));

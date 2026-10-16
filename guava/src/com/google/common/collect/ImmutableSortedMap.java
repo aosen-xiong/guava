@@ -92,7 +92,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    */
   public static <T extends @Nullable Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-          Comparator<? super K> comparator,
+          @Readonly Comparator<? super K> comparator,
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
     return CollectCollectors.toImmutableSortedMap(comparator, keyFunction, valueFunction);
@@ -111,7 +111,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    */
   public static <T extends @Nullable Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
-          Comparator<? super K> comparator,
+          @Readonly Comparator<? super K> comparator,
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction,
           BinaryOperator<V> mergeFunction) {
@@ -123,13 +123,13 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    * TODO(kevinb): Confirm that ImmutableSortedMap is faster to construct and
    * uses less memory than TreeMap; then say so in the class Javadoc.
    */
-  private static final Comparator<?> NATURAL_ORDER = Ordering.natural();
+  private static final @Readonly Comparator<?> NATURAL_ORDER = Ordering.natural();
 
   private static final ImmutableSortedMap<@Immutable Comparable<?>, Object> NATURAL_EMPTY_MAP =
       new ImmutableSortedMap<>(
           ImmutableSortedSet.emptySet(Ordering.natural()), ImmutableList.<@Readonly Object>of());
 
-  static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> emptyMap(Comparator<? super K> comparator) {
+  static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> emptyMap(@Readonly Comparator<? super K> comparator) {
     if (Ordering.natural().equals(comparator)) {
       return of();
     } else {
@@ -156,7 +156,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
   }
 
   /** Returns an immutable map containing a single entry. */
-  private static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(Comparator<? super K> comparator, K k1, V v1) {
+  private static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> of(@Readonly Comparator<? super K> comparator, K k1, V v1) {
     return new ImmutableSortedMap<>(
         new RegularImmutableSortedSet<K>(ImmutableList.of(k1), checkNotNull(comparator)),
         ImmutableList.of(v1));
@@ -393,7 +393,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    * @throws IllegalArgumentException if any two keys are equal according to the comparator
    */
   public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> copyOf(
-      Map<? extends K, ? extends V> map, Comparator<? super K> comparator) {
+      Map<? extends K, ? extends V> map, @Readonly Comparator<? super K> comparator) {
     return copyOfInternal(map, checkNotNull(comparator));
   }
 
@@ -427,7 +427,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    */
   public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries,
-      Comparator<? super K> comparator) {
+      @Readonly Comparator<? super K> comparator) {
     return fromEntries(checkNotNull(comparator), false, entries);
   }
 
@@ -443,7 +443,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    */
   @SuppressWarnings("unchecked")
   public static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> copyOfSorted(SortedMap<K, ? extends V> map) {
-    Comparator<? super K> comparator = map.comparator();
+    @Readonly Comparator<? super K> comparator = map.comparator();
     if (comparator == null) {
       // If map has a null comparator, the keys should have a natural ordering,
       // even though K doesn't explicitly implement Comparable.
@@ -462,11 +462,11 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
   }
 
   private static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> copyOfInternal(
-      Map<? extends K, ? extends V> map, Comparator<? super K> comparator) {
+      Map<? extends K, ? extends V> map, @Readonly Comparator<? super K> comparator) {
     boolean sameComparator = false;
     if (map instanceof SortedMap) {
       SortedMap<?, ?> sortedMap = (SortedMap<?, ?>) map;
-      Comparator<?> comparator2 = sortedMap.comparator();
+      @Readonly Comparator<?> comparator2 = sortedMap.comparator();
       sameComparator =
           (comparator2 == null) ? comparator == NATURAL_ORDER : comparator.equals(comparator2);
     }
@@ -494,7 +494,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    * that they do not need to be sorted or checked for dupes.
    */
   private static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> fromEntries(
-      Comparator<? super K> comparator,
+      @Readonly Comparator<? super K> comparator,
       boolean sameComparator,
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     // "adding" type params to an array of a raw type should be safe as
@@ -507,7 +507,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
 
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
   private static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> fromEntries(
-      final Comparator<? super K> comparator,
+      final @Readonly Comparator<? super K> comparator,
       boolean sameComparator,
       @Nullable @Immutable Entry<K, V>[] entryArray,
       int size) {
@@ -587,7 +587,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    *
    * @throws NullPointerException if {@code comparator} is null
    */
-  public static <K extends @Immutable Object, V> Builder<K, V> orderedBy(Comparator<K> comparator) {
+  public static <K extends @Immutable Object, V> Builder<K, V> orderedBy(@Readonly Comparator<K> comparator) {
     return new Builder<>(comparator);
   }
 
@@ -621,13 +621,13 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    * @since 2.0
    */
   public static @Mutable class Builder<K extends @Immutable Object, V> extends ImmutableMap.Builder<K, V> {
-    private final Comparator<? super K> comparator;
+    private final @Readonly Comparator<? super K> comparator;
 
     /**
      * Creates a new builder. The returned builder is equivalent to the builder generated by {@link
      * ImmutableSortedMap#orderedBy}.
      */
-    public Builder(Comparator<? super K> comparator) {
+    public Builder(@Readonly Comparator<? super K> comparator) {
       this.comparator = checkNotNull(comparator);
     }
 
@@ -696,7 +696,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
     @Override
     @Deprecated
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final Builder<K, V> orderEntriesByValue(Comparator<? super V> valueComparator) {
+    public final Builder<K, V> orderEntriesByValue(@Readonly Comparator<? super V> valueComparator) {
       throw new UnsupportedOperationException("Not available on ImmutableSortedMap.Builder");
     }
 
@@ -919,7 +919,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
    */
   @SideEffectFree
   @Override
-  public Comparator<? super K> comparator() {
+  public @Readonly Comparator<? super K> comparator() {
     return keySet().comparator();
   }
 
@@ -1171,7 +1171,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
    */
   @J2ktIncompatible // serialization
   private static class SerializedForm<K extends @Immutable Object, V> extends ImmutableMap.SerializedForm<K, V> {
-    private final Comparator<? super K> comparator;
+    private final @Readonly Comparator<? super K> comparator;
 
     SerializedForm(ImmutableSortedMap<K, V> sortedMap) {
       super(sortedMap);
