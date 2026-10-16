@@ -12,16 +12,16 @@
 #   CHECKERFRAMEWORK=... mvn -B -P checkerframework-local \
 #     dependency:build-classpath -Dmdep.outputFile=../guava-cp.txt
 #
-# The annotated JDK is supplied with --patch-module. Note the module root is
-# java.base/share/classes, NOT java.base — pointing one level too high makes
-# javac silently resolve java.base from the runtime image, so the annotations
-# are ignored and everything looks broken. See guava-annotation-strategy.md 5.2.
+# The JDK annotations come from the annotated JDK bundled in checker.jar, so
+# checker.jar must be built against aosen-xiong/jdk#4 (-PannotatedJdkHome) and
+# rebuilt after every JDK change. java.base is not patched from source: doing
+# so makes the checker see AbstractCollection's Collection supertype as raw,
+# which gave order-dependent errors and an AsSuperVisitor crash.
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 : "${CHECKERFRAMEWORK:=/Users/aosenxiong/cf-pico-move}"
 : "${JAVA_HOME:=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home}"
-: "${ANNOTATED_JDK:=/Users/aosenxiong/jdk/src/java.base/share/classes}"  # the annotated JDK of aosen-xiong/jdk#4, the same one checker.jar must bundle
 export JAVA_HOME
 
 CP="$(cat "${ROOT}/guava-cp.txt")"
@@ -49,8 +49,6 @@ set +e
   -processor "${PROCESSOR:-org.checkerframework.checker.mutability.MutabilityChecker}" \
   ${ASSUME_INITIALIZED:--AassumeInitialized} \
   ${EXTRA_ARGS:-} \
-  --patch-module java.base="${ANNOTATED_JDK}" \
-  --add-reads java.base=ALL-UNNAMED \
   "${SCOPE[@]}" \
   -Xmaxerrs 100000 -Xmaxwarns 100000 \
   -Alint=-all -XDignore.symbol.file ${WARN_FLAGS:--nowarn} \
