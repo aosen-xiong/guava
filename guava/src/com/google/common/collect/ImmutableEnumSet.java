@@ -46,6 +46,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 @Immutable
 final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: every caller hands over a fresh EnumSet that no one else references
   static <E extends Enum<E>> ImmutableSet<E> asImmutable(EnumSet<E> set) {
     switch (set.size()) {
       case 0:
@@ -167,9 +168,9 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
    */
   @J2ktIncompatible // serialization
   private static class EnumSerializedForm<E extends Enum<E>> implements Serializable {
-    final EnumSet<E> delegate;
+    final @Immutable EnumSet<E> delegate;
 
-    EnumSerializedForm(EnumSet<E> delegate) {
+    EnumSerializedForm(@Immutable EnumSet<E> delegate) {
       this.delegate = delegate;
     }
 

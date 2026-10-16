@@ -49,6 +49,7 @@ final class JdkBackedImmutableMap<K extends @Immutable Object, V> extends Immuta
    * detected. This implementation may replace the entries in entryArray with its own entry objects
    * (though they will have the same key/value contents), and will take ownership of entryArray.
    */
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V> ImmutableMap<K, V> create(
       int n, @Nullable @Immutable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys) {
     Map<K, V> delegateMap = Maps.newHashMapWithExpectedSize(n);

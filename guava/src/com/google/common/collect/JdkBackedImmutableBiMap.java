@@ -44,6 +44,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @Immutable
 final class JdkBackedImmutableBiMap<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableBiMap<K, V> {
   @VisibleForTesting
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> create(int n, @Nullable @Immutable Entry<K, V>[] entryArray) {
     Map<K, V> forwardDelegate = Maps.newHashMapWithExpectedSize(n);
     Map<V, K> backwardDelegate = Maps.newHashMapWithExpectedSize(n);
@@ -69,7 +70,7 @@ final class JdkBackedImmutableBiMap<K extends @Immutable Object, V extends @Immu
   private final Map<V, K> backwardDelegate;
 
   private JdkBackedImmutableBiMap(
-      ImmutableList<@Immutable Entry<K, V>> entries, Map<K, V> forwardDelegate, Map<V, K> backwardDelegate) {
+      ImmutableList<@Immutable Entry<K, V>> entries, @Immutable Map<K, V> forwardDelegate, @Immutable Map<V, K> backwardDelegate) {
     this.entries = entries;
     this.forwardDelegate = forwardDelegate;
     this.backwardDelegate = backwardDelegate;

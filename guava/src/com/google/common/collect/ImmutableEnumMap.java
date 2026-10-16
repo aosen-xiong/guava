@@ -43,6 +43,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @ElementTypesAreNonnullByDefault
 @Immutable
 final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutableMap<K, V> {
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: every caller hands over a fresh EnumMap that no one else references
   static <K extends Enum<K>, V> ImmutableMap<K, V> asImmutable(EnumMap<K, V> map) {
     switch (map.size()) {
       case 0:
@@ -57,7 +58,7 @@ final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutabl
 
   private final transient EnumMap<K, V> delegate;
 
-  private ImmutableEnumMap(EnumMap<K, V> delegate) {
+  private ImmutableEnumMap(@Immutable EnumMap<K, V> delegate) {
     this.delegate = delegate;
     checkArgument(!delegate.isEmpty());
   }
@@ -138,9 +139,9 @@ final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutabl
    */
   @J2ktIncompatible // serialization
   private static class EnumSerializedForm<K extends Enum<K>, V> implements Serializable {
-    final EnumMap<K, V> delegate;
+    final @Immutable EnumMap<K, V> delegate;
 
-    EnumSerializedForm(EnumMap<K, V> delegate) {
+    EnumSerializedForm(@Immutable EnumMap<K, V> delegate) {
       this.delegate = delegate;
     }
 
