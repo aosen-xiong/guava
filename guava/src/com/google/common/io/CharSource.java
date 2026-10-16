@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -570,7 +571,7 @@ public abstract class CharSource {
      * empty string is not included, to match the behavior of BufferedReader/LineReader.readLine().
      */
     private Iterator<String> linesIterator() {
-      return new AbstractIterator<String>() {
+      return new @Mutable AbstractIterator<String>() {
         Iterator<String> lines = LINE_SPLITTER.split(seq).iterator();
 
         @Override

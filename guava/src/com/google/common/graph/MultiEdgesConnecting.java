@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -50,7 +51,7 @@ abstract class MultiEdgesConnecting<E> extends AbstractSet<E> {
   @Override
   public UnmodifiableIterator<E> iterator() {
     Iterator<? extends Entry<E, ?>> entries = outEdgeToNode.entrySet().iterator();
-    return new AbstractIterator<E>() {
+    return new @Mutable AbstractIterator<E>() {
       @Override
       @CheckForNull
       protected E computeNext() {

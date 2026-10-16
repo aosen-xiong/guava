@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An object that can traverse the nodes that are reachable from a specified (set of) start node(s)
@@ -441,7 +442,7 @@ public abstract class Traverser<N> {
     private Iterator<N> topDown(Iterator<? extends N> startNodes, InsertionOrder order) {
       Deque<Iterator<? extends N>> horizon = new ArrayDeque<>();
       horizon.add(startNodes);
-      return new AbstractIterator<N>() {
+      return new @Mutable AbstractIterator<N>() {
         @Override
         @CheckForNull
         protected N computeNext() {
@@ -466,7 +467,7 @@ public abstract class Traverser<N> {
       Deque<N> ancestorStack = new ArrayDeque<>();
       Deque<Iterator<? extends N>> horizon = new ArrayDeque<>();
       horizon.add(startNodes);
-      return new AbstractIterator<N>() {
+      return new @Mutable AbstractIterator<N>() {
         @Override
         @CheckForNull
         protected N computeNext() {
