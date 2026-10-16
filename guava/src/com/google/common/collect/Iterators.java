@@ -135,9 +135,9 @@ public final class Iterators {
   }
 
   /** Returns an unmodifiable view of {@code iterator}. */
-  @SuppressWarnings("mutability:return.type.incompatible") // the wrapper only reads iterator and its remove() throws, so any qualifier the caller needs is sound
+  @SuppressWarnings("mutability:return.type.incompatible") // the wrapper only forwards hasNext() and next() to iterator, so it has iterator's mutability; an anonymous class cannot be created @PolyMutable
   public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> unmodifiableIterator(
-          @Readonly Iterator<? extends T> iterator) {
+          @PolyMutable Iterator<? extends T> iterator) {
     checkNotNull(iterator);
     if (iterator instanceof UnmodifiableIterator) {
       @SuppressWarnings("unchecked") // Since it's unmodifiable, the covariant cast is safe
