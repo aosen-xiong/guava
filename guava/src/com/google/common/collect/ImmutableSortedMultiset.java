@@ -303,14 +303,14 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
   }
 
   private static <E> ImmutableSortedMultiset<E> copyOfSortedEntries(
-      Comparator<? super E> comparator, Collection<Entry<E>> entries) {
+      Comparator<? super E> comparator, Collection<@Immutable Entry<E>> entries) {
     if (entries.isEmpty()) {
       return emptyMultiset(comparator);
     }
     ImmutableList.Builder<E> elementsBuilder = new ImmutableList.Builder<E>(entries.size());
     long[] cumulativeCounts = new long[entries.size() + 1];
     int i = 0;
-    for (Entry<E> entry : entries) {
+    for (@Immutable Entry<E> entry : entries) {
       elementsBuilder.add(entry.getElement());
       cumulativeCounts[i + 1] = cumulativeCounts[i] + entry.getCount();
       i++;
@@ -368,7 +368,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
   @CheckForNull
-  public final Entry<E> pollFirstEntry() {
+  public final @Immutable Entry<E> pollFirstEntry() {
     throw new UnsupportedOperationException();
   }
 
@@ -385,7 +385,7 @@ public abstract class ImmutableSortedMultiset<E> extends ImmutableMultiset<E>
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
   @CheckForNull
-  public final Entry<E> pollLastEntry() {
+  public final @Immutable Entry<E> pollLastEntry() {
     throw new UnsupportedOperationException();
   }
 

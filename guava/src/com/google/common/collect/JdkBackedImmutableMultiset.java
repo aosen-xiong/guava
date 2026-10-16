@@ -45,16 +45,16 @@ import org.checkerframework.framework.qual.CFComment;
 @Immutable
 final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends ImmutableMultiset<E> {
   private final @Immutable Map<E, Integer> delegateMap;
-  private final ImmutableList<Entry<E>> entries;
+  private final ImmutableList<@Immutable Entry<E>> entries;
   private final long size;
 
   static <E extends @Immutable Object> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
     @SuppressWarnings("unchecked")
-    Entry<E>[] entriesArray = entries.toArray((Entry<E>[]) new Entry<?>[0]);
+    @Immutable Entry<E>[] entriesArray = entries.toArray((@Immutable Entry<E>[]) new Entry<?>[0]);
     Map<E, Integer> delegateMap = Maps.newHashMapWithExpectedSize(entriesArray.length);
     long size = 0;
     for (int i = 0; i < entriesArray.length; i++) {
-      Entry<E> entry = entriesArray[i];
+      @Immutable Entry<E> entry = entriesArray[i];
       int count = entry.getCount();
       size += count;
       E element = checkNotNull(entry.getElement());
@@ -68,7 +68,7 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
   }
 
   private JdkBackedImmutableMultiset(
-      Map<E, Integer> delegateMap, ImmutableList<Entry<E>> entries, long size) {
+      Map<E, Integer> delegateMap, ImmutableList<@Immutable Entry<E>> entries, long size) {
     this.delegateMap = delegateMap;
     this.entries = entries;
     this.size = size;
@@ -88,7 +88,7 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
   }
 
   @Override
-  Entry<E> getEntry(int index) {
+  @Immutable Entry<E> getEntry(int index) {
     return entries.get(index);
   }
 

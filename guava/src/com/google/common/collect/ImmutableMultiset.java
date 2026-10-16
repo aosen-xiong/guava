@@ -242,7 +242,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
 
   @Override
   public @Immutable UnmodifiableIterator<E> iterator() {
-    final Iterator<Entry<E>> entryIterator = entrySet().iterator();
+    final Iterator<@Immutable Entry<E>> entryIterator = entrySet().iterator();
     return new @Immutable UnmodifiableIterator<E>() {
       @Assignable int remaining;
       @Assignable @CheckForNull E element;
@@ -255,7 +255,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
       @Override
       public E next() {
         if (remaining <= 0) {
-          Entry<E> entry = entryIterator.next();
+          @Immutable Entry<E> entry = entryIterator.next();
           element = entry.getElement();
           remaining = entry.getCount();
         }
@@ -342,7 +342,7 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
   @GwtIncompatible // not present in emulated superclass
   @Override
   int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
-    for (Multiset.Entry<E> entry : entrySet()) {
+    for (Multiset.@Immutable Entry<E> entry : entrySet()) {
       Arrays.fill(dst, offset, offset + entry.getCount(), entry.getElement());
       offset += entry.getCount();
     }
@@ -371,31 +371,31 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
   @Override
   public abstract ImmutableSet<E> elementSet();
 
-  @LazyInit @CheckForNull private transient @Assignable ImmutableSet<Entry<E>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableSet<@Immutable Entry<E>> entrySet;
 
   @SideEffectFree
   @Override
-  public ImmutableSet<Entry<E>> entrySet() {
-    ImmutableSet<Entry<E>> es = entrySet;
+  public ImmutableSet<@Immutable Entry<E>> entrySet() {
+    ImmutableSet<@Immutable Entry<E>> es = entrySet;
     return (es == null) ? (entrySet = createEntrySet()) : es;
   }
 
-  private ImmutableSet<Entry<E>> createEntrySet() {
-    return isEmpty() ? ImmutableSet.<Entry<E>>of() : new EntrySet();
+  private ImmutableSet<@Immutable Entry<E>> createEntrySet() {
+    return isEmpty() ? ImmutableSet.<@Immutable Entry<E>>of() : new EntrySet();
   }
 
-  abstract Entry<E> getEntry(int index);
+  abstract @Immutable Entry<E> getEntry(int index);
 
   @WeakOuter
   @Immutable
-  private final class EntrySet extends IndexedImmutableSet<Entry<E>> {
+  private final class EntrySet extends IndexedImmutableSet<@Immutable Entry<E>> {
     @Override
     boolean isPartialView() {
       return ImmutableMultiset.this.isPartialView();
     }
 
     @Override
-    Entry<E> get(int index) {
+    @Immutable Entry<E> get(int index) {
       return getEntry(index);
     }
 
@@ -625,11 +625,11 @@ public abstract class ImmutableMultiset<E> extends ImmutableMultisetGwtSerializa
 
   @Immutable
   static final class ElementSet<E> extends ImmutableSet.Indexed<E> {
-    private final List<Entry<E>> entries;
+    private final List<@Immutable Entry<E>> entries;
     // TODO(cpovirk): @Weak?
     private final Multiset<E> delegate;
 
-    ElementSet(List<Entry<E>> entries, Multiset<E> delegate) {
+    ElementSet(List<@Immutable Entry<E>> entries, Multiset<E> delegate) {
       this.entries = entries;
       this.delegate = delegate;
     }

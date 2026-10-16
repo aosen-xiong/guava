@@ -74,7 +74,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   }
 
   @Override
-  Entry<E> getEntry(int index) {
+  @Immutable Entry<E> getEntry(int index) {
     return Multisets.immutableEntry(elementSet.asList().get(index), getCount(index));
   }
 
@@ -88,13 +88,13 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
 
   @Override
   @CheckForNull
-  public Entry<E> firstEntry() {
+  public @Immutable Entry<E> firstEntry() {
     return isEmpty() ? null : getEntry(0);
   }
 
   @Override
   @CheckForNull
-  public Entry<E> lastEntry() {
+  public @Immutable Entry<E> lastEntry() {
     return isEmpty() ? null : getEntry(length - 1);
   }
 

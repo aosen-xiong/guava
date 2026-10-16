@@ -47,13 +47,13 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
 
   @Override
   @CheckForNull
-  public Entry<E> firstEntry() {
+  public @Immutable Entry<E> firstEntry() {
     return forward.lastEntry();
   }
 
   @Override
   @CheckForNull
-  public Entry<E> lastEntry() {
+  public @Immutable Entry<E> lastEntry() {
     return forward.firstEntry();
   }
 
@@ -68,7 +68,7 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   }
 
   @Override
-  Entry<E> getEntry(int index) {
+  @Immutable Entry<E> getEntry(int index) {
     return forward.entrySet().asList().reverse().get(index);
   }
 

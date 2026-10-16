@@ -49,7 +49,7 @@ import org.checkerframework.framework.qual.CFComment;
 @Immutable
 class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   private static final ImmutableEntry<?>[] EMPTY_ARRAY = new ImmutableEntry<?>[0];
-  static final ImmutableMultiset<Object> EMPTY = create(ImmutableList.<Entry<Object>>of());
+  static final ImmutableMultiset<Object> EMPTY = create(ImmutableList.<@Immutable Entry<Object>>of());
 
   static <E> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
     int distinct = entries.size();
@@ -69,7 +69,7 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
     long size = 0;
     for (Entry<? extends E> entryWithWildcard : entries) {
       @SuppressWarnings("unchecked") // safe because we only read from it
-      Entry<E> entry = (Entry<E>) entryWithWildcard;
+      @Immutable Entry<E> entry = (@Immutable Entry<E>) entryWithWildcard;
       E element = checkNotNull(entry.getElement());
       int count = entry.getCount();
       int hash = element.hashCode();
@@ -200,7 +200,7 @@ class RegularImmutableMultiset<E> extends ImmutableMultiset<E> {
   }
 
   @Override
-  Entry<E> getEntry(int index) {
+  @Immutable Entry<E> getEntry(int index) {
     return entries[index];
   }
 
