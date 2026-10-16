@@ -135,7 +135,7 @@ public final class Lists {
    */
   @GwtCompatible(serializable = true)
   public static <E extends @Nullable @Readonly Object> ArrayList<E> newArrayList(
-      Iterable<? extends E> elements) {
+      @Readonly Iterable<? extends E> elements) {
     checkNotNull(elements); // for GWT
     // Let ArrayList's sizing logic work, if possible
     return (elements instanceof Collection)
@@ -152,7 +152,7 @@ public final class Lists {
    */
   @GwtCompatible(serializable = true)
   public static <E extends @Nullable @Readonly Object> ArrayList<E> newArrayList(
-      Iterator<? extends E> elements) {
+      @Readonly Iterator<? extends E> elements) {
     ArrayList<E> list = newArrayList();
     Iterators.addAll(list, elements);
     return list;

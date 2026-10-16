@@ -335,7 +335,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @since 7.0 (source-compatible since 2.0)
    */
   public static <E> ImmutableSortedSet<E> copyOf(
-      @Readonly Comparator<? super E> comparator, Collection<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, @Readonly Collection<? extends E> elements) {
     return copyOf(comparator, (Iterable<? extends E>) elements);
   }
 

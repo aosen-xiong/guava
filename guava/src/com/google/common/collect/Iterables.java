@@ -254,7 +254,7 @@ public final class Iterables {
    * generally guaranteed.
    */
   @Pure
-  public static String toString(Iterable<?> iterable) {
+  public static String toString(@Readonly Iterable<?> iterable) {
     return Iterators.toString(iterable.iterator());
   }
 
@@ -300,7 +300,7 @@ public final class Iterables {
     return toArray(iterable, ObjectArrays.newArray(type, 0));
   }
 
-  static <T extends @Nullable @Readonly Object> T[] toArray(Iterable<? extends T> iterable, T[] array) {
+  static <T extends @Nullable @Readonly Object> T[] toArray(@Readonly Iterable<? extends T> iterable, T[] array) {
     Collection<? extends T> collection = castOrCopyToCollection(iterable);
     return collection.toArray(array);
   }
@@ -311,7 +311,7 @@ public final class Iterables {
    * @param iterable the iterable to copy
    * @return a newly-allocated array into which all the elements of the iterable have been copied
    */
-  static @Nullable Object[] toArray(Iterable<?> iterable) {
+  static @Nullable Object[] toArray(@Readonly Iterable<?> iterable) {
     return castOrCopyToCollection(iterable).toArray();
   }
 
@@ -320,8 +320,8 @@ public final class Iterables {
    * returned. Otherwise, an {@link java.util.ArrayList} is created with the contents of the
    * iterable in the same iteration order.
    */
-  private static <E extends @Nullable @Readonly Object> Collection<E> castOrCopyToCollection(
-      Iterable<E> iterable) {
+  private static <E extends @Nullable @Readonly Object> @Readonly Collection<E> castOrCopyToCollection(
+      @Readonly Iterable<E> iterable) {
     return (iterable instanceof Collection)
         ? (Collection<E>) iterable
         : Lists.newArrayList(iterable.iterator());

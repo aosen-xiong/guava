@@ -297,7 +297,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
 
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
+    public Builder<K, V> putAll(K key, @Readonly Iterable<? extends V> values) {
       super.putAll(key, values);
       return this;
     }
@@ -311,7 +311,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     @CanIgnoreReturnValue
     @Override
     public Builder<K, V> putAll(@Readonly Multimap<? extends K, ? extends V> multimap) {
-      for (Entry<? extends K, ? extends Collection<? extends V>> entry :
+      for (@Readonly Entry<? extends K, ? extends @Readonly Collection<? extends V>> entry :
           multimap.asMap().entrySet()) {
         putAll(entry.getKey(), entry.getValue());
       }
@@ -418,7 +418,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
 
   /** Creates an ImmutableSetMultimap from an asMap.entrySet. */
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableSetMultimap<K, V> fromMapEntries(
-      Collection<? extends Map.Entry<? extends K, ? extends Collection<? extends V>>> mapEntries,
+      @Readonly Collection<? extends Map.@Readonly Entry<? extends K, ? extends @Readonly Collection<? extends V>>> mapEntries,
       @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     if (mapEntries.isEmpty()) {
       return of();
@@ -427,9 +427,9 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
         new ImmutableMap.Builder<>(mapEntries.size());
     int size = 0;
 
-    for (Entry<? extends K, ? extends Collection<? extends V>> entry : mapEntries) {
+    for (@Readonly Entry<? extends K, ? extends @Readonly Collection<? extends V>> entry : mapEntries) {
       K key = entry.getKey();
-      Collection<? extends V> values = entry.getValue();
+      @Readonly Collection<? extends V> values = entry.getValue();
       ImmutableSet<V> set = valueSet(valueComparator, values);
       if (!set.isEmpty()) {
         builder.put(key, set);
@@ -577,7 +577,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   }
 
   private static <V> ImmutableSet<V> valueSet(
-      @CheckForNull @Readonly Comparator<? super V> valueComparator, Collection<? extends V> values) {
+      @CheckForNull @Readonly Comparator<? super V> valueComparator, @Readonly Collection<? extends V> values) {
     return (valueComparator == null)
         ? ImmutableSet.copyOf(values)
         : ImmutableSortedSet.copyOf(valueComparator, values);

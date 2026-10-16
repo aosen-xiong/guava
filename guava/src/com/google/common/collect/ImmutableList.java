@@ -266,7 +266,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if {@code elements} contains a null element
    */
-  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(Collection<? extends E> elements) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Readonly Collection<? extends E> elements) {
     if (elements instanceof ImmutableCollection) {
       @SuppressWarnings("unchecked") // all supported methods are covariant
       ImmutableList<E> list = ((ImmutableCollection<E>) elements).asList();
@@ -349,7 +349,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    * @since 21.0
    */
   public static <E extends @Readonly @NonNull Object> ImmutableList<E> sortedCopyOf(
-      @Readonly Comparator<? super E> comparator, Iterable<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, @Readonly Iterable<? extends E> elements) {
     checkNotNull(comparator);
     @SuppressWarnings("unchecked") // all supported methods are covariant
     E[] array = (E[]) Iterables.toArray(elements);

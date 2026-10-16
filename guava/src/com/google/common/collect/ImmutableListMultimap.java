@@ -260,7 +260,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
+    public Builder<K, V> putAll(K key, @Readonly Iterable<? extends V> values) {
       super.putAll(key, values);
       return this;
     }
@@ -361,7 +361,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
   /** Creates an ImmutableListMultimap from an asMap.entrySet. */
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> fromMapEntries(
-      Collection<? extends Map.Entry<? extends K, ? extends Collection<? extends V>>> mapEntries,
+      @Readonly Collection<? extends Map.@Readonly Entry<? extends K, ? extends @Readonly Collection<? extends V>>> mapEntries,
       @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     if (mapEntries.isEmpty()) {
       return of();
@@ -370,9 +370,9 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
         new ImmutableMap.Builder<>(mapEntries.size());
     int size = 0;
 
-    for (Entry<? extends K, ? extends Collection<? extends V>> entry : mapEntries) {
+    for (@Readonly Entry<? extends K, ? extends @Readonly Collection<? extends V>> entry : mapEntries) {
       K key = entry.getKey();
-      Collection<? extends V> values = entry.getValue();
+      @Readonly Collection<? extends V> values = entry.getValue();
       ImmutableList<V> list =
           (valueComparator == null)
               ? ImmutableList.copyOf(values)

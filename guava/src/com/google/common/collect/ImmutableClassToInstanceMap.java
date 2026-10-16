@@ -50,7 +50,7 @@ public final class ImmutableClassToInstanceMap<B>
     implements ClassToInstanceMap<B>, Serializable {
 
   private static final ImmutableClassToInstanceMap<@Readonly Object> EMPTY =
-      new ImmutableClassToInstanceMap<>(ImmutableMap.<Class<?>, Object>of());
+      new ImmutableClassToInstanceMap<>(ImmutableMap.<Class<?>, @Readonly Object>of());
 
   /**
    * Returns an empty {@code ImmutableClassToInstanceMap}.
@@ -179,6 +179,7 @@ public final class ImmutableClassToInstanceMap<B>
   }
 
   @Override
+  @SuppressWarnings("mutability:override.return.invalid") // an @Immutable class cannot restate ForwardingObject's @PolyMutable delegate(): its receiver is always @Immutable, so the poly always means @Immutable
   protected @Immutable Map<Class<? extends B>, B> delegate() {
     return delegate;
   }

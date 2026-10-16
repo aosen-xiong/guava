@@ -295,7 +295,7 @@ public final class Iterators {
    * The iterator will be left exhausted: its {@code hasNext()} method will return {@code false}.
    */
   @Pure
-  public static String toString(Iterator<?> iterator) {
+  public static String toString(@Readonly Iterator<?> iterator) {
     StringBuilder sb = new StringBuilder().append('[');
     boolean first = true;
     while (iterator.hasNext()) {
@@ -370,7 +370,7 @@ public final class Iterators {
    */
   @CanIgnoreReturnValue
   public static <T extends @Nullable @Readonly Object> boolean addAll(
-      Collection<T> addTo, Iterator<? extends T> iterator) {
+      Collection<T> addTo, @Readonly Iterator<? extends T> iterator) {
     checkNotNull(addTo);
     checkNotNull(iterator);
     boolean wasModified = false;

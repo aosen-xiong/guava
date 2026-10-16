@@ -220,7 +220,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
      *     is null. The builder is left in an invalid state.
      */
     @CanIgnoreReturnValue
-    public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
+    public Builder<K, V> putAll(K key, @Readonly Iterable<? extends V> values) {
       if (key == null) {
         throw new NullPointerException("null key in entry: null=" + Iterables.toString(values));
       }
@@ -702,7 +702,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
 
     @Override
     Multiset.@Immutable Entry<K> getEntry(int index) {
-      Map.Entry<K, ? extends Collection<V>> entry = map.entrySet().asList().get(index);
+      Map.Entry<K, ? extends @Readonly Collection<V>> entry = map.entrySet().asList().get(index);
       return Multisets.immutableEntry(entry.getKey(), entry.getValue().size());
     }
 

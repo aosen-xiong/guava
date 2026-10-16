@@ -720,7 +720,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    */
   @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(
-      @Readonly Iterable<? extends Entry<? extends K, ? extends V>> entries) {
+      @Readonly Iterable<? extends @Readonly Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant
     @Immutable Entry<K, V>[] entryArray = (@Immutable Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
     switch (entryArray.length) {
@@ -743,7 +743,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
       EnumMap<?, ? extends V> original) {
     @SuppressWarnings("unchecked") // the best we could do to make copyOf(Map) compile
     EnumMap<K, V> copy = new EnumMap<>((EnumMap<K, ? extends V>) original);
-    for (@Immutable Entry<K, V> entry : copy.entrySet()) {
+    for (@Readonly Entry<K, V> entry : copy.entrySet()) {
       checkEntryNotNull(entry.getKey(), entry.getValue());
     }
     return ImmutableEnumMap.asImmutable(copy);
@@ -1139,7 +1139,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    *
    * @since 14.0
    */
-  public ImmutableSetMultimap<K, @Immutable V> asMultimap() {
+  public ImmutableSetMultimap<K, @Immutable V> asMultimap(@Immutable ImmutableMap<K, @Immutable V> this) {
     if (isEmpty()) {
       return ImmutableSetMultimap.of();
     }
@@ -1273,11 +1273,11 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
 
     SerializedForm(ImmutableMap<K, V> map) {
       if (USE_LEGACY_SERIALIZATION) {
-        Object[] keys = new Object[map.size()];
+        @Readonly Object[] keys = new Object[map.size()];
         @Readonly Object[] values = new Object[map.size()];
         int i = 0;
         // "extends Object" works around https://github.com/typetools/checker-framework/issues/3013
-        for (Entry<? extends Object, ? extends @Readonly Object> entry : map.entrySet()) {
+        for (Entry<? extends @Readonly Object, ? extends @Readonly Object> entry : map.entrySet()) {
           keys[i] = entry.getKey();
           values[i] = entry.getValue();
           i++;
