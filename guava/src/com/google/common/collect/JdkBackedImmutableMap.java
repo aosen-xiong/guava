@@ -79,7 +79,7 @@ final class JdkBackedImmutableMap<K extends @Immutable Object, V> extends Immuta
       @SuppressWarnings({"rawtypes", "unchecked"})
       @Immutable Entry<K, V>[] newEntryArray = new @Immutable Entry[n - dupCount];
       for (int inI = 0, outI = 0; inI < n; inI++) {
-        Entry<K, V> entry = requireNonNull(entryArray[inI]);
+        @Immutable Entry<K, V> entry = requireNonNull(entryArray[inI]);
         K key = entry.getKey();
         if (duplicates.containsKey(key)) {
           V value = duplicates.get(key);
@@ -97,9 +97,9 @@ final class JdkBackedImmutableMap<K extends @Immutable Object, V> extends Immuta
   }
 
   private final transient Map<K, V> delegateMap;
-  private final transient ImmutableList<Entry<K, V>> entries;
+  private final transient ImmutableList<@Immutable Entry<K, V>> entries;
 
-  JdkBackedImmutableMap(@Immutable Map<K, V> delegateMap, ImmutableList<Entry<K, V>> entries) {
+  JdkBackedImmutableMap(@Immutable Map<K, V> delegateMap, ImmutableList<@Immutable Entry<K, V>> entries) {
     this.delegateMap = delegateMap;
     this.entries = entries;
   }
@@ -116,7 +116,7 @@ final class JdkBackedImmutableMap<K extends @Immutable Object, V> extends Immuta
   }
 
   @Override
-  ImmutableSet<Entry<K, V>> createEntrySet() {
+  ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     return new ImmutableMapEntrySet.RegularEntrySet<>(this, entries);
   }
 

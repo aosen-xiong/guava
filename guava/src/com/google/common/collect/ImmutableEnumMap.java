@@ -100,12 +100,14 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
   }
 
   @Override
-  @Immutable UnmodifiableIterator<Entry<K, V>> entryIterator() {
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible"}) // the delegate is a private EnumMap that is never modified after construction, and Maps.unmodifiableEntry wraps each of its entries so it cannot be modified either: the entries are immutable
+  @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
     return Maps.unmodifiableEntryIterator(delegate.entrySet().iterator());
   }
 
   @Override
-  Spliterator<Entry<K, V>> entrySpliterator() {
+  @SuppressWarnings("mutability:methodref.return.invalid") // the delegate is a private EnumMap that is never modified after construction, and Maps.unmodifiableEntry wraps each of its entries so it cannot be modified either: the entries are immutable
+  Spliterator<@Immutable Entry<K, V>> entrySpliterator() {
     return CollectSpliterators.map(delegate.entrySet().spliterator(), Maps::unmodifiableEntry);
   }
 

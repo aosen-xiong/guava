@@ -57,7 +57,7 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
   @Override
   public @Immutable UnmodifiableIterator<V> iterator() {
     return new @Immutable UnmodifiableIterator<V>() {
-      final UnmodifiableIterator<Entry<K, V>> entryItr = map.entrySet().iterator();
+      final UnmodifiableIterator<@Immutable Entry<K, V>> entryItr = map.entrySet().iterator();
 
       @Override
       public boolean hasNext() {
@@ -88,7 +88,7 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
 
   @Override
   public ImmutableList<V> asList() {
-    final ImmutableList<Entry<K, V>> entryList = map.entrySet().asList();
+    final ImmutableList<@Immutable Entry<K, V>> entryList = map.entrySet().asList();
     return new ImmutableAsList<V>() {
       @Override
       public V get(int index) {

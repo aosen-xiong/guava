@@ -288,7 +288,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
   @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     @SuppressWarnings("unchecked") // we will only ever read these
-    Entry<K, V>[] entries2 = (Entry<K, V>[]) entries;
+    @Immutable Entry<K, V>[] entries2 = (@Immutable Entry<K, V>[]) entries;
     return RegularImmutableBiMap.fromEntries(entries2);
   }
 
@@ -465,7 +465,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
           return of();
         case 1:
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> onlyEntry = requireNonNull(entries[0]);
+          @Immutable Entry<K, V> onlyEntry = requireNonNull(entries[0]);
           return of(onlyEntry.getKey(), onlyEntry.getValue());
         default:
           /*
@@ -480,7 +480,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
               entries = Arrays.copyOf(entries, size);
             }
             Arrays.sort(
-                (Entry<K, V>[]) entries, // Entries up to size are not null
+                (@Immutable Entry<K, V>[]) entries, // Entries up to size are not null
                 0,
                 size,
                 Ordering.from(valueComparator).onResultOf(Maps.valueFunction()));
@@ -517,7 +517,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
           return of();
         case 1:
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> onlyEntry = requireNonNull(entries[0]);
+          @Immutable Entry<K, V> onlyEntry = requireNonNull(entries[0]);
           return of(onlyEntry.getKey(), onlyEntry.getValue());
         default:
           entriesUsed = true;
@@ -568,12 +568,12 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant
-    Entry<K, V>[] entryArray = (Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
+    @Immutable Entry<K, V>[] entryArray = (@Immutable Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
     switch (entryArray.length) {
       case 0:
         return of();
       case 1:
-        Entry<K, V> entry = entryArray[0];
+        @Immutable Entry<K, V> entry = entryArray[0];
         return of(entry.getKey(), entry.getValue());
       default:
         /*
@@ -704,7 +704,7 @@ public boolean equals(@Nullable @Readonly Object arg0) { return super.equals(arg
 
 @SideEffectFree
 @Override
-public ImmutableSet<Map.Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
+public ImmutableSet<Map.@Immutable Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
 
 @SideEffectFree
 @Override

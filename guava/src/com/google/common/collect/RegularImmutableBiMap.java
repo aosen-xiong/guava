@@ -89,13 +89,13 @@ class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Ob
      * of non-null entries.
      */
     @SuppressWarnings("nullness")
-    Entry<K, V>[] entries =
-        (n == entryArray.length) ? (Entry<K, V>[]) entryArray : createEntryArray(n);
+    @Immutable Entry<K, V>[] entries =
+        (n == entryArray.length) ? (@Immutable Entry<K, V>[]) entryArray : createEntryArray(n);
     int hashCode = 0;
 
     for (int i = 0; i < n; i++) {
       // requireNonNull is safe because the first `n` elements have been filled in.
-      Entry<K, V> entry = requireNonNull(entryArray[i]);
+      @Immutable Entry<K, V> entry = requireNonNull(entryArray[i]);
       K key = entry.getKey();
       V value = entry.getValue();
       checkEntryNotNull(key, value);
@@ -178,7 +178,7 @@ class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Ob
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
     checkNotNull(action);
-    for (Entry<K, V> entry : entries) {
+    for (@Immutable Entry<K, V> entry : entries) {
       action.accept(entry.getKey(), entry.getValue());
     }
   }
@@ -278,26 +278,26 @@ class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Ob
       }
 
       @Override
-      public @Immutable UnmodifiableIterator<Entry<V, K>> iterator() {
+      public @Immutable UnmodifiableIterator<@Immutable Entry<V, K>> iterator() {
         return asList().iterator();
       }
 
       @Override
-      public void forEach(Consumer<? super Entry<V, K>> action) {
+      public void forEach(Consumer<? super @Immutable Entry<V, K>> action) {
         asList().forEach(action);
       }
 
       @Override
-      ImmutableList<Entry<V, K>> createAsList() {
-        return new ImmutableAsList<Entry<V, K>>() {
+      ImmutableList<@Immutable Entry<V, K>> createAsList() {
+        return new ImmutableAsList<@Immutable Entry<V, K>>() {
           @Override
-          public Entry<V, K> get(int index) {
-            Entry<K, V> entry = entries[index];
+          public @Immutable Entry<V, K> get(int index) {
+            @Immutable Entry<K, V> entry = entries[index];
             return Maps.immutableEntry(entry.getValue(), entry.getKey());
           }
 
           @Override
-          ImmutableCollection<Entry<V, K>> delegateCollection() {
+          ImmutableCollection<@Immutable Entry<V, K>> delegateCollection() {
             return InverseEntrySet.this;
           }
 

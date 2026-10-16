@@ -501,7 +501,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
     // long as no one can ever cast that same array instance back to a
     // raw type.
     @SuppressWarnings("unchecked")
-    Entry<K, V>[] entryArray = (Entry[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
+    @Immutable Entry<K, V>[] entryArray = (@Immutable Entry[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
     return fromEntries(comparator, sameComparator, entryArray, entryArray.length);
   }
 
@@ -509,14 +509,14 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
   private static <K extends @Immutable Object, V> ImmutableSortedMap<K, V> fromEntries(
       final Comparator<? super K> comparator,
       boolean sameComparator,
-      @Nullable Entry<K, V>[] entryArray,
+      @Nullable @Immutable Entry<K, V>[] entryArray,
       int size) {
     switch (size) {
       case 0:
         return emptyMap(comparator);
       case 1:
         // requireNonNull is safe because the first `size` elements have been filled in.
-        Entry<K, V> onlyEntry = requireNonNull(entryArray[0]);
+        @Immutable Entry<K, V> onlyEntry = requireNonNull(entryArray[0]);
         return of(comparator, onlyEntry.getKey(), onlyEntry.getValue());
       default:
         @Immutable Object[] keys = new Object[size];
@@ -525,7 +525,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
           // Need to check for nulls, but don't need to sort or validate.
           for (int i = 0; i < size; i++) {
             // requireNonNull is safe because the first `size` elements have been filled in.
-            Entry<K, V> entry = requireNonNull(entryArray[i]);
+            @Immutable Entry<K, V> entry = requireNonNull(entryArray[i]);
             Object key = entry.getKey();
             Object value = entry.getValue();
             checkEntryNotNull(key, value);
@@ -547,15 +547,15 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
                 return comparator.compare(e1.getKey(), e2.getKey());
               });
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> firstEntry = requireNonNull(entryArray[0]);
+          @Immutable Entry<K, V> firstEntry = requireNonNull(entryArray[0]);
           K prevKey = firstEntry.getKey();
           keys[0] = prevKey;
           values[0] = firstEntry.getValue();
           checkEntryNotNull(keys[0], values[0]);
           for (int i = 1; i < size; i++) {
             // requireNonNull is safe because the first `size` elements have been filled in.
-            Entry<K, V> prevEntry = requireNonNull(entryArray[i - 1]);
-            Entry<K, V> entry = requireNonNull(entryArray[i]);
+            @Immutable Entry<K, V> prevEntry = requireNonNull(entryArray[i - 1]);
+            @Immutable Entry<K, V> entry = requireNonNull(entryArray[i]);
             K key = entry.getKey();
             V value = entry.getValue();
             checkEntryNotNull(key, value);
@@ -737,7 +737,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
           return emptyMap(comparator);
         case 1:
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> onlyEntry = requireNonNull(entries[0]);
+          @Immutable Entry<K, V> onlyEntry = requireNonNull(entries[0]);
           return of(comparator, onlyEntry.getKey(), onlyEntry.getValue());
         default:
           return fromEntries(comparator, false, entries, size);
@@ -810,46 +810,46 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
   /** Returns an immutable set of the mappings in this map, sorted by the key ordering. */
   @SideEffectFree
   @Override
-  public ImmutableSet<Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public ImmutableSet<@Immutable Entry<@KeyFor({"this"}) K, V>> entrySet() {
     return super.entrySet();
   }
 
   @Override
-  ImmutableSet<Entry<K, V>> createEntrySet() {
+  ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     @Immutable
     class EntrySet extends ImmutableMapEntrySet<K, V> {
       @Override
-      public @Immutable UnmodifiableIterator<Entry<K, V>> iterator() {
+      public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
         return asList().iterator();
       }
 
       @Override
-      public Spliterator<Entry<K, V>> spliterator() {
+      public Spliterator<@Immutable Entry<K, V>> spliterator() {
         return asList().spliterator();
       }
 
       @Override
-      public void forEach(Consumer<? super Entry<K, V>> action) {
+      public void forEach(Consumer<? super @Immutable Entry<K, V>> action) {
         asList().forEach(action);
       }
 
       @Override
-      ImmutableList<Entry<K, V>> createAsList() {
-        return new ImmutableAsList<Entry<K, V>>() {
+      ImmutableList<@Immutable Entry<K, V>> createAsList() {
+        return new ImmutableAsList<@Immutable Entry<K, V>>() {
           @Override
-          public Entry<K, V> get(int index) {
+          public @Immutable Entry<K, V> get(int index) {
             return new AbstractMap.SimpleImmutableEntry<>(
                 keySet.asList().get(index), valueList.get(index));
           }
 
           @Override
-          public Spliterator<Entry<K, V>> spliterator() {
+          public Spliterator<@Immutable Entry<K, V>> spliterator() {
             return CollectSpliterators.indexed(
                 size(), ImmutableSet.SPLITERATOR_CHARACTERISTICS, this::get);
           }
 
           @Override
-          ImmutableCollection<Entry<K, V>> delegateCollection() {
+          ImmutableCollection<@Immutable Entry<K, V>> delegateCollection() {
             return EntrySet.this;
           }
 
@@ -882,7 +882,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
         return super.writeReplace();
       }
     }
-    return isEmpty() ? ImmutableSet.<Entry<K, V>>of() : new EntrySet();
+    return isEmpty() ? ImmutableSet.<@Immutable Entry<K, V>>of() : new EntrySet();
   }
 
   /** Returns an immutable sorted set of the keys in this map. */
@@ -1047,7 +1047,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
 
   @Override
   @CheckForNull
-  public Entry<K, V> lowerEntry(K key) {
+  public @Immutable Entry<K, V> lowerEntry(K key) {
     return headMap(key, false).lastEntry();
   }
 
@@ -1059,7 +1059,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
 
   @Override
   @CheckForNull
-  public Entry<K, V> floorEntry(K key) {
+  public @Immutable Entry<K, V> floorEntry(K key) {
     return headMap(key, true).lastEntry();
   }
 
@@ -1071,7 +1071,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
 
   @Override
   @CheckForNull
-  public Entry<K, V> ceilingEntry(K key) {
+  public @Immutable Entry<K, V> ceilingEntry(K key) {
     return tailMap(key, true).firstEntry();
   }
 
@@ -1083,7 +1083,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
 
   @Override
   @CheckForNull
-  public Entry<K, V> higherEntry(K key) {
+  public @Immutable Entry<K, V> higherEntry(K key) {
     return tailMap(key, false).firstEntry();
   }
 
@@ -1095,13 +1095,13 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
 
   @Override
   @CheckForNull
-  public Entry<K, V> firstEntry() {
+  public @Immutable Entry<K, V> firstEntry() {
     return isEmpty() ? null : entrySet().asList().get(0);
   }
 
   @Override
   @CheckForNull
-  public Entry<K, V> lastEntry() {
+  public @Immutable Entry<K, V> lastEntry() {
     return isEmpty() ? null : entrySet().asList().get(size() - 1);
   }
 
@@ -1116,7 +1116,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
   @CheckForNull
-  public final Entry<K, V> pollFirstEntry() {
+  public final @Immutable Entry<K, V> pollFirstEntry() {
     throw new UnsupportedOperationException();
   }
 
@@ -1131,7 +1131,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
   @CheckForNull
-  public final Entry<K, V> pollLastEntry() {
+  public final @Immutable Entry<K, V> pollLastEntry() {
     throw new UnsupportedOperationException();
   }
 

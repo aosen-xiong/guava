@@ -423,7 +423,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
   private ImmutableListMultimap<V, K> invert() {
     Builder<V, K> builder = builder();
-    for (Entry<K, V> entry : entries()) {
+    for (@Immutable Entry<K, V> entry : entries()) {
       builder.put(entry.getValue(), entry.getKey());
     }
     ImmutableListMultimap<V, K> invertedMultimap = builder.build();

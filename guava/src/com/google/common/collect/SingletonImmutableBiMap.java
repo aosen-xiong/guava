@@ -95,7 +95,7 @@ final class SingletonImmutableBiMap<K extends @Immutable Object, V extends @Immu
   }
 
   @Override
-  ImmutableSet<Entry<K, V>> createEntrySet() {
+  ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     return ImmutableSet.of(Maps.immutableEntry(singleKey, singleValue));
   }
 

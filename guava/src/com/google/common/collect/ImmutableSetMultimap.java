@@ -485,7 +485,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
 
   private ImmutableSetMultimap<V, K> invert() {
     Builder<V, K> builder = builder();
-    for (Entry<K, V> entry : entries()) {
+    for (@Immutable Entry<K, V> entry : entries()) {
       builder.put(entry.getValue(), entry.getKey());
     }
     ImmutableSetMultimap<V, K> invertedMultimap = builder.build();
@@ -521,7 +521,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     throw new UnsupportedOperationException();
   }
 
-  @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableSet<Entry<K, V>> entries;
+  @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableSet<@Immutable Entry<K, V>> entries;
 
   /**
    * Returns an immutable collection of all key-value pairs in the multimap. Its iterator traverses
@@ -529,13 +529,13 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
    */
   @SideEffectFree
   @Override
-  public ImmutableSet<Entry<K, V>> entries() {
-    ImmutableSet<Entry<K, V>> result = entries;
+  public ImmutableSet<@Immutable Entry<K, V>> entries() {
+    ImmutableSet<@Immutable Entry<K, V>> result = entries;
     return result == null ? (entries = new EntrySet<>(this)) : result;
   }
 
   @Immutable
-  private static final class EntrySet<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableSet<Entry<K, V>> {
+  private static final class EntrySet<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableSet<@Immutable Entry<K, V>> {
     @Weak private final transient ImmutableSetMultimap<K, V> multimap;
 
     EntrySet(ImmutableSetMultimap<K, V> multimap) {
@@ -557,7 +557,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     }
 
     @Override
-    public @Immutable UnmodifiableIterator<Entry<K, V>> iterator() {
+    public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
       return multimap.entryIterator();
     }
 

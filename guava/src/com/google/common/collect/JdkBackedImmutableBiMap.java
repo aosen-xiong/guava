@@ -44,12 +44,12 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @Immutable
 final class JdkBackedImmutableBiMap<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableBiMap<K, V> {
   @VisibleForTesting
-  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> create(int n, @Nullable Entry<K, V>[] entryArray) {
+  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> create(int n, @Nullable @Immutable Entry<K, V>[] entryArray) {
     Map<K, V> forwardDelegate = Maps.newHashMapWithExpectedSize(n);
     Map<V, K> backwardDelegate = Maps.newHashMapWithExpectedSize(n);
     for (int i = 0; i < n; i++) {
       // requireNonNull is safe because the first `n` elements have been filled in.
-      Entry<K, V> e = RegularImmutableMap.makeImmutable(requireNonNull(entryArray[i]));
+      @Immutable Entry<K, V> e = RegularImmutableMap.makeImmutable(requireNonNull(entryArray[i]));
       entryArray[i] = e;
       V oldValue = forwardDelegate.putIfAbsent(e.getKey(), e.getValue());
       if (oldValue != null) {
@@ -60,16 +60,16 @@ final class JdkBackedImmutableBiMap<K extends @Immutable Object, V extends @Immu
         throw conflictException("value", oldKey + "=" + e.getValue(), entryArray[i]);
       }
     }
-    ImmutableList<Entry<K, V>> entryList = ImmutableList.asImmutableList(entryArray, n);
+    ImmutableList<@Immutable Entry<K, V>> entryList = ImmutableList.asImmutableList(entryArray, n);
     return new JdkBackedImmutableBiMap<>(entryList, forwardDelegate, backwardDelegate);
   }
 
-  private final transient ImmutableList<Entry<K, V>> entries;
+  private final transient ImmutableList<@Immutable Entry<K, V>> entries;
   private final Map<K, V> forwardDelegate;
   private final Map<V, K> backwardDelegate;
 
   private JdkBackedImmutableBiMap(
-      ImmutableList<Entry<K, V>> entries, Map<K, V> forwardDelegate, Map<V, K> backwardDelegate) {
+      ImmutableList<@Immutable Entry<K, V>> entries, Map<K, V> forwardDelegate, Map<V, K> backwardDelegate) {
     this.entries = entries;
     this.forwardDelegate = forwardDelegate;
     this.backwardDelegate = backwardDelegate;
@@ -97,10 +97,10 @@ final class JdkBackedImmutableBiMap<K extends @Immutable Object, V extends @Immu
 
   @WeakOuter
   @Immutable
-  private final class InverseEntries extends ImmutableList<Entry<V, K>> {
+  private final class InverseEntries extends ImmutableList<@Immutable Entry<V, K>> {
     @Override
-    public Entry<V, K> get(int index) {
-      Entry<K, V> entry = entries.get(index);
+    public @Immutable Entry<V, K> get(int index) {
+      @Immutable Entry<K, V> entry = entries.get(index);
       return Maps.immutableEntry(entry.getValue(), entry.getKey());
     }
 

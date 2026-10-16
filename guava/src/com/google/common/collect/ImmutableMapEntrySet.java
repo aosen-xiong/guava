@@ -41,14 +41,14 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
 @Immutable
-abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends ImmutableSet.CachingAsList<Entry<K, V>> {
+abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends ImmutableSet.CachingAsList<@Immutable Entry<K, V>> {
   @Immutable
   static final class RegularEntrySet<K extends @Immutable Object, V> extends ImmutableMapEntrySet<K, V> {
     private final transient ImmutableMap<K, V> map;
     private final transient ImmutableList<@Immutable Entry<K, V>> entries;
 
     RegularEntrySet(ImmutableMap<K, V> map, @Immutable Entry<K, V>[] entries) {
-      this(map, ImmutableList.<Entry<K, V>>asImmutableList(entries));
+      this(map, ImmutableList.<@Immutable Entry<K, V>>asImmutableList(entries));
     }
 
     RegularEntrySet(ImmutableMap<K, V> map, ImmutableList<@Immutable Entry<K, V>> entries) {
@@ -68,22 +68,22 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
     }
 
     @Override
-    public @Immutable UnmodifiableIterator<Entry<K, V>> iterator() {
+    public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
       return entries.iterator();
     }
 
     @Override
-    public Spliterator<Entry<K, V>> spliterator() {
+    public Spliterator<@Immutable Entry<K, V>> spliterator() {
       return entries.spliterator();
     }
 
     @Override
-    public void forEach(Consumer<? super Entry<K, V>> action) {
+    public void forEach(Consumer<? super @Immutable Entry<K, V>> action) {
       entries.forEach(action);
     }
 
     @Override
-    ImmutableList<Entry<K, V>> createAsList() {
+    ImmutableList<@Immutable Entry<K, V>> createAsList() {
       return new RegularImmutableAsList<>(this, entries);
     }
 

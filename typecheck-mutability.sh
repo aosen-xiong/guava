@@ -61,7 +61,7 @@ set -e
 
 echo "exit=${status}  log=${LOG}"
 tail -3 "${LOG}"
-echo "checker crashes: $(grep -c 'unexpected Throwable' "${LOG}" || true)"
+echo "checker crashes: $(grep -c 'The Checker Framework crashed' "${LOG}" || true)"
 if grep -q "error: \[" "${LOG}"; then
   python3 /Users/aosenxiong/pico-artifact/guava-summarize-errors.py "${LOG}" | head -30
 else

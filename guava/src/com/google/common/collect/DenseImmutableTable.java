@@ -136,14 +136,14 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     }
 
     @Override
-    @Immutable UnmodifiableIterator<Entry<K, V>> entryIterator() {
-      return new @Immutable AbstractIterator<Entry<K, V>>() {
+    @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
+      return new @Immutable AbstractIterator<@Immutable Entry<K, V>>() {
         private @Assignable int index = -1;
         private final int maxIndex = keyToIndex().size();
 
         @Override
         @CheckForNull
-        protected Entry<K, V> computeNext() {
+        protected @Immutable Entry<K, V> computeNext() {
           for (index++; index < maxIndex; index++) {
             V value = getValue(index);
             if (value != null) {
