@@ -61,7 +61,7 @@ class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Ob
   @SuppressWarnings("unchecked") // TODO(cpovirk): Consider storing Entry<?, ?>[] instead.
   static final RegularImmutableBiMap<@Immutable Object, @Immutable Object> EMPTY =
       new RegularImmutableBiMap<>(
-          null, null, (Entry<@Immutable Object, @Immutable Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, 0, 0);
+          null, null, (@Immutable Entry<@Immutable Object, @Immutable Object> @Immutable []) ImmutableMap.EMPTY_ENTRY_ARRAY, 0, 0);
 
   static final double MAX_LOAD_FACTOR = 1.2;
 

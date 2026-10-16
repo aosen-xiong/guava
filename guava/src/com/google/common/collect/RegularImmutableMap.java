@@ -58,7 +58,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 final class RegularImmutableMap<K extends @Immutable Object, V> extends ImmutableMap<K, V> {
   @SuppressWarnings("unchecked")
   static final ImmutableMap<@Immutable Object, Object> EMPTY =
-      new RegularImmutableMap<>((@Immutable Entry<Object, Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, null, 0);
+      new RegularImmutableMap<>((@Immutable Entry<@Immutable Object, Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, null, 0);
 
   /**
    * Closed addressing tends to perform well even with high load factors. Being conservative here
