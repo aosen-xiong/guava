@@ -675,7 +675,7 @@ public final class Iterators {
    * {@code retainIfTrue}.
    */
   public static <T extends @Nullable @Readonly Object> @Readonly UnmodifiableIterator<T> filter(
-      @Readonly Iterator<T> unfiltered, Predicate<? super T> retainIfTrue) {
+      @Readonly Iterator<T> unfiltered, @Readonly Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
     return new @Mutable AbstractIterator<T>() {

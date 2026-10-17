@@ -1468,7 +1468,7 @@ final class Synchronized {
     public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable SynchronizedBiMap<K, V> this) {
       synchronized (mutex) {
         if (inverse == null) {
-          inverse = new SynchronizedBiMap<>(delegate().inverse(), mutex, this);
+          inverse = new @ReceiverDependentMutable SynchronizedBiMap<>(delegate().inverse(), mutex, this);
         }
         return inverse;
       }

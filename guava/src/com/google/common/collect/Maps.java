@@ -3176,7 +3176,7 @@ public final class Maps {
     }
 
     static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> boolean removeAllKeys(
-        @Mutable Map<K, V> map, Predicate<? super Entry<K, V>> entryPredicate, @Readonly Collection<?> keyCollection) {
+        @Mutable Map<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate, @Readonly Collection<?> keyCollection) {
       Iterator<Entry<K, V>> entryItr = map.entrySet().iterator();
       boolean result = false;
       while (entryItr.hasNext()) {
@@ -3190,7 +3190,7 @@ public final class Maps {
     }
 
     static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> boolean retainAllKeys(
-        @Mutable Map<K, V> map, Predicate<? super Entry<K, V>> entryPredicate, @Readonly Collection<?> keyCollection) {
+        @Mutable Map<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate, @Readonly Collection<?> keyCollection) {
       Iterator<Entry<K, V>> entryItr = map.entrySet().iterator();
       boolean result = false;
       while (entryItr.hasNext()) {
