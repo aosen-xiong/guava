@@ -169,7 +169,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
    * Finds and removes {@code entry} from the bucket linked lists in both the key-to-value direction
    * and the value-to-key direction.
    */
-  private void delete(@Mutable HashBiMap<K,V> this, @Readonly BiEntry<K, V> entry) {
+  private void delete(@Mutable HashBiMap<K,V> this, BiEntry<K, V> entry) {
     int keyBucket = entry.keyHash & mask;
     BiEntry<K, V> prevBucketEntry = null;
     for (BiEntry<K, V> bucketEntry = hashTableKToV[keyBucket];
@@ -218,7 +218,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     modCount++;
   }
 
-  private void insert(@Mutable HashBiMap<K,V> this, @Readonly BiEntry<K, V> entry, @CheckForNull @Readonly BiEntry<K, V> oldEntryForKey) {
+  private void insert(@Mutable HashBiMap<K,V> this, BiEntry<K, V> entry, @CheckForNull BiEntry<K, V> oldEntryForKey) {
     int keyBucket = entry.keyHash & mask;
     entry.nextInKToVBucket = hashTableKToV[keyBucket];
     hashTableKToV[keyBucket] = entry;
