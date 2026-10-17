@@ -36,6 +36,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Extracts non-overlapping substrings from an input string, typically by recognizing appearances of
@@ -151,7 +152,7 @@ public final class Splitter {
     return new Splitter(
         new Strategy() {
           @Override
-          public SplittingIterator iterator(Splitter splitter, final CharSequence toSplit) {
+          public SplittingIterator iterator(Splitter splitter, final @Readonly CharSequence toSplit) {
             return new SplittingIterator(splitter, toSplit) {
               @Override
               @GTENegativeOne @LTEqLengthOf("toSplit") int separatorStart(@NonNegative int start) {
@@ -183,7 +184,7 @@ public final class Splitter {
     return new Splitter(
         new Strategy() {
           @Override
-          public SplittingIterator iterator(Splitter splitter, CharSequence toSplit) {
+          public SplittingIterator iterator(Splitter splitter, @Readonly CharSequence toSplit) {
             return new SplittingIterator(splitter, toSplit) {
               @Override
               public @GTENegativeOne @LTEqLengthOf("toSplit") int separatorStart(@NonNegative int start) {
@@ -235,7 +236,7 @@ public final class Splitter {
     return new Splitter(
         new Strategy() {
           @Override
-          public SplittingIterator iterator(final Splitter splitter, CharSequence toSplit) {
+          public SplittingIterator iterator(final Splitter splitter, @Readonly CharSequence toSplit) {
             final CommonMatcher matcher = separatorPattern.matcher(toSplit);
             return new SplittingIterator(splitter, toSplit) {
               @Override
@@ -293,7 +294,7 @@ public final class Splitter {
     return new Splitter(
         new Strategy() {
           @Override
-          public SplittingIterator iterator(final Splitter splitter, CharSequence toSplit) {
+          public SplittingIterator iterator(final Splitter splitter, @Readonly CharSequence toSplit) {
             return new SplittingIterator(splitter, toSplit) {
               @Override
               public @GTENegativeOne @LTEqLengthOf("toSplit") int separatorStart(@NonNegative int start) {
@@ -388,7 +389,7 @@ public final class Splitter {
    * @param sequence the sequence of characters to split
    * @return an iteration over the segments split from the parameter
    */
-  public Iterable<String> split(final CharSequence sequence) {
+  public Iterable<String> split(final @Readonly CharSequence sequence) {
     checkNotNull(sequence);
 
     return new @Mutable Iterable<String>() {
@@ -407,7 +408,7 @@ public final class Splitter {
     };
   }
 
-  private Iterator<String> splittingIterator(CharSequence sequence) {
+  private Iterator<String> splittingIterator(@Readonly CharSequence sequence) {
     return strategy.iterator(this, sequence);
   }
 
@@ -419,7 +420,7 @@ public final class Splitter {
    * @return an immutable list of the segments split from the parameter
    * @since 15.0
    */
-  public List<String> splitToList(CharSequence sequence) {
+  public List<String> splitToList(@Readonly CharSequence sequence) {
     checkNotNull(sequence);
 
     Iterator<String> iterator = splittingIterator(sequence);
@@ -441,7 +442,7 @@ public final class Splitter {
    * @return a stream over the segments split from the parameter
    * @since 28.2
    */
-  public Stream<String> splitToStream(CharSequence sequence) {
+  public Stream<String> splitToStream(@Readonly CharSequence sequence) {
     // Can't use Streams.stream() from base
     return StreamSupport.stream(split(sequence).spliterator(), false);
   }
@@ -519,7 +520,7 @@ public final class Splitter {
      * @throws IllegalArgumentException if the specified sequence does not split into valid map
      *     entries, or if there are duplicate keys
      */
-    public Map<String, String> split(CharSequence sequence) {
+    public Map<String, String> split(@Readonly CharSequence sequence) {
       Map<String, String> map = new LinkedHashMap<>();
       for (String entry : outerSplitter.split(sequence)) {
         Iterator<String> entryFields = entrySplitter.splittingIterator(entry);
@@ -539,11 +540,11 @@ public final class Splitter {
   }
 
   private interface Strategy {
-    Iterator<String> iterator(Splitter splitter, CharSequence toSplit);
+    Iterator<String> iterator(Splitter splitter, @Readonly CharSequence toSplit);
   }
 
   private abstract static class SplittingIterator extends AbstractIterator<String> {
-    final CharSequence toSplit;
+    final @Readonly CharSequence toSplit;
     final CharMatcher trimmer;
     final boolean omitEmptyStrings;
 
@@ -562,7 +563,7 @@ public final class Splitter {
     @GTENegativeOne int offset = 0;
     @Positive int limit;
 
-    protected SplittingIterator(Splitter splitter, CharSequence toSplit) {
+    protected SplittingIterator(Splitter splitter, @Readonly CharSequence toSplit) {
       this.trimmer = splitter.trimmer;
       this.omitEmptyStrings = splitter.omitEmptyStrings;
       this.limit = splitter.limit;

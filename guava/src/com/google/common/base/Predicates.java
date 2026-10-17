@@ -217,7 +217,7 @@ public final class Predicates {
    *
    * @param target the collection that may contain the function input
    */
-  public static <T extends @Nullable @Readonly Object> Predicate<T> in(Collection<? extends T> target) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> in(@Readonly Collection<? extends T> target) {
     return new InPredicate<>(target);
   }
 
@@ -587,9 +587,9 @@ public final class Predicates {
   /** @see Predicates#in(Collection) */
   private static class InPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
-    private final Collection<?> target;
+    private final @Readonly Collection<?> target;
 
-    private InPredicate(Collection<?> target) {
+    private InPredicate(@Readonly Collection<?> target) {
       this.target = checkNotNull(target);
     }
 

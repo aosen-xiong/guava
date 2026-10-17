@@ -179,7 +179,7 @@ public final class MoreObjects {
      * called, in which case this name/value pair will not be added.
      */
     @CanIgnoreReturnValue
-    public ToStringHelper add(String name, @CheckForNull Object value) {
+    public ToStringHelper add(String name, @CheckForNull @Readonly Object value) {
       return addHolder(name, value);
     }
 
@@ -250,7 +250,7 @@ public final class MoreObjects {
      * readable name.
      */
     @CanIgnoreReturnValue
-    public ToStringHelper addValue(@CheckForNull Object value) {
+    public ToStringHelper addValue(@CheckForNull @Readonly Object value) {
       return addHolder(value);
     }
 
@@ -404,14 +404,14 @@ public final class MoreObjects {
     }
 
     @CanIgnoreReturnValue
-    private ToStringHelper addHolder(@CheckForNull Object value) {
+    private ToStringHelper addHolder(@CheckForNull @Readonly Object value) {
       ValueHolder valueHolder = addHolder();
       valueHolder.value = value;
       return this;
     }
 
     @CanIgnoreReturnValue
-    private ToStringHelper addHolder(String name, @CheckForNull Object value) {
+    private ToStringHelper addHolder(String name, @CheckForNull @Readonly Object value) {
       ValueHolder valueHolder = addHolder();
       valueHolder.value = value;
       valueHolder.name = checkNotNull(name);
@@ -425,14 +425,14 @@ public final class MoreObjects {
     }
 
     @CanIgnoreReturnValue
-    private ToStringHelper addUnconditionalHolder(Object value) {
+    private ToStringHelper addUnconditionalHolder(@Readonly Object value) {
       UnconditionalValueHolder valueHolder = addUnconditionalHolder();
       valueHolder.value = value;
       return this;
     }
 
     @CanIgnoreReturnValue
-    private ToStringHelper addUnconditionalHolder(String name, Object value) {
+    private ToStringHelper addUnconditionalHolder(String name, @Readonly Object value) {
       UnconditionalValueHolder valueHolder = addUnconditionalHolder();
       valueHolder.value = value;
       valueHolder.name = checkNotNull(name);

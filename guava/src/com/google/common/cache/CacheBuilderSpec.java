@@ -488,7 +488,7 @@ public final class CacheBuilderSpec {
   }
 
   @FormatMethod
-  private static String format(String format, Object... args) {
+  private static String format(String format, @Readonly Object... args) {
     return String.format(Locale.ROOT, format, args);
   }
 }
