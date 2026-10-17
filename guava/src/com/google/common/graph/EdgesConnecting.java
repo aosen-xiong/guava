@@ -39,7 +39,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class EdgesConnecting<E> extends AbstractSet<E> {
+final class EdgesConnecting<E extends @Immutable Object> extends AbstractSet<E> {
 
   private final Map<?, E> nodeToOutEdge;
   private final Object targetNode;

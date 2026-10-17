@@ -28,6 +28,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to represent the set of edges connecting an (implicit) origin node to a target node.
@@ -39,7 +40,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-abstract class MultiEdgesConnecting<E> extends AbstractSet<E> {
+abstract class MultiEdgesConnecting<E extends @Immutable Object> extends AbstractSet<E> {
 
   private final Map<E, ?> outEdgeToNode;
   private final Object targetNode;

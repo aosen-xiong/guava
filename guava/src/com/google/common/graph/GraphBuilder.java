@@ -181,7 +181,8 @@ public final class GraphBuilder<N> extends AbstractGraphBuilder<N> {
   }
 
   /** Returns an empty {@link MutableGraph} with the properties of this {@link GraphBuilder}. */
-  public <N1 extends N> MutableGraph<N1> build() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // nodes are hash keys, so N1 is @Immutable; inference cannot relate this builder's N to N1 without the cast that immutable() makes
+  public <N1 extends @Immutable N> MutableGraph<N1> build() {
     return new StandardMutableGraph<>(this);
   }
 

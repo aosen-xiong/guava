@@ -17,6 +17,7 @@
 package com.google.common.graph;
 
 import com.google.common.graph.GraphConstants.Presence;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Standard implementation of {@link MutableGraph} that supports both directed and undirected
@@ -29,7 +30,7 @@ import com.google.common.graph.GraphConstants.Presence;
  * @param <N> Node parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class StandardMutableGraph<N> extends ForwardingGraph<N> implements MutableGraph<N> {
+final class StandardMutableGraph<N extends @Immutable Object> extends ForwardingGraph<N> implements MutableGraph<N> {
   private final MutableValueGraph<N, Presence> backingValueGraph;
 
   /** Constructs a {@link MutableGraph} with the properties specified in {@code builder}. */

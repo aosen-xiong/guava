@@ -53,7 +53,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
+class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> extends AbstractNetwork<N, E> {
   private final boolean isDirected;
   private final boolean allowsParallelEdges;
   private final boolean allowsSelfLoops;

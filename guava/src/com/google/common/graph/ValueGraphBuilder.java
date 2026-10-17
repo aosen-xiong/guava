@@ -188,7 +188,8 @@ public final class ValueGraphBuilder<N, V> extends AbstractGraphBuilder<N> {
    * Returns an empty {@link MutableValueGraph} with the properties of this {@link
    * ValueGraphBuilder}.
    */
-  public <N1 extends N, V1 extends V> MutableValueGraph<N1, V1> build() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // nodes are hash keys, so N1 is @Immutable; inference cannot relate this builder's N to N1 without the cast that immutable() makes
+  public <N1 extends @Immutable N, V1 extends V> MutableValueGraph<N1, V1> build() {
     return new StandardMutableValueGraph<>(this);
   }
 

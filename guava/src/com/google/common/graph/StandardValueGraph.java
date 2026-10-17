@@ -27,6 +27,7 @@ import java.util.TreeMap;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Standard implementation of {@link ValueGraph} that supports the options supplied by {@link
@@ -47,7 +48,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
+class StandardValueGraph<N extends @Immutable Object, V> extends AbstractValueGraph<N, V> {
   private final boolean isDirected;
   private final boolean allowsSelfLoops;
   private final ElementOrder<N> nodeOrder;

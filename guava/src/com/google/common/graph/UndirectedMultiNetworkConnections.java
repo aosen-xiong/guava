@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An implementation of {@link NetworkConnections} for undirected networks with parallel edges.
@@ -41,19 +42,19 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class UndirectedMultiNetworkConnections<N, E>
+final class UndirectedMultiNetworkConnections<N extends @Immutable Object, E extends @Immutable Object>
     extends AbstractUndirectedNetworkConnections<N, E> {
 
   private UndirectedMultiNetworkConnections(Map<E, N> incidentEdges) {
     super(incidentEdges);
   }
 
-  static <N, E> UndirectedMultiNetworkConnections<N, E> of() {
+  static <N extends @Immutable Object, E extends @Immutable Object> UndirectedMultiNetworkConnections<N, E> of() {
     return new UndirectedMultiNetworkConnections<>(
         new HashMap<E, N>(INNER_CAPACITY, INNER_LOAD_FACTOR));
   }
 
-  static <N, E> UndirectedMultiNetworkConnections<N, E> ofImmutable(Map<E, N> incidentEdges) {
+  static <N extends @Immutable Object, E extends @Immutable Object> UndirectedMultiNetworkConnections<N, E> ofImmutable(Map<E, N> incidentEdges) {
     return new UndirectedMultiNetworkConnections<>(ImmutableMap.copyOf(incidentEdges));
   }
 

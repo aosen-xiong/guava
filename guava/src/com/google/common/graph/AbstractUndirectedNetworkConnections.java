@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A base implementation of {@link NetworkConnections} for undirected networks.
@@ -33,7 +34,7 @@ import javax.annotation.CheckForNull;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-abstract class AbstractUndirectedNetworkConnections<N, E> implements NetworkConnections<N, E> {
+abstract class AbstractUndirectedNetworkConnections<N extends @Immutable Object, E extends @Immutable Object> implements NetworkConnections<N, E> {
   /** Keys are edges incident to the origin node, values are the node at the other end. */
   final Map<E, N> incidentEdgeMap;
 
