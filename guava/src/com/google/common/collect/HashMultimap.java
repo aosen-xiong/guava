@@ -122,7 +122,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @SuppressWarnings("mutability:method.invocation.invalid") // Putall method
-  private HashMultimap(@ReceiverDependentMutable Multimap<? extends K, ? extends V> multimap) {
+  private HashMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newHashMapWithExpectedSize(multimap.keySet().size()));
     putAll(multimap);
   }

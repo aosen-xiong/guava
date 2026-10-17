@@ -128,7 +128,7 @@ public final class ArrayListMultimap<K extends @Nullable @Immutable Object, V ex
     this.expectedValuesPerKey = expectedValuesPerKey;
   }
 
-  private ArrayListMultimap(@ReceiverDependentMutable Multimap<? extends K, ? extends V> multimap) {
+  private ArrayListMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     this(
         multimap.keySet().size(),
         (multimap instanceof ArrayListMultimap)
