@@ -735,7 +735,7 @@ public final class Sets {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Pure
       @Override
       public @NonNegative int size() {
@@ -843,7 +843,7 @@ public final class Sets {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
         return new @Immutable AbstractIterator<E>() {
@@ -916,7 +916,7 @@ public final class Sets {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
         return new @Mutable AbstractIterator<E>() {
@@ -985,7 +985,7 @@ public final class Sets {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
         final Iterator<? extends E> itr1 = set1.iterator();
@@ -1579,7 +1579,7 @@ public final class Sets {
 
     @Override
     public Iterator<E> iterator(@Readonly SubSet<E> this) {
-      return new UnmodifiableIterator<E>() {
+      return new @Mutable UnmodifiableIterator<E>() {
         final ImmutableList<E> elements = inputSet.keySet().asList();
         int remainingSetBits = mask;
 
@@ -1634,7 +1634,7 @@ public final class Sets {
 
     @Override
     public Iterator<Set<E>> iterator(@Readonly PowerSet<E> this) {
-      return new AbstractIndexedListIterator<Set<E>>(size()) {
+      return new @Mutable AbstractIndexedListIterator<Set<E>>(size()) {
         @Override
         protected Set<E> get(final int setBits) {
           return new SubSet<E>(inputSet, setBits);
@@ -1709,7 +1709,7 @@ public final class Sets {
     } else if (size == index.size()) {
       return ImmutableSet.<Set<E>>of(index.keySet());
     }
-    return new AbstractSet<Set<E>>() {
+    return new @Mutable AbstractSet<Set<E>>() {
       @Override
       public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
         if (o instanceof Set) {
@@ -1755,7 +1755,7 @@ public final class Sets {
               bits.set(bitToFlip);
             }
             final BitSet copy = (BitSet) bits.clone();
-            return new AbstractSet<E>() {
+            return new @Mutable AbstractSet<E>() {
               @Override
               public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
                 Integer i = index.get(o);

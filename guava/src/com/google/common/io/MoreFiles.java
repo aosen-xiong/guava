@@ -55,6 +55,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -315,7 +316,7 @@ public final class MoreFiles {
    */
   public static Predicate<Path> isDirectory(LinkOption... options) {
     final LinkOption[] optionsCopy = options.clone();
-    return new Predicate<Path>() {
+    return new @Mutable Predicate<Path>() {
       @Override
       public boolean apply(Path input) {
         return Files.isDirectory(input, optionsCopy);
@@ -342,7 +343,7 @@ public final class MoreFiles {
    */
   public static Predicate<Path> isRegularFile(LinkOption... options) {
     final LinkOption[] optionsCopy = options.clone();
-    return new Predicate<Path>() {
+    return new @Mutable Predicate<Path>() {
       @Override
       public boolean apply(Path input) {
         return Files.isRegularFile(input, optionsCopy);

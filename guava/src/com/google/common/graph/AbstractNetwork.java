@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -74,7 +75,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
         }
 
         // Optimized implementation assumes no parallel edges (1:1 edge to EndpointPair mapping).
-        return new AbstractSet<EndpointPair<N>>() {
+        return new @Mutable AbstractSet<EndpointPair<N>>() {
           @Override
           public Iterator<EndpointPair<N>> iterator() {
             return Iterators.transform(

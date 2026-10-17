@@ -466,7 +466,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   @Override
   Set<E> createElementSet() {
     Set<E> delegate = countMap.keySet();
-    return new ForwardingSet<E>() {
+    return new @Mutable ForwardingSet<E>() {
       @Override
       protected Set<E> delegate() {
         return delegate;
@@ -543,7 +543,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
           }
         };
 
-    return new ForwardingIterator<Entry<E>>() {
+    return new @Mutable ForwardingIterator<Entry<E>>() {
       @CheckForNull private Entry<E> last;
 
       @Override

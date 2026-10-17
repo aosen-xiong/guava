@@ -387,7 +387,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   private Entry<E> wrapEntry(final AvlNode<E> baseEntry) {
-    return new Multisets.AbstractEntry<E>() {
+    return new Multisets.@Mutable AbstractEntry<E>() {
       @Override
       @ParametricNullness
       public E getElement() {
@@ -462,7 +462,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   @Override
   Iterator<Entry<E>> entryIterator() {
-    return new Iterator<Entry<E>>() {
+    return new @Mutable Iterator<Entry<E>>() {
       @CheckForNull AvlNode<E> current = firstNode();
       @CheckForNull Entry<E> prevEntry;
 
@@ -505,7 +505,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   @Override
   Iterator<Entry<E>> descendingEntryIterator() {
-    return new Iterator<Entry<E>>() {
+    return new @Mutable Iterator<Entry<E>>() {
       @CheckForNull AvlNode<E> current = lastNode();
       @CheckForNull Entry<E> prevEntry = null;
 

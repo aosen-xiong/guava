@@ -1147,7 +1147,7 @@ public final class Maps {
   }
 
   private static <E extends @Nullable @Readonly Object> Set<E> removeOnlySet(final Set<E> set) {
-    return new ForwardingSet<E>() {
+    return new @Mutable ForwardingSet<E>() {
       @Override
       protected Set<E> delegate() {
         return set;
@@ -1167,7 +1167,7 @@ public final class Maps {
 
   private static <E extends @Nullable @Readonly Object> SortedSet<E> removeOnlySortedSet(
       final SortedSet<E> set) {
-    return new ForwardingSortedSet<E>() {
+    return new @Mutable ForwardingSortedSet<E>() {
       @Override
       protected SortedSet<E> delegate() {
         return set;
@@ -1204,7 +1204,7 @@ public final class Maps {
   @GwtIncompatible // NavigableSet
   private static <E extends @Nullable @Readonly Object> NavigableSet<E> removeOnlyNavigableSet(
       final NavigableSet<E> set) {
-    return new ForwardingNavigableSet<E>() {
+    return new @Mutable ForwardingNavigableSet<E>() {
       @Override
       protected NavigableSet<E> delegate() {
         return set;
@@ -1504,7 +1504,7 @@ public final class Maps {
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @Readonly Entry<K, V> unmodifiableEntry(
       final @Readonly Entry<? extends K, ? extends V> entry) {
     checkNotNull(entry);
-    return new AbstractMapEntry<K, V>() {
+    return new @Mutable AbstractMapEntry<K, V>() {
       @Override
       @ParametricNullness
       public K getKey() {
@@ -1522,7 +1522,7 @@ public final class Maps {
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly  Object>
     @Readonly UnmodifiableIterator<Entry<K, V>> unmodifiableEntryIterator(
           final @Readonly Iterator<Entry<K, V>> entryIterator) {
-    return new UnmodifiableIterator<Entry<K, V>>() {
+    return new @Mutable UnmodifiableIterator<Entry<K, V>>() {
       @Override
       public boolean hasNext() {
         return entryIterator.hasNext();
@@ -2194,7 +2194,7 @@ public final class Maps {
           final EntryTransformer<? super K, ? super V1, V2> transformer, final Entry<K, V1> entry) {
     checkNotNull(transformer);
     checkNotNull(entry);
-    return new AbstractMapEntry<K, V2>() {
+    return new @Mutable AbstractMapEntry<K, V2>() {
       @Override
       @ParametricNullness
       public K getKey() {
@@ -3152,7 +3152,7 @@ public final class Maps {
         return new TransformedIterator<Entry<K, V>, Entry<K, V>>(filteredEntrySet.iterator()) {
           @Override
           Entry<K, V> transform(final Entry<K, V> entry) {
-            return new ForwardingMapEntry<K, V>() {
+            return new @Mutable ForwardingMapEntry<K, V>() {
               @Override
               protected Entry<K, V> delegate() {
                 return entry;

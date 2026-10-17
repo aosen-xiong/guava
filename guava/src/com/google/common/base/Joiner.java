@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -499,7 +500,7 @@ public class Joiner {
   private static Iterable<@Nullable Object> iterable(
       @CheckForNull Object first, @CheckForNull Object second, @Nullable Object[] rest) {
     checkNotNull(rest);
-    return new AbstractList<@Nullable Object>() {
+    return new @Mutable AbstractList<@Nullable Object>() {
       @Pure
       @Override
       public @NonNegative int size() {

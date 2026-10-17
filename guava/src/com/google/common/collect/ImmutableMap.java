@@ -1205,7 +1205,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
         @Override
         public @Immutable Entry<K, ImmutableSet<V>> next() {
           final @Immutable Entry<K, V> backingEntry = backingIterator.next();
-          return new AbstractMapEntry<K, ImmutableSet<V>>() {
+          return new @Immutable AbstractMapEntry<K, ImmutableSet<V>>() {
             @Override
             public K getKey() {
               return backingEntry.getKey();

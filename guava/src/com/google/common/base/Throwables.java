@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 
 /**
@@ -410,7 +411,7 @@ public final class Throwables {
      * TODO(cpovirk): Consider the UnsignedBytes pattern if it performs faster and doesn't cause
      * AOSP grief.
      */
-    return new AbstractList<StackTraceElement>() {
+    return new @Mutable AbstractList<StackTraceElement>() {
       /*
        * The following requireNonNull calls are safe because we use jlaStackTrace() only if
        * lazyStackTraceIsLazy() returns true.

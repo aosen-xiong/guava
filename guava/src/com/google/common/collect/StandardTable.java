@@ -415,7 +415,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
         return Iterators.emptyModifiableIterator();
       }
       final Iterator<Entry<C, V>> iterator = backingRowMap.entrySet().iterator();
-      return new Iterator<Entry<C, V>>() {
+      return new @Mutable Iterator<Entry<C, V>>() {
         @Override
         public boolean hasNext() {
           return iterator.hasNext();
@@ -444,7 +444,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     Entry<C, V> wrapEntry(final Entry<C, V> entry) {
-      return new ForwardingMapEntry<C, V>() {
+      return new @Mutable ForwardingMapEntry<C, V>() {
         @Override
         protected Entry<C, V> delegate() {
           return entry;

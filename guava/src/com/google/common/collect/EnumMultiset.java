@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.ObjIntConsumer;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -273,7 +274,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
     return new Itr<Entry<E>>() {
       @Override
       Entry<E> output(final int index) {
-        return new Multisets.AbstractEntry<E>() {
+        return new Multisets.@Mutable AbstractEntry<E>() {
           @Override
           public E getElement() {
             return enumConstants[index];

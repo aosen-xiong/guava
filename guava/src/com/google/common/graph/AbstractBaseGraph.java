@@ -32,6 +32,7 @@ import com.google.common.primitives.Ints;
 import java.util.AbstractSet;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -71,7 +72,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
    */
   @Override
   public Set<EndpointPair<N>> edges() {
-    return new AbstractSet<EndpointPair<N>>() {
+    return new @Mutable AbstractSet<EndpointPair<N>>() {
       @Override
       public UnmodifiableIterator<EndpointPair<N>> iterator() {
         return EndpointPairIterator.of(AbstractBaseGraph.this);

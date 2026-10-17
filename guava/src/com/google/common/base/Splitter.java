@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
@@ -390,7 +391,7 @@ public final class Splitter {
   public Iterable<String> split(final CharSequence sequence) {
     checkNotNull(sequence);
 
-    return new Iterable<String>() {
+    return new @Mutable Iterable<String>() {
       @Override
       public Iterator<String> iterator() {
         return splittingIterator(sequence);

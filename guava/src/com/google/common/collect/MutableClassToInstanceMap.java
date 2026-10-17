@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -96,7 +97,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
    */
   private static <B extends @Nullable Object> Entry<Class<? extends @NonNull B>, B> checkedEntry(
       final Entry<Class<? extends @NonNull B>, B> entry) {
-    return new ForwardingMapEntry<Class<? extends @NonNull B>, B>() {
+    return new @Mutable ForwardingMapEntry<Class<? extends @NonNull B>, B>() {
       @Override
       protected Entry<Class<? extends @NonNull B>, B> delegate() {
         return entry;
@@ -113,7 +114,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
 
   @Override
   public Set<Entry<@KeyFor({"this"}) Class<? extends @NonNull B>, B>> entrySet() {
-    return new ForwardingSet<Entry<Class<? extends @NonNull B>, B>>() {
+    return new @Mutable ForwardingSet<Entry<Class<? extends @NonNull B>, B>>() {
 
       @Override
       protected Set<Entry<Class<? extends @NonNull B>, B>> delegate() {

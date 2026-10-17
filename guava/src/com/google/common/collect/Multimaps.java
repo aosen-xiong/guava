@@ -1190,7 +1190,7 @@ public final class Multimaps {
       return new Sets.@PolyMutable ImprovedAbstractSet<V>() {
         @Override
         public Iterator<V> iterator() {
-          return new Iterator<V>() {
+          return new @Mutable Iterator<V>() {
             int i;
 
             @Override
@@ -1776,7 +1776,7 @@ public final class Multimaps {
           multimap.asMap().entrySet().iterator()) {
         @Override
         Multiset.Entry<K> transform(final Map.Entry<K, Collection<V>> backingEntry) {
-          return new Multisets.AbstractEntry<K>() {
+          return new Multisets.@Mutable AbstractEntry<K>() {
             @Override
             @ParametricNullness
             public K getElement() {

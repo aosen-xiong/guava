@@ -387,7 +387,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   Iterator<Entry<K, V>> entrySetIterator(@Readonly AbstractBiMap<K, V> this) {
     final Iterator<Entry<K, V>> iterator = delegate.entrySet().iterator();
-    return new Iterator<Entry<K, V>>() {
+    return new @Mutable Iterator<Entry<K, V>>() {
       @CheckForNull Entry<K, V> entry;
 
       @Override

@@ -235,7 +235,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     Entry<K, V> getEntry(final int index) {
       checkElementIndex(index, size());
-      return new AbstractMapEntry<K, V>() {
+      return new @Mutable AbstractMapEntry<K, V>() {
         @Override
         public K getKey() {
           return ArrayMap.this.getKey(index);
@@ -257,7 +257,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     @Override
     Iterator<Entry<K, V>> entryIterator() {
-      return new AbstractIndexedListIterator<Entry<K, V>>(size()) {
+      return new @Mutable AbstractIndexedListIterator<Entry<K, V>>(size()) {
         @Override
         protected Entry<K, V> get(final int index) {
           return getEntry(index);
@@ -569,7 +569,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
   @Override
   Iterator<Cell<R, C, @Nullable V>> cellIterator() {
-    return new AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
+    return new @Mutable AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
       @Override
       protected Cell<R, C, @Nullable V> get(final int index) {
         return getCell(index);
@@ -584,7 +584,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   private Cell<R, C, @Nullable V> getCell(final int index) {
-    return new Tables.AbstractCell<R, C, @Nullable V>() {
+    return new Tables.@Mutable AbstractCell<R, C, @Nullable V>() {
       final int rowIndex = index / columnList.size();
       final int columnIndex = index % columnList.size();
 
@@ -820,7 +820,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
   @Override
   @ReceiverDependentMutable Iterator<@Nullable V> valuesIterator() {
-    return new AbstractIndexedListIterator<@Nullable V>(size()) {
+    return new @Mutable AbstractIndexedListIterator<@Nullable V>(size()) {
       @Override
       @CheckForNull
       protected V get(int index) {

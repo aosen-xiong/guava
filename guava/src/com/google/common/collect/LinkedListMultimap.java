@@ -732,7 +732,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @Override
   public List<V> get(@ParametricNullness final K key) {
-    return new AbstractSequentialList<V>() {
+    return new @Mutable AbstractSequentialList<V>() {
       @Pure
       @Override
       public @NonNegative int size() {

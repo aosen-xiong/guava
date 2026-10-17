@@ -934,7 +934,7 @@ public final class Iterables {
          * remove() method would remove one of the skipped elements instead of
          * throwing an IllegalStateException.
          */
-        return new Iterator<T>() {
+        return new @Mutable Iterator<T>() {
           boolean atStart = true;
 
           @Override

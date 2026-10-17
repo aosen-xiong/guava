@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -67,7 +68,7 @@ abstract class AbstractDirectedNetworkConnections<N, E> implements NetworkConnec
 
   @Override
   public Set<E> incidentEdges() {
-    return new AbstractSet<E>() {
+    return new @Mutable AbstractSet<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
         Iterable<E> incidentEdges =

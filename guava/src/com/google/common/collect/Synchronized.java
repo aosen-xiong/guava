@@ -1023,7 +1023,7 @@ final class Synchronized {
           super.iterator()) {
         @Override
         Map.Entry<K, Collection<V>> transform(final Map.Entry<K, Collection<V>> entry) {
-          return new ForwardingMapEntry<K, Collection<V>>() {
+          return new @Mutable ForwardingMapEntry<K, Collection<V>>() {
             @Override
             protected Map.Entry<K, Collection<V>> delegate() {
               return entry;

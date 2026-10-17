@@ -974,7 +974,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     @Override
     public Iterator<K> iterator() {
       final Iterator<Entry<K, Collection<V>>> entryIterator = map().entrySet().iterator();
-      return new Iterator<K>() {
+      return new @Mutable Iterator<K>() {
         @CheckForNull Entry<K, Collection<V>> entry;
 
         @Override

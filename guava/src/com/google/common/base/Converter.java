@@ -26,6 +26,7 @@ import com.google.j2objc.annotations.RetainedWith;
 import java.io.Serializable;
 import java.util.Iterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
@@ -277,7 +278,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     return new Iterable<B>() {
       @Override
       public Iterator<B> iterator() {
-        return new Iterator<B>() {
+        return new @Mutable Iterator<B>() {
           private final Iterator<? extends A> fromIterator = fromIterable.iterator();
 
           @Override

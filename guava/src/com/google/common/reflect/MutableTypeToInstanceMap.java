@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -132,7 +133,7 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
 
     static <K extends @Immutable Object, V extends @Nullable Object> Set<Entry<K, V>> transformEntries(
         Set<Entry<K, V>> entries) {
-      return new ForwardingSet<Map.Entry<K, V>>() {
+      return new @Mutable ForwardingSet<Map.Entry<K, V>>() {
         @Override
         protected Set<Entry<K, V>> delegate() {
           return entries;

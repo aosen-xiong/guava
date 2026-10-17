@@ -39,6 +39,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.function.BiFunction;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
@@ -393,7 +394,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   @SuppressWarnings("ConstantCaseForConstants") // This RangeMap is immutable.
   @Immutable
   private static final RangeMap<Comparable<?>, Object> EMPTY_SUB_RANGE_MAP =
-      new RangeMap<Comparable<?>, Object>() {
+      new @Mutable RangeMap<Comparable<?>, Object>() {
         @Override
         @CheckForNull
         public Object get(Comparable<?> key) {
@@ -610,7 +611,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
                   .descendingMap()
                   .values()
                   .iterator();
-          return new AbstractIterator<Entry<Range<K>, V>>() {
+          return new @Mutable AbstractIterator<Entry<Range<K>, V>>() {
 
             @Override
             @CheckForNull
@@ -738,7 +739,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
       @Override
       public Set<Entry<Range<K>, V>> entrySet() {
-        return new Maps.EntrySet<Range<K>, V>() {
+        return new Maps.@Mutable EntrySet<Range<K>, V>() {
           @Override
           Map<Range<K>, V> map() {
             return SubRangeMapAsMap.this;
@@ -775,7 +776,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
                 entriesByLowerBound.floorKey(subRange.lowerBound), subRange.lowerBound);
         final Iterator<RangeMapEntry<K, V>> backingItr =
             entriesByLowerBound.tailMap(cutToStart, true).values().iterator();
-        return new AbstractIterator<Entry<Range<K>, V>>() {
+        return new @Mutable AbstractIterator<Entry<Range<K>, V>>() {
 
           @Override
           @CheckForNull

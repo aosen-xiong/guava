@@ -943,7 +943,7 @@ public final class Lists {
     public ListIterator<T> listIterator(@Readonly ReverseList<T> this, int index) {
       int start = reversePosition(index);
       final ListIterator<T> forwardIterator = forwardList.listIterator(start);
-      return new ListIterator<T>() {
+      return new @Mutable ListIterator<T>() {
 
         boolean canRemoveOrSet;
 

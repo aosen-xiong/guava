@@ -325,7 +325,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
     @Override
     protected Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable StandardDescendingMap this) {
-      return new Iterator<@PolyMutable Entry<K, V>>() {
+      return new @Mutable Iterator<@PolyMutable Entry<K, V>>() {
         @CheckForNull private Entry<K, V> toRemove = null;
         @CheckForNull private Entry<K, V> nextOrNull = forward().lastEntry();
 

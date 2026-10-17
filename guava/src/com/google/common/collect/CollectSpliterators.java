@@ -34,6 +34,7 @@ import java.util.function.LongConsumer;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -117,7 +118,7 @@ final class CollectSpliterators {
           Function<? super InElementT, ? extends OutElementT> function) {
     checkNotNull(fromSpliterator);
     checkNotNull(function);
-    return new Spliterator<OutElementT>() {
+    return new @Mutable Spliterator<OutElementT>() {
 
       @Override
       public boolean tryAdvance(Consumer<? super OutElementT> action) {

@@ -144,7 +144,7 @@ public final class Iterators {
       UnmodifiableIterator<T> result = (UnmodifiableIterator<T>) iterator;
       return result;
     }
-    return new UnmodifiableIterator<T>() {
+    return new @Mutable UnmodifiableIterator<T>() {
       @Override
       public boolean hasNext() {
         return iterator.hasNext();
@@ -411,7 +411,7 @@ public final class Iterators {
    */
   public static <T extends @Nullable @Readonly Object> Iterator<T> cycle(Iterable<T> iterable) {
     checkNotNull(iterable);
-    return new Iterator<T>() {
+    return new @Mutable Iterator<T>() {
       Iterator<T> iterator = emptyModifiableIterator();
 
       @Override
@@ -475,7 +475,7 @@ public final class Iterators {
    * <p>This is mainly just to avoid the intermediate ArrayDeque in ConsumingQueueIterator.
    */
   private static <I extends @Readonly Iterator<?>> @Readonly Iterator<I> consumingForArray(@Nullable I... elements) {
-    return new UnmodifiableIterator<I>() {
+    return new @Mutable UnmodifiableIterator<I>() {
       int index = 0;
 
       @Override
@@ -636,7 +636,7 @@ public final class Iterators {
       Iterator<T> iterator, int size, boolean pad) {
     checkNotNull(iterator);
     checkArgument(size > 0);
-    return new UnmodifiableIterator<List<@Nullable T>>() {
+    return new @Mutable UnmodifiableIterator<List<@Nullable T>>() {
       @Override
       public boolean hasNext() {
         return iterator.hasNext();
@@ -971,7 +971,7 @@ public final class Iterators {
       @PolyMutable Iterator<T> iterator, int limitSize) {
     checkNotNull(iterator);
     checkArgument(limitSize >= 0, "limit is negative");
-    return new Iterator<T>() {
+    return new @Mutable Iterator<T>() {
       private int count;
 
       @Override
@@ -1010,7 +1010,7 @@ public final class Iterators {
    */
   public static <T extends @Nullable @Readonly Object> Iterator<T> consumingIterator(Iterator<T> iterator) {
     checkNotNull(iterator);
-    return new UnmodifiableIterator<T>() {
+    return new @Mutable UnmodifiableIterator<T>() {
       @Override
       public boolean hasNext() {
         return iterator.hasNext();
@@ -1161,7 +1161,7 @@ public final class Iterators {
   public static <T extends @Nullable @Readonly Object> UnmodifiableIterator<T> forEnumeration(
       Enumeration<T> enumeration) {
     checkNotNull(enumeration);
-    return new UnmodifiableIterator<T>() {
+    return new @Mutable UnmodifiableIterator<T>() {
       @Override
       public boolean hasNext() {
         return enumeration.hasMoreElements();
@@ -1183,7 +1183,7 @@ public final class Iterators {
    */
   public static <T extends @Nullable @Readonly Object> Enumeration<T> asEnumeration(Iterator<T> iterator) {
     checkNotNull(iterator);
-    return new Enumeration<T>() {
+    return new @Mutable Enumeration<T>() {
       @Override
       public boolean hasMoreElements() {
         return iterator.hasNext();

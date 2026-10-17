@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
@@ -296,7 +297,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
       public Iterator<T> iterator() {
         return Iterators.concat(
             /* lazily generate the iterators on each input only as needed */
-            new AbstractIndexedListIterator<Iterator<? extends T>>(inputs.length) {
+            new @Mutable AbstractIndexedListIterator<Iterator<? extends T>>(inputs.length) {
               @Override
               public Iterator<? extends T> get(int i) {
                 return inputs[i].iterator();

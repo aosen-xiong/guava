@@ -47,6 +47,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -554,7 +555,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
     if (delegate != null) {
       return delegate.iterator();
     }
-    return new Iterator<E>() {
+    return new @Mutable Iterator<E>() {
       int expectedMetadata = metadata;
       int currentIndex = firstEntryIndex();
       int indexToRemove = -1;

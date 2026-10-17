@@ -437,7 +437,7 @@ public final class Multisets {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
 
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
       public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.contains(element) || multiset2.contains(element);
@@ -509,7 +509,7 @@ public final class Multisets {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
 
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
       public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         int count1 = multiset1.count(element);
@@ -567,7 +567,7 @@ public final class Multisets {
     checkNotNull(multiset2);
 
     // TODO(lowasser): consider making the entries live views
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
       public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.contains(element) || multiset2.contains(element);
@@ -644,7 +644,7 @@ public final class Multisets {
     checkNotNull(multiset2);
 
     // TODO(lowasser): consider making the entries live views
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
       public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         int count1 = multiset1.count(element);

@@ -429,7 +429,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
     @Override
     public Iterator<V> iterator(@PolyMutable ValueSet this) {
-      return new Iterator<V>() {
+      return new @Mutable Iterator<V>() {
         ValueSetLink<K, V> nextEntry = firstEntry;
         @CheckForNull ValueEntry<K, V> toRemove;
         int expectedModCount = modCount;
@@ -582,7 +582,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
   @Override
   Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable LinkedHashMultimap<K, V> this) {
-    return new Iterator<@PolyMutable Entry<K, V>>() {
+    return new @Mutable Iterator<@PolyMutable Entry<K, V>>() {
       ValueEntry<K, V> nextEntry = multimapHeaderEntry.getSuccessorInMultimap();
       @CheckForNull ValueEntry<K, V> toRemove;
 
