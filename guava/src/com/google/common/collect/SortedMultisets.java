@@ -55,7 +55,7 @@ final class SortedMultisets {
     }
 
     @Override
-    final SortedMultiset<E> multiset() {
+    final @ReceiverDependentMutable SortedMultiset<E> multiset() {
       return multiset;
     }
 
@@ -70,17 +70,17 @@ final class SortedMultisets {
     }
 
     @Override
-    public SortedSet<E> subSet(@ParametricNullness E fromElement, @ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> subSet(@ParametricNullness E fromElement, @ParametricNullness E toElement) {
       return multiset().subMultiset(fromElement, CLOSED, toElement, OPEN).elementSet();
     }
 
     @Override
-    public SortedSet<E> headSet(@ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> headSet(@ParametricNullness E toElement) {
       return multiset().headMultiset(toElement, OPEN).elementSet();
     }
 
     @Override
-    public SortedSet<E> tailSet(@ParametricNullness E fromElement) {
+    public @ReceiverDependentMutable SortedSet<E> tailSet(@ParametricNullness E fromElement) {
       return multiset().tailMultiset(fromElement, CLOSED).elementSet();
     }
 
@@ -102,7 +102,7 @@ final class SortedMultisets {
   @ReceiverDependentMutable
   static class NavigableElementSet<E extends @Nullable @Readonly Object> extends ElementSet<E>
       implements NavigableSet<E> {
-    NavigableElementSet(SortedMultiset<E> multiset) {
+    NavigableElementSet(@ReceiverDependentMutable SortedMultiset<E> multiset) {
       super(multiset);
     }
 

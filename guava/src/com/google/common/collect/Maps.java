@@ -3200,8 +3200,8 @@ public final class Maps {
     }
 
     @Override
-    Set<K> createKeySet() {
-      return new KeySet();
+    @ReceiverDependentMutable Set<K> createKeySet() {
+      return new @ReceiverDependentMutable KeySet();
     }
 
     static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> boolean removeAllKeys(
@@ -3932,7 +3932,7 @@ public final class Maps {
     }
 
     @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this) {
-      return new KeySet<>(this);
+      return new @ReceiverDependentMutable KeySet<>(this);
     }
 
     @LazyInit @CheckForNull private transient @Assignable Collection<V> values;

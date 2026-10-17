@@ -80,7 +80,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
   @ReceiverDependentMutable
   protected class StandardElementSet extends SortedMultisets.NavigableElementSet<E> {
     /** Constructor for use by subclasses. */
-    public StandardElementSet() {
+    public @Mutable StandardElementSet() {
       super(ForwardingSortedMultiset.this);
     }
   }

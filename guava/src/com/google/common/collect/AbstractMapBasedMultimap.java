@@ -759,7 +759,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public NavigableSet<V> descendingSet() {
+    public @ReceiverDependentMutable NavigableSet<V> descendingSet() {
       return wrap(getSortedSetDelegate().descendingSet());
     }
 
@@ -769,7 +769,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public NavigableSet<V> subSet(
+    public @ReceiverDependentMutable NavigableSet<V> subSet(
         @ParametricNullness V fromElement,
         boolean fromInclusive,
         @ParametricNullness V toElement,
@@ -779,12 +779,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public NavigableSet<V> headSet(@ParametricNullness V toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<V> headSet(@ParametricNullness V toElement, boolean inclusive) {
       return wrap(getSortedSetDelegate().headSet(toElement, inclusive));
     }
 
     @Override
-    public NavigableSet<V> tailSet(@ParametricNullness V fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<V> tailSet(@ParametricNullness V fromElement, boolean inclusive) {
       return wrap(getSortedSetDelegate().tailSet(fromElement, inclusive));
     }
   }
@@ -1142,7 +1142,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public Iterator<K> descendingIterator() {
+    public @ReceiverDependentMutable Iterator<K> descendingIterator() {
       return descendingSet().iterator();
     }
 

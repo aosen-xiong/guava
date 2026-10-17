@@ -330,7 +330,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   abstract ImmutableCollection<V> createValues();
 
   @Override
-  final Iterator<V> valuesIterator() {
+  final @Immutable Iterator<V> valuesIterator() {
     throw new AssertionError("should never be called");
   }
 

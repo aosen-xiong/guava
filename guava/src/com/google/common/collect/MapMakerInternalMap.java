@@ -2107,7 +2107,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    @ReceiverDependentMutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
+    ReferenceQueue<V> getValueReferenceQueueForTesting() {
       return queueForValues;
     }
 

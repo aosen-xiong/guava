@@ -912,7 +912,7 @@ final class Synchronized {
     }
 
     @Override
-    public Set<V> get(@Readonly SynchronizedSetMultimap<K, V> this, K key) {
+    public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable SynchronizedSetMultimap<K, V> this, K key) {
       synchronized (mutex) {
         return set(delegate().get(key), mutex);
       }

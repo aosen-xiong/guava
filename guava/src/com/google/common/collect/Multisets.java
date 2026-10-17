@@ -1009,7 +1009,7 @@ public final class Multisets {
 
   @ReceiverDependentMutable
   abstract static class ElementSet<E extends @Nullable @Readonly Object> extends Sets.ImprovedAbstractSet<E> {
-    abstract Multiset<E> multiset();
+    abstract @ReceiverDependentMutable Multiset<E> multiset();
 
     @Override
     public void clear(@Mutable ElementSet<E> this) {
@@ -1048,7 +1048,7 @@ public final class Multisets {
   @ReceiverDependentMutable
   abstract static class EntrySet<E extends @Nullable @Readonly Object>
       extends Sets.ImprovedAbstractSet<Entry<E>> {
-    abstract Multiset<E> multiset();
+    abstract @ReceiverDependentMutable Multiset<E> multiset();
 
     @Override
     public boolean contains(@Readonly EntrySet<E> this, @CheckForNull @UnknownSignedness @Readonly Object o) {

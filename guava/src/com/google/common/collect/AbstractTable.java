@@ -203,8 +203,8 @@ abstract class AbstractTable<
     return new @ReceiverDependentMutable Values();
   }
 
-  Iterator<V> valuesIterator(@Readonly AbstractTable<R, C, V> this) {
-    return new TransformedIterator<Cell<R, C, V>, V>(cellSet().iterator()) {
+  @ReceiverDependentMutable Iterator<V> valuesIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
+    return new @ReceiverDependentMutable TransformedIterator<Cell<R, C, V>, V>(cellSet().iterator()) {
       @Override
       @ParametricNullness
       V transform(Cell<R, C, V> cell) {
