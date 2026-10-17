@@ -150,7 +150,7 @@ final class Synchronized {
     @SuppressWarnings("unchecked")
     @Override
     @ReceiverDependentMutable Collection<E> delegate(@ReceiverDependentMutable SynchronizedCollection<E> this) {
-      return (@PolyMutable Collection<E>) super.delegate();
+      return (@ReceiverDependentMutable Collection<E>) super.delegate();
     }
 
     @Override
@@ -301,7 +301,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable Set<E> delegate(@ReceiverDependentMutable SynchronizedSet<E> this) {
-      return (@PolyMutable Set<E>) super.delegate();
+      return (@ReceiverDependentMutable Set<E>) super.delegate();
     }
 
     @Pure
@@ -340,7 +340,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable SortedSet<E> delegate(@ReceiverDependentMutable SynchronizedSortedSet<E> this) {
-      return (@PolyMutable SortedSet<E>) super.delegate();
+      return (@ReceiverDependentMutable SortedSet<E>) super.delegate();
     }
 
     @SideEffectFree
@@ -411,7 +411,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable List<E> delegate(@ReceiverDependentMutable SynchronizedList<E> this) {
-      return (List<E>) super.delegate();
+      return (@ReceiverDependentMutable List<E>) super.delegate();
     }
 
     @Override
@@ -549,7 +549,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable SynchronizedMultiset<E> this) {
-      return (Multiset<E>) super.delegate();
+      return (@ReceiverDependentMutable Multiset<E>) super.delegate();
     }
 
     @Override
@@ -651,7 +651,7 @@ final class Synchronized {
     @SuppressWarnings("unchecked")
     @Override
     @ReceiverDependentMutable Multimap<K, V> delegate(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
-      return (Multimap<K, V>) super.delegate();
+      return (@ReceiverDependentMutable Multimap<K, V>) super.delegate();
     }
 
     SynchronizedMultimap(@ReceiverDependentMutable Multimap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
@@ -854,7 +854,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable ListMultimap<K, V> delegate(@ReceiverDependentMutable SynchronizedListMultimap<K, V> this) {
-      return (ListMultimap<K, V>) super.delegate();
+      return (@ReceiverDependentMutable ListMultimap<K, V>) super.delegate();
     }
 
     @Override
@@ -900,7 +900,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable SetMultimap<K, V> delegate(@ReceiverDependentMutable SynchronizedSetMultimap<K, V> this) {
-      return (SetMultimap<K, V>) super.delegate();
+      return (@ReceiverDependentMutable SetMultimap<K, V>) super.delegate();
     }
 
     @Override
@@ -957,7 +957,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable SortedSetMultimap<K, V> delegate(@ReceiverDependentMutable SynchronizedSortedSetMultimap<K, V> this) {
-      return (SortedSetMultimap<K, V>) super.delegate();
+      return (@ReceiverDependentMutable SortedSetMultimap<K, V>) super.delegate();
     }
 
     @Override
@@ -1139,7 +1139,7 @@ final class Synchronized {
     @SuppressWarnings("unchecked")
     @Override
     @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable SynchronizedMap<K, V> this) {
-      return (Map<K, V>) super.delegate();
+      return (@ReceiverDependentMutable Map<K, V>) super.delegate();
     }
 
     @Override
@@ -1371,7 +1371,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable SortedMap<K, V> delegate(@ReceiverDependentMutable SynchronizedSortedMap<K, V> this) {
-      return (SortedMap<K, V>) super.delegate();
+      return (@ReceiverDependentMutable SortedMap<K, V>) super.delegate();
     }
 
     @Override
@@ -1442,7 +1442,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable BiMap<K, V> delegate(@ReceiverDependentMutable SynchronizedBiMap<K, V> this) {
-      return (BiMap<K, V>) super.delegate();
+      return (@ReceiverDependentMutable BiMap<K, V>) super.delegate();
     }
 
     @SideEffectFree
@@ -1589,7 +1589,7 @@ final class Synchronized {
 
     @Override
     @ReceiverDependentMutable NavigableSet<E> delegate(@ReceiverDependentMutable SynchronizedNavigableSet<E> this) {
-      return (NavigableSet<E>) super.delegate();
+      return (@ReceiverDependentMutable NavigableSet<E>) super.delegate();
     }
 
     @Override
@@ -1736,7 +1736,7 @@ final class Synchronized {
 
     @Override
     NavigableMap<K, V> delegate() {
-      return (NavigableMap<K, V>) super.delegate();
+      return (@ReceiverDependentMutable NavigableMap<K, V>) super.delegate();
     }
 
     @Override
@@ -1994,7 +1994,7 @@ final class Synchronized {
 
     @Override
     Queue<E> delegate() {
-      return (Queue<E>) super.delegate();
+      return (@ReceiverDependentMutable Queue<E>) super.delegate();
     }
 
     @Override
@@ -2051,7 +2051,7 @@ final class Synchronized {
 
     @Override
     Deque<E> delegate() {
-      return (Deque<E>) super.delegate();
+      return (@ReceiverDependentMutable Deque<E>) super.delegate();
     }
 
     @Override
@@ -2197,7 +2197,7 @@ final class Synchronized {
     @SuppressWarnings("unchecked")
     @Override
     @ReceiverDependentMutable Table<R, C, V> delegate(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
-      return (Table<R, C, V>) super.delegate();
+      return (@ReceiverDependentMutable Table<R, C, V>) super.delegate();
     }
 
     @Override

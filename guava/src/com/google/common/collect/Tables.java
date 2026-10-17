@@ -691,7 +691,7 @@ public final class Tables {
 
     @Override
     protected @Readonly RowSortedTable<R, C, V> delegate() {
-      return (RowSortedTable<R, C, V>) super.delegate();
+      return (@ReceiverDependentMutable RowSortedTable<R, C, V>) super.delegate();
     }
 
     @Override
