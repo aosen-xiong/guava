@@ -140,7 +140,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * implementation.
    */
   @CheckForNull
-  protected E standardPollFirst() {
+  protected E standardPollFirst(@Mutable ForwardingNavigableSet<E> this) {
     return Iterators.pollNext(iterator());
   }
 
@@ -156,7 +156,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * forward to this implementation.
    */
   @CheckForNull
-  protected E standardPollLast() {
+  protected E standardPollLast(@Mutable ForwardingNavigableSet<E> this) {
     return Iterators.pollNext(descendingIterator());
   }
 

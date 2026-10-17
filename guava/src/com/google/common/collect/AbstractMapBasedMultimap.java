@@ -744,13 +744,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     @CheckForNull
-    public V pollFirst() {
+    public V pollFirst(@Mutable WrappedNavigableSet this) {
       return Iterators.pollNext(iterator());
     }
 
     @Override
     @CheckForNull
-    public V pollLast() {
+    public V pollLast(@Mutable WrappedNavigableSet this) {
       return Iterators.pollNext(descendingIterator());
     }
 
@@ -1126,13 +1126,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     @CheckForNull
-    public K pollFirst() {
+    public K pollFirst(@Mutable NavigableKeySet this) {
       return Iterators.pollNext(iterator());
     }
 
     @Override
     @CheckForNull
-    public K pollLast() {
+    public K pollLast(@Mutable NavigableKeySet this) {
       return Iterators.pollNext(descendingIterator());
     }
 

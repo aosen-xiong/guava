@@ -485,7 +485,7 @@ public final class Collections2 {
      * </ul>
      */
     private static <E> int calculateSize(
-        List<E> sortedInputList, Comparator<? super E> comparator) {
+        @Readonly List<E> sortedInputList, Comparator<? super E> comparator) {
       int permutations = 1;
       int n = 1;
       int r = 1;
@@ -540,7 +540,7 @@ public final class Collections2 {
     @CheckForNull @Assignable List<E> nextPermutation;
     final @Mutable Comparator<? super E> comparator;
 
-    OrderedPermutationIterator(@ReceiverDependentMutable List<E> list, Comparator<? super E> comparator) {
+    OrderedPermutationIterator(@Readonly List<E> list, Comparator<? super E> comparator) {
       this.nextPermutation = Lists.newArrayList(list);
       this.comparator = comparator;
     }
@@ -670,7 +670,7 @@ public final class Collections2 {
     final int[] o;
     @Assignable int j;
 
-    PermutationIterator(@ReceiverDependentMutable List<E> list) {
+    PermutationIterator(@Readonly List<E> list) {
       this.list = new ArrayList<E>(list);
       int n = list.size();
       c = new int[n];
