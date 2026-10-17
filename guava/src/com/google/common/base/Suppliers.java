@@ -54,12 +54,12 @@ public final class Suppliers {
    * and then applying {@code function} to that value. Note that the resulting supplier will not
    * call {@code supplier} or invoke {@code function} until it is called.
    */
-  public static <F extends @Nullable Object, T extends @Nullable Object> Supplier<T> compose(
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Supplier<T> compose(
       Function<? super F, T> function, Supplier<F> supplier) {
     return new SupplierComposition<>(function, supplier);
   }
 
-  private static class SupplierComposition<F extends @Nullable Object, T extends @Nullable Object>
+  private static class SupplierComposition<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
       implements Supplier<T>, Serializable {
     final Function<? super F, T> function;
     final Supplier<F> supplier;
@@ -113,7 +113,7 @@ public final class Suppliers {
    * <p>If {@code delegate} is an instance created by an earlier call to {@code memoize}, it is
    * returned directly.
    */
-  public static <T extends @Nullable Object> Supplier<T> memoize(Supplier<T> delegate) {
+  public static <T extends @Nullable @Readonly Object> Supplier<T> memoize(Supplier<T> delegate) {
     if (delegate instanceof NonSerializableMemoizingSupplier
         || delegate instanceof MemoizingSupplier) {
       return delegate;
@@ -124,7 +124,7 @@ public final class Suppliers {
   }
 
   @VisibleForTesting
-  static class MemoizingSupplier<T extends @Nullable Object> implements Supplier<T>, Serializable {
+  static class MemoizingSupplier<T extends @Nullable @Readonly Object> implements Supplier<T>, Serializable {
     final Supplier<T> delegate;
     transient volatile boolean initialized;
     // "value" does not need to be volatile; visibility piggy-backs
@@ -164,7 +164,7 @@ public final class Suppliers {
   }
 
   @VisibleForTesting
-  static class NonSerializableMemoizingSupplier<T extends @Nullable Object> implements Supplier<T> {
+  static class NonSerializableMemoizingSupplier<T extends @Nullable @Readonly Object> implements Supplier<T> {
     @SuppressWarnings("UnnecessaryLambda") // Must be a fixed singleton object
     private static final Supplier<Void> SUCCESSFULLY_COMPUTED =
         () -> {
@@ -231,7 +231,7 @@ public final class Suppliers {
    * @since 2.0
    */
   @SuppressWarnings("GoodTime") // Prefer the Duration overload
-  public static <T extends @Nullable Object> Supplier<T> memoizeWithExpiration(
+  public static <T extends @Nullable @Readonly Object> Supplier<T> memoizeWithExpiration(
       Supplier<T> delegate, long duration, TimeUnit unit) {
     checkNotNull(delegate);
     checkArgument(duration > 0, "duration (%s %s) must be > 0", duration, unit);
@@ -263,7 +263,7 @@ public final class Suppliers {
   @GwtIncompatible // java.time.Duration
   @SuppressWarnings("Java7ApiChecker") // no more dangerous that wherever the user got the Duration
   @IgnoreJRERequirement
-  public static <T extends @Nullable Object> Supplier<T> memoizeWithExpiration(
+  public static <T extends @Nullable @Readonly Object> Supplier<T> memoizeWithExpiration(
       Supplier<T> delegate, Duration duration) {
     checkNotNull(delegate);
     // The alternative of `duration.compareTo(Duration.ZERO) > 0` causes J2ObjC trouble.
@@ -274,7 +274,7 @@ public final class Suppliers {
 
   @VisibleForTesting
   @SuppressWarnings("GoodTime") // lots of violations
-  static class ExpiringMemoizingSupplier<T extends @Nullable Object>
+  static class ExpiringMemoizingSupplier<T extends @Nullable @Readonly Object>
       implements Supplier<T>, Serializable {
     final Supplier<T> delegate;
     final long durationNanos;
@@ -326,12 +326,12 @@ public final class Suppliers {
   }
 
   /** Returns a supplier that always supplies {@code instance}. */
-  public static <T extends @Nullable Object> Supplier<T> ofInstance(
+  public static <T extends @Nullable @Readonly Object> Supplier<T> ofInstance(
       @ParametricNullness T instance) {
     return new SupplierOfInstance<>(instance);
   }
 
-  private static class SupplierOfInstance<T extends @Nullable Object>
+  private static class SupplierOfInstance<T extends @Nullable @Readonly Object>
       implements Supplier<T>, Serializable {
     @ParametricNullness final T instance;
 
@@ -371,12 +371,12 @@ public final class Suppliers {
    * Returns a supplier whose {@code get()} method synchronizes on {@code delegate} before calling
    * it, making it thread-safe.
    */
-  public static <T extends @Nullable Object> Supplier<T> synchronizedSupplier(
+  public static <T extends @Nullable @Readonly Object> Supplier<T> synchronizedSupplier(
       Supplier<T> delegate) {
     return new ThreadSafeSupplier<>(delegate);
   }
 
-  private static class ThreadSafeSupplier<T extends @Nullable Object>
+  private static class ThreadSafeSupplier<T extends @Nullable @Readonly Object>
       implements Supplier<T>, Serializable {
     final Supplier<T> delegate;
 
@@ -408,13 +408,13 @@ public final class Suppliers {
    *
    * @since 8.0
    */
-  public static <T extends @Nullable Object> Function<Supplier<T>, T> supplierFunction() {
+  public static <T extends @Nullable @Readonly Object> Function<Supplier<T>, T> supplierFunction() {
     @SuppressWarnings("unchecked") // implementation is "fully variant"
     SupplierFunction<T> sf = (SupplierFunction<T>) SupplierFunctionImpl.INSTANCE;
     return sf;
   }
 
-  private interface SupplierFunction<T extends @Nullable Object> extends Function<Supplier<T>, T> {}
+  private interface SupplierFunction<T extends @Nullable @Readonly Object> extends Function<Supplier<T>, T> {}
 
   private enum SupplierFunctionImpl implements SupplierFunction<@Nullable Object> {
     INSTANCE;

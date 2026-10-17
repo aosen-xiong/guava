@@ -25,6 +25,7 @@ import org.checkerframework.common.value.qual.MinLen;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Skeleton implementation of {@link HashFunction} in terms of {@link #newHasher()}.
@@ -35,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @ElementTypesAreNonnullByDefault
 abstract class AbstractHashFunction implements HashFunction {
   @Override
-  public <T extends @Nullable Object> HashCode hashObject(
+  public <T extends @Nullable @Readonly Object> HashCode hashObject(
       @ParametricNullness T instance, Funnel<? super T> funnel) {
     return newHasher().putObject(instance, funnel).hash();
   }

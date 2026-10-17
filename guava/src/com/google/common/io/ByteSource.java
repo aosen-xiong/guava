@@ -44,6 +44,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A readable source of bytes, such as a file. Unlike an {@link InputStream}, a {@code ByteSource}
@@ -319,7 +320,7 @@ public abstract class ByteSource {
    */
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
-  public <T extends @Nullable Object> T read(ByteProcessor<T> processor) throws IOException {
+  public <T extends @Nullable @Readonly Object> T read(ByteProcessor<T> processor) throws IOException {
     checkNotNull(processor);
 
     Closer closer = Closer.create();
@@ -631,7 +632,7 @@ public abstract class ByteSource {
     @SuppressWarnings("CheckReturnValue") // it doesn't matter what processBytes returns here
     @Override
     @ParametricNullness
-    public <T extends @Nullable Object> T read(ByteProcessor<T> processor) throws IOException {
+    public <T extends @Nullable @Readonly Object> T read(ByteProcessor<T> processor) throws IOException {
       processor.processBytes(bytes, offset, length);
       return processor.getResult();
     }

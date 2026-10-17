@@ -53,7 +53,7 @@ public final class ObjectArrays {
    */
   @GwtIncompatible // Array.newInstance(Class, int)
   @SuppressWarnings("unchecked")
-  public static <T extends @Nullable Object> T[] newArray(Class<@NonNull T> type, int length) {
+  public static <T extends @Nullable @Readonly Object> T[] newArray(Class<@NonNull T> type, int length) {
     return (T[]) Array.newInstance(type, length);
   }
 
@@ -75,7 +75,7 @@ public final class ObjectArrays {
    * @param type the component type of the returned array
    */
   @GwtIncompatible // Array.newInstance(Class, int)
-  public static <T extends @Nullable Object> T[] concat(
+  public static <T extends @Nullable @Readonly Object> T[] concat(
       T[] first, T[] second, Class<@NonNull T> type) {
     T[] result = newArray(type, first.length + second.length);
     System.arraycopy(first, 0, result, 0, first.length);

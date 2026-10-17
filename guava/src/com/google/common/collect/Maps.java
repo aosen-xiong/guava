@@ -392,7 +392,7 @@ public final class Maps {
    * @return a new, empty {@code TreeMap}
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <K extends @Immutable Comparable, V extends @Nullable Object> TreeMap<K, V> newTreeMap() {
+  public static <K extends @Immutable Comparable, V extends @Nullable @Readonly Object> TreeMap<K, V> newTreeMap() {
     return new TreeMap<>();
   }
 
@@ -497,7 +497,7 @@ public final class Maps {
    * @param right the map to treat as the "right" map for purposes of comparison
    * @return the difference between the two maps
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       MapDifference<K, V> difference(
           @Readonly Map<? extends K, ? extends V> left, @Readonly Map<? extends K, ? extends V> right) {
     if (left instanceof SortedMap) {
@@ -522,7 +522,7 @@ public final class Maps {
    * @return the difference between the two maps
    * @since 10.0
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       MapDifference<K, V> difference(
           Map<? extends K, ? extends V> left,
           Map<? extends K, ? extends V> right,
@@ -570,9 +570,9 @@ public final class Maps {
     return new SortedMapDifferenceImpl<>(onlyOnLeft, onlyOnRight, onBoth, differences);
   }
 
-  private static <K extends @Nullable @Immutable Object, V extends @Nullable Object> void doDifference(
-      Map<? extends K, ? extends V> left,
-      Map<? extends K, ? extends V> right,
+  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> void doDifference(
+      @Readonly Map<? extends K, ? extends V> left,
+      @Readonly Map<? extends K, ? extends V> right,
       Equivalence<? super @NonNull V> valueEquivalence,
       Map<K, V> onlyOnLeft,
       Map<K, V> onlyOnRight,
@@ -1540,7 +1540,7 @@ public final class Maps {
 
   /** The implementation of {@link Multimaps#unmodifiableEntries}. */
   @ReceiverDependentMutable
-  static class UnmodifiableEntries<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  static class UnmodifiableEntries<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingCollection<Entry<K, V>> {
     private final Collection<Entry<K, V>> entries;
 
@@ -1590,7 +1590,7 @@ public final class Maps {
 
   /** The implementation of {@link Maps#unmodifiableEntrySet(Set)}. */
   @ReceiverDependentMutable
-  static class UnmodifiableEntrySet<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  static class UnmodifiableEntrySet<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends UnmodifiableEntries<K, V> implements Set<Entry<K, V>> {
     UnmodifiableEntrySet(Set<Entry<K, V>> entries) {
       super(entries);

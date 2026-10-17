@@ -375,7 +375,7 @@ final class CollectCollectors {
         ImmutableListMultimap.Builder::build);
   }
 
-  static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableListMultimap<K, V>> flatteningToImmutableListMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends Stream<? extends V>> valuesFunction) {
@@ -389,7 +389,7 @@ final class CollectCollectors {
         ImmutableListMultimap::copyOf);
   }
 
-  static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableSetMultimap<K, V>> toImmutableSetMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {

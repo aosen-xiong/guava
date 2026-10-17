@@ -99,7 +99,7 @@ final class TopKSelector<
    *
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
-  public static <T extends @Nullable Object> TopKSelector<T> greatest(
+  public static <T extends @Nullable @Readonly Object> TopKSelector<T> greatest(
       int k, Comparator<? super T> comparator) {
     return new TopKSelector<T>(Ordering.from(comparator).reverse(), k);
   }

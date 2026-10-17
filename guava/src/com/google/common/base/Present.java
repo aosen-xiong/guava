@@ -74,7 +74,7 @@ final class Present<T> extends Optional<T> {
   }
 
   @Override
-  public <V extends @NonNull Object> Optional<V> transform(Function<? super T, V> function) {
+  public <V extends @NonNull @Readonly Object> Optional<V> transform(Function<? super T, V> function) {
     return new Present<>(
         checkNotNull(
             function.apply(reference),

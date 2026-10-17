@@ -642,7 +642,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
    */
   @DoNotCall("Use toImmutableSortedMultiset.")
   @Deprecated
-  public static <T extends @Nullable Object, E extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, E extends @Immutable Object>
       Collector<T, ?, ImmutableMultiset<E>> toImmutableMultiset(
           Function<? super T, ? extends E> elementFunction,
           ToIntFunction<? super T> countFunction) {

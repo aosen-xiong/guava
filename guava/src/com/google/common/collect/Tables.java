@@ -75,7 +75,7 @@ public final class Tables {
    * @since 21.0
    */
   public static <
-          T extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
           R extends @Nullable @Immutable Object,
           C extends @Nullable @Immutable Object,
           V,
@@ -104,7 +104,7 @@ public final class Tables {
    * @since 21.0
    */
   public static <
-          T extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
           R extends @Nullable @Immutable Object,
           C extends @Nullable @Immutable Object,
           V,
@@ -340,7 +340,7 @@ public final class Tables {
   }
 
   private static <
-          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       Cell<C, R, V> transposeCell(Cell<R, C, V> cell) {
     return immutableCell(cell.getColumnKey(), cell.getRowKey(), cell.getValue());
   }
@@ -674,7 +674,7 @@ public final class Tables {
    * @since 11.0
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
-  public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       @PolyMutable RowSortedTable<R, C, V> unmodifiableRowSortedTable(
           @PolyMutable RowSortedTable<R, ? extends C, ? extends V> table) {
     /*
@@ -687,7 +687,7 @@ public final class Tables {
 
   @ReceiverDependentMutable
   private static final class UnmodifiableRowSortedMap<
-          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends UnmodifiableTable<R, C, V> implements RowSortedTable<R, C, V> {
 
     public UnmodifiableRowSortedMap(@ReceiverDependentMutable RowSortedTable<R, ? extends C, ? extends V> delegate) {

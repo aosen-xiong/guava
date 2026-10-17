@@ -194,7 +194,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
    *
    * @since 10.0
    */
-  public static final class Wrapper<T extends @Nullable Object> implements Serializable {
+  public static final class Wrapper<T extends @Nullable @Readonly Object> implements Serializable {
     /*
      * Equivalence's type argument is always non-nullable: Equivalence<Number>, never
      * Equivalence<@Nullable Number>. That can still produce wrappers of various types --

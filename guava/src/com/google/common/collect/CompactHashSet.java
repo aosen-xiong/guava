@@ -118,7 +118,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    */
   @SafeVarargs
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public static <E extends @Nullable Object> CompactHashSet<E> create(E... elements) {
+  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> create(E... elements) {
     CompactHashSet<E> set = createWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
@@ -133,7 +133,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    *     elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <E extends @Nullable Object> CompactHashSet<E> createWithExpectedSize(
+  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> createWithExpectedSize(
       int expectedSize) {
     return new CompactHashSet<>(expectedSize);
   }

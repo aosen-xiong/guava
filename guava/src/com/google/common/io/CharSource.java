@@ -42,6 +42,7 @@ import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A readable source of characters, such as a text file. Unlike a {@link Reader}, a {@code
@@ -364,7 +365,7 @@ public abstract class CharSource {
    */
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
-  public <T extends @Nullable Object> T readLines(LineProcessor<T> processor) throws IOException {
+  public <T extends @Nullable @Readonly Object> T readLines(LineProcessor<T> processor) throws IOException {
     checkNotNull(processor);
 
     Closer closer = Closer.create();
@@ -608,7 +609,7 @@ public abstract class CharSource {
 
     @Override
     @ParametricNullness
-    public <T extends @Nullable Object> T readLines(LineProcessor<T> processor) throws IOException {
+    public <T extends @Nullable @Readonly Object> T readLines(LineProcessor<T> processor) throws IOException {
       Iterator<String> lines = linesIterator();
       while (lines.hasNext()) {
         if (!processor.processLine(lines.next())) {

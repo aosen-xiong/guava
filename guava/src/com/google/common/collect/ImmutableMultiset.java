@@ -96,7 +96,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
    *
    * @since 22.0
    */
-  public static <T extends @Nullable Object, E extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, E extends @Immutable Object>
       Collector<T, ?, ImmutableMultiset<E>> toImmutableMultiset(
           Function<? super T, ? extends E> elementFunction,
           ToIntFunction<? super T> countFunction) {

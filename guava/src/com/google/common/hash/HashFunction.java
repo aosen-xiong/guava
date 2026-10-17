@@ -22,6 +22,7 @@ import org.checkerframework.common.value.qual.MinLen;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A hash function is a collision-averse pure function that maps an arbitrary block of data to a
@@ -214,7 +215,7 @@ public interface HashFunction {
    *
    * @since 14.0
    */
-  <T extends @Nullable Object> HashCode hashObject(
+  <T extends @Nullable @Readonly Object> HashCode hashObject(
       @ParametricNullness T instance, Funnel<? super T> funnel);
 
   /**

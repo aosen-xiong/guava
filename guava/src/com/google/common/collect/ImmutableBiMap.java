@@ -69,7 +69,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableBiMap<K, V>> toImmutableBiMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -666,7 +666,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
    */
   @Deprecated
   @DoNotCall("Use toImmutableBiMap")
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -683,7 +683,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
    */
   @Deprecated
   @DoNotCall("Use toImmutableBiMap")
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction,

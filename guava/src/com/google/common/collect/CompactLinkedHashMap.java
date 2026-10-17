@@ -65,12 +65,12 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 @GwtIncompatible // not worth using in GWT for now
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends CompactHashMap<K, V> {
   // TODO(lowasser): implement removeEldestEntry so this can be used as a drop-in replacement
 
   /** Creates an empty {@code CompactLinkedHashMap} instance. */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       CompactLinkedHashMap<K, V> create() {
     return new CompactLinkedHashMap<>();
   }
@@ -84,7 +84,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
    *     expectedSize} elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       CompactLinkedHashMap<K, V> createWithExpectedSize(int expectedSize) {
     return new CompactLinkedHashMap<>(expectedSize);
   }

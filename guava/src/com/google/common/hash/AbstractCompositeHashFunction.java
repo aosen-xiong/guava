@@ -24,6 +24,7 @@ import org.checkerframework.common.value.qual.MinLen;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An abstract composition of multiple hash functions. {@linkplain #newHasher()} delegates to the
@@ -182,7 +183,7 @@ abstract class AbstractCompositeHashFunction extends AbstractHashFunction {
       }
 
       @Override
-      public <T extends @Nullable Object> Hasher putObject(
+      public <T extends @Nullable @Readonly Object> Hasher putObject(
           @ParametricNullness T instance, Funnel<? super T> funnel) {
         for (Hasher hasher : hashers) {
           hasher.putObject(instance, funnel);

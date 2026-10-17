@@ -22,6 +22,7 @@ import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import java.util.Comparator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A utility for performing a chained comparison statement. <b>Note:</b> Java 8+ users should
@@ -109,7 +110,7 @@ public abstract class ComparisonChain {
         }
 
         @Override
-        public <T extends @Nullable Object> ComparisonChain compare(
+        public <T extends @Nullable @Readonly Object> ComparisonChain compare(
             @ParametricNullness T left, @ParametricNullness T right, Comparator<T> comparator) {
           return classify(comparator.compare(left, right));
         }
@@ -171,7 +172,7 @@ public abstract class ComparisonChain {
     }
 
     @Override
-    public <T extends @Nullable Object> ComparisonChain compare(
+    public <T extends @Nullable @Readonly Object> ComparisonChain compare(
         @ParametricNullness T left, @ParametricNullness T right, Comparator<T> comparator) {
       return this;
     }
@@ -234,7 +235,7 @@ public abstract class ComparisonChain {
    * Compares two objects using a comparator, <i>if</i> the result of this comparison chain has not
    * already been determined.
    */
-  public abstract <T extends @Nullable Object> ComparisonChain compare(
+  public abstract <T extends @Nullable @Readonly Object> ComparisonChain compare(
       @ParametricNullness T left, @ParametricNullness T right, Comparator<T> comparator);
 
   /**

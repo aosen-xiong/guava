@@ -83,7 +83,7 @@ final class TableCollectors {
   }
 
   static <
-          T extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
           R extends @Nullable @Immutable Object,
           C extends @Nullable @Immutable Object,
           V,
@@ -104,7 +104,7 @@ final class TableCollectors {
   }
 
   static <
-          T extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
           R extends @Nullable @Immutable Object,
           C extends @Nullable @Immutable Object,
           V,

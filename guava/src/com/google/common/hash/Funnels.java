@@ -183,12 +183,12 @@ public final class Funnels {
    *
    * @since 15.0
    */
-  public static <E extends @Nullable Object> Funnel<Iterable<? extends E>> sequentialFunnel(
+  public static <E extends @Nullable @Readonly Object> Funnel<Iterable<? extends E>> sequentialFunnel(
       Funnel<E> elementFunnel) {
     return new SequentialFunnel<>(elementFunnel);
   }
 
-  private static class SequentialFunnel<E extends @Nullable Object>
+  private static class SequentialFunnel<E extends @Nullable @Readonly Object>
       implements Funnel<Iterable<? extends E>>, Serializable {
     private final Funnel<E> elementFunnel;
 

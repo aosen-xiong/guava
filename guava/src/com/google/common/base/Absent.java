@@ -79,7 +79,7 @@ final class Absent<T> extends Optional<T> {
   }
 
   @Override
-  public <V extends @NonNull Object> Optional<V> transform(Function<? super T, V> function) {
+  public <V extends @NonNull @Readonly Object> Optional<V> transform(Function<? super T, V> function) {
     checkNotNull(function);
     return Optional.absent();
   }

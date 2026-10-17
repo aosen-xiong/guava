@@ -36,7 +36,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-final class ByFunctionOrdering<F extends @Nullable Object, T extends @Nullable Object>
+final class ByFunctionOrdering<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
     extends Ordering<F> implements Serializable {
   final Function<F, ? extends T> function;
   final Ordering<T> ordering;

@@ -358,7 +358,7 @@ public final class Iterators {
    * @return a newly-allocated array into which all the elements of the iterator have been copied
    */
   @GwtIncompatible // Array.newInstance(Class, int)
-  public static <T extends @Nullable Object> T[] toArray(
+  public static <T extends @Nullable @Readonly Object> T[] toArray(
       Iterator<? extends T> iterator, Class<@NonNull T> type) {
     List<T> list = Lists.newArrayList(iterator);
     return Iterables.<T>toArray(list, type);
@@ -564,7 +564,7 @@ public final class Iterators {
    * @throws NullPointerException if any of the provided iterators is null
    */
   @SafeVarargs
-  public static <T extends @Nullable Object> Iterator<T> concat(Iterator<? extends T>... inputs) {
+  public static <T extends @Nullable @Readonly Object> Iterator<T> concat(Iterator<? extends T>... inputs) {
     return concatNoDefensiveCopy(Arrays.copyOf(inputs, inputs.length));
   }
 
@@ -1120,7 +1120,7 @@ public final class Iterators {
     return new SingletonIterator<>(value);
   }
 
-  private static final class SingletonIterator<T extends @Nullable Object>
+  private static final class SingletonIterator<T extends @Nullable @Readonly Object>
       extends UnmodifiableIterator<T> {
     private static final Object SENTINEL = new Object();
 
@@ -1318,7 +1318,7 @@ public final class Iterators {
    *
    * @since 11.0
    */
-  public static <T extends @Nullable Object> UnmodifiableIterator<T> mergeSorted(
+  public static <T extends @Nullable @Readonly Object> UnmodifiableIterator<T> mergeSorted(
       Iterable<? extends Iterator<? extends T>> iterators, Comparator<? super T> comparator) {
     checkNotNull(iterators, "iterators");
     checkNotNull(comparator, "comparator");

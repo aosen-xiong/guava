@@ -119,7 +119,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
   }
 
-  static class AddRejectingSet<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  static class AddRejectingSet<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingSet<V> {
     @ParametricNullness final K key;
 

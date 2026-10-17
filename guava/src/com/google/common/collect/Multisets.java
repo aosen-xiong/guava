@@ -328,7 +328,7 @@ public final class Multisets {
    * @since 14.0
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
-  public static <E extends @Nullable Object> @PolyMutable Multiset<E> filter(
+  public static <E extends @Nullable @Readonly Object> @PolyMutable Multiset<E> filter(
       @PolyMutable Multiset<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredMultiset) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
@@ -435,7 +435,7 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> union(
+  public static <E extends @Nullable @Readonly Object> Multiset<E> union(
       final Multiset<? extends E> multiset1, final Multiset<? extends E> multiset2) {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
@@ -564,7 +564,7 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> sum(
+  public static <E extends @Nullable @Readonly Object> Multiset<E> sum(
       final Multiset<? extends E> multiset1, final Multiset<? extends E> multiset2) {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
@@ -641,7 +641,7 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> difference(
+  public static <E extends @Nullable @Readonly Object> Multiset<E> difference(
       final Multiset<E> multiset1, final Multiset<?> multiset2) {
     checkNotNull(multiset1);
     checkNotNull(multiset2);

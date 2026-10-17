@@ -297,7 +297,7 @@ public final class Iterables {
    * @return a newly-allocated array into which all the elements of the iterable have been copied
    */
   @GwtIncompatible // Array.newInstance(Class, int)
-  public static <T extends @Nullable Object> T[] toArray(
+  public static <T extends @Nullable @Readonly Object> T[] toArray(
       Iterable<? extends T> iterable, Class<@NonNull T> type) {
     return toArray(iterable, ObjectArrays.newArray(type, 0));
   }
@@ -1073,7 +1073,7 @@ public final class Iterables {
    *
    * @since 11.0
    */
-  public static <T extends @Nullable Object> Iterable<T> mergeSorted(
+  public static <T extends @Nullable @Readonly Object> Iterable<T> mergeSorted(
       final Iterable<? extends Iterable<? extends T>> iterables,
       final Comparator<? super T> comparator) {
     checkNotNull(iterables, "iterables");

@@ -87,7 +87,7 @@ public final class Streams {
    * Returns a sequential {@link Stream} of the remaining contents of {@code iterator}. Do not use
    * {@code iterator} directly after passing it to this method.
    */
-  public static <T extends @Nullable Object> Stream<T> stream(Iterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> Stream<T> stream(Iterator<T> iterator) {
     return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
   }
 

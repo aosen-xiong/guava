@@ -50,7 +50,7 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
    */
   MURMUR128_MITZ_32() {
     @Override
-    public <T extends @Nullable Object> boolean put(
+    public <T extends @Nullable @Readonly Object> boolean put(
         @ParametricNullness T object,
         Funnel<? super T> funnel,
         int numHashFunctions,
@@ -73,7 +73,7 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
     }
 
     @Override
-    public <T extends @Nullable Object> boolean mightContain(
+    public <T extends @Nullable @Readonly Object> boolean mightContain(
         @ParametricNullness T object,
         Funnel<? super T> funnel,
         int numHashFunctions,
@@ -104,7 +104,7 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
    */
   MURMUR128_MITZ_64() {
     @Override
-    public <T extends @Nullable Object> boolean put(
+    public <T extends @Nullable @Readonly Object> boolean put(
         @ParametricNullness T object,
         Funnel<? super T> funnel,
         int numHashFunctions,
@@ -126,7 +126,7 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
     }
 
     @Override
-    public <T extends @Nullable Object> boolean mightContain(
+    public <T extends @Nullable @Readonly Object> boolean mightContain(
         @ParametricNullness T object,
         Funnel<? super T> funnel,
         int numHashFunctions,

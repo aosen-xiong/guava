@@ -178,7 +178,7 @@ final class SortedMultisets {
     }
   }
 
-  private static <E extends @Nullable Object> E getElementOrThrow(@CheckForNull Entry<E> entry) {
+  private static <E extends @Nullable @Readonly Object> E getElementOrThrow(@CheckForNull Entry<E> entry) {
     if (entry == null) {
       throw new NoSuchElementException();
     }

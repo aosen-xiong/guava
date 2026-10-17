@@ -45,7 +45,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
  * @since 13.0
  */
 @ElementTypesAreNonnullByDefault
-public final class MutableTypeToInstanceMap<B extends @Nullable Object>
+public final class MutableTypeToInstanceMap<B extends @Nullable @Readonly Object>
     extends ForwardingMap<TypeToken<? extends @NonNull B>, B> implements TypeToInstanceMap<B> {
 
   private final Map<TypeToken<? extends @NonNull B>, B> backingMap = Maps.newHashMap();
@@ -126,12 +126,12 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
     return (T) backingMap.get(type);
   }
 
-  private static final class UnmodifiableEntry<K extends @Immutable Object, V extends @Nullable Object>
+  private static final class UnmodifiableEntry<K extends @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingMapEntry<K, V> {
 
     private final Entry<K, V> delegate;
 
-    static <K extends @Immutable Object, V extends @Nullable Object> Set<Entry<K, V>> transformEntries(
+    static <K extends @Immutable Object, V extends @Nullable @Readonly Object> Set<Entry<K, V>> transformEntries(
         Set<Entry<K, V>> entries) {
       return new @Mutable ForwardingSet<Map.Entry<K, V>>() {
         @Override
@@ -165,7 +165,7 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
       };
     }
 
-    private static <K extends @Immutable Object, V extends @Nullable Object> Iterator<Entry<K, V>> transformEntries(
+    private static <K extends @Immutable Object, V extends @Nullable @Readonly Object> Iterator<Entry<K, V>> transformEntries(
         Iterator<Entry<K, V>> entries) {
       return Iterators.transform(entries, UnmodifiableEntry::new);
     }

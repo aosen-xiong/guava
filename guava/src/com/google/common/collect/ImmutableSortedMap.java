@@ -90,7 +90,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
           @Readonly Comparator<? super K> comparator,
           Function<? super T, ? extends K> keyFunction,
@@ -109,7 +109,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableSortedMap<K, V>> toImmutableSortedMap(
           @Readonly Comparator<? super K> comparator,
           Function<? super T, ? extends K> keyFunction,
@@ -1211,7 +1211,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
    */
   @DoNotCall("Use toImmutableSortedMap")
   @Deprecated
-  public static <T extends @Nullable Object, K extends @Immutable Object, V>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -1228,7 +1228,7 @@ public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { re
    */
   @DoNotCall("Use toImmutableSortedMap")
   @Deprecated
-  public static <T extends @Nullable Object, K extends @Immutable Object, V>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction,

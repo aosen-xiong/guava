@@ -1999,7 +1999,7 @@ final class Synchronized {
   }
 
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
-  static <E extends @Nullable Object> @PolyMutable Queue<E> queue(@PolyMutable Queue<E> queue, @CheckForNull @Readonly Object mutex) {
+  static <E extends @Nullable @Readonly Object> @PolyMutable Queue<E> queue(@PolyMutable Queue<E> queue, @CheckForNull @Readonly Object mutex) {
     return (queue instanceof SynchronizedQueue) ? queue : new @PolyMutable SynchronizedQueue<E>(queue, mutex);
   }
 

@@ -641,7 +641,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return indexBeforeRemove - 1;
   }
 
-  private abstract class Itr<T extends @Nullable Object> implements Iterator<T> {
+  private abstract class Itr<T extends @Nullable @Readonly Object> implements Iterator<T> {
     int expectedMetadata = metadata;
     int currentIndex = firstEntryIndex();
     int indexToRemove = -1;

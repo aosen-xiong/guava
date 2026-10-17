@@ -1147,7 +1147,7 @@ public final class Sets {
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableSet
-  public static <E extends @Nullable Object> @PolyMutable NavigableSet<E> filter(
+  public static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> filter(
       @PolyMutable NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered

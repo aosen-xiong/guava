@@ -1129,7 +1129,7 @@ public final class Multimaps {
    *
    * @since 15.0
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       Map<K, Collection<V>> asMap(Multimap<K, V> multimap) {
     return multimap.asMap();
   }

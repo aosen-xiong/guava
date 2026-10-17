@@ -219,7 +219,7 @@ public final class CharStreams {
    */
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
-  public static <T extends @Nullable Object> T readLines(
+  public static <T extends @Nullable @Readonly Object> T readLines(
       Readable readable, LineProcessor<T> processor) throws IOException {
     checkNotNull(readable);
     checkNotNull(processor);

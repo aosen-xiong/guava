@@ -99,7 +99,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableSetMultimap<K, V>> toImmutableSetMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -146,7 +146,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableSetMultimap<K, V>> flatteningToImmutableSetMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends Stream<? extends V>> valuesFunction) {

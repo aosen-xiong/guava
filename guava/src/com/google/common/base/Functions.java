@@ -94,7 +94,7 @@ public final class Functions {
    */
   // implementation is "fully variant"; E has become a "pass-through" type
   @SuppressWarnings("unchecked")
-  public static <E extends @Nullable Object> Function<E, E> identity() {
+  public static <E extends @Nullable @Readonly Object> Function<E, E> identity() {
     return (Function<E, E>) IdentityFunction.INSTANCE;
   }
 
@@ -128,7 +128,7 @@ public final class Functions {
    * key (instead of an exception being thrown), you can use the method reference {@code map::get}
    * instead.
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object> Function<K, V> forMap(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Function<K, V> forMap(
       Map<K, V> map) {
     return new FunctionForMapNoDefault<>(map);
   }
@@ -146,13 +146,13 @@ public final class Functions {
    * @return function that returns {@code map.get(a)} when {@code a} is a key, or {@code
    *     defaultValue} otherwise
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object> Function<K, V> forMap(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Function<K, V> forMap(
       Map<K, ? extends V> map, @ParametricNullness V defaultValue) {
     return new ForMapWithDefault<>(map, defaultValue);
   }
 
   private static class FunctionForMapNoDefault<
-          K extends @Nullable @Immutable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       implements Function<K, V>, Serializable {
     final Map<K, V> map;
 
@@ -194,7 +194,7 @@ public final class Functions {
     private static final long serialVersionUID = 0;
   }
 
-  private static class ForMapWithDefault<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  private static class ForMapWithDefault<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       implements Function<K, V>, Serializable {
     final Map<K, ? extends V> map;
     @ParametricNullness final V defaultValue;
@@ -252,13 +252,13 @@ public final class Functions {
    * @return the composition of {@code f} and {@code g}
    * @see <a href="//en.wikipedia.org/wiki/Function_composition">function composition</a>
    */
-  public static <A extends @Nullable Object, B extends @Nullable Object, C extends @Nullable @Immutable Object>
+  public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object, C extends @Nullable @Immutable Object>
       Function<A, C> compose(Function<B, C> g, Function<A, ? extends B> f) {
     return new FunctionComposition<>(g, f);
   }
 
   private static class FunctionComposition<
-          A extends @Nullable Object, B extends @Nullable Object, C extends @Nullable @Immutable Object>
+          A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object, C extends @Nullable @Immutable Object>
       implements Function<A, C>, Serializable {
     private final Function<B, C> g;
     private final Function<A, ? extends B> f;
@@ -308,13 +308,13 @@ public final class Functions {
    *
    * <p><b>Java 8+ users:</b> use the method reference {@code predicate::test} instead.
    */
-  public static <T extends @Nullable Object> Function<T, Boolean> forPredicate(
+  public static <T extends @Nullable @Readonly Object> Function<T, Boolean> forPredicate(
       Predicate<T> predicate) {
     return new PredicateFunction<>(predicate);
   }
 
   /** @see Functions#forPredicate */
-  private static class PredicateFunction<T extends @Nullable Object>
+  private static class PredicateFunction<T extends @Nullable @Readonly Object>
       implements Function<T, Boolean>, Serializable {
     private final Predicate<T> predicate;
 
@@ -411,13 +411,13 @@ public final class Functions {
    *
    * @since 10.0
    */
-  public static <F extends @Nullable Object, T extends @Nullable Object> Function<F, T> forSupplier(
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Function<F, T> forSupplier(
       Supplier<T> supplier) {
     return new SupplierFunction<>(supplier);
   }
 
   /** @see Functions#forSupplier */
-  private static class SupplierFunction<F extends @Nullable Object, T extends @Nullable Object>
+  private static class SupplierFunction<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
       implements Function<F, T>, Serializable {
 
     private final Supplier<T> supplier;

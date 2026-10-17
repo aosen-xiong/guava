@@ -38,7 +38,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingListMultimap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+public abstract class ForwardingListMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends ForwardingMultimap<K, V> implements ListMultimap<K, V> {
 
   /** Constructor for use by subclasses. */
