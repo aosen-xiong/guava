@@ -247,7 +247,7 @@ public final class Multimaps {
     }
 
     @Override
-    protected @PolyMutable Collection<V> createCollection(@PolyMutable CustomMultimap<K, V> this) {
+    protected @ReceiverDependentMutable Collection<V> createCollection(@ReceiverDependentMutable CustomMultimap<K, V> this) {
       return factory.get();
     }
 
@@ -368,7 +368,7 @@ public final class Multimaps {
     }
 
     @Override
-    protected @ReceiverDependentMutable List<V> createCollection(@PolyMutable CustomListMultimap<K, V> this) {
+    protected @ReceiverDependentMutable List<V> createCollection(@ReceiverDependentMutable CustomListMultimap<K, V> this) {
       return factory.get();
     }
 
@@ -454,7 +454,7 @@ public final class Multimaps {
     }
 
     @Override
-    protected @PolyMutable Set<V> createCollection(@PolyMutable CustomSetMultimap<K, V> this) {
+    protected @ReceiverDependentMutable Set<V> createCollection(@ReceiverDependentMutable CustomSetMultimap<K, V> this) {
       return factory.get();
     }
 
@@ -566,7 +566,7 @@ public final class Multimaps {
     }
 
     @Override
-    protected @PolyMutable SortedSet<V> createCollection(@PolyMutable CustomSortedSetMultimap<K, V> this) {
+    protected @ReceiverDependentMutable SortedSet<V> createCollection(@ReceiverDependentMutable CustomSortedSetMultimap<K, V> this) {
       return factory.get();
     }
 
@@ -1191,7 +1191,7 @@ public final class Multimaps {
 
     @Override
     public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable MapMultimap<K, V> this, @ParametricNullness final K key) {
-      return new Sets.@PolyMutable ImprovedAbstractSet<V>() {
+      return new Sets.@ReceiverDependentMutable ImprovedAbstractSet<V>() {
         @Override
         public Iterator<V> iterator() {
           return new @Mutable Iterator<V>() {
@@ -1302,7 +1302,7 @@ public final class Multimaps {
     }
 
     @Override
-    Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable MapMultimap<K, V> this) {
+    Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return map.entrySet().iterator();
     }
 
@@ -1801,7 +1801,7 @@ public final class Multimaps {
     }
 
     @Override
-    public Spliterator<K> spliterator(@PolyMutable Keys<K, V> this) {
+    public Spliterator<K> spliterator(@ReceiverDependentMutable Keys<K, V> this) {
       return CollectSpliterators.map(multimap.entries().spliterator(), Map.Entry::getKey);
     }
 
@@ -1827,7 +1827,7 @@ public final class Multimaps {
     }
 
     @Override
-    public Iterator<K> iterator(@PolyMutable Keys<K, V> this) {
+    public Iterator<K> iterator(@ReceiverDependentMutable Keys<K, V> this) {
       return Maps.keyIterator(multimap.entries().iterator());
     }
 
@@ -1943,7 +1943,7 @@ public final class Multimaps {
     @CFComment("PICO: outer receiver dependency")
     class EntrySet extends Maps.EntrySet<K, @Readonly Collection<V>> {
       @Override
-      @PolyMutable Map<K, @PolyMutable Collection<V>> map(@PolyMutable AsMap<K, V>.@Readonly EntrySet this) {
+      @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map(@ReceiverDependentMutable AsMap<K, V>.@Readonly EntrySet this) {
         return AsMap.this;
       }
 
@@ -1967,7 +1967,7 @@ public final class Multimaps {
     @SuppressWarnings("unchecked")
     @Override
     @CheckForNull
-    public @PolyMutable Collection<V> get(@PolyMutable AsMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
+    public @ReceiverDependentMutable Collection<V> get(@ReceiverDependentMutable AsMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       return containsKey(key) ? multimap.get((K) key) : null;
     }
 

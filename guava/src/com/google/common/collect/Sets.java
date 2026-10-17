@@ -1195,7 +1195,7 @@ public final class Sets {
     @Override
     public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
       return new @ReceiverDependentMutable FilteredSortedSet<E>(
-          ((@PolyMutable SortedSet<E>) unfiltered).subSet(fromElement, toElement), predicate);
+          ((@ReceiverDependentMutable SortedSet<E>) unfiltered).subSet(fromElement, toElement), predicate);
     }
 
     @Override
@@ -1236,7 +1236,7 @@ public final class Sets {
       super(unfiltered, predicate);
     }
 
-    @PolyMutable NavigableSet<E> unfiltered(@PolyMutable FilteredNavigableSet<E> this) {
+    @ReceiverDependentMutable NavigableSet<E> unfiltered(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
       return (NavigableSet<E>) unfiltered;
     }
 

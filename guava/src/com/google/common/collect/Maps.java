@@ -3286,17 +3286,17 @@ public final class Maps {
       super(unfiltered, entryPredicate);
     }
 
-      @PolyMutable SortedMap<K, V> sortedMap(@PolyMutable FilteredEntrySortedMap<K, V> this) {
-      return (@PolyMutable SortedMap<K, V>) unfiltered;
+      @ReceiverDependentMutable SortedMap<K, V> sortedMap(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this) {
+      return (@ReceiverDependentMutable SortedMap<K, V>) unfiltered;
     }
 
     @Override
     public @ReceiverDependentMutable SortedSet<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this) {
-      return (@PolyMutable SortedSet<K>) super.keySet();
+      return (@ReceiverDependentMutable SortedSet<K>) super.keySet();
     }
 
     @Override
-    @PolyMutable SortedSet<K> createKeySet(@PolyMutable FilteredEntrySortedMap<K, V> this) {
+    @ReceiverDependentMutable SortedSet<K> createKeySet(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this) {
       return new SortedKeySet();
     }
 
@@ -3313,17 +3313,17 @@ public final class Maps {
       public @ReceiverDependentMutable SortedSet<K> subSet(
               @ReceiverDependentMutable SortedKeySet this,
           @ParametricNullness K fromElement, @ParametricNullness K toElement) {
-        return (@PolyMutable SortedSet<K>) subMap(fromElement, toElement).keySet();
+        return (@ReceiverDependentMutable SortedSet<K>) subMap(fromElement, toElement).keySet();
       }
 
       @Override
       public @ReceiverDependentMutable SortedSet<K> headSet(@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K toElement) {
-        return (@PolyMutable SortedSet<K>) headMap(toElement).keySet();
+        return (@ReceiverDependentMutable SortedSet<K>) headMap(toElement).keySet();
       }
 
       @Override
       public @ReceiverDependentMutable SortedSet<K> tailSet(@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K fromElement) {
-        return (@PolyMutable SortedSet<K>) tailMap(fromElement).keySet();
+        return (@ReceiverDependentMutable SortedSet<K>) tailMap(fromElement).keySet();
       }
 
       @Override
@@ -3432,12 +3432,12 @@ public final class Maps {
     }
 
     @Override
-    @Readonly Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable FilteredEntryNavigableMap<K, V> this) {
+    @Readonly Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return Iterators.filter(unfiltered.entrySet().iterator(), entryPredicate);
     }
 
     @Override
-    @Readonly Iterator<@PolyMutable Entry<K, V>> descendingEntryIterator(@PolyMutable FilteredEntryNavigableMap<K, V> this) {
+    @Readonly Iterator<@ReceiverDependentMutable Entry<K, V>> descendingEntryIterator(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return Iterators.filter(unfiltered.descendingMap().entrySet().iterator(), entryPredicate);
     }
 
@@ -3485,7 +3485,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable FilteredEntryNavigableMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return filteredDelegate.entrySet();
     }
 
@@ -3556,8 +3556,8 @@ public final class Maps {
       this.inverse = inverse;
     }
 
-    @PolyMutable BiMap<K, V> unfiltered(@PolyMutable FilteredEntryBiMap<K, V> this) {
-      return (@PolyMutable BiMap<K, V>) unfiltered;
+    @ReceiverDependentMutable BiMap<K, V> unfiltered(@ReceiverDependentMutable FilteredEntryBiMap<K, V> this) {
+      return (@ReceiverDependentMutable BiMap<K, V>) unfiltered;
     }
 
     @Override
@@ -4240,8 +4240,8 @@ public final class Maps {
     }
 
     @Override
-    @PolyMutable NavigableMap<K, V> map(@PolyMutable NavigableKeySet<K, V> this) {
-      return (@PolyMutable NavigableMap<K, V>) map;
+    @ReceiverDependentMutable NavigableMap<K, V> map(@ReceiverDependentMutable NavigableKeySet<K, V> this) {
+      return (@ReceiverDependentMutable NavigableMap<K, V>) map;
     }
 
     @Override
