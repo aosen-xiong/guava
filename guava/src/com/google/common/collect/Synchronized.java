@@ -134,9 +134,10 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  private static <E extends @Nullable @Readonly Object> Collection<E> collection(
-          Collection<E> collection, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedCollection<E>(collection, mutex);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable Collection<E> collection(
+          @PolyMutable Collection<E> collection, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedCollection<E>(collection, mutex);
   }
 
   @VisibleForTesting
@@ -286,6 +287,7 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @VisibleForTesting
   static <E extends @Nullable @Readonly Object> @PolyMutable Set<E> set(@PolyMutable Set<E> set, @CheckForNull @Readonly Object mutex) {
     return new @PolyMutable SynchronizedSet<E>(set, mutex);
@@ -326,9 +328,10 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  private static <E extends @Nullable @Readonly Object> SortedSet<E> sortedSet(
-      SortedSet<E> set, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedSortedSet<E>(set, mutex);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable SortedSet<E> sortedSet(
+      @PolyMutable SortedSet<E> set, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedSortedSet<E>(set, mutex);
   }
 
   @ReceiverDependentMutable
@@ -395,11 +398,12 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  private static <E extends @Nullable @Readonly Object> List<E> list(
-      List<E> list, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable List<E> list(
+      @PolyMutable List<E> list, @CheckForNull @Readonly Object mutex) {
     return (list instanceof RandomAccess)
-        ? new SynchronizedRandomAccessList<E>(list, mutex)
-        : new SynchronizedList<E>(list, mutex);
+        ? new @PolyMutable SynchronizedRandomAccessList<E>(list, mutex)
+        : new @PolyMutable SynchronizedList<E>(list, mutex);
   }
 
   @ReceiverDependentMutable
@@ -529,12 +533,13 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <E extends @Nullable @Readonly Object> Multiset<E> multiset(
-      Multiset<E> multiset, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <E extends @Nullable @Readonly Object> @PolyMutable Multiset<E> multiset(
+      @PolyMutable Multiset<E> multiset, @CheckForNull @Readonly Object mutex) {
     if (multiset instanceof SynchronizedMultiset || multiset instanceof ImmutableMultiset) {
       return multiset;
     }
-    return new SynchronizedMultiset<E>(multiset, mutex);
+    return new @PolyMutable SynchronizedMultiset<E>(multiset, mutex);
   }
 
   @ReceiverDependentMutable
@@ -631,12 +636,13 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Multimap<K, V> multimap(
-      Multimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Multimap<K, V> multimap(
+      @PolyMutable Multimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
     if (multimap instanceof SynchronizedMultimap || multimap instanceof BaseImmutableMultimap) {
       return multimap;
     }
-    return new SynchronizedMultimap<>(multimap, mutex);
+    return new @PolyMutable SynchronizedMultimap<>(multimap, mutex);
   }
 
   @ReceiverDependentMutable
@@ -699,7 +705,7 @@ final class Synchronized {
     }
 
     @Override
-    public Collection<V> get(@ParametricNullness K key) {
+    public @ReceiverDependentMutable Collection<V> get(@ParametricNullness K key) {
       synchronized (mutex) {
         return typePreservingCollection(delegate().get(key), mutex);
       }
@@ -836,12 +842,13 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> ListMultimap<K, V> listMultimap(
-      ListMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable ListMultimap<K, V> listMultimap(
+      @PolyMutable ListMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
     if (multimap instanceof SynchronizedListMultimap || multimap instanceof BaseImmutableMultimap) {
       return multimap;
     }
-    return new SynchronizedListMultimap<>(multimap, mutex);
+    return new @PolyMutable SynchronizedListMultimap<>(multimap, mutex);
   }
 
   @ReceiverDependentMutable
@@ -881,12 +888,13 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> SetMultimap<K, V> setMultimap(
-      SetMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable SetMultimap<K, V> setMultimap(
+      @PolyMutable SetMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
     if (multimap instanceof SynchronizedSetMultimap || multimap instanceof BaseImmutableMultimap) {
       return multimap;
     }
-    return new SynchronizedSetMultimap<>(multimap, mutex);
+    return new @PolyMutable SynchronizedSetMultimap<>(multimap, mutex);
   }
 
   @ReceiverDependentMutable
@@ -938,13 +946,14 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SortedSetMultimap<K, V> sortedSetMultimap(
-          SortedSetMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
+      @PolyMutable SortedSetMultimap<K, V> sortedSetMultimap(
+          @PolyMutable SortedSetMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
     if (multimap instanceof SynchronizedSortedSetMultimap) {
       return multimap;
     }
-    return new SynchronizedSortedSetMultimap<>(multimap, mutex);
+    return new @PolyMutable SynchronizedSortedSetMultimap<>(multimap, mutex);
   }
 
   @ReceiverDependentMutable
@@ -992,8 +1001,9 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  private static <E extends @Nullable @Readonly Object> Collection<E> typePreservingCollection(
-      Collection<E> collection, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable Collection<E> typePreservingCollection(
+      @PolyMutable Collection<E> collection, @CheckForNull @Readonly Object mutex) {
     if (collection instanceof SortedSet) {
       return sortedSet((SortedSet<E>) collection, mutex);
     }
@@ -1006,8 +1016,9 @@ final class Synchronized {
     return collection(collection, mutex);
   }
 
-  private static <E extends @Nullable @Readonly Object> Set<E> typePreservingSet(
-      Set<E> set, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable Set<E> typePreservingSet(
+      @PolyMutable Set<E> set, @CheckForNull @Readonly Object mutex) {
     if (set instanceof SortedSet) {
       return sortedSet((SortedSet<E>) set, mutex);
     } else {
@@ -1119,10 +1130,11 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @VisibleForTesting
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> map(
-      Map<K, V> map, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedMap<>(map, mutex);
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> map(
+      @PolyMutable Map<K, V> map, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedMap<>(map, mutex);
   }
 
   @ReceiverDependentMutable
@@ -1356,9 +1368,10 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <K extends @Nullable @Immutable Object, V extends @Nullable  @Readonly Object> SortedMap<K, V> sortedMap(
-      SortedMap<K, V> sortedMap, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedSortedMap<>(sortedMap, mutex);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <K extends @Nullable @Immutable Object, V extends @Nullable  @Readonly Object> @PolyMutable SortedMap<K, V> sortedMap(
+      @PolyMutable SortedMap<K, V> sortedMap, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedSortedMap<>(sortedMap, mutex);
   }
 
   @ReceiverDependentMutable
@@ -1420,12 +1433,13 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> BiMap<K, V> biMap(
-      BiMap<K, V> bimap, @CheckForNull @Readonly Object mutex) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable BiMap<K, V> biMap(
+      @PolyMutable BiMap<K, V> bimap, @CheckForNull @Readonly Object mutex) {
     if (bimap instanceof SynchronizedBiMap || bimap instanceof ImmutableBiMap) {
       return bimap;
     }
-    return new SynchronizedBiMap<>(bimap, mutex, null);
+    return new @PolyMutable SynchronizedBiMap<>(bimap, mutex, null);
   }
 
   @ReceiverDependentMutable
@@ -1628,7 +1642,7 @@ final class Synchronized {
     }
 
     @Override
-    public NavigableSet<E> headSet(E toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> headSet(E toElement, boolean inclusive) {
       synchronized (mutex) {
         return Synchronized.navigableSet(delegate().headSet(toElement, inclusive), mutex);
       }
@@ -1672,7 +1686,7 @@ final class Synchronized {
     }
 
     @Override
-    public NavigableSet<E> subSet(
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
         E fromElement, boolean fromInclusive, E toElement, boolean toInclusive) {
       synchronized (mutex) {
         return Synchronized.navigableSet(
@@ -1686,7 +1700,7 @@ final class Synchronized {
     }
 
     @Override
-    public NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(E fromElement, boolean inclusive) {
       synchronized (mutex) {
         return Synchronized.navigableSet(delegate().tailSet(fromElement, inclusive), mutex);
       }
@@ -1700,27 +1714,31 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableSet
-  static <E extends @Nullable @Readonly Object> NavigableSet<E> navigableSet(
-      NavigableSet<E> navigableSet, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedNavigableSet<E>(navigableSet, mutex);
+  static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> navigableSet(
+      @PolyMutable NavigableSet<E> navigableSet, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedNavigableSet<E>(navigableSet, mutex);
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableSet
-  static <E extends @Nullable @Readonly Object> NavigableSet<E> navigableSet(NavigableSet<E> navigableSet) {
+  static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> navigableSet(@PolyMutable NavigableSet<E> navigableSet) {
     return navigableSet(navigableSet, null);
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> NavigableMap<K, V> navigableMap(
-      NavigableMap<K, V> navigableMap) {
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable NavigableMap<K, V> navigableMap(
+      @PolyMutable NavigableMap<K, V> navigableMap) {
     return navigableMap(navigableMap, null);
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> NavigableMap<K, V> navigableMap(
-      NavigableMap<K, V> navigableMap, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedNavigableMap<>(navigableMap, mutex);
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable NavigableMap<K, V> navigableMap(
+      @PolyMutable NavigableMap<K, V> navigableMap, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedNavigableMap<>(navigableMap, mutex);
   }
 
   @GwtIncompatible // NavigableMap
@@ -1770,7 +1788,7 @@ final class Synchronized {
     @CheckForNull transient NavigableMap<K, V> descendingMap;
 
     @Override
-    public NavigableMap<K, V> descendingMap() {
+    public @ReceiverDependentMutable NavigableMap<K, V> descendingMap() {
       synchronized (mutex) {
         if (descendingMap == null) {
           return descendingMap = navigableMap(delegate().descendingMap(), mutex);
@@ -1980,8 +1998,9 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <E extends @Nullable Object> Queue<E> queue(Queue<E> queue, @CheckForNull @Readonly Object mutex) {
-    return (queue instanceof SynchronizedQueue) ? queue : new SynchronizedQueue<E>(queue, mutex);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <E extends @Nullable Object> @PolyMutable Queue<E> queue(@PolyMutable Queue<E> queue, @CheckForNull @Readonly Object mutex) {
+    return (queue instanceof SynchronizedQueue) ? queue : new @PolyMutable SynchronizedQueue<E>(queue, mutex);
   }
 
   @ReceiverDependentMutable
@@ -2037,8 +2056,9 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static <E extends @Nullable @Readonly Object> Deque<E> deque(Deque<E> deque, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedDeque<E>(deque, mutex);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
+  static <E extends @Nullable @Readonly Object> @PolyMutable Deque<E> deque(@PolyMutable Deque<E> deque, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedDeque<E>(deque, mutex);
   }
 
   @ReceiverDependentMutable
@@ -2180,9 +2200,10 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Table<R, C, V> table(Table<R, C, V> table, @CheckForNull @Readonly Object mutex) {
-    return new SynchronizedTable<>(table, mutex);
+      @PolyMutable Table<R, C, V> table(@PolyMutable Table<R, C, V> table, @CheckForNull @Readonly Object mutex) {
+    return new @PolyMutable SynchronizedTable<>(table, mutex);
   }
 
   @ReceiverDependentMutable
@@ -2284,14 +2305,14 @@ final class Synchronized {
     }
 
     @Override
-    public Map<C, V> row(@ParametricNullness R rowKey) {
+    public @ReceiverDependentMutable Map<C, V> row(@ParametricNullness R rowKey) {
       synchronized (mutex) {
         return map(delegate().row(rowKey), mutex);
       }
     }
 
     @Override
-    public Map<R, V> column(@ParametricNullness C columnKey) {
+    public @ReceiverDependentMutable Map<R, V> column(@ParametricNullness C columnKey) {
       synchronized (mutex) {
         return map(delegate().column(columnKey), mutex);
       }
