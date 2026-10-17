@@ -824,7 +824,7 @@ public final class Maps {
    * @since 14.0
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> asMap(
-          @PolyMutable Set<K> set, Function<? super K, V> function) {
+          @PolyMutable Set<K> set, @Readonly Function<? super K, V> function) {
     return new @PolyMutable AsMapView<>(set, function);
   }
 
@@ -852,7 +852,7 @@ public final class Maps {
    * @since 14.0
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable SortedMap<K, V> asMap(
-      @PolyMutable SortedSet<K> set, Function<? super K, V> function) {
+      @PolyMutable SortedSet<K> set, @Readonly Function<? super K, V> function) {
     return new @PolyMutable SortedAsMapView<>(set, function);
   }
 
@@ -881,7 +881,7 @@ public final class Maps {
    */
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable NavigableMap<K, V> asMap(
-      @PolyMutable NavigableSet<K> set, Function<? super K, V> function) {
+      @PolyMutable NavigableSet<K> set, @Readonly Function<? super K, V> function) {
     return new @PolyMutable NavigableAsMapView<>(set, function);
   }
 
@@ -890,13 +890,13 @@ public final class Maps {
       extends ViewCachingAbstractMap<K, V> {
 
     private final Set<K> set;
-    final Function<? super K, V> function;
+    final @Readonly Function<? super K, V> function;
 
     @PolyMutable Set<K> backingSet(@PolyMutable AsMapView<K, V> this) {
       return set;
     }
 
-    AsMapView(@ReceiverDependentMutable Set<K> set, Function<? super K, V> function) {
+    AsMapView(@ReceiverDependentMutable Set<K> set, @Readonly Function<? super K, V> function) {
       this.set = checkNotNull(set);
       this.function = checkNotNull(function);
     }
@@ -982,7 +982,7 @@ public final class Maps {
   }
 
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Iterator<@PolyMutable Entry<K, V>> asMapEntryIterator(@PolyMutable Set<K> set, final Function<? super K, V> function) {
+      Iterator<@PolyMutable Entry<K, V>> asMapEntryIterator(@PolyMutable Set<K> set, final @Readonly Function<? super K, V> function) {
     return new TransformedIterator<K, @PolyMutable Entry<K, V>>(set.iterator()) {
       @Override
       Entry<K, V> transform(@ParametricNullness final K key) {
@@ -995,7 +995,7 @@ public final class Maps {
   private static class SortedAsMapView<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends AsMapView<K, V> implements SortedMap<K, V> {
 
-    SortedAsMapView(@ReceiverDependentMutable SortedSet<K> set, Function<? super K, V> function) {
+    SortedAsMapView(@ReceiverDependentMutable SortedSet<K> set, @Readonly Function<? super K, V> function) {
       super(set, function);
     }
 
@@ -1056,7 +1056,7 @@ public final class Maps {
     private final NavigableSet<K> set;
     private final Function<? super K, V> function;
 
-    NavigableAsMapView(@ReceiverDependentMutable NavigableSet<K> ks, Function<? super K, V> vFunction) {
+    NavigableAsMapView(@ReceiverDependentMutable NavigableSet<K> ks, @Readonly Function<? super K, V> vFunction) {
       this.set = checkNotNull(ks);
       this.function = checkNotNull(vFunction);
     }
@@ -1860,7 +1860,7 @@ public final class Maps {
    */
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      @PolyMutable Map<K, V2> transformValues(@PolyMutable Map<K, V1> fromMap, Function<? super V1, V2> function) {
+      @PolyMutable Map<K, V2> transformValues(@PolyMutable Map<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
     return transformEntries(fromMap, asEntryTransformer(function));
   }
 
@@ -1903,7 +1903,7 @@ public final class Maps {
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       SortedMap<K, V2> transformValues(
-          SortedMap<K, V1> fromMap, Function<? super V1, V2> function) {
+          SortedMap<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
     return transformEntries(fromMap, asEntryTransformer(function));
   }
 
@@ -1949,7 +1949,7 @@ public final class Maps {
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       NavigableMap<K, V2> transformValues(
-          NavigableMap<K, V1> fromMap, Function<? super V1, V2> function) {
+          NavigableMap<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
     return transformEntries(fromMap, asEntryTransformer(function));
   }
 
@@ -2003,7 +2003,7 @@ public final class Maps {
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
     @PolyMutable Map<K, V2> transformEntries(
-          @PolyMutable Map<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
+          @PolyMutable Map<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
     return new @PolyMutable TransformedEntriesMap<>(fromMap, transformer);
   }
 
@@ -2057,7 +2057,7 @@ public final class Maps {
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       SortedMap<K, V2> transformEntries(
-          SortedMap<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
+          SortedMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
     return new TransformedEntriesSortedMap<>(fromMap, transformer);
   }
 
@@ -2113,7 +2113,7 @@ public final class Maps {
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       NavigableMap<K, V2> transformEntries(
-          NavigableMap<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
+          NavigableMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
     return new TransformedEntriesNavigableMap<>(fromMap, transformer);
   }
 
@@ -2150,7 +2150,7 @@ public final class Maps {
 
   /** Views a function as an entry transformer that ignores the entry key. */
   static <K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      EntryTransformer<K, V1, V2> asEntryTransformer(final Function<? super V1, V2> function) {
+      EntryTransformer<K, V1, V2> asEntryTransformer(final @Readonly Function<? super V1, V2> function) {
     checkNotNull(function);
     return new EntryTransformer<K, V1, V2>() {
       @Override
@@ -2163,7 +2163,7 @@ public final class Maps {
 
   static <K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       Function<V1, V2> asValueToValueFunction(
-          final EntryTransformer<? super K, V1, V2> transformer, @ParametricNullness final K key) {
+          final @Readonly EntryTransformer<? super K, V1, V2> transformer, @ParametricNullness final K key) {
     checkNotNull(transformer);
     return new Function<V1, V2>() {
       @Override
@@ -2191,7 +2191,7 @@ public final class Maps {
   /** Returns a view of an entry transformed by the specified transformer. */
   static <V2 extends @Nullable @Readonly Object, K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object>
       Entry<K, V2> transformEntry(
-          final EntryTransformer<? super K, ? super V1, V2> transformer, final Entry<K, V1> entry) {
+          final @Readonly EntryTransformer<? super K, ? super V1, V2> transformer, final Entry<K, V1> entry) {
     checkNotNull(transformer);
     checkNotNull(entry);
     return new @Mutable AbstractMapEntry<K, V2>() {
@@ -2227,10 +2227,10 @@ public final class Maps {
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       extends IteratorBasedAbstractMap<K, V2> {
     final Map<K, V1> fromMap;
-    final EntryTransformer<? super K, ? super V1, V2> transformer;
+    final @Readonly EntryTransformer<? super K, ? super V1, V2> transformer;
 
     TransformedEntriesMap(
-            @ReceiverDependentMutable Map<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
+            @ReceiverDependentMutable Map<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
       this.fromMap = checkNotNull(fromMap);
       this.transformer = checkNotNull(transformer);
     }
@@ -2320,7 +2320,7 @@ public final class Maps {
     }
 
     TransformedEntriesSortedMap(
-            @ReceiverDependentMutable SortedMap<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
+            @ReceiverDependentMutable SortedMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
       super(fromMap, transformer);
     }
 
@@ -2365,7 +2365,7 @@ public final class Maps {
       extends TransformedEntriesSortedMap<K, V1, V2> implements NavigableMap<K, V2> {
 
     TransformedEntriesNavigableMap(
-            @ReceiverDependentMutable NavigableMap<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
+            @ReceiverDependentMutable NavigableMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
       super(fromMap, transformer);
     }
 
@@ -2504,7 +2504,7 @@ public final class Maps {
   }
 
   static <K extends @Nullable @Immutable Object> Predicate<@Readonly Entry<K, ?>> keyPredicateOnEntries(
-      Predicate<? super K> keyPredicate) {
+      @Readonly Predicate<? super K> keyPredicate) {
     return compose(keyPredicate, Maps.<K>keyFunction());
   }
 
@@ -2537,9 +2537,9 @@ public final class Maps {
    * Predicates.instanceOf(ArrayList.class)}, which is inconsistent with equals.
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterKeys(
-      Map<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+      Map<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     checkNotNull(keyPredicate);
-    Predicate<@Readonly Entry<K, ?>> entryPredicate = keyPredicateOnEntries(keyPredicate);
+    @Readonly Predicate<@Readonly Entry<K, ?>> entryPredicate = keyPredicateOnEntries(keyPredicate);
     return (unfiltered instanceof AbstractFilteredMap)
         ? filterFiltered((AbstractFilteredMap<K, V>) unfiltered, entryPredicate)
         : new FilteredKeyMap<K, V>(checkNotNull(unfiltered), keyPredicate, entryPredicate);
@@ -2572,7 +2572,7 @@ public final class Maps {
    * @since 11.0
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> SortedMap<K, V> filterKeys(
-      SortedMap<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+      SortedMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     // TODO(lowasser): Return a subclass of Maps.FilteredKeyMap for slightly better
     // performance.
     return filterEntries(unfiltered, Maps.<K>keyPredicateOnEntries(keyPredicate));
@@ -2607,7 +2607,7 @@ public final class Maps {
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       NavigableMap<K, V> filterKeys(
-          NavigableMap<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+          NavigableMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     // TODO(lowasser): Return a subclass of Maps.FilteredKeyMap for slightly better
     // performance.
     return filterEntries(unfiltered, Maps.<K>keyPredicateOnEntries(keyPredicate));
@@ -2638,7 +2638,7 @@ public final class Maps {
    * @since 14.0
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> BiMap<K, V> filterKeys(
-      BiMap<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+      BiMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     checkNotNull(keyPredicate);
     return filterEntries(unfiltered, Maps.<K>keyPredicateOnEntries(keyPredicate));
   }
@@ -2793,7 +2793,7 @@ public final class Maps {
    * at {@link Predicate#apply}.
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterEntries(
-      Map<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
+      Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     return (unfiltered instanceof AbstractFilteredMap)
         ? filterFiltered((AbstractFilteredMap<K, V>) unfiltered, entryPredicate)
@@ -2828,7 +2828,7 @@ public final class Maps {
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       SortedMap<K, V> filterEntries(
-          SortedMap<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
+          SortedMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     return (unfiltered instanceof FilteredEntrySortedMap)
         ? filterFiltered((FilteredEntrySortedMap<K, V>) unfiltered, entryPredicate)
@@ -2864,7 +2864,7 @@ public final class Maps {
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       NavigableMap<K, V> filterEntries(
-          NavigableMap<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
+          NavigableMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     return (unfiltered instanceof FilteredEntryNavigableMap)
         ? filterFiltered((FilteredEntryNavigableMap<K, V>) unfiltered, entryPredicate)
@@ -2899,7 +2899,7 @@ public final class Maps {
    * @since 14.0
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> BiMap<K, V> filterEntries(
-      BiMap<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
+      BiMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(unfiltered);
     checkNotNull(entryPredicate);
     return (unfiltered instanceof FilteredEntryBiMap)
@@ -2912,7 +2912,7 @@ public final class Maps {
    * map.
    */
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterFiltered(
-      AbstractFilteredMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
+      AbstractFilteredMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     return new FilteredEntryMap<>(
         map.unfiltered, Predicates.<Entry<K, V>>and(map.predicate, entryPredicate));
   }
@@ -2923,8 +2923,8 @@ public final class Maps {
    */
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       SortedMap<K, V> filterFiltered(
-          FilteredEntrySortedMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
-    Predicate<Entry<K, V>> predicate = Predicates.<Entry<K, V>>and(map.predicate, entryPredicate);
+          FilteredEntrySortedMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+    @Readonly Predicate<Entry<K, V>> predicate = Predicates.<Entry<K, V>>and(map.predicate, entryPredicate);
     return new FilteredEntrySortedMap<>(map.sortedMap(), predicate);
   }
 
@@ -2935,7 +2935,7 @@ public final class Maps {
   @GwtIncompatible // NavigableMap
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       NavigableMap<K, V> filterFiltered(
-          FilteredEntryNavigableMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
+          FilteredEntryNavigableMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate =
         Predicates.<Entry<K, V>>and(map.entryPredicate, entryPredicate);
     return new FilteredEntryNavigableMap<>(map.unfiltered, predicate);
@@ -2947,7 +2947,7 @@ public final class Maps {
    */
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       BiMap<K, V> filterFiltered(
-          FilteredEntryBiMap<K, V> map, Predicate<? super Entry<K, V>> entryPredicate) {
+          FilteredEntryBiMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate = Predicates.<Entry<K, V>>and(map.predicate, entryPredicate);
     return new FilteredEntryBiMap<>(map.unfiltered(), predicate);
   }
@@ -2959,7 +2959,7 @@ public final class Maps {
     final Map<K, V> unfiltered;
     final Predicate<? super Entry<K, V>> predicate;
 
-    AbstractFilteredMap(@ReceiverDependentMutable Map<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+    AbstractFilteredMap(@ReceiverDependentMutable Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
       this.unfiltered = unfiltered;
       this.predicate = predicate;
     }
@@ -3026,7 +3026,7 @@ public final class Maps {
       final Predicate<? super Entry<K, V>> predicate;
 
       FilteredMapValues(
-              @ReceiverDependentMutable Map<K, V> filteredMap, Map<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+              @ReceiverDependentMutable Map<K, V> filteredMap, Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
           super(filteredMap);
           this.unfiltered = unfiltered;
           this.predicate = predicate;
@@ -3089,11 +3089,11 @@ public final class Maps {
   @ReceiverDependentMutable
   private static class FilteredKeyMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends AbstractFilteredMap<K, V> {
-    final Predicate<? super K> keyPredicate;
+    final @Readonly Predicate<? super K> keyPredicate;
 
     FilteredKeyMap(
             @ReceiverDependentMutable Map<K, V> unfiltered,
-        Predicate<? super K> keyPredicate,
+        @Readonly Predicate<? super K> keyPredicate,
         Predicate<? super Entry<K, V>> entryPredicate) {
       super(unfiltered, entryPredicate);
       this.keyPredicate = keyPredicate;
@@ -3128,7 +3128,7 @@ public final class Maps {
      */
     final Set<@ReceiverDependentMutable Entry<K, V>> filteredEntrySet;
 
-    FilteredEntryMap(@ReceiverDependentMutable Map<K, V> unfiltered, Predicate<? super @ReceiverDependentMutable Entry<K, V>> entryPredicate) {
+    FilteredEntryMap(@ReceiverDependentMutable Map<K, V> unfiltered, @Readonly Predicate<? super @ReceiverDependentMutable Entry<K, V>> entryPredicate) {
       super(unfiltered, entryPredicate);
       filteredEntrySet = Sets.filter(unfiltered.entrySet(), predicate);
     }
@@ -3253,7 +3253,7 @@ public final class Maps {
       extends FilteredEntryMap<K, V> implements SortedMap<K, V> {
 
     FilteredEntrySortedMap(
-            @ReceiverDependentMutable SortedMap<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
+            @ReceiverDependentMutable SortedMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
       super(unfiltered, entryPredicate);
     }
 
@@ -3370,7 +3370,7 @@ public final class Maps {
     private final Map<K, V> filteredDelegate;
 
     FilteredEntryNavigableMap(
-            @ReceiverDependentMutable NavigableMap<K, V> unfiltered, Predicate<? super @ReceiverDependentMutable Entry<K, V>> entryPredicate) {
+            @ReceiverDependentMutable NavigableMap<K, V> unfiltered, @Readonly Predicate<? super @ReceiverDependentMutable Entry<K, V>> entryPredicate) {
       this.unfiltered = checkNotNull(unfiltered);
       this.entryPredicate = entryPredicate;
       this.filteredDelegate = new FilteredEntryMap<>(unfiltered, entryPredicate);
@@ -3506,7 +3506,7 @@ public final class Maps {
 
     private static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
         Predicate<Entry<V, K>> inversePredicate(
-            final Predicate<? super Entry<K, V>> forwardPredicate) {
+            final @Readonly Predicate<? super Entry<K, V>> forwardPredicate) {
       return new Predicate<Entry<V, K>>() {
         @Override
         public boolean apply(Entry<V, K> input) {
@@ -3515,14 +3515,14 @@ public final class Maps {
       };
     }
 
-    FilteredEntryBiMap(@ReceiverDependentMutable BiMap<K, V> delegate, Predicate<? super @ReceiverDependentMutable Entry<K, V>> predicate) {
+    FilteredEntryBiMap(@ReceiverDependentMutable BiMap<K, V> delegate, @Readonly Predicate<? super @ReceiverDependentMutable Entry<K, V>> predicate) {
       super(delegate, predicate);
       this.inverse =
           new @ReceiverDependentMutable FilteredEntryBiMap<>(delegate.inverse(), inversePredicate(predicate), this);
     }
 
     private FilteredEntryBiMap(
-            @ReceiverDependentMutable BiMap<K, V> delegate, Predicate<? super @ReceiverDependentMutable Entry<K, V>> predicate, @ReceiverDependentMutable BiMap<V, K> inverse) {
+            @ReceiverDependentMutable BiMap<K, V> delegate, @Readonly Predicate<? super @ReceiverDependentMutable Entry<K, V>> predicate, @ReceiverDependentMutable BiMap<V, K> inverse) {
       super(delegate, predicate);
       this.inverse = inverse;
     }
