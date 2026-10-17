@@ -313,8 +313,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    * Generates a decorated collection that remains consistent with the values in the multimap for
    * the provided key. Changes to the multimap may alter the returned collection, and vice versa.
    */
-  @PolyMutable Collection<V> wrapCollection(@PolyMutable AbstractMapBasedMultimap<K, V> this, @ParametricNullness K key, @PolyMutable Collection<V> collection) {
-    return new @PolyMutable WrappedCollection(key, collection, null);
+  @ReceiverDependentMutable Collection<V> wrapCollection(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this, @ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
+    return new @ReceiverDependentMutable WrappedCollection(key, collection, null);
   }
 
   final @PolyMutable List<V> wrapList(
