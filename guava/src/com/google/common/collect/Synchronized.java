@@ -1908,8 +1908,8 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<K, V> subMap(
-        @ReceiverDependentMutable SynchronizedNavigableMap<K, V> this, K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> subMap(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this,
+        K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
       synchronized (mutex) {
         return navigableMap(delegate().subMap(fromKey, fromInclusive, toKey, toInclusive), mutex);
       }

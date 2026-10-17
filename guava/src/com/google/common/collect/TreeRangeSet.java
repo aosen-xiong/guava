@@ -324,8 +324,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(
-        @ReceiverDependentMutable RangesByUpperBound<C> this, Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable RangesByUpperBound<C> this,
+        Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
       return subMap(
           Range.range(
               fromKey, BoundType.forBoolean(fromInclusive),
@@ -496,8 +496,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(
-        @ReceiverDependentMutable ComplementRangesByLowerBound<C> this, Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable ComplementRangesByLowerBound<C> this,
+        Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
       return subMap(
           Range.range(
               fromKey, BoundType.forBoolean(fromInclusive),
@@ -733,8 +733,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(
-        @ReceiverDependentMutable SubRangeSetRangesByLowerBound<C> this, Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable SubRangeSetRangesByLowerBound<C> this,
+        Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
       return subMap(
           Range.range(
               fromKey,
