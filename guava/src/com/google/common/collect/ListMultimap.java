@@ -59,7 +59,7 @@ public interface ListMultimap<K extends @Nullable @Immutable Object, V extends @
    * the {@link Multimap} interface.
    */
   @Override
-  @ReceiverDependentMutable List<V> get(@Readonly ListMultimap<K,V> this, @ParametricNullness K key);
+  @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable ListMultimap<K,V> this, @ParametricNullness K key);
 
   /**
    * {@inheritDoc}

@@ -72,7 +72,7 @@ public interface SortedSetMultimap<K extends @Nullable @Immutable Object, V exte
    * {@link Multimap} interface.
    */
   @Override
-  SortedSet<V> get(@Readonly SortedSetMultimap<K,V> this, @ParametricNullness K key);
+  @ReceiverDependentMutable SortedSet<V> get(@ReceiverDependentMutable SortedSetMultimap<K,V> this, @ParametricNullness K key);
 
   /**
    * Removes all values associated with a given key.
@@ -116,7 +116,7 @@ public interface SortedSetMultimap<K extends @Nullable @Immutable Object, V exte
    * MultimapBuilder#treeKeys()}, may make additional guarantees.
    */
   @Override
-  Map<K, Collection<V>> asMap();
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable SortedSetMultimap<K, V> this);
 
   /**
    * Returns the comparator that orders the multimap values, with {@code null} indicating that

@@ -52,7 +52,7 @@ public abstract class ForwardingSortedSetMultimap<
   protected abstract @ReceiverDependentMutable SortedSetMultimap<K, V> delegate();
 
   @Override
-  public SortedSet<V> get(@Readonly ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable SortedSet<V> get(@ReceiverDependentMutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key) {
     return delegate().get(key);
   }
 

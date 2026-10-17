@@ -970,7 +970,7 @@ final class Synchronized {
     }
 
     @Override
-    public SortedSet<V> get(@Readonly SynchronizedSortedSetMultimap<K, V> this, K key) {
+    public @ReceiverDependentMutable SortedSet<V> get(@ReceiverDependentMutable SynchronizedSortedSetMultimap<K, V> this, K key) {
       synchronized (mutex) {
         return sortedSet(delegate().get(key), mutex);
       }

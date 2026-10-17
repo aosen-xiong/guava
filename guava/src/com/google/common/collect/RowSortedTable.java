@@ -49,7 +49,7 @@ public interface RowSortedTable<
    * Table} interface.
    */
   @Override
-  SortedSet<R> rowKeySet();
+  @ReceiverDependentMutable SortedSet<R> rowKeySet(@ReceiverDependentMutable RowSortedTable<R, C, V> this);
 
   /**
    * {@inheritDoc}
