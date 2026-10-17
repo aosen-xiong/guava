@@ -301,7 +301,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
 
     @Override
     @CheckForNull
-    public V put(C key, V value) {
+    public V put(@Mutable TreeRow this, C key, V value) {
       checkArgument(rangeContains(checkNotNull(key)));
       return super.put(key, value);
     }

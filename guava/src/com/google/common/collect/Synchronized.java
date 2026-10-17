@@ -798,7 +798,7 @@ final class Synchronized {
     public @ReceiverDependentMutable Map<K, Collection<V>> asMap(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
       synchronized (mutex) {
         if (asMap == null) {
-          asMap = new SynchronizedAsMap<>(delegate().asMap(), mutex);
+          asMap = new @ReceiverDependentMutable SynchronizedAsMap<>(delegate().asMap(), mutex);
         }
         return asMap;
       }
@@ -1501,7 +1501,7 @@ final class Synchronized {
     public @ReceiverDependentMutable Set<Map.Entry<@KeyFor({"this"}) K, Collection<V>>> entrySet(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
       synchronized (mutex) {
         if (asMapEntrySet == null) {
-          asMapEntrySet = new SynchronizedAsMapEntries<>(delegate().entrySet(), mutex);
+          asMapEntrySet = new @ReceiverDependentMutable SynchronizedAsMapEntries<>(delegate().entrySet(), mutex);
         }
         return asMapEntrySet;
       }
@@ -1512,7 +1512,7 @@ final class Synchronized {
     public @ReceiverDependentMutable Collection<Collection<V>> values(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
       synchronized (mutex) {
         if (asMapValues == null) {
-          asMapValues = new SynchronizedAsMapValues<V>(delegate().values(), mutex);
+          asMapValues = new @ReceiverDependentMutable SynchronizedAsMapValues<V>(delegate().values(), mutex);
         }
         return asMapValues;
       }

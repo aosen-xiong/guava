@@ -372,7 +372,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @Override
     @CheckForNull
-    public V put(C key, V value) {
+    public V put(@Mutable Row this, C key, V value) {
       checkNotNull(key);
       checkNotNull(value);
       if (backingRowMap != null && !backingRowMap.isEmpty()) {

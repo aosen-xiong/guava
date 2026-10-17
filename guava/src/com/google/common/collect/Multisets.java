@@ -391,14 +391,14 @@ public final class Multisets {
     }
 
     @Override
-    public int add(@ParametricNullness E element, int occurrences) {
+    public int add(@Mutable FilteredMultiset<E> this, @ParametricNullness E element, int occurrences) {
       checkArgument(
           predicate.apply(element), "Element %s does not match predicate %s", element, predicate);
       return unfiltered.add(element, occurrences);
     }
 
     @Override
-    public int remove(@CheckForNull @Readonly Object element, int occurrences) {
+    public int remove(@Mutable FilteredMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
       checkNonnegative(occurrences, "occurrences");
       if (occurrences == 0) {
         return count(element);

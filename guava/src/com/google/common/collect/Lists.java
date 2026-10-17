@@ -572,7 +572,7 @@ public final class Lists {
      * can be overkill. That's why we forward this call directly to the backing list.
      */
     @Override
-    protected void removeRange(int fromIndex, int toIndex) {
+    protected void removeRange(@Mutable TransformingSequentialList<F, T> this, int fromIndex, int toIndex) {
       fromList.subList(fromIndex, toIndex).clear();
     }
 
@@ -631,7 +631,7 @@ public final class Lists {
      * can be overkill. That's why we forward this call directly to the backing list.
      */
     @Override
-    protected void removeRange(int fromIndex, int toIndex) {
+    protected void removeRange(@Mutable TransformingRandomAccessList<F, T> this, int fromIndex, int toIndex) {
       fromList.subList(fromIndex, toIndex).clear();
     }
 

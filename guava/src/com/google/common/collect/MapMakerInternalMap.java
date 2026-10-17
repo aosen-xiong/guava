@@ -2993,7 +2993,7 @@ class MapMakerInternalMap<
 
     @SuppressWarnings("unchecked")
     @J2ktIncompatible // java.io.ObjectInputStream
-    void readEntries(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    void readEntries(@Mutable AbstractSerializationProxy<K, V> this, ObjectInputStream in) throws IOException, ClassNotFoundException {
       while (true) {
         K key = (K) in.readObject();
         if (key == null) {

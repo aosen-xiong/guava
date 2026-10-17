@@ -478,7 +478,7 @@ public final class Tables {
 
     @Override
     @CheckForNull
-    public V2 remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
+    public V2 remove(@Mutable TransformedTable<R, C, V1, V2> this, @CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
       return contains(rowKey, columnKey)
           // The cast is safe because of the contains() check.
           ? function.apply(uncheckedCastNullableTToT(fromTable.remove(rowKey, columnKey)))

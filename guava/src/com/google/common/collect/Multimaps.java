@@ -1614,7 +1614,7 @@ public final class Multimaps {
 
     @SuppressWarnings("unchecked")
     @Override
-    public boolean remove(@CheckForNull @Readonly Object key, @CheckForNull @Readonly Object value) {
+    public boolean remove(@Mutable TransformedEntriesMultimap<K, V1, V2> this, @CheckForNull @Readonly Object key, @CheckForNull @Readonly Object value) {
       return get((K) key).remove(value);
     }
 
@@ -1926,7 +1926,7 @@ public final class Multimaps {
       return new EntrySet();
     }
 
-    void removeValuesForKey(@CheckForNull @Readonly Object key) {
+    void removeValuesForKey(@Mutable AsMap<K, V> this, @CheckForNull @Readonly Object key) {
       multimap.keySet().remove(key);
     }
 

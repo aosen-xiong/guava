@@ -941,7 +941,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public V remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public V remove(@Mutable AsMapView<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       if (backingSet().remove(key)) {
         @SuppressWarnings("unchecked") // unsafe, but Javadoc warns about it
         K k = (K) key;
@@ -952,7 +952,7 @@ public final class Maps {
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable AsMapView<K, V> this) {
       backingSet().clear();
     }
 

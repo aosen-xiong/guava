@@ -492,7 +492,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       }
 
       @Override
-      public void remove() {
+      public void remove(@Mutable WrappedIterator this) {
         delegateIterator.remove();
         totalSize--;
         removeIfEmpty();
@@ -1010,7 +1010,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public boolean remove(@Mutable KeySet this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       int count = 0;
       Collection<V> collection = map().remove(key);
       if (collection != null) {
@@ -1231,7 +1231,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable Itr<T> this) {
       valueIterator.remove();
       /*
        * requireNonNull is safe because we've already initialized `collection`. If we hadn't, then
