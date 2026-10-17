@@ -1301,7 +1301,7 @@ class MapMakerInternalMap<
       return new AtomicReferenceArray<E>(size);
     }
 
-    void initTable(AtomicReferenceArray<E> newTable) {
+    void initTable(@Mutable Segment<K, V, E, S> this, AtomicReferenceArray<E> newTable) {
       this.threshold = newTable.length() * 3 / 4; // 0.75
       this.table = newTable;
     }
@@ -1537,7 +1537,7 @@ class MapMakerInternalMap<
     }
 
     @CheckForNull
-    V put(K key, int hash, V value, boolean onlyIfAbsent) {
+    V put(@Mutable Segment<K, V, E, S> this, K key, int hash, V value, boolean onlyIfAbsent) {
       lock();
       try {
         preWriteCleanup();
@@ -1596,7 +1596,7 @@ class MapMakerInternalMap<
 
     /** Expands the table if possible. */
     @GuardedBy("this")
-    void expand() {
+    void expand(@Mutable Segment<K, V, E, S> this) {
       AtomicReferenceArray<E> oldTable = table;
       int oldCapacity = oldTable.length();
       if (oldCapacity >= MAXIMUM_CAPACITY) {
@@ -1663,7 +1663,7 @@ class MapMakerInternalMap<
       this.count = newCount;
     }
 
-    boolean replace(K key, int hash, V oldValue, V newValue) {
+    boolean replace(@Mutable Segment<K, V, E, S> this, K key, int hash, V oldValue, V newValue) {
       lock();
       try {
         preWriteCleanup();
@@ -1711,7 +1711,7 @@ class MapMakerInternalMap<
     }
 
     @CheckForNull
-    V replace(K key, int hash, V newValue) {
+    V replace(@Mutable Segment<K, V, E, S> this, K key, int hash, V newValue) {
       lock();
       try {
         preWriteCleanup();
@@ -1754,7 +1754,7 @@ class MapMakerInternalMap<
 
     @CheckForNull
     @CanIgnoreReturnValue
-    V remove(Object key, int hash) {
+    V remove(@Mutable Segment<K, V, E, S> this, Object key, int hash) {
       lock();
       try {
         preWriteCleanup();
@@ -1794,7 +1794,7 @@ class MapMakerInternalMap<
       }
     }
 
-    boolean remove(Object key, int hash, Object value) {
+    boolean remove(@Mutable Segment<K, V, E, S> this, Object key, int hash, Object value) {
       lock();
       try {
         preWriteCleanup();
@@ -1835,7 +1835,7 @@ class MapMakerInternalMap<
       }
     }
 
-    void clear() {
+    void clear(@Mutable Segment<K, V, E, S> this) {
       if (count != 0) {
         lock();
         try {
@@ -1868,7 +1868,7 @@ class MapMakerInternalMap<
      */
     @GuardedBy("this")
     @CheckForNull
-    E removeFromChain(E first, E entry) {
+    E removeFromChain(@Mutable Segment<K, V, E, S> this, E first, E entry) {
       int newCount = count;
       E newFirst = entry.getNext();
       for (E e = first; e != entry; e = e.getNext()) {
@@ -1885,7 +1885,7 @@ class MapMakerInternalMap<
 
     /** Removes an entry whose key has been garbage collected. */
     @CanIgnoreReturnValue
-    boolean reclaimKey(E entry, int hash) {
+    boolean reclaimKey(@Mutable Segment<K, V, E, S> this, E entry, int hash) {
       lock();
       try {
         int newCount = count - 1;
@@ -1912,7 +1912,7 @@ class MapMakerInternalMap<
 
     /** Removes an entry whose value has been garbage collected. */
     @CanIgnoreReturnValue
-    boolean reclaimValue(K key, int hash, WeakValueReference<K, V, E> valueReference) {
+    boolean reclaimValue(@Mutable Segment<K, V, E, S> this, K key, int hash, WeakValueReference<K, V, E> valueReference) {
       lock();
       try {
         int newCount = this.count - 1;
@@ -1978,7 +1978,7 @@ class MapMakerInternalMap<
     }
 
     @GuardedBy("this")
-    boolean removeEntryForTesting(E entry) {
+    boolean removeEntryForTesting(@Mutable Segment<K, V, E, S> this, E entry) {
       int hash = entry.getHash();
       int newCount = this.count - 1;
       AtomicReferenceArray<E> table = this.table;
