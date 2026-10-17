@@ -175,7 +175,7 @@ public final class Iterators {
    * Returns the number of elements remaining in {@code iterator}. The iterator will be left
    * exhausted: its {@code hasNext()} method will return {@code false}.
    */
-  public static int size(Iterator<?> iterator) {
+  public static int size(@Readonly Iterator<?> iterator) {
     long count = 0L;
     while (iterator.hasNext()) {
       iterator.next();
@@ -278,7 +278,7 @@ public final class Iterators {
    * <p>Note that this will modify the supplied iterators, since they will have been advanced some
    * number of elements forward.
    */
-  public static boolean elementsEqual(Iterator<?> iterator1, Iterator<?> iterator2) {
+  public static boolean elementsEqual(@Readonly Iterator<?> iterator1, @Readonly Iterator<?> iterator2) {
     while (iterator1.hasNext()) {
       if (!iterator2.hasNext()) {
         return false;
@@ -318,7 +318,7 @@ public final class Iterators {
    *     iterator is unspecified.
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getOnlyElement(Iterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> T getOnlyElement(@Readonly Iterator<T> iterator) {
     T first = iterator.next();
     if (!iterator.hasNext()) {
       return first;
@@ -345,7 +345,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getOnlyElement(
-          Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
+          @Readonly Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
     return iterator.hasNext() ? getOnlyElement(iterator) : defaultValue;
   }
 
@@ -388,7 +388,7 @@ public final class Iterators {
    *
    * @see Collections#frequency
    */
-  public static int frequency(Iterator<?> iterator, @CheckForNull @Readonly Object element) {
+  public static int frequency(@Readonly Iterator<?> iterator, @CheckForNull @Readonly Object element) {
     int count = 0;
     while (contains(iterator, element)) {
       // Since it lives in the same class, we know contains gets to the element and then stops,
@@ -708,7 +708,7 @@ public final class Iterators {
    * predicate.
    */
   public static <T extends @Nullable @Readonly Object> boolean any(
-      Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
+      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     return indexOf(iterator, predicate) != -1;
   }
 
@@ -717,7 +717,7 @@ public final class Iterators {
    * predicate. If {@code iterator} is empty, {@code true} is returned.
    */
   public static <T extends @Nullable @Readonly Object> boolean all(
-      Iterator<T> iterator, Predicate<? super T> predicate) {
+      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate);
     while (iterator.hasNext()) {
       T element = iterator.next();
@@ -787,7 +787,7 @@ public final class Iterators {
    *
    * @since 11.0
    */
-  public static <T> Optional<T> tryFind(Iterator<T> iterator, Predicate<? super T> predicate) {
+  public static <T> Optional<T> tryFind(@Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(iterator);
     checkNotNull(predicate);
     while (iterator.hasNext()) {
@@ -814,7 +814,7 @@ public final class Iterators {
    * @since 2.0
    */
   public static <T extends @Nullable @Readonly Object> int indexOf(
-      Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
+      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate, "predicate");
     for (int i = 0; iterator.hasNext(); i++) {
       T current = iterator.next();
@@ -855,7 +855,7 @@ public final class Iterators {
    *     the number of elements remaining in {@code iterator}
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T get(Iterator<T> iterator, int position) {
+  public static <T extends @Nullable @Readonly Object> T get(@Readonly Iterator<T> iterator, int position) {
     checkNonnegative(position);
     int skipped = advance(iterator, position);
     if (!iterator.hasNext()) {
@@ -883,7 +883,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T get(
-      Iterator<? extends T> iterator, int position, @ParametricNullness T defaultValue) {
+      @Readonly Iterator<? extends T> iterator, int position, @ParametricNullness T defaultValue) {
     checkNonnegative(position);
     advance(iterator, position);
     return getNext(iterator, defaultValue);
@@ -916,7 +916,7 @@ public final class Iterators {
    * @throws NoSuchElementException if the iterator is empty
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getLast(Iterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> T getLast(@Readonly Iterator<T> iterator) {
     while (true) {
       T current = iterator.next();
       if (!iterator.hasNext()) {
@@ -935,7 +935,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getLast(
-      Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
+      @Readonly Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
     return iterator.hasNext() ? getLast(iterator) : defaultValue;
   }
 
@@ -947,7 +947,7 @@ public final class Iterators {
    * @since 13.0 (since 3.0 as {@code Iterators.skip})
    */
   @CanIgnoreReturnValue
-  public static int advance(Iterator<?> iterator, int numberToAdvance) {
+  public static int advance(@Readonly Iterator<?> iterator, int numberToAdvance) {
     checkNotNull(iterator);
     checkArgument(numberToAdvance >= 0, "numberToAdvance must be nonnegative");
 

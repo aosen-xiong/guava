@@ -133,7 +133,7 @@ public final class Iterables {
   }
 
   /** Returns the number of elements in {@code iterable}. */
-  public static int size(Iterable<?> iterable) {
+  public static int size(@Readonly Iterable<?> iterable) {
     return (iterable instanceof Collection)
         ? ((Collection<?>) iterable).size()
         : Iterators.size(iterable.iterator());
@@ -237,7 +237,7 @@ public final class Iterables {
    * number of elements and every element of {@code iterable1} is equal to the corresponding element
    * of {@code iterable2}.
    */
-  public static boolean elementsEqual(Iterable<?> iterable1, Iterable<?> iterable2) {
+  public static boolean elementsEqual(@Readonly Iterable<?> iterable1, @Readonly Iterable<?> iterable2) {
     if (iterable1 instanceof Collection && iterable2 instanceof Collection) {
       Collection<?> collection1 = (Collection<?>) iterable1;
       Collection<?> collection2 = (Collection<?>) iterable2;
@@ -285,7 +285,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getOnlyElement(
-      Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
+      @Readonly Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
     return Iterators.getOnlyElement(iterable.iterator(), defaultValue);
   }
 
@@ -355,7 +355,7 @@ public final class Iterables {
    * @see java.util.Collections#frequency(Collection, Object) Collections.frequency(Collection,
    *     Object)
    */
-  public static int frequency(Iterable<?> iterable, @CheckForNull Object element) {
+  public static int frequency(@Readonly Iterable<?> iterable, @CheckForNull Object element) {
     if ((iterable instanceof Multiset)) {
       return ((Multiset<?>) iterable).count(element);
     } else if ((iterable instanceof Set)) {
@@ -639,7 +639,7 @@ public final class Iterables {
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#anyMatch}.
    */
   public static <T extends @Nullable @Readonly Object> boolean any(
-      Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
+      @Readonly Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.any(iterable.iterator(), predicate);
   }
 
@@ -650,7 +650,7 @@ public final class Iterables {
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#allMatch}.
    */
   public static <T extends @Nullable @Readonly Object> boolean all(
-      Iterable<T> iterable, Predicate<? super T> predicate) {
+      @Readonly Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.all(iterable.iterator(), predicate);
   }
 
@@ -713,7 +713,7 @@ public final class Iterables {
    *
    * @since 11.0
    */
-  public static <T> Optional<T> tryFind(Iterable<T> iterable, Predicate<? super T> predicate) {
+  public static <T> Optional<T> tryFind(@Readonly Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.tryFind(iterable.iterator(), predicate);
   }
 
@@ -728,7 +728,7 @@ public final class Iterables {
    * @since 2.0
    */
   public static <T extends @Nullable @Readonly Object> int indexOf(
-      Iterable<T> iterable, Predicate<? super T> predicate) {
+      @Readonly Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.indexOf(iterable.iterator(), predicate);
   }
 
@@ -780,7 +780,7 @@ public final class Iterables {
    *     the size of {@code iterable}
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T get(Iterable<T> iterable, int position) {
+  public static <T extends @Nullable @Readonly Object> T get(@Readonly Iterable<T> iterable, int position) {
     checkNotNull(iterable);
     return (iterable instanceof List)
         ? ((List<T>) iterable).get(position)
@@ -804,7 +804,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T get(
-      Iterable<? extends T> iterable, int position, @ParametricNullness T defaultValue) {
+      @Readonly Iterable<? extends T> iterable, int position, @ParametricNullness T defaultValue) {
     checkNotNull(iterable);
     Iterators.checkNonnegative(position);
     if (iterable instanceof List) {
@@ -876,7 +876,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getLast(
-      Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
+      @Readonly Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
     if (iterable instanceof Collection) {
       Collection<? extends T> c = (Collection<? extends T>) iterable;
       if (c.isEmpty()) {
@@ -1054,7 +1054,7 @@ public final class Iterables {
    * @return {@code true} if the iterable contains no elements
    */
   @Pure
-  public static boolean isEmpty(Iterable<?> iterable) {
+  public static boolean isEmpty(@Readonly Iterable<?> iterable) {
     if (iterable instanceof Collection) {
       return ((Collection<?>) iterable).isEmpty();
     }
