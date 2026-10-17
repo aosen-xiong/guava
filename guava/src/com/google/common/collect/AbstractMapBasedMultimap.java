@@ -1333,7 +1333,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   @Override
-  Spliterator<@PolyMutable Entry<K, V>> entrySpliterator(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return CollectSpliterators.flatMap(
         map.entrySet().spliterator(),
         keyToValueCollectionEntry -> {

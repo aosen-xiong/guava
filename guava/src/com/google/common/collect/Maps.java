@@ -2299,13 +2299,13 @@ public final class Maps {
     }
 
     @Override
-    Iterator<@PolyMutable Entry<K, V2>> entryIterator(@PolyMutable TransformedEntriesMap<K, V1, V2> this) {
+    Iterator<@ReceiverDependentMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMap<K, V1, V2> this) {
       return Iterators.transform(
           fromMap.entrySet().iterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));
     }
 
     @Override
-    Spliterator<@PolyMutable Entry<K, V2>> entrySpliterator(@PolyMutable TransformedEntriesMap<K, V1, V2> this) {
+    Spliterator<@ReceiverDependentMutable Entry<K, V2>> entrySpliterator(@ReceiverDependentMutable TransformedEntriesMap<K, V1, V2> this) {
       return CollectSpliterators.map(
           fromMap.entrySet().spliterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));
     }
