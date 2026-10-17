@@ -4498,7 +4498,7 @@ public final class Maps {
   abstract static class DescendingMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingMap<K, V> implements NavigableMap<K, V> {
 
-    abstract @PolyMutable NavigableMap<K, V> forward(@PolyMutable DescendingMap<K, V> this);
+    abstract @ReceiverDependentMutable NavigableMap<K, V> forward(@ReceiverDependentMutable DescendingMap<K, V> this);
 
     @Override
     protected final @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable DescendingMap<K, V> this) {
@@ -4558,7 +4558,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public K floorKey(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K key) {
+    public K floorKey(@ReceiverDependentMutable DescendingMap<K, V> this, @ParametricNullness K key) {
       return forward().ceilingKey(key);
     }
 
@@ -4619,13 +4619,13 @@ public final class Maps {
 
     @Override
     public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
-      Set<@PolyMutable Entry<K, V>> result = entrySet;
+      Set<@ReceiverDependentMutable Entry<K, V>> result = entrySet;
       return (result == null) ? entrySet = createEntrySet() : result;
     }
 
-    abstract Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable DescendingMap<K, V> this);
+    abstract Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable DescendingMap<K, V> this);
 
-      @PolyMutable Set<@PolyMutable Entry<K, V>> createEntrySet(@PolyMutable DescendingMap<K, V> this) {
+      @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
       @WeakOuter
       class EntrySetImpl extends EntrySet<K, V> {
         @Override

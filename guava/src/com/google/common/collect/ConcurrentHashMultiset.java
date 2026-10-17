@@ -591,7 +591,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
 
     @CFComment("signedness: is same as E, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       return snapshot().toArray();
     }
 
@@ -601,8 +601,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
       return snapshot().toArray(array);
     }
 
-    private List<Multiset.Entry<E>> snapshot() {
-      List<Multiset.Entry<E>> list = Lists.newArrayListWithExpectedSize(size());
+    private List<Multiset.@Readonly Entry<E>> snapshot() {
+      List<Multiset.@Readonly Entry<E>> list = Lists.newArrayListWithExpectedSize(size());
       // Not Iterables.addAll(list, this), because that'll forward right back here.
       Iterators.addAll(list, iterator());
       return list;

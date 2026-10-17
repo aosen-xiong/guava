@@ -1779,7 +1779,7 @@ public final class Multimaps {
     }
 
     @Override
-    Iterator<Multiset.@PolyMutable Entry<K>> entryIterator(@PolyMutable Keys<K, V> this) {
+    Iterator<Multiset.@ReceiverDependentMutable Entry<K>> entryIterator(@ReceiverDependentMutable Keys<K, V> this) {
       return new TransformedIterator<Map.Entry<K, Collection<V>>, Multiset.Entry<K>>(
           multimap.asMap().entrySet().iterator()) {
         @Override

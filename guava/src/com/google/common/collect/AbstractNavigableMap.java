@@ -145,7 +145,7 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
     return Maps.keyOrNull(higherEntry(key));
   }
 
-  abstract Iterator<@PolyMutable Entry<K, V>> descendingEntryIterator(@PolyMutable AbstractNavigableMap<K,V> this);
+  abstract Iterator<@ReceiverDependentMutable Entry<K, V>> descendingEntryIterator(@ReceiverDependentMutable AbstractNavigableMap<K,V> this);
 
   @Override
   public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
@@ -185,12 +185,12 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
   @ReceiverDependentMutable
   private final class DescendingMap extends Maps.DescendingMap<K, V> {
     @Override
-    @PolyMutable NavigableMap<K, V> forward(@PolyMutable AbstractNavigableMap<K, V>.DescendingMap this) {
+    @ReceiverDependentMutable NavigableMap<K, V> forward(@ReceiverDependentMutable AbstractNavigableMap<K, V>.DescendingMap this) {
       return AbstractNavigableMap.this;
     }
 
     @Override
-    Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable AbstractNavigableMap<K, V>.DescendingMap this) {
+    Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractNavigableMap<K, V>.DescendingMap this) {
       return descendingEntryIterator();
     }
   }

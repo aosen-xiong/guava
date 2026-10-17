@@ -158,15 +158,15 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
    * Creates a new instance of this multiset's element set, which will be returned by {@link
    * #elementSet()}.
    */
-  @PolyMutable Set<E> createElementSet(@PolyMutable AbstractMultiset<E> this) {
-    return new @PolyMutable ElementSet();
+  @ReceiverDependentMutable Set<E> createElementSet(@ReceiverDependentMutable AbstractMultiset<E> this) {
+    return new @ReceiverDependentMutable ElementSet();
   }
 
   @WeakOuter
   @ReceiverDependentMutable
   class ElementSet extends Multisets.ElementSet<E> {
     @Override
-    @PolyMutable Multiset<E> multiset(@PolyMutable AbstractMultiset<E>.ElementSet this) {
+    @ReceiverDependentMutable Multiset<E> multiset(@ReceiverDependentMutable AbstractMultiset<E>.ElementSet this) {
       return AbstractMultiset.this;
     }
 
@@ -184,7 +184,7 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
   @SideEffectFree
   @Override
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable AbstractMultiset<E> this) {
-    Set<@PolyMutable Entry<E>> result = entrySet;
+    Set<@ReceiverDependentMutable Entry<E>> result = entrySet;
     if (result == null) {
       entrySet = result = createEntrySet();
     }
@@ -195,12 +195,12 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
   @ReceiverDependentMutable
   class EntrySet extends Multisets.EntrySet<E> {
     @Override
-    @PolyMutable  Multiset<E> multiset(@PolyMutable AbstractMultiset<E>.EntrySet this) {
+    @ReceiverDependentMutable  Multiset<E> multiset(@ReceiverDependentMutable AbstractMultiset<E>.EntrySet this) {
       return AbstractMultiset.this;
     }
 
     @Override
-    public Iterator<@PolyMutable Entry<E>> iterator(@PolyMutable AbstractMultiset<E>.EntrySet this) {
+    public Iterator<@ReceiverDependentMutable Entry<E>> iterator(@ReceiverDependentMutable AbstractMultiset<E>.EntrySet this) {
       return entryIterator();
     }
 
@@ -210,11 +210,11 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
     }
   }
 
-  @PolyMutable Set<@PolyMutable Entry<E>> createEntrySet(@PolyMutable AbstractMultiset<E> this) {
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> createEntrySet(@ReceiverDependentMutable AbstractMultiset<E> this) {
     return new EntrySet();
   }
 
-  abstract Iterator<@PolyMutable Entry<E>> entryIterator(@PolyMutable AbstractMultiset<E> this);
+  abstract Iterator<@ReceiverDependentMutable Entry<E>> entryIterator(@ReceiverDependentMutable AbstractMultiset<E> this);
 
   abstract int distinctElements(@Readonly AbstractMultiset<E> this);
 
