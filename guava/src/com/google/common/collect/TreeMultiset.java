@@ -736,7 +736,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    @ReceiverDependentMutable AvlNode<E> remove(@Mutable AvlNode<E> this, 
+    AvlNode<E> remove(@Mutable AvlNode<E> this, 
         @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
@@ -789,7 +789,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    @ReceiverDependentMutable AvlNode<E> setCount(@Mutable AvlNode<E> this, 
+    AvlNode<E> setCount(@Mutable AvlNode<E> this, 
         @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
@@ -839,7 +839,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    @ReceiverDependentMutable AvlNode<E> setCount(@Mutable AvlNode<E> this, 
+    AvlNode<E> setCount(@Mutable AvlNode<E> this, 
         @Readonly Comparator<? super E> comparator,
         @ParametricNullness E e,
         int expectedCount,
@@ -931,7 +931,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the minimum node from this subtree to be reused elsewhere
     @CheckForNull
-    private @ReceiverDependentMutable AvlNode<E> removeMin(@Mutable AvlNode<E> this, AvlNode<E> node) {
+    private AvlNode<E> removeMin(@Mutable AvlNode<E> this, AvlNode<E> node) {
       if (left == null) {
         return right;
       } else {
@@ -944,7 +944,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the maximum node from this subtree to be reused elsewhere
     @CheckForNull
-    private @ReceiverDependentMutable AvlNode<E> removeMax(@Mutable AvlNode<E> this, AvlNode<E> node) {
+    private AvlNode<E> removeMax(@Mutable AvlNode<E> this, AvlNode<E> node) {
       if (right == null) {
         return left;
       } else {
