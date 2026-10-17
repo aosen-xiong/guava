@@ -338,7 +338,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   /** An {@code Iterator} over all nodes. */
   @ReceiverDependentMutable
   private class NodeIterator implements ListIterator<Entry<K, V>> {
-    int nextIndex;
+    @Assignable int nextIndex;
     @CheckForNull @Assignable Node<K, V> next;
     @CheckForNull @Assignable Node<K, V> current;
     @CheckForNull @Assignable Node<K, V> previous;

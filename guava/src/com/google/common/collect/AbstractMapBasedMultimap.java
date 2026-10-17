@@ -56,6 +56,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Basic implementation of the {@link Multimap} interface. This class represents a multimap as a map
@@ -1195,9 +1196,9 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   @ReceiverDependentMutable
   private abstract class Itr<T extends @Nullable @Readonly Object> implements Iterator<T> {
     final Iterator<Entry<K, Collection<V>>> keyIterator;
-    @CheckForNull K key;
-    @CheckForNull Collection<V> collection;
-    Iterator<V> valueIterator;
+    @CheckForNull @Assignable K key;
+    @CheckForNull @Assignable Collection<V> collection;
+    @Assignable Iterator<V> valueIterator;
 
     Itr() {
       keyIterator = map.entrySet().iterator();

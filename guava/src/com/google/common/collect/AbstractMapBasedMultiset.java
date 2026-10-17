@@ -47,6 +47,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Basic implementation of {@code Multiset<E>} backed by an instance of {@code Map<E, Count>}.
@@ -214,9 +215,9 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   @ReceiverDependentMutable
   private class MapBasedMultisetIterator implements Iterator<E> {
     final Iterator<Map.Entry<E, Count>> entryIterator;
-    @CheckForNull Map.Entry<E, Count> currentEntry;
-    int occurrencesLeft;
-    boolean canRemove;
+    @CheckForNull @Assignable Map.Entry<E, Count> currentEntry;
+    @Assignable int occurrencesLeft;
+    @Assignable boolean canRemove;
 
     MapBasedMultisetIterator() {
       this.entryIterator = backingMap.entrySet().iterator();

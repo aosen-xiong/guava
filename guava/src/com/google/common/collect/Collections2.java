@@ -51,6 +51,7 @@ import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Provides static methods for working with {@code Collection} instances.
@@ -534,7 +535,7 @@ public final class Collections2 {
 
   @ReceiverDependentMutable
   private static final class OrderedPermutationIterator<E> extends AbstractIterator<List<E>> {
-    @CheckForNull List<E> nextPermutation;
+    @CheckForNull @Assignable List<E> nextPermutation;
     final @Mutable Comparator<? super E> comparator;
 
     OrderedPermutationIterator(@ReceiverDependentMutable List<E> list, Comparator<? super E> comparator) {
@@ -665,7 +666,7 @@ public final class Collections2 {
     final List<E> list;
     final int[] c;
     final int[] o;
-    int j;
+    @Assignable int j;
 
     PermutationIterator(@ReceiverDependentMutable List<E> list) {
       this.list = new ArrayList<E>(list);

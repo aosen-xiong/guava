@@ -57,6 +57,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * This class contains static utility methods that operate on or return objects of type {@link
@@ -1202,8 +1203,8 @@ public final class Iterators {
   private static class PeekingImpl<E extends @Nullable @Readonly Object> implements PeekingIterator<E> {
 
     private final Iterator<? extends E> iterator;
-    private boolean hasPeeked;
-    @CheckForNull private E peekedElement;
+    private @Assignable boolean hasPeeked;
+    @CheckForNull private @Assignable E peekedElement;
 
     public PeekingImpl(@ReceiverDependentMutable Iterator<? extends E> iterator) {
       this.iterator = checkNotNull(iterator);
@@ -1379,7 +1380,7 @@ public final class Iterators {
     @CheckForNull private Iterator<? extends T> toRemove;
 
     /* The iterator currently returning elements. */
-    private @Readonly Iterator<? extends T> iterator;
+    private @Readonly @Assignable Iterator<? extends T> iterator;
 
     /*
      * We track the "meta iterators," the iterators-of-iterators, below.  Usually, topMetaIterator
@@ -1388,10 +1389,10 @@ public final class Iterators {
      * operation O(1).
      */
 
-    @CheckForNull private Iterator<? extends Iterator<? extends T>> topMetaIterator;
+    @CheckForNull private @Assignable Iterator<? extends Iterator<? extends T>> topMetaIterator;
 
     // Only becomes nonnull if we encounter nested concatenations.
-    @CheckForNull private Deque<Iterator<? extends Iterator<? extends T>>> metaIterators;
+    @CheckForNull private @Assignable Deque<Iterator<? extends Iterator<? extends T>>> metaIterators;
 
     ConcatenatedIterator(@ReceiverDependentMutable Iterator<? extends Iterator<? extends T>> metaIterator) {
       iterator = emptyIterator();

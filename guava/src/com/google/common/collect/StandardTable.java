@@ -791,7 +791,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     // consistent with equals().
     final Map<C, V> seen = factory.get();
     final Iterator<Map<C, V>> mapIterator = backingMap.values().iterator();
-    Iterator<Entry<C, V>> entryIterator = Iterators.emptyIterator();
+    @Assignable Iterator<Entry<C, V>> entryIterator = Iterators.emptyIterator();
 
     @Override
     @CheckForNull
