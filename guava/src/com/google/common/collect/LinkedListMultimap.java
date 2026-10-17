@@ -119,7 +119,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    * ValueForKeyIterator} in constant time.
    */
 
-  static final class Node<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  static final class Node<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends AbstractMapEntry<K, V> {
     @ParametricNullness final K key;
     @ParametricNullness V value;
