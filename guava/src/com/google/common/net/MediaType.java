@@ -799,7 +799,7 @@ public final class MediaType {
     return parameters;
   }
 
-  private Map<String, ImmutableMultiset<String>> parametersAsMap() {
+  private @org.checkerframework.checker.mutability.qual.Immutable Map<String, ImmutableMultiset<String>> parametersAsMap() {
     return Maps.transformValues(parameters.asMap(), ImmutableMultiset::copyOf);
   }
 

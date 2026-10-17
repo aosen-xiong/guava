@@ -139,7 +139,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    protected Set<V> delegate() {
+    protected @Immutable Set<V> delegate() {
       return Collections.emptySet();
     }
   }
@@ -179,7 +179,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    protected List<V> delegate() {
+    protected @Immutable List<V> delegate() {
       return Collections.emptyList();
     }
   }

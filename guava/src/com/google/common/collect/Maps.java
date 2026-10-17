@@ -707,7 +707,7 @@ public final class Maps {
     @ParametricNullness private final V left;
     @ParametricNullness private final V right;
 
-    static <V extends @Nullable @Readonly Object> ValueDifference<V> create(
+    static <V extends @Nullable @Readonly Object> @Immutable ValueDifference<V> create(
         @ParametricNullness V left, @ParametricNullness V right) {
       return new ValueDifferenceImpl<V>(left, right);
     }
@@ -985,7 +985,7 @@ public final class Maps {
       Iterator<@PolyMutable Entry<K, V>> asMapEntryIterator(@PolyMutable Set<K> set, final @Readonly Function<? super K, V> function) {
     return new TransformedIterator<K, @PolyMutable Entry<K, V>>(set.iterator()) {
       @Override
-      Entry<K, V> transform(@ParametricNullness final K key) {
+      @Immutable Entry<K, V> transform(@ParametricNullness final K key) {
         return immutableEntry(key, function.apply(key));
       }
     };
@@ -3230,7 +3230,7 @@ public final class Maps {
       }
 
       @Override
-      public @PolyNull @PolySigned Object[] toArray() {
+      public @PolyNull @PolySigned @Immutable Object[] toArray() {
         // creating an ArrayList so filtering happens once
         return Lists.newArrayList(iterator()).toArray();
       }

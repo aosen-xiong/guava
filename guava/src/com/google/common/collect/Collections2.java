@@ -456,7 +456,7 @@ public final class Collections2 {
    *     the specified comparator is null.
    * @since 12.0
    */
-  public static <E> Collection<List<E>> orderedPermutations(
+  public static <E> @Immutable Collection<List<E>> orderedPermutations(
       Iterable<E> elements, Comparator<? super E> comparator) {
     return new OrderedPermutationCollection<E>(elements, comparator);
   }
@@ -619,7 +619,7 @@ public final class Collections2 {
    * @throws NullPointerException if the specified collection is null or has any null elements.
    * @since 12.0
    */
-  public static <E> Collection<List<E>> permutations(Collection<E> elements) {
+  public static <E> @Immutable Collection<List<E>> permutations(Collection<E> elements) {
     return new PermutationCollection<E>(ImmutableList.copyOf(elements));
   }
 

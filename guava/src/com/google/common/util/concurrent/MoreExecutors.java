@@ -54,6 +54,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Factory and utility methods for {@link java.util.concurrent.Executor}, {@link ExecutorService},
@@ -350,7 +351,7 @@ public final class MoreExecutors {
 
     // See newDirectExecutorService javadoc for unusual behavior of this method.
     @Override
-    public List<Runnable> shutdownNow() {
+    public @Immutable List<Runnable> shutdownNow() {
       shutdown();
       return Collections.emptyList();
     }

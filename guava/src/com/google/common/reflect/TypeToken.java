@@ -691,7 +691,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     @Override
-    protected Set<TypeToken<? super T>> delegate() {
+    protected @Immutable Set<TypeToken<? super T>> delegate() {
       ImmutableSet<TypeToken<? super T>> filteredTypes = types;
       if (filteredTypes == null) {
         // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
@@ -708,7 +708,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     /** Returns the raw types of the types in this set, in the same order. */
-    public Set<Class<? super T>> rawTypes() {
+    public @Immutable Set<Class<? super T>> rawTypes() {
       // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
       @SuppressWarnings({"unchecked", "rawtypes"})
       ImmutableList<Class<? super T>> collectedTypes =
@@ -729,7 +729,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     @Override
-    protected Set<TypeToken<? super T>> delegate() {
+    protected @Immutable Set<TypeToken<? super T>> delegate() {
       ImmutableSet<TypeToken<? super T>> result = interfaces;
       if (result == null) {
         return (interfaces =
@@ -745,7 +745,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     @Override
-    public Set<Class<? super T>> rawTypes() {
+    public @Immutable Set<Class<? super T>> rawTypes() {
       // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
       @SuppressWarnings({"unchecked", "rawtypes"})
       ImmutableList<Class<? super T>> collectedTypes =
@@ -770,7 +770,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     @CheckForNull private transient ImmutableSet<TypeToken<? super T>> classes;
 
     @Override
-    protected Set<TypeToken<? super T>> delegate() {
+    protected @Immutable Set<TypeToken<? super T>> delegate() {
       ImmutableSet<TypeToken<? super T>> result = classes;
       if (result == null) {
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -792,7 +792,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     @Override
-    public Set<Class<? super T>> rawTypes() {
+    public @Immutable Set<Class<? super T>> rawTypes() {
       // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
       @SuppressWarnings({"unchecked", "rawtypes"})
       ImmutableList<Class<? super T>> collectedTypes =
@@ -1333,7 +1333,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
           }
 
           @Override
-          Iterable<? extends TypeToken<?>> getInterfaces(TypeToken<?> type) {
+          @Immutable Iterable<? extends TypeToken<?>> getInterfaces(TypeToken<?> type) {
             return type.getGenericInterfaces();
           }
 
@@ -1367,7 +1367,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     final TypeCollector<K> classesOnly() {
       return new ForwardingTypeCollector<K>(this) {
         @Override
-        Iterable<? extends K> getInterfaces(K type) {
+        @Immutable Iterable<? extends K> getInterfaces(K type) {
           return ImmutableSet.of();
         }
 

@@ -45,6 +45,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code boolean} primitives, that are not already found in
@@ -96,7 +97,7 @@ public final class Booleans {
    *
    * @since 21.0
    */
-  public static Comparator<Boolean> trueFirst() {
+  public static @Immutable Comparator<Boolean> trueFirst() {
     return BooleanComparator.TRUE_FIRST;
   }
 
@@ -108,7 +109,7 @@ public final class Booleans {
    *
    * @since 21.0
    */
-  public static Comparator<Boolean> falseFirst() {
+  public static @Immutable Comparator<Boolean> falseFirst() {
     return BooleanComparator.FALSE_FIRST;
   }
 
@@ -324,7 +325,7 @@ public final class Booleans {
    *
    * @since 2.0
    */
-  public static Comparator<boolean[]> lexicographicalComparator() {
+  public static @Immutable Comparator<boolean[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -391,7 +392,7 @@ public final class Booleans {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static List<Boolean> asList(boolean... backingArray) {
+  public static @Immutable List<Boolean> asList(boolean... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

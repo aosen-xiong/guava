@@ -65,7 +65,7 @@ public final class Functions {
    * future, when this class requires Java 8, this method will be deprecated. See {@link Function}
    * for more important information about the Java 8+ transition.
    */
-  public static Function<Object, String> toStringFunction() {
+  public static @Immutable Function<Object, String> toStringFunction() {
     return ToStringFunction.INSTANCE;
   }
 

@@ -38,6 +38,7 @@ import java.util.concurrent.TimeoutException;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /** Static methods used to implement {@link Futures#getChecked(Future, Class)}. */
 @J2ktIncompatible
@@ -100,13 +101,13 @@ final class FuturesGetChecked {
   }
 
   @VisibleForTesting
-  static GetCheckedTypeValidator weakSetValidator() {
+  static @Immutable GetCheckedTypeValidator weakSetValidator() {
     return GetCheckedTypeValidatorHolder.WeakSetValidator.INSTANCE;
   }
 
   @J2ObjCIncompatible // ClassValue
   @VisibleForTesting
-  static GetCheckedTypeValidator classValueValidator() {
+  static @Immutable GetCheckedTypeValidator classValueValidator() {
     return GetCheckedTypeValidatorHolder.ClassValueValidator.INSTANCE;
   }
 

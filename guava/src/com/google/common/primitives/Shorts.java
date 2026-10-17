@@ -48,6 +48,7 @@ import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code short} primitives, that are not already found in
@@ -456,7 +457,7 @@ public final class Shorts extends ShortsMethodsForWeb {
    *
    * @since 2.0
    */
-  public static Comparator<short[]> lexicographicalComparator() {
+  public static @Immutable Comparator<short[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -627,7 +628,7 @@ public final class Shorts extends ShortsMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static List<Short> asList(short... backingArray) {
+  public static @Immutable List<Short> asList(short... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

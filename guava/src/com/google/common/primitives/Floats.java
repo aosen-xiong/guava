@@ -48,6 +48,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code float} primitives, that are not already found in
@@ -399,7 +400,7 @@ public final class Floats extends FloatsMethodsForWeb {
    *
    * @since 2.0
    */
-  public static Comparator<float[]> lexicographicalComparator() {
+  public static @Immutable Comparator<float[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -579,7 +580,7 @@ public final class Floats extends FloatsMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static List<Float> asList(float... backingArray) {
+  public static @Immutable List<Float> asList(float... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

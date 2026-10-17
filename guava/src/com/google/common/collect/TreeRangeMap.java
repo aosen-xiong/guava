@@ -120,7 +120,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
   @Override
   @CheckForNull
-  public Entry<@Immutable Range<K>, V> getEntry(K key) {
+  public @Immutable Entry<@Immutable Range<K>, V> getEntry(K key) {
     Entry<@Immutable Cut<K>, RangeMapEntry<K, V>> mapEntry =
         entriesByLowerBound.floorEntry(Cut.belowValue(key));
     if (mapEntry != null && mapEntry.getValue().contains(key)) {
@@ -454,12 +454,12 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
         }
 
         @Override
-        public Map<Range<@Immutable Comparable<?>>, Object> asMapOfRanges() {
+        public @Immutable Map<Range<@Immutable Comparable<?>>, Object> asMapOfRanges() {
           return Collections.emptyMap();
         }
 
         @Override
-        public Map<Range<@Immutable Comparable<?>>, Object> asDescendingMapOfRanges() {
+        public @Immutable Map<Range<@Immutable Comparable<?>>, Object> asDescendingMapOfRanges() {
           return Collections.emptyMap();
         }
 
@@ -486,7 +486,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
     @Override
     @CheckForNull
-    public Entry<Range<K>, V> getEntry(K key) {
+    public @Immutable Entry<Range<K>, V> getEntry(K key) {
       if (subRange.contains(key)) {
         Entry<Range<K>, V> entry = TreeRangeMap.this.getEntry(key);
         if (entry != null) {

@@ -47,6 +47,7 @@ import org.checkerframework.checker.signedness.qual.Unsigned;
 import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code char} primitives, that are not already found in
@@ -408,7 +409,7 @@ public final class Chars {
    *
    * @since 2.0
    */
-  public static Comparator<char[]> lexicographicalComparator() {
+  public static @Immutable Comparator<char[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -578,7 +579,7 @@ public final class Chars {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static List<Character> asList(char... backingArray) {
+  public static @Immutable List<Character> asList(char... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

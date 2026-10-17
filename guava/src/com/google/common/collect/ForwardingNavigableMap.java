@@ -86,7 +86,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * lowerEntry} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<K, V> standardLowerEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  protected @Immutable Entry<K, V> standardLowerEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return headMap(key, false).lastEntry();
   }
 
@@ -118,7 +118,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * floorEntry} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<K, V> standardFloorEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  protected @Immutable Entry<K, V> standardFloorEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return headMap(key, true).lastEntry();
   }
 
@@ -150,7 +150,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * ceilingEntry} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<K, V> standardCeilingEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  protected @Immutable Entry<K, V> standardCeilingEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return tailMap(key, true).firstEntry();
   }
 
@@ -182,7 +182,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * higherEntry} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<K, V> standardHigherEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  protected @Immutable Entry<K, V> standardHigherEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return tailMap(key, false).firstEntry();
   }
 

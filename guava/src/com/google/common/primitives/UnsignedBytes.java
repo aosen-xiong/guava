@@ -37,6 +37,7 @@ import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import sun.misc.Unsafe;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code byte} primitives that interpret values as
@@ -283,7 +284,7 @@ public final class UnsignedBytes {
   }
 
   @VisibleForTesting
-  static Comparator<@Unsigned byte[]> lexicographicalComparatorJavaImpl() {
+  static @Immutable Comparator<@Unsigned byte[]> lexicographicalComparatorJavaImpl() {
     return LexicographicalComparatorHolder.PureJavaComparator.INSTANCE;
   }
 

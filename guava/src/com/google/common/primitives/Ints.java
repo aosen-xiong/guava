@@ -51,6 +51,7 @@ import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code int} primitives, that are not already found in either
@@ -456,7 +457,7 @@ public final class Ints extends IntsMethodsForWeb {
    *
    * @since 2.0
    */
-  public static Comparator<int[]> lexicographicalComparator() {
+  public static @Immutable Comparator<int[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -656,7 +657,7 @@ public final class Ints extends IntsMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static List<Integer> asList(int... backingArray) {
+  public static @Immutable List<Integer> asList(int... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

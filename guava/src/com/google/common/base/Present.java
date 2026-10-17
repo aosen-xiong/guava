@@ -23,6 +23,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /** Implementation of an {@link Optional} containing a reference. */
 @GwtCompatible
@@ -68,7 +69,7 @@ final class Present<T> extends Optional<T> {
   }
 
   @Override
-  public Set<@NonNull T> asSet() {
+  public @Immutable Set<@NonNull T> asSet() {
     return Collections.singleton(reference);
   }
 

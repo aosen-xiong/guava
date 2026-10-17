@@ -45,6 +45,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code byte} primitives, that are not already found in
@@ -261,7 +262,7 @@ public final class Bytes {
    * @return a list view of the array
    */
   @SuppressWarnings({"signedness:argument", "signedness:return"}) // non-generic container class
-  public static List<@PolySigned Byte> asList(@PolySigned byte... backingArray) {
+  public static @Immutable List<@PolySigned Byte> asList(@PolySigned byte... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

@@ -24,6 +24,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A sorted multiset which forwards all its method calls to another sorted multiset. Subclasses
@@ -131,7 +132,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    * forward to this implementation.
    */
   @CheckForNull
-  protected Entry<E> standardFirstEntry() {
+  protected @Immutable Entry<E> standardFirstEntry() {
     Iterator<Entry<E>> entryIterator = entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
@@ -154,7 +155,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    * {@link #firstEntry()} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<E> standardLastEntry() {
+  protected @Immutable Entry<E> standardLastEntry() {
     Iterator<@ReceiverDependentMutable Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
@@ -176,7 +177,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    * forward to this implementation.
    */
   @CheckForNull
-  protected Entry<E> standardPollFirstEntry(@Mutable ForwardingSortedMultiset<E> this) {
+  protected @Immutable Entry<E> standardPollFirstEntry(@Mutable ForwardingSortedMultiset<E> this) {
     Iterator<Entry<E>> entryIterator = entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
@@ -201,7 +202,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    * override {@link #pollLastEntry()} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<E> standardPollLastEntry(@Mutable ForwardingSortedMultiset<E> this) {
+  protected @Immutable Entry<E> standardPollLastEntry(@Mutable ForwardingSortedMultiset<E> this) {
     Iterator<Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;

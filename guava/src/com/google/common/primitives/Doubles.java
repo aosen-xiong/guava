@@ -50,6 +50,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code double} primitives, that are not already found in
@@ -404,7 +405,7 @@ public final class Doubles extends DoublesMethodsForWeb {
    *
    * @since 2.0
    */
-  public static Comparator<double[]> lexicographicalComparator() {
+  public static @Immutable Comparator<double[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -587,7 +588,7 @@ public final class Doubles extends DoublesMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static List<Double> asList(double... backingArray) {
+  public static @Immutable List<Double> asList(double... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

@@ -24,6 +24,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /** Implementation of an {@link Optional} not containing a reference. */
 @AnnotatedFor({"nullness"})
@@ -73,7 +74,7 @@ final class Absent<T> extends Optional<T> {
   }
 
   @Override
-  public Set<@NonNull T> asSet() {
+  public @Immutable Set<@NonNull T> asSet() {
     return Collections.emptySet();
   }
 

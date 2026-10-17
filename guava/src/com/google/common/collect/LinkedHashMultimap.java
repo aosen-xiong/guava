@@ -592,7 +592,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
       }
 
       @Override
-      public Entry<K, V> next() {
+      public @Immutable Entry<K, V> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
         }

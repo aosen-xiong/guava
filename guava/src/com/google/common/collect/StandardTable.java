@@ -265,7 +265,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public Cell<R, C, V> next(@Mutable CellIterator this) {
+    public @Immutable Cell<R, C, V> next(@Mutable CellIterator this) {
       if (!columnIterator.hasNext()) {
         rowEntry = rowIterator.next();
         columnIterator = rowEntry.getValue().entrySet().iterator();

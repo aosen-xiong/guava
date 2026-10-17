@@ -498,7 +498,7 @@ public final class Tables {
     Function<Cell<R, C, V1>, Cell<R, C, V2>> cellFunction() {
       return new Function<Cell<R, C, V1>, Cell<R, C, V2>>() {
         @Override
-        public Cell<R, C, V2> apply(Cell<R, C, V1> cell) {
+        public @Immutable Cell<R, C, V2> apply(Cell<R, C, V1> cell) {
           return immutableCell(
               cell.getRowKey(), cell.getColumnKey(), function.apply(cell.getValue()));
         }
@@ -645,7 +645,7 @@ public final class Tables {
     }
 
     @Override
-    public Map<R, Map<C, V>> rowMap() {
+    public @Immutable Map<R, Map<C, V>> rowMap() {
       Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.rowMap(), wrapper));
     }

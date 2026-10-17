@@ -112,7 +112,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
     return MoreObjects.firstNonNull(asMap().remove(key), unmodifiableEmptyCollection());
   }
 
-  Collection<V> unmodifiableEmptyCollection() {
+  @Immutable Collection<V> unmodifiableEmptyCollection() {
     // These return false, rather than throwing a UOE, on remove calls.
     return (unfiltered instanceof SetMultimap)
         ? Collections.<V>emptySet()

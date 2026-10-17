@@ -18,7 +18,7 @@ abstract class GraphsBridgeMethods {
   }
 
   @SuppressWarnings("PreferredInterfaceType")
-  public static <N> Set<N> reachableNodes(Graph<N> graph, N node) {
+  public static <N> @Immutable Set<N> reachableNodes(Graph<N> graph, N node) {
     return Graphs.reachableNodes(graph, node);
   }
 }

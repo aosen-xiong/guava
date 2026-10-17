@@ -129,7 +129,7 @@ public final class Multisets {
    * @since 10.0
    */
   @Deprecated
-  public static <E> Multiset<E> unmodifiableMultiset(ImmutableMultiset<E> multiset) {
+  public static <E> @Immutable Multiset<E> unmodifiableMultiset(ImmutableMultiset<E> multiset) {
     return checkNotNull(multiset);
   }
 
@@ -250,7 +250,7 @@ public final class Multisets {
    * @return an unmodifiable view of the multiset
    * @since 11.0
    */
-  public static <E extends @Nullable Object> SortedMultiset<E> unmodifiableSortedMultiset(
+  public static <E extends @Nullable Object> @Immutable SortedMultiset<E> unmodifiableSortedMultiset(
       SortedMultiset<E> sortedMultiset) {
     // it's in its own file so it can be emulated for GWT
     return new UnmodifiableSortedMultiset<E>(checkNotNull(sortedMultiset));
@@ -471,7 +471,7 @@ public final class Multisets {
         return new @Mutable AbstractIterator<Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Immutable Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -605,7 +605,7 @@ public final class Multisets {
         return new @Mutable AbstractIterator<Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Immutable Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();

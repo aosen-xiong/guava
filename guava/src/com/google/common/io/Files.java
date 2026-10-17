@@ -59,6 +59,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Provides utility methods for working with {@linkplain File files}.
@@ -868,7 +869,7 @@ public final class Files {
    *
    * @since 15.0
    */
-  public static Predicate<File> isDirectory() {
+  public static @Immutable Predicate<File> isDirectory() {
     return FilePredicate.IS_DIRECTORY;
   }
 
@@ -877,7 +878,7 @@ public final class Files {
    *
    * @since 15.0
    */
-  public static Predicate<File> isFile() {
+  public static @Immutable Predicate<File> isFile() {
     return FilePredicate.IS_FILE;
   }
 

@@ -1506,7 +1506,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       }
 
       @Override
-      public Entry<K, Collection<V>> next() {
+      public @Immutable Entry<K, Collection<V>> next() {
         Entry<K, Collection<V>> entry = delegateIterator.next();
         collection = entry.getValue();
         return wrapEntry(entry);

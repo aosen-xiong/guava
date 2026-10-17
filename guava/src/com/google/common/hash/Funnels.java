@@ -31,6 +31,7 @@ import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Funnels for common types. All implementations are serializable.
@@ -44,7 +45,7 @@ public final class Funnels {
   private Funnels() {}
 
   /** Returns a funnel that extracts the bytes from a {@code byte} array. */
-  public static Funnel<byte[]> byteArrayFunnel() {
+  public static @Immutable Funnel<byte[]> byteArrayFunnel() {
     return ByteArrayFunnel.INSTANCE;
   }
 
@@ -70,7 +71,7 @@ public final class Funnels {
    *
    * @since 15.0 (since 11.0 as {@code Funnels.stringFunnel()}.
    */
-  public static Funnel<CharSequence> unencodedCharsFunnel() {
+  public static @Immutable Funnel<CharSequence> unencodedCharsFunnel() {
     return UnencodedCharsFunnel.INSTANCE;
   }
 
@@ -158,7 +159,7 @@ public final class Funnels {
    *
    * @since 13.0
    */
-  public static Funnel<Integer> integerFunnel() {
+  public static @Immutable Funnel<Integer> integerFunnel() {
     return IntegerFunnel.INSTANCE;
   }
 
@@ -227,7 +228,7 @@ public final class Funnels {
    *
    * @since 13.0
    */
-  public static Funnel<Long> longFunnel() {
+  public static @Immutable Funnel<Long> longFunnel() {
     return LongFunnel.INSTANCE;
   }
 
