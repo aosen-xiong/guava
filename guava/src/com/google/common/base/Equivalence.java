@@ -237,7 +237,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
            * handle either reference, so it's safe to circumvent compile-time type checking.
            */
           @SuppressWarnings("unchecked")
-          Equivalence<Object> equivalence = (Equivalence<Object>) this.equivalence;
+          Equivalence<@Readonly Object> equivalence = (Equivalence<@Readonly Object>) this.equivalence;
           return equivalence.equivalent(this.reference, that.reference);
         }
       }

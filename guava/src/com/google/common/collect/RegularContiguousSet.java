@@ -120,7 +120,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
     };
   }
 
-  private static boolean equalsOrThrow(Comparable<?> left, @CheckForNull Comparable<?> right) {
+  private static boolean equalsOrThrow(@Readonly Comparable<?> left, @CheckForNull @Readonly Comparable<?> right) {
     return right != null && Range.compareOrThrow(left, right) == 0;
   }
 

@@ -1450,7 +1450,7 @@ class MapMakerInternalMap<
     // Specialized implementations of map methods
 
     @CheckForNull
-    E getEntry(Object key, int hash) {
+    E getEntry(@Readonly Object key, int hash) {
       if (count != 0) { // read-volatile
         for (E e = getFirst(hash); e != null; e = e.getNext()) {
           if (e.getHash() != hash) {
@@ -1473,7 +1473,7 @@ class MapMakerInternalMap<
     }
 
     @CheckForNull
-    E getLiveEntry(Object key, int hash) {
+    E getLiveEntry(@Readonly Object key, int hash) {
       return getEntry(key, hash);
     }
 
@@ -2421,7 +2421,7 @@ class MapMakerInternalMap<
    * collected. Does not impact recency ordering.
    */
   @CheckForNull
-  E getEntry(@CheckForNull Object key) {
+  E getEntry(@CheckForNull @Readonly Object key) {
     if (key == null) {
       return null;
     }

@@ -119,7 +119,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
    * Returns {@code element} cast to {@code E}, if it actually is a nonnull E. Otherwise, throws
    * either a NullPointerException or a ClassCastException as appropriate.
    */
-  private void checkIsE(Object element) {
+  private void checkIsE(@Readonly Object element) {
     checkNotNull(element);
     if (!isActuallyE(element)) {
       throw new ClassCastException("Expected an " + type + " but got " + element);

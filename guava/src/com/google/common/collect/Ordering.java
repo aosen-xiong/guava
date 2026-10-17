@@ -972,9 +972,9 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
   @VisibleForTesting
   @ReceiverDependentMutable
   static class IncomparableValueException extends ClassCastException {
-    final Object value;
+    final @Readonly Object value;
 
-    IncomparableValueException(@ReceiverDependentMutable Object value) {
+    IncomparableValueException(@Readonly Object value) {
       super("Cannot compare value: " + value);
       this.value = value;
     }

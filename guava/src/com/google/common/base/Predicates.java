@@ -462,9 +462,9 @@ public final class Predicates {
 
   /** @see Predicates#equalTo(Object) */
   private static class IsEqualToPredicate implements Predicate<@Nullable Object>, Serializable {
-    private final Object target;
+    private final @Readonly Object target;
 
-    private IsEqualToPredicate(Object target) {
+    private IsEqualToPredicate(@Readonly Object target) {
       this.target = target;
     }
 

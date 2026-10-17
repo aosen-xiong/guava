@@ -148,9 +148,9 @@ public final class Iterables {
   // <? extends @Nullable Object> instead of <?> because of Kotlin b/189937072, discussed in Joiner.
   @Pure
   public static boolean contains(
-      Iterable<? extends @Nullable @Readonly Object> iterable, @CheckForNull Object element) {
+      @Readonly Iterable<? extends @Nullable @Readonly Object> iterable, @CheckForNull @Readonly Object element) {
     if (iterable instanceof Collection) {
-      Collection<?> collection = (Collection<?>) iterable;
+      @Readonly Collection<?> collection = (@Readonly Collection<?>) iterable;
       return Collections2.safeContains(collection, element);
     }
     return Iterators.contains(iterable.iterator(), element);
