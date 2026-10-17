@@ -2847,7 +2847,7 @@ class MapMakerInternalMap<
   final class EntrySet extends SafeToArraySet<Entry<K, V>> {
 
     @Override
-    public @ReceiverDependentMutable Iterator<Entry<K, V>> iterator(@ReceiverDependentMutable EntrySet this) {
+    public @ReceiverDependentMutable Iterator<Entry<K, V>> iterator(@ReceiverDependentMutable MapMakerInternalMap<K, V, E, S>.@ReceiverDependentMutable EntrySet this) {
       return new @ReceiverDependentMutable EntryIterator();
     }
 

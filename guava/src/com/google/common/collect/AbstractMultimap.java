@@ -222,7 +222,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
   @ReceiverDependentMutable
   class Values extends AbstractCollection<V> {
     @Override
-    public Iterator<V> iterator(@Readonly Values this) {
+    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable AbstractMultimap<K, V>.@ReceiverDependentMutable Values this) {
       return valueIterator();
     }
 

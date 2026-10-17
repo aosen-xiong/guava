@@ -3317,12 +3317,12 @@ public final class Maps {
       }
 
       @Override
-      public @ReceiverDependentMutable SortedSet<K> headSet(@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K toElement) {
+      public @ReceiverDependentMutable SortedSet<K> headSet(@ReceiverDependentMutable FilteredEntrySortedMap<K, V>.@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K toElement) {
         return (@ReceiverDependentMutable SortedSet<K>) headMap(toElement).keySet();
       }
 
       @Override
-      public @ReceiverDependentMutable SortedSet<K> tailSet(@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K fromElement) {
+      public @ReceiverDependentMutable SortedSet<K> tailSet(@ReceiverDependentMutable FilteredEntrySortedMap<K, V>.@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K fromElement) {
         return (@ReceiverDependentMutable SortedSet<K>) tailMap(fromElement).keySet();
       }
 

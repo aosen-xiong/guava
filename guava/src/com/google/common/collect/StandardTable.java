@@ -323,8 +323,8 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   }
 
   @Override
-  public Map<C, V> row(R rowKey) {
-    return new Row(rowKey);
+  public @ReceiverDependentMutable Map<C, V> row(@ReceiverDependentMutable StandardTable<R, C, V> this, R rowKey) {
+    return new @ReceiverDependentMutable Row(rowKey);
   }
 
   @ReceiverDependentMutable
@@ -470,8 +470,8 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * <p>The returned map's views have iterators that don't support {@code remove()}.
    */
   @Override
-  public Map<R, V> column(C columnKey) {
-    return new Column(columnKey);
+  public @ReceiverDependentMutable Map<R, V> column(@ReceiverDependentMutable StandardTable<R, C, V> this, C columnKey) {
+    return new @ReceiverDependentMutable Column(columnKey);
   }
 
   @ReceiverDependentMutable
@@ -631,11 +631,12 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    Set<R> createKeySet() {
-      return new KeySet();
+    @ReceiverDependentMutable Set<R> createKeySet(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable Column this) {
+      return new @ReceiverDependentMutable KeySet();
     }
 
     @WeakOuter
+    @ReceiverDependentMutable
     private class KeySet extends Maps.KeySet<R, V> {
       KeySet() {
         super(Column.this);
@@ -658,11 +659,12 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    Collection<V> createValues() {
-      return new Values();
+    @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable Column this) {
+      return new @ReceiverDependentMutable Values();
     }
 
     @WeakOuter
+    @ReceiverDependentMutable
     private class Values extends Maps.Values<R, V> {
       Values() {
         super(Column.this);
@@ -701,7 +703,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * etc., skipping any columns that have appeared previously.
    */
   @Override
-  public @ReceiverDependentMutable Set<C> columnKeySet() {
+  public @ReceiverDependentMutable Set<C> columnKeySet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     Set<C> result = columnKeySet;
     return (result == null) ? columnKeySet = new ColumnKeySet() : result;
   }
@@ -944,13 +946,13 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public Set<@KeyFor({"this"}) C> keySet() {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) C> keySet(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnMap this) {
       return columnKeySet();
     }
 
     @Override
-    Collection<Map<R, V>> createValues() {
-      return new ColumnMapValues();
+    @ReceiverDependentMutable Collection<Map<R, V>> createValues(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnMap this) {
+      return new @ReceiverDependentMutable ColumnMapValues();
     }
 
     @WeakOuter
@@ -1025,6 +1027,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @WeakOuter
+    @ReceiverDependentMutable
     private class ColumnMapValues extends Maps.Values<C, Map<R, V>> {
       ColumnMapValues() {
         super(ColumnMap.this);

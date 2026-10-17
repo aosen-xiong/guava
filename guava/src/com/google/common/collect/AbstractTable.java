@@ -221,7 +221,7 @@ abstract class AbstractTable<
   @ReceiverDependentMutable
   class Values extends AbstractCollection<V> {
     @Override
-    public Iterator<V> iterator(@Readonly Values this) {
+    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable Values this) {
       return valuesIterator();
     }
 

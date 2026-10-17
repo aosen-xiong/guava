@@ -315,7 +315,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
     public StandardDescendingMap() {}
 
     @Override
-    @ReceiverDependentMutable NavigableMap<K, V> forward(@ReceiverDependentMutable StandardDescendingMap this) {
+    @ReceiverDependentMutable NavigableMap<K, V> forward(@ReceiverDependentMutable ForwardingNavigableMap<K, V>.@ReceiverDependentMutable StandardDescendingMap this) {
       return ForwardingNavigableMap.this;
     }
 
@@ -325,7 +325,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
     }
 
     @Override
-    protected Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable StandardDescendingMap this) {
+    protected Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable ForwardingNavigableMap<K, V>.@ReceiverDependentMutable StandardDescendingMap this) {
       return new @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>>() {
         @CheckForNull private Entry<K, V> toRemove = null;
         @CheckForNull private Entry<K, V> nextOrNull = forward().lastEntry();

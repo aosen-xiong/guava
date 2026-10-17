@@ -408,12 +408,12 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
     @CFComment("PICO: this is okay only if the field can not be directly accessed")
     @Override
-    public @ReceiverDependentMutable ValueSetLink<K, V> getPredecessorInValueSet(@ReceiverDependentMutable ValueSet this) {
+    public @ReceiverDependentMutable ValueSetLink<K, V> getPredecessorInValueSet(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return lastEntry;
     }
 
     @Override
-    public @ReceiverDependentMutable ValueSetLink<K, V> getSuccessorInValueSet(@ReceiverDependentMutable ValueSet this) {
+    public @ReceiverDependentMutable ValueSetLink<K, V> getSuccessorInValueSet(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return firstEntry;
     }
 
@@ -428,7 +428,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
     }
 
     @Override
-    public Iterator<V> iterator(@ReceiverDependentMutable ValueSet this) {
+    public Iterator<V> iterator(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return new @Mutable Iterator<V>() {
         @Readonly ValueSetLink<K, V> nextEntry = firstEntry;
         @CheckForNull ValueEntry<K, V> toRemove;

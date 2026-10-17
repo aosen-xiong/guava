@@ -677,12 +677,12 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public @ReceiverDependentMutable BiMap<K, V> inverse(@ReceiverDependentMutable Inverse this) {
+    public @ReceiverDependentMutable BiMap<K, V> inverse(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable Inverse this) {
       return forward();
     }
 
     @Override
-    public @ReceiverDependentMutable Set<@KeyFor({"this"}) V> keySet(@ReceiverDependentMutable Inverse this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) V> keySet(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable Inverse this) {
       return new @ReceiverDependentMutable InverseKeySet();
     }
 
