@@ -76,7 +76,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
    *
    * @since 21.0
    */
-  public static <C extends @Immutable Comparable<?>> TreeRangeSet<C> create(Iterable<Range<C>> ranges) {
+  public static <C extends @Immutable Comparable<?>> TreeRangeSet<C> create(@Readonly Iterable<Range<C>> ranges) {
     TreeRangeSet<C> result = create();
     result.addAll(ranges);
     return result;

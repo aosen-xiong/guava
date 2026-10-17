@@ -42,6 +42,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
@@ -437,8 +438,9 @@ public final class Iterables {
    * <p><b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
    * Stream.concat(a, b)}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<@Readonly T> concat(
-      Iterable<? extends T> a, Iterable<? extends T> b) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:return.type.incompatible"}) // the view's iterator reads and removes through a's and b's iterators, so it has their mutability; an anonymous FluentIterable cannot be created @PolyMutable
+  public static <T extends @Nullable @Readonly Object> @PolyMutable Iterable<T> concat(
+      @PolyMutable Iterable<? extends T> a, @PolyMutable Iterable<? extends T> b) {
     return FluentIterable.concat(a, b);
   }
 

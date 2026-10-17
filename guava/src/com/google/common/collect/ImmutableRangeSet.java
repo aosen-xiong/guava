@@ -149,7 +149,7 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
    *
    * @since 21.0
    */
-  public static <C extends @Immutable Comparable<?>> ImmutableRangeSet<C> unionOf(Iterable<Range<C>> ranges) {
+  public static <C extends @Immutable Comparable<?>> ImmutableRangeSet<C> unionOf(@Readonly Iterable<Range<C>> ranges) {
     return copyOf(TreeRangeSet.create(ranges));
   }
 

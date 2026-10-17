@@ -194,7 +194,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0
    */
-  public static <T extends @Nullable Object> FluentIterable<T> concat(
+  public static <T extends @Nullable @Readonly Object> FluentIterable<T> concat(
       Iterable<? extends T> a, Iterable<? extends T> b) {
     return concatNoDefensiveCopy(a, b);
   }
