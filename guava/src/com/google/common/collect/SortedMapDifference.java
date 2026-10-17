@@ -36,14 +36,14 @@ public interface SortedMapDifference<K extends @Nullable @Immutable Object, V ex
     extends MapDifference<K, V> {
 
   @Override
-  SortedMap<K, V> entriesOnlyOnLeft();
+  @Readonly SortedMap<K, V> entriesOnlyOnLeft();
 
   @Override
-  SortedMap<K, V> entriesOnlyOnRight();
+  @Readonly SortedMap<K, V> entriesOnlyOnRight();
 
   @Override
-  SortedMap<K, V> entriesInCommon();
+  @Readonly SortedMap<K, V> entriesInCommon();
 
   @Override
-  SortedMap<K, ValueDifference<V>> entriesDiffering();
+  @Readonly SortedMap<K, ValueDifference<V>> entriesDiffering();
 }

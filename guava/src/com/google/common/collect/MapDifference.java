@@ -50,25 +50,25 @@ public interface MapDifference<K extends @Nullable @Immutable Object, V extends 
    * Returns an unmodifiable map containing the entries from the left map whose keys are not present
    * in the right map.
    */
-  Map<K, V> entriesOnlyOnLeft();
+  @Readonly Map<K, V> entriesOnlyOnLeft();
 
   /**
    * Returns an unmodifiable map containing the entries from the right map whose keys are not
    * present in the left map.
    */
-  Map<K, V> entriesOnlyOnRight();
+  @Readonly Map<K, V> entriesOnlyOnRight();
 
   /**
    * Returns an unmodifiable map containing the entries that appear in both maps; that is, the
    * intersection of the two maps.
    */
-  Map<K, V> entriesInCommon();
+  @Readonly Map<K, V> entriesInCommon();
 
   /**
    * Returns an unmodifiable map describing keys that appear in both maps, but with different
    * values.
    */
-  Map<K, ValueDifference<V>> entriesDiffering();
+  @Readonly Map<K, ValueDifference<V>> entriesDiffering();
 
   /**
    * Compares the specified object with this instance for equality. Returns {@code true} if the
