@@ -265,14 +265,14 @@ class MapMakerInternalMap<
   enum Strength {
     STRONG {
       @Override
-      Equivalence<Object> defaultEquivalence() {
+      Equivalence<@Readonly Object> defaultEquivalence() {
         return Equivalence.equals();
       }
     },
 
     WEAK {
       @Override
-      Equivalence<Object> defaultEquivalence() {
+      Equivalence<@Readonly Object> defaultEquivalence() {
         return Equivalence.identity();
       }
     };
@@ -282,7 +282,7 @@ class MapMakerInternalMap<
      * at this strength. This strategy will be used unless the user explicitly specifies an
      * alternate strategy.
      */
-    abstract Equivalence<Object> defaultEquivalence();
+    abstract Equivalence<@Readonly Object> defaultEquivalence();
   }
 
   /**
@@ -1265,7 +1265,7 @@ class MapMakerInternalMap<
      * A counter of the number of reads since the last write, used to drain queues on a small
      * fraction of read operations.
      */
-    final AtomicInteger readCount = new AtomicInteger();
+    final @Mutable AtomicInteger readCount = new AtomicInteger();
 
     Segment(MapMakerInternalMap<K, V, E, S> map, int initialCapacity) {
       this.map = map;
@@ -1319,12 +1319,12 @@ class MapMakerInternalMap<
     abstract E castForTesting(InternalEntry<K, V, ?> entry);
 
     /** Unsafely extracts the key reference queue used by this segment. */
-    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @Mutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       throw new AssertionError();
     }
 
     /** Unsafely extracts the value reference queue used by this segment. */
-    @ReceiverDependentMutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
+    @Mutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
       throw new AssertionError();
     }
 
@@ -2092,7 +2092,7 @@ class MapMakerInternalMap<
   /** Concrete implementation of {@link Segment} for strong keys and weak values. */
   static final class StrongKeyWeakValueSegment<K extends @Immutable Object, V>
       extends Segment<K, V, StrongKeyWeakValueEntry<K, V>, StrongKeyWeakValueSegment<K, V>> {
-    private final ReferenceQueue<V> queueForValues = new ReferenceQueue<V>();
+    private final @Mutable ReferenceQueue<V> queueForValues = new ReferenceQueue<V>();
 
     StrongKeyWeakValueSegment(
         MapMakerInternalMap<K, V, StrongKeyWeakValueEntry<K, V>, StrongKeyWeakValueSegment<K, V>>
@@ -2182,7 +2182,7 @@ class MapMakerInternalMap<
   @ReceiverDependentMutable
   static final class WeakKeyStrongValueSegment<K extends @Immutable Object, V>
       extends Segment<K, V, WeakKeyStrongValueEntry<K, V>, WeakKeyStrongValueSegment<K, V>> {
-    private final ReferenceQueue<K> queueForKeys = new ReferenceQueue<K>();
+    private final @Mutable ReferenceQueue<K> queueForKeys = new ReferenceQueue<K>();
 
     WeakKeyStrongValueSegment(
         MapMakerInternalMap<K, V, WeakKeyStrongValueEntry<K, V>, WeakKeyStrongValueSegment<K, V>>
@@ -2197,7 +2197,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @Mutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
@@ -2222,8 +2222,8 @@ class MapMakerInternalMap<
   @ReceiverDependentMutable
   static final class WeakKeyWeakValueSegment<K extends @Immutable Object, V>
       extends Segment<K, V, WeakKeyWeakValueEntry<K, V>, WeakKeyWeakValueSegment<K, V>> {
-    private final ReferenceQueue<K> queueForKeys = new ReferenceQueue<K>();
-    private final ReferenceQueue<V> queueForValues = new ReferenceQueue<V>();
+    private final @Mutable ReferenceQueue<K> queueForKeys = new ReferenceQueue<K>();
+    private final @Mutable ReferenceQueue<V> queueForValues = new ReferenceQueue<V>();
 
     WeakKeyWeakValueSegment(
         MapMakerInternalMap<K, V, WeakKeyWeakValueEntry<K, V>, WeakKeyWeakValueSegment<K, V>> map,
@@ -2237,12 +2237,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @Mutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
     @Override
-    @ReceiverDependentMutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
+    @Mutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
       return queueForValues;
     }
 
@@ -2294,7 +2294,7 @@ class MapMakerInternalMap<
   @ReceiverDependentMutable
   static final class WeakKeyDummyValueSegment<K extends @Immutable Object>
       extends Segment<K, Dummy, WeakKeyDummyValueEntry<K>, WeakKeyDummyValueSegment<K>> {
-    private final ReferenceQueue<K> queueForKeys = new ReferenceQueue<K>();
+    private final @Mutable ReferenceQueue<K> queueForKeys = new ReferenceQueue<K>();
 
     WeakKeyDummyValueSegment(
         MapMakerInternalMap<K, Dummy, WeakKeyDummyValueEntry<K>, WeakKeyDummyValueSegment<K>> map,
@@ -2308,7 +2308,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @Mutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
@@ -2944,8 +2944,8 @@ class MapMakerInternalMap<
 
     final Strength keyStrength;
     final Strength valueStrength;
-    final Equivalence<Object> keyEquivalence;
-    final Equivalence<Object> valueEquivalence;
+    final Equivalence<@Readonly Object> keyEquivalence;
+    final Equivalence<@Readonly Object> valueEquivalence;
     final int concurrencyLevel;
 
     transient ConcurrentMap<K, V> delegate;
@@ -2953,8 +2953,8 @@ class MapMakerInternalMap<
     AbstractSerializationProxy(
         Strength keyStrength,
         Strength valueStrength,
-        Equivalence<Object> keyEquivalence,
-        Equivalence<Object> valueEquivalence,
+        Equivalence<@Readonly Object> keyEquivalence,
+        Equivalence<@Readonly Object> valueEquivalence,
         int concurrencyLevel,
         ConcurrentMap<K, V> delegate) {
       this.keyStrength = keyStrength;
@@ -3015,8 +3015,8 @@ class MapMakerInternalMap<
     SerializationProxy(
         Strength keyStrength,
         Strength valueStrength,
-        Equivalence<Object> keyEquivalence,
-        Equivalence<Object> valueEquivalence,
+        Equivalence<@Readonly Object> keyEquivalence,
+        Equivalence<@Readonly Object> valueEquivalence,
         int concurrencyLevel,
         ConcurrentMap<K, V> delegate) {
       super(
