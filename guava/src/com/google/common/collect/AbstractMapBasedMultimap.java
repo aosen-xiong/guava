@@ -1089,6 +1089,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   private final class NavigableKeySet extends SortedKeySet implements NavigableSet<K> {
     NavigableKeySet(NavigableMap<K, Collection<V>> subMap) {
       super(subMap);
@@ -1584,6 +1585,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
   }
 
+  @ReceiverDependentMutable
   private final class NavigableAsMap extends SortedAsMap implements NavigableMap<K, Collection<V>> {
 
     NavigableAsMap(NavigableMap<K, @ReceiverDependentMutable Collection<V>> submap) {
@@ -1686,12 +1688,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> descendingMap(@PolyMutable NavigableAsMap this) {
-      return new @PolyMutable NavigableAsMap(sortedMap().descendingMap());
+    public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> descendingMap(@ReceiverDependentMutable NavigableAsMap this) {
+      return new @ReceiverDependentMutable NavigableAsMap(sortedMap().descendingMap());
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> keySet(@PolyMutable NavigableAsMap this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable NavigableAsMap this) {
       return (@PolyMutable NavigableSet<K>) super.keySet();
     }
 
@@ -1701,52 +1703,52 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable NavigableAsMap this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable NavigableAsMap this) {
       return keySet();
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@PolyMutable NavigableAsMap this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable NavigableAsMap this) {
       return descendingMap().navigableKeySet();
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> subMap(
-            @PolyMutable NavigableAsMap this,
+    public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> subMap(
+            @ReceiverDependentMutable NavigableAsMap this,
         @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return subMap(fromKey, true, toKey, false);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> subMap(
-            @PolyMutable NavigableAsMap this,
+    public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> subMap(
+            @ReceiverDependentMutable NavigableAsMap this,
         @ParametricNullness K fromKey,
         boolean fromInclusive,
         @ParametricNullness K toKey,
         boolean toInclusive) {
-      return new @PolyMutable NavigableAsMap(sortedMap().subMap(fromKey, fromInclusive, toKey, toInclusive));
+      return new @ReceiverDependentMutable NavigableAsMap(sortedMap().subMap(fromKey, fromInclusive, toKey, toInclusive));
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> headMap(@PolyMutable NavigableAsMap this, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> headMap(@ReceiverDependentMutable NavigableAsMap this, @ParametricNullness K toKey) {
       return headMap(toKey, false);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> headMap(@PolyMutable NavigableAsMap this, @ParametricNullness K toKey, boolean inclusive) {
-      return new @PolyMutable NavigableAsMap(sortedMap().headMap(toKey, inclusive));
+    public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> headMap(@ReceiverDependentMutable NavigableAsMap this, @ParametricNullness K toKey, boolean inclusive) {
+      return new @ReceiverDependentMutable NavigableAsMap(sortedMap().headMap(toKey, inclusive));
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> tailMap(@PolyMutable NavigableAsMap this, @ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> tailMap(@ReceiverDependentMutable NavigableAsMap this, @ParametricNullness K fromKey) {
       return tailMap(fromKey, true);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> tailMap(
-            @PolyMutable NavigableAsMap this,
+    public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> tailMap(
+            @ReceiverDependentMutable NavigableAsMap this,
         @ParametricNullness K fromKey, boolean inclusive) {
-      return new @PolyMutable NavigableAsMap(sortedMap().tailMap(fromKey, inclusive));
+      return new @ReceiverDependentMutable NavigableAsMap(sortedMap().tailMap(fromKey, inclusive));
     }
   }
 
