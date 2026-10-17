@@ -228,7 +228,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<@Readonly E> copyOf(Iterable<? extends E> elements) {
+  public static <E> ImmutableSet<@Readonly E> copyOf(@Readonly Iterable<? extends E> elements) {
     return (elements instanceof Collection)
         ? copyOf((Collection<? extends E>) elements)
         : copyOf(elements.iterator());
@@ -240,7 +240,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<E> copyOf(Iterator<? extends E> elements) {
+  public static <E> ImmutableSet<E> copyOf(@Readonly Iterator<? extends E> elements) {
     // We special-case for 0 or 1 elements, but anything further is madness.
     if (!elements.hasNext()) {
       return of();
@@ -555,14 +555,14 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
      */
     @Override
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       super.addAll(elements);
       return this;
     }
 
     @Override
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

@@ -217,7 +217,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
    * @throws ClassCastException if the elements are not mutually comparable
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOf(Iterable<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOf(@Readonly Iterable<? extends E> elements) {
     // Hack around E not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedMultisetFauxverideShim.
     @SuppressWarnings("unchecked")
@@ -235,7 +235,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
    * @throws ClassCastException if the elements are not mutually comparable
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOf(Iterator<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOf(@Readonly Iterator<? extends E> elements) {
     // Hack around E not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedMultisetFauxverideShim.
     @SuppressWarnings("unchecked")
@@ -250,7 +250,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
   public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOf(
-      @Readonly Comparator<? super E> comparator, Iterator<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, @Readonly Iterator<? extends E> elements) {
     checkNotNull(comparator);
     return new Builder<E>(comparator).addAll(elements).build();
   }
@@ -266,7 +266,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
   public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOf(
-      @Readonly Comparator<? super E> comparator, Iterable<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, @Readonly Iterable<? extends E> elements) {
     if (elements instanceof ImmutableSortedMultiset) {
       @SuppressWarnings("unchecked") // immutable collections are always safe for covariant casts
       ImmutableSortedMultiset<E> multiset = (ImmutableSortedMultiset<E>) elements;
@@ -546,7 +546,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       super.addAll(elements);
       return this;
     }
@@ -560,7 +560,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

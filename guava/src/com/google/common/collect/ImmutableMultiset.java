@@ -194,7 +194,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E extends @Immutable Object> ImmutableMultiset<E> copyOf(Iterable<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableMultiset<E> copyOf(@Readonly Iterable<? extends E> elements) {
     if (elements instanceof ImmutableMultiset) {
       @SuppressWarnings("unchecked") // all supported methods are covariant
       ImmutableMultiset<E> result = (ImmutableMultiset<E>) elements;
@@ -217,7 +217,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E extends @Immutable Object> ImmutableMultiset<E> copyOf(Iterator<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableMultiset<E> copyOf(@Readonly Iterator<? extends E> elements) {
     Multiset<E> multiset = LinkedHashMultiset.create();
     Iterators.addAll(multiset, elements);
     return copyFromEntries(multiset.entrySet());
@@ -580,7 +580,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       if (elements instanceof Multiset) {
         Multiset<? extends E> multiset = Multisets.cast(elements);
         multiset.forEachEntry((e, n) -> contents.add(checkNotNull(e), n));
@@ -599,7 +599,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

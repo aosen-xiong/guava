@@ -242,7 +242,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if {@code elements} contains a null element
    */
-  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(Iterable<? extends E> elements) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Readonly Iterable<? extends E> elements) {
     checkNotNull(elements); // TODO(kevinb): is this here only for GWT?
     return (elements instanceof Collection)
         ? copyOf((Collection<? extends E>) elements)
@@ -280,7 +280,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if {@code elements} contains a null element
    */
-  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(Iterator<? extends E> elements) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Readonly Iterator<? extends E> elements) {
     // We special-case for 0 or 1 elements, but going further is madness.
     if (!elements.hasNext()) {
       return of();
@@ -326,7 +326,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    * @since 21.0
    */
   public static <E extends @Immutable Comparable<? super E>> ImmutableList<E> sortedCopyOf(
-      Iterable<? extends E> elements) {
+      @Readonly Iterable<? extends E> elements) {
     @Readonly Comparable<?>[] array = Iterables.toArray(elements, new Comparable<?>[0]);
     checkElementsNotNull((Object[]) array);
     Arrays.sort(array);
@@ -896,7 +896,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       checkNotNull(elements);
       if (elements instanceof Collection) {
         Collection<?> collection = (Collection<?>) elements;
@@ -920,7 +920,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

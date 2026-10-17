@@ -220,7 +220,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws ClassCastException if the elements are not mutually comparable
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSortedSet<E> copyOf(Iterable<? extends E> elements) {
+  public static <E> ImmutableSortedSet<E> copyOf(@Readonly Iterable<? extends E> elements) {
     // Hack around E not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedSetFauxverideShim.
     @SuppressWarnings("unchecked")
@@ -252,7 +252,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws NullPointerException if any of {@code elements} is null
    * @since 7.0 (source-compatible since 2.0)
    */
-  public static <E> ImmutableSortedSet<E> copyOf(Collection<? extends E> elements) {
+  public static <E> ImmutableSortedSet<E> copyOf(@Readonly Collection<? extends E> elements) {
     // Hack around E not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedSetFauxverideShim.
     @SuppressWarnings("unchecked")
@@ -271,7 +271,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws ClassCastException if the elements are not mutually comparable
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSortedSet<E> copyOf(Iterator<? extends E> elements) {
+  public static <E> ImmutableSortedSet<E> copyOf(@Readonly Iterator<? extends E> elements) {
     // Hack around E not being a subtype of Comparable.
     // Unsafe, see ImmutableSortedSetFauxverideShim.
     @SuppressWarnings("unchecked")
@@ -287,7 +287,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
   public static <E> ImmutableSortedSet<E> copyOf(
-      @Readonly Comparator<? super E> comparator, Iterator<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, @Readonly Iterator<? extends E> elements) {
     return new Builder<E>(comparator).addAll(elements).build();
   }
 
@@ -303,7 +303,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
    * @throws NullPointerException if {@code comparator} or any of {@code elements} is null
    */
   public static <E> ImmutableSortedSet<E> copyOf(
-      @Readonly Comparator<? super E> comparator, Iterable<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, @Readonly Iterable<? extends E> elements) {
     checkNotNull(comparator);
     boolean hasSameComparator = SortedIterables.hasSameComparator(comparator, elements);
 
@@ -547,7 +547,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       super.addAll(elements);
       return this;
     }
@@ -562,7 +562,7 @@ public abstract class ImmutableSortedSet<E> extends ImmutableSet.CachingAsList<E
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

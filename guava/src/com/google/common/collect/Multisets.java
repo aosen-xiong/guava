@@ -416,9 +416,9 @@ public final class Multisets {
    * distinct elements is only computed if {@code elements} is an instance of {@code Multiset};
    * otherwise the default value of 11 is returned.
    */
-  static int inferDistinctElements(Iterable<?> elements) {
+  static int inferDistinctElements(@Readonly Iterable<?> elements) {
     if (elements instanceof Multiset) {
-      return ((Multiset<?>) elements).elementSet().size();
+      return ((@Readonly Multiset<?>) elements).elementSet().size();
     }
     return 11; // initial capacity will be rounded up to 16
   }

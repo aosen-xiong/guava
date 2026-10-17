@@ -137,7 +137,7 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
    * @throws IllegalArgumentException if any ranges overlap or are empty
    * @since 21.0
    */
-  public static <C extends @Immutable Comparable<?>> ImmutableRangeSet<C> copyOf(Iterable<Range<C>> ranges) {
+  public static <C extends @Immutable Comparable<?>> ImmutableRangeSet<C> copyOf(@Readonly Iterable<Range<C>> ranges) {
     return new ImmutableRangeSet.Builder<C>().addAll(ranges).build();
   }
 
@@ -812,7 +812,7 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
      * @since 21.0
      */
     @CanIgnoreReturnValue
-    public Builder<C> addAll(Iterable<Range<C>> ranges) {
+    public Builder<C> addAll(@Readonly Iterable<Range<C>> ranges) {
       // CHECKER BUG: the enhanced-for loop variable is defaulted @Mutable instead of taking
         // Range's @Immutable class bound; ranges.get(0) on the same field is correctly
         // @Immutable. The checker flags its own default with type.invalid.annotations.on.use.

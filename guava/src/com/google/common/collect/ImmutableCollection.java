@@ -487,7 +487,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       for (E element : elements) {
         add(element);
       }
@@ -505,7 +505,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
       while (elements.hasNext()) {
         add(elements.next());
       }

@@ -79,7 +79,7 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
    * @param elements the elements that the multiset should contain
    */
   public static <E extends @Nullable @Immutable Object> LinkedHashMultiset<E> create(
-      Iterable<? extends E> elements) {
+      @Readonly Iterable<? extends E> elements) {
     LinkedHashMultiset<E> multiset = create(Multisets.inferDistinctElements(elements));
     Iterables.addAll(multiset, elements);
     return multiset;
