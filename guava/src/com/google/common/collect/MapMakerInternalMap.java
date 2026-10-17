@@ -1278,7 +1278,7 @@ class MapMakerInternalMap<
      * <p>This method exists so that the {@link Segment} code can be generic in terms of {@code S},
      * the type of the concrete implementation.
      */
-    abstract S self();
+    abstract @ReceiverDependentMutable S self();
 
     /** Drains the reference queues used by this segment, if any. */
     @GuardedBy("this")
@@ -1319,12 +1319,12 @@ class MapMakerInternalMap<
     abstract E castForTesting(InternalEntry<K, V, ?> entry);
 
     /** Unsafely extracts the key reference queue used by this segment. */
-    ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       throw new AssertionError();
     }
 
     /** Unsafely extracts the value reference queue used by this segment. */
-    ReferenceQueue<V> getValueReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
       throw new AssertionError();
     }
 
@@ -2107,7 +2107,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    ReferenceQueue<V> getValueReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
       return queueForValues;
     }
 
