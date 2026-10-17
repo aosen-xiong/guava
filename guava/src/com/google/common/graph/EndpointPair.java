@@ -25,6 +25,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.errorprone.annotations.Immutable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -67,7 +68,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
   }
 
   /** Returns an {@link EndpointPair} representing the endpoints of an edge in {@code network}. */
-  static <N> EndpointPair<N> of(Network<?, ?> network, N nodeU, N nodeV) {
+  static <N> EndpointPair<N> of(@Readonly Network<?, ?> network, N nodeU, N nodeV) {
     return network.isDirected() ? ordered(nodeU, nodeV) : unordered(nodeU, nodeV);
   }
 

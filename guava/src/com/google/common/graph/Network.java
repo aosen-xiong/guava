@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -106,6 +107,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @DoNotMock("Use NetworkBuilder to create a real instance")
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
   //
   // Network-level accessors
@@ -125,7 +127,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * treated as if collapsed into a single edge. For example, the {@link #degree(Object)} of a node
    * in the {@link Graph} view may be less than the degree of the same node in this {@link Network}.
    */
-  Graph<N> asGraph();
+  @ReceiverDependentMutable Graph<N> asGraph();
 
   //
   // Network properties

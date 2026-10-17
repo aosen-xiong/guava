@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Collection;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -105,6 +106,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @DoNotMock("Use GraphBuilder to create a real instance")
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface Graph<N> extends BaseGraph<N> {
   //
   // Graph-level accessors

@@ -47,6 +47,7 @@ import java.util.Map;
 @Immutable(containerOf = {"N", "E"})
 @SuppressWarnings("Immutable") // Extends StandardNetwork but uses ImmutableMaps.
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public final class ImmutableNetwork<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> extends StandardNetwork<N, E> {
 
   private ImmutableNetwork(Network<N, E> network) {

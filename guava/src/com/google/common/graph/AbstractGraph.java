@@ -18,6 +18,7 @@ package com.google.common.graph;
 
 import com.google.common.annotations.Beta;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -30,6 +31,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public abstract class AbstractGraph<N> extends AbstractBaseGraph<N> implements Graph<N> {
 
   @Override

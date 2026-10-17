@@ -20,6 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
@@ -29,12 +32,13 @@ import org.checkerframework.checker.mutability.qual.Immutable;
  * @author James Sexton
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 final class MapRetrievalCache<K extends @Immutable Object, V> extends MapIteratorCache<K, V> {
   // See the note about volatile in the superclass.
-  @CheckForNull private transient volatile CacheEntry<K, V> cacheEntry1;
-  @CheckForNull private transient volatile CacheEntry<K, V> cacheEntry2;
+  @CheckForNull private transient volatile @Assignable @Mutable CacheEntry<K, V> cacheEntry1;
+  @CheckForNull private transient volatile @Assignable @Mutable CacheEntry<K, V> cacheEntry2;
 
-  MapRetrievalCache(Map<K, V> backingMap) {
+  MapRetrievalCache(@ReceiverDependentMutable Map<K, V> backingMap) {
     super(backingMap);
   }
 
@@ -85,7 +89,7 @@ final class MapRetrievalCache<K extends @Immutable Object, V> extends MapIterato
   }
 
   @Override
-  void clearCache() {
+  void clearCache(@Mutable MapRetrievalCache<K, V> this) {
     super.clearCache();
     cacheEntry1 = null;
     cacheEntry2 = null;

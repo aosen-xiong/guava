@@ -20,6 +20,7 @@ import com.google.common.annotations.Beta;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -109,6 +110,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface ValueGraph<N, V> extends BaseGraph<N> {
   //
   // ValueGraph-level accessors
@@ -126,7 +128,7 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
    * Returns a live view of this graph as a {@link Graph}. The resulting {@link Graph} will have an
    * edge connecting node A to node B if this {@link ValueGraph} has an edge connecting A to B.
    */
-  Graph<N> asGraph();
+  @ReceiverDependentMutable Graph<N> asGraph();
 
   //
   // ValueGraph properties

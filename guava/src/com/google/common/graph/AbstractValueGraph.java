@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -40,12 +42,13 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
     implements ValueGraph<N, V> {
 
   @Override
-  public Graph<N> asGraph() {
-    return new AbstractGraph<N>() {
+  public @ReceiverDependentMutable Graph<N> asGraph() {
+    return new @ReceiverDependentMutable AbstractGraph<N>() {
       @Override
       public Set<N> nodes() {
         return AbstractValueGraph.this.nodes();
@@ -151,7 +154,7 @@ public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
         + edgeValueMap(this);
   }
 
-  private static <N, V> Map<EndpointPair<N>, V> edgeValueMap(final ValueGraph<N, V> graph) {
+  private static <N, V> Map<EndpointPair<N>, V> edgeValueMap(final @Readonly ValueGraph<N, V> graph) {
     return Maps.asMap(
         graph.edges(),
         edge ->

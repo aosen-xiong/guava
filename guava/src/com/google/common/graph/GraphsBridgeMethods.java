@@ -2,6 +2,7 @@ package com.google.common.graph;
 
 import com.google.common.annotations.Beta;
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Supertype for {@link Graphs}, containing the old signatures of methods whose signatures we've
@@ -12,7 +13,7 @@ import java.util.Set;
 abstract class GraphsBridgeMethods {
 
   @SuppressWarnings("PreferredInterfaceType")
-  public static <N> Graph<N> transitiveClosure(Graph<N> graph) {
+  public static <N extends @Immutable Object> @Immutable Graph<N> transitiveClosure(Graph<N> graph) {
     return Graphs.transitiveClosure(graph);
   }
 

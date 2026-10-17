@@ -45,6 +45,7 @@ import com.google.errorprone.annotations.Immutable;
 @Immutable(containerOf = {"N", "V"})
 @SuppressWarnings("Immutable") // Extends StandardValueGraph but uses ImmutableMaps.
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public final class ImmutableValueGraph<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> extends StandardValueGraph<N, V> {
 
   private ImmutableValueGraph(ValueGraph<N, V> graph) {

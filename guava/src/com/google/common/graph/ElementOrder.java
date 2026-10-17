@@ -29,6 +29,7 @@ import com.google.errorprone.annotations.Immutable;
 import java.util.Comparator;
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -47,6 +48,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @Immutable
+@org.checkerframework.checker.mutability.qual.Immutable
 @ElementTypesAreNonnullByDefault
 @SuppressWarnings("mutability")
 public final class ElementOrder<T> {
@@ -190,7 +192,8 @@ public final class ElementOrder<T> {
   }
 
   /** Returns an empty mutable map whose keys will respect this {@link ElementOrder}. */
-  <K extends T, V> Map<K, V> createMap(int expectedSize) {
+  // A fresh map: return-only @PolyMutable, so a receiver-dependent graph can take it.
+  <K extends T, V> @PolyMutable Map<K, V> createMap(int expectedSize) {
     switch (type) {
       case UNORDERED:
         return Maps.newHashMapWithExpectedSize(expectedSize);

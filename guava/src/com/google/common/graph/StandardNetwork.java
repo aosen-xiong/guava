@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * Standard implementation of {@link Network} that supports the options supplied by {@link
@@ -49,6 +50,7 @@ import java.util.TreeMap;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
   private final boolean isDirected;
   private final boolean allowsParallelEdges;
@@ -77,8 +79,8 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
    */
   StandardNetwork(
       NetworkBuilder<? super N, ? super E> builder,
-      Map<N, NetworkConnections<N, E>> nodeConnections,
-      Map<E, N> edgeToReferenceNode) {
+      @ReceiverDependentMutable Map<N, NetworkConnections<N, E>> nodeConnections,
+      @ReceiverDependentMutable Map<E, N> edgeToReferenceNode) {
     this.isDirected = builder.directed;
     this.allowsParallelEdges = builder.allowsParallelEdges;
     this.allowsSelfLoops = builder.allowsSelfLoops;
@@ -88,9 +90,9 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
     // methods that access the same node(s) repeatedly, such as Graphs.removeEdgesConnecting().
     this.nodeConnections =
         (nodeConnections instanceof TreeMap)
-            ? new MapRetrievalCache<N, NetworkConnections<N, E>>(nodeConnections)
-            : new MapIteratorCache<N, NetworkConnections<N, E>>(nodeConnections);
-    this.edgeToReferenceNode = new MapIteratorCache<>(edgeToReferenceNode);
+            ? new @ReceiverDependentMutable MapRetrievalCache<N, NetworkConnections<N, E>>(nodeConnections)
+            : new @ReceiverDependentMutable MapIteratorCache<N, NetworkConnections<N, E>>(nodeConnections);
+    this.edgeToReferenceNode = new @ReceiverDependentMutable MapIteratorCache<>(edgeToReferenceNode);
   }
 
   @Override

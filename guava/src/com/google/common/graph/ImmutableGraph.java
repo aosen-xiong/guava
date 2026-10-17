@@ -46,11 +46,12 @@ import com.google.errorprone.annotations.Immutable;
 @Beta
 @Immutable(containerOf = {"N"})
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public class ImmutableGraph<N extends @org.checkerframework.checker.mutability.qual.Immutable Object> extends ForwardingGraph<N> {
   @SuppressWarnings("Immutable") // The backing graph must be immutable.
   private final BaseGraph<N> backingGraph;
 
-  ImmutableGraph(BaseGraph<N> backingGraph) {
+  ImmutableGraph(@org.checkerframework.checker.mutability.qual.Immutable BaseGraph<N> backingGraph) {
     this.backingGraph = backingGraph;
   }
 
@@ -59,7 +60,7 @@ public class ImmutableGraph<N extends @org.checkerframework.checker.mutability.q
     return (graph instanceof ImmutableGraph)
         ? (ImmutableGraph<N>) graph
         : new ImmutableGraph<N>(
-            new StandardValueGraph<N, Presence>(
+            new @org.checkerframework.checker.mutability.qual.Immutable StandardValueGraph<N, Presence>(
                 GraphBuilder.from(graph), getNodeConnections(graph), graph.edges().size()));
   }
 
@@ -101,7 +102,7 @@ public class ImmutableGraph<N extends @org.checkerframework.checker.mutability.q
   }
 
   @Override
-  BaseGraph<N> delegate() {
+  @org.checkerframework.checker.mutability.qual.Immutable BaseGraph<N> delegate() {
     return backingGraph;
   }
 

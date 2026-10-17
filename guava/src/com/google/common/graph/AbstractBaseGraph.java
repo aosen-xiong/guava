@@ -32,6 +32,7 @@ import com.google.common.primitives.Ints;
 import java.util.AbstractSet;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -45,6 +46,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @param <N> Node parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
 
   /**
