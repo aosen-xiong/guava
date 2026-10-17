@@ -52,7 +52,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 @Immutable
 final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
-  static final RegularImmutableSortedSet<Comparable> NATURAL_EMPTY_SET =
+  static final RegularImmutableSortedSet<@Immutable Comparable> NATURAL_EMPTY_SET =
       new RegularImmutableSortedSet<>(ImmutableList.<@Immutable Comparable>of(), Ordering.natural());
 
   private final transient ImmutableList<E> elements;

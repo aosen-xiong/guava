@@ -470,7 +470,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
     return new ByFunctionOrdering<>(function, this);
   }
 
-  <T2 extends @Immutable T> Ordering<Entry<T2, ?>> onKeys() {
+  <T2 extends @Immutable T> Ordering<@Readonly Entry<T2, ?>> onKeys() {
     return onResultOf(Maps.<T2>keyFunction());
   }
 

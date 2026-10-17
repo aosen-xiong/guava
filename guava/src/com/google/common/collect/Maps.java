@@ -129,7 +129,7 @@ public final class Maps {
   }
 
   @SuppressWarnings("unchecked")
-  static <K extends @Nullable @Immutable Object> Function<Entry<K, ?>, K> keyFunction() {
+  static <K extends @Nullable @Immutable Object> Function<@Readonly Entry<K, ?>, K> keyFunction() {
     return (Function) EntryFunction.KEY;
   }
 
@@ -2503,7 +2503,7 @@ public final class Maps {
     }
   }
 
-  static <K extends @Nullable @Immutable Object> Predicate<Entry<K, ?>> keyPredicateOnEntries(
+  static <K extends @Nullable @Immutable Object> Predicate<@Readonly Entry<K, ?>> keyPredicateOnEntries(
       Predicate<? super K> keyPredicate) {
     return compose(keyPredicate, Maps.<K>keyFunction());
   }
@@ -2539,7 +2539,7 @@ public final class Maps {
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterKeys(
       Map<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
     checkNotNull(keyPredicate);
-    Predicate<Entry<K, ?>> entryPredicate = keyPredicateOnEntries(keyPredicate);
+    Predicate<@Readonly Entry<K, ?>> entryPredicate = keyPredicateOnEntries(keyPredicate);
     return (unfiltered instanceof AbstractFilteredMap)
         ? filterFiltered((AbstractFilteredMap<K, V>) unfiltered, entryPredicate)
         : new FilteredKeyMap<K, V>(checkNotNull(unfiltered), keyPredicate, entryPredicate);

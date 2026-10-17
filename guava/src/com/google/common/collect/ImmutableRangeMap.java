@@ -115,7 +115,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
    */
   @DoNotMock
   public static final class Builder<K extends @Immutable Comparable<?>, V> {
-    private final List<Entry<Range<K>, V>> entries;
+    private final List<@Immutable Entry<Range<K>, V>> entries;
 
     public Builder() {
       this.entries = Lists.newArrayList();

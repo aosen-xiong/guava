@@ -129,7 +129,7 @@ public final class ImmutableClassToInstanceMap<B>
       return this;
     }
 
-    private static <T> T cast(Class<T> type, Object value) {
+    private static <T> T cast(Class<T> type, @Readonly Object value) {
       return Primitives.wrap(type).cast(value);
     }
 
