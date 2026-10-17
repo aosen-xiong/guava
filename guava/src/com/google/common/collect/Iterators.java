@@ -475,7 +475,7 @@ public final class Iterators {
    *
    * <p>This is mainly just to avoid the intermediate ArrayDeque in ConsumingQueueIterator.
    */
-  private static <I extends @Readonly Iterator<?>> @Readonly Iterator<I> consumingForArray(@Nullable I... elements) {
+  private static <I extends @Readonly Iterator<?>> Iterator<I> consumingForArray(@Nullable I... elements) {
     return new @Mutable UnmodifiableIterator<I>() {
       int index = 0;
 

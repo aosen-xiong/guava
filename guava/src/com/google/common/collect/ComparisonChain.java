@@ -105,8 +105,8 @@ public abstract class ComparisonChain {
       new ComparisonChain() {
         @SuppressWarnings("unchecked") // unsafe; see discussion on supertype
         @Override
-        public ComparisonChain compare(Comparable<?> left, Comparable<?> right) {
-          return classify(((Comparable<Object>) left).compareTo(right));
+        public ComparisonChain compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right) {
+          return classify(((@Readonly Comparable<@Readonly Object>) left).compareTo(right));
         }
 
         @Override
@@ -167,7 +167,7 @@ public abstract class ComparisonChain {
     }
 
     @Override
-    public ComparisonChain compare(Comparable<?> left, Comparable<?> right) {
+    public ComparisonChain compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right) {
       return this;
     }
 
@@ -229,7 +229,7 @@ public abstract class ComparisonChain {
    *
    * @throws ClassCastException if the parameters are not mutually comparable
    */
-  public abstract ComparisonChain compare(Comparable<?> left, Comparable<?> right);
+  public abstract ComparisonChain compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right);
 
   /**
    * Compares two objects using a comparator, <i>if</i> the result of this comparison chain has not

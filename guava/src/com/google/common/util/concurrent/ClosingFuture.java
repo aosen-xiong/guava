@@ -1281,7 +1281,7 @@ public final class ClosingFuture<V extends @Nullable @Readonly Object> {
     private final boolean allMustSucceed;
     protected final ImmutableList<ClosingFuture<?>> inputs;
 
-    private Combiner(boolean allMustSucceed, Iterable<? extends ClosingFuture<?>> inputs) {
+    private Combiner(boolean allMustSucceed, @Readonly Iterable<? extends ClosingFuture<?>> inputs) {
       this.allMustSucceed = allMustSucceed;
       this.inputs = ImmutableList.copyOf(inputs);
       for (ClosingFuture<?> input : inputs) {
