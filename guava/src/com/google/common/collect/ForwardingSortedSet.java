@@ -70,7 +70,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
   protected ForwardingSortedSet() {}
 
   @Override
-  protected abstract @PolyMutable SortedSet<E> delegate(@PolyMutable ForwardingSortedSet<E> this);
+  protected abstract @ReceiverDependentMutable SortedSet<E> delegate(@ReceiverDependentMutable ForwardingSortedSet<E> this);
 
   @SideEffectFree
   @Override
@@ -165,7 +165,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
    *
    * @since 7.0
    */
-  protected SortedSet<E> standardSubSet(
+  protected @ReceiverDependentMutable SortedSet<E> standardSubSet(
       @ParametricNullness E fromElement, @ParametricNullness E toElement) {
     return tailSet(fromElement).headSet(toElement);
   }

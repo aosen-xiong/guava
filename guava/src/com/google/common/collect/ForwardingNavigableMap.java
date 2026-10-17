@@ -391,7 +391,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * descendingMap}, you may wish to override {@code descendingKeySet} to forward to this
    * implementation.
    */
-  protected NavigableSet<K> standardDescendingKeySet() {
+  protected @ReceiverDependentMutable NavigableSet<K> standardDescendingKeySet() {
     return descendingMap().navigableKeySet();
   }
 

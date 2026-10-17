@@ -94,7 +94,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
    */
   @SideEffectFree
   @Override
-  public Set<Multiset.Entry<E>> entrySet() {
+  public @ReceiverDependentMutable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet() {
     return super.entrySet();
   }
 

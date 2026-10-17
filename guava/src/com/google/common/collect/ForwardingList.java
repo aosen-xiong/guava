@@ -70,7 +70,7 @@ public abstract class ForwardingList<E extends @Nullable @Readonly Object> exten
   protected ForwardingList() {}
 
   @Override
-  protected abstract @PolyMutable List<E> delegate(@PolyMutable ForwardingList<E> this);
+  protected abstract @ReceiverDependentMutable List<E> delegate(@ReceiverDependentMutable ForwardingList<E> this);
 
   @Override
   public void add(@Mutable ForwardingList<E> this, int index, @ParametricNullness E element) {

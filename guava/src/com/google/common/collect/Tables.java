@@ -599,12 +599,12 @@ public final class Tables {
     }
 
     @Override
-    public @Readonly Map<R, V> column(@ParametricNullness C columnKey) {
+    public @Immutable Map<R, V> column(@ParametricNullness C columnKey) {
       return Collections.unmodifiableMap(super.column(columnKey));
     }
 
     @Override
-    public @Readonly Set<C> columnKeySet() {
+    public @Immutable Set<C> columnKeySet() {
       return Collections.unmodifiableSet(super.columnKeySet());
     }
 
@@ -635,12 +635,12 @@ public final class Tables {
     }
 
     @Override
-    public Map<C, V> row(@ParametricNullness R rowKey) {
+    public @Immutable Map<C, V> row(@ParametricNullness R rowKey) {
       return Collections.unmodifiableMap(super.row(rowKey));
     }
 
     @Override
-    public Set<R> rowKeySet() {
+    public @Immutable Set<R> rowKeySet() {
       return Collections.unmodifiableSet(super.rowKeySet());
     }
 
@@ -651,7 +651,7 @@ public final class Tables {
     }
 
     @Override
-    public Collection<V> values() {
+    public @Immutable Collection<V> values() {
       return Collections.unmodifiableCollection(super.values());
     }
 

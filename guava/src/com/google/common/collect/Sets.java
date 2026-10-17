@@ -1477,7 +1477,7 @@ public final class Sets {
     }
 
     @Override
-    protected @PolyMutable Collection<List<E>> delegate(@PolyMutable CartesianSet<E> this) {
+    protected @ReceiverDependentMutable Collection<List<E>> delegate(@ReceiverDependentMutable CartesianSet<E> this) {
       return delegate;
     }
 
@@ -2059,7 +2059,7 @@ public final class Sets {
     }
 
     @Override
-    protected @PolyMutable NavigableSet<E> delegate(@PolyMutable DescendingSet<E> this) {
+    protected @ReceiverDependentMutable NavigableSet<E> delegate(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward;
     }
 

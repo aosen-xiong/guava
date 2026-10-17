@@ -56,7 +56,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public Multimap<K, V> unfiltered() {
+  public @ReceiverDependentMutable Multimap<K, V> unfiltered() {
     return unfiltered;
   }
 
@@ -108,7 +108,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public Collection<V> get(@ParametricNullness K key) {
+  public @ReceiverDependentMutable Collection<V> get(@ParametricNullness K key) {
     if (keyPredicate.apply(key)) {
       return unfiltered.get(key);
     } else if (unfiltered instanceof SetMultimap) {

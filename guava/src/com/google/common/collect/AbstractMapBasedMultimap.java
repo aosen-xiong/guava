@@ -518,7 +518,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @CheckForNull
-    WrappedCollection getAncestor() {
+    @ReceiverDependentMutable WrappedCollection getAncestor() {
       return ancestor;
     }
 

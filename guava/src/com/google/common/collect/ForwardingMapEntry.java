@@ -66,7 +66,7 @@ public abstract class ForwardingMapEntry<K extends @Nullable @Immutable Object, 
   protected ForwardingMapEntry() {}
 
   @Override
-  protected abstract @PolyMutable Entry<K, V> delegate(@PolyMutable ForwardingMapEntry<K, V> this);
+  protected abstract @ReceiverDependentMutable Entry<K, V> delegate(@ReceiverDependentMutable ForwardingMapEntry<K, V> this);
 
   @Pure
   @Override

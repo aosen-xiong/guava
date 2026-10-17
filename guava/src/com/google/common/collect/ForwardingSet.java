@@ -65,7 +65,7 @@ public abstract class ForwardingSet<E extends @Nullable @Readonly Object> extend
 
   @Override
   // TODO(aosen): If I make poly on both, how to avoid rep exposure and type confusion?
-  protected abstract Set<E> delegate(@Readonly ForwardingSet<E> this);
+  protected abstract @ReceiverDependentMutable Set<E> delegate(@ReceiverDependentMutable ForwardingSet<E> this);
 
   @Pure
   @Override

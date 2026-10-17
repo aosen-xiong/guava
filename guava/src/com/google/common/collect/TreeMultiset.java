@@ -652,11 +652,11 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // For discussion of pred() and succ(), see the comment on the pred and succ fields.
 
-    private AvlNode<E> pred() {
+    private @ReceiverDependentMutable AvlNode<E> pred() {
       return requireNonNull(pred);
     }
 
-    private AvlNode<E> succ() {
+    private @ReceiverDependentMutable AvlNode<E> succ() {
       return requireNonNull(succ);
     }
 
@@ -736,7 +736,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    AvlNode<E> remove(
+    @ReceiverDependentMutable AvlNode<E> remove(
         @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
@@ -789,7 +789,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    AvlNode<E> setCount(
+    @ReceiverDependentMutable AvlNode<E> setCount(
         @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
@@ -839,7 +839,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    AvlNode<E> setCount(
+    @ReceiverDependentMutable AvlNode<E> setCount(
         @Readonly Comparator<? super E> comparator,
         @ParametricNullness E e,
         int expectedCount,
@@ -931,7 +931,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the minimum node from this subtree to be reused elsewhere
     @CheckForNull
-    private AvlNode<E> removeMin(AvlNode<E> node) {
+    private @ReceiverDependentMutable AvlNode<E> removeMin(AvlNode<E> node) {
       if (left == null) {
         return right;
       } else {
@@ -944,7 +944,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the maximum node from this subtree to be reused elsewhere
     @CheckForNull
-    private AvlNode<E> removeMax(AvlNode<E> node) {
+    private @ReceiverDependentMutable AvlNode<E> removeMax(AvlNode<E> node) {
       if (right == null) {
         return left;
       } else {
@@ -1029,7 +1029,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    private AvlNode<E> ceiling(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
+    private @ReceiverDependentMutable AvlNode<E> ceiling(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         return (left == null) ? this : MoreObjects.firstNonNull(left.ceiling(comparator, e), this);
@@ -1041,7 +1041,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    private AvlNode<E> floor(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
+    private @ReceiverDependentMutable AvlNode<E> floor(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp > 0) {
         return (right == null) ? this : MoreObjects.firstNonNull(right.floor(comparator, e), this);

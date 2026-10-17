@@ -47,7 +47,7 @@ public abstract class ForwardingTable<
   protected ForwardingTable() {}
 
   @Override
-  protected abstract Table<R, C, V> delegate();
+  protected abstract @ReceiverDependentMutable Table<R, C, V> delegate();
 
   @Override
   public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet() {
@@ -60,12 +60,12 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public Map<R, V> column(@ParametricNullness C columnKey) {
+  public @ReceiverDependentMutable Map<R, V> column(@ParametricNullness C columnKey) {
     return delegate().column(columnKey);
   }
 
   @Override
-  public Set<C> columnKeySet() {
+  public @ReceiverDependentMutable Set<C> columnKeySet() {
     return delegate().columnKeySet();
   }
 
@@ -126,12 +126,12 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public Map<C, V> row(@ParametricNullness R rowKey) {
+  public @ReceiverDependentMutable Map<C, V> row(@ParametricNullness R rowKey) {
     return delegate().row(rowKey);
   }
 
   @Override
-  public Set<R> rowKeySet() {
+  public @ReceiverDependentMutable Set<R> rowKeySet() {
     return delegate().rowKeySet();
   }
 
@@ -146,7 +146,7 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public Collection<V> values() {
+  public @ReceiverDependentMutable Collection<V> values() {
     return delegate().values();
   }
 

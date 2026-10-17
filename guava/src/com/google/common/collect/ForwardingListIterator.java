@@ -51,7 +51,7 @@ public abstract class ForwardingListIterator<E extends @Nullable @Readonly Objec
   protected ForwardingListIterator() {}
 
   @Override
-  protected abstract ListIterator<E> delegate();
+  protected abstract @ReceiverDependentMutable ListIterator<E> delegate();
 
   @Override
   public void add(@Mutable ForwardingListIterator<E> this, @ParametricNullness E element) {

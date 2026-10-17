@@ -67,7 +67,7 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
   protected ForwardingMultiset() {}
 
   @Override
-  protected abstract @PolyMutable Multiset<E> delegate(@PolyMutable ForwardingMultiset<E> this);
+  protected abstract @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable ForwardingMultiset<E> this);
 
   @Override
   public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {

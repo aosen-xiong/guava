@@ -57,7 +57,7 @@ public abstract class ForwardingDeque<E extends @Nullable @Readonly Object> exte
   protected ForwardingDeque() {}
 
   @Override
-  protected abstract @PolyMutable Deque<E> delegate(@PolyMutable ForwardingDeque<E> this);
+  protected abstract @ReceiverDependentMutable Deque<E> delegate(@ReceiverDependentMutable ForwardingDeque<E> this);
 
   @Override
   public void addFirst(@Mutable ForwardingDeque<E> this, @ParametricNullness E e) {

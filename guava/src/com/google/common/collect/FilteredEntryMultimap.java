@@ -62,7 +62,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public Multimap<K, V> unfiltered() {
+  public @ReceiverDependentMutable Multimap<K, V> unfiltered() {
     return unfiltered;
   }
 
@@ -150,7 +150,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  Set<K> createKeySet() {
+  @ReceiverDependentMutable Set<K> createKeySet() {
     return asMap().keySet();
   }
 

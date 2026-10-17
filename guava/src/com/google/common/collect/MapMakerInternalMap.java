@@ -2075,7 +2075,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    StrongKeyStrongValueSegment<K, V> self() {
+    @ReceiverDependentMutable StrongKeyStrongValueSegment<K, V> self() {
       return this;
     }
 
@@ -2166,7 +2166,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    StrongKeyDummyValueSegment<K> self() {
+    @ReceiverDependentMutable StrongKeyDummyValueSegment<K> self() {
       return this;
     }
 
@@ -2191,12 +2191,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    WeakKeyStrongValueSegment<K, V> self() {
+    @ReceiverDependentMutable WeakKeyStrongValueSegment<K, V> self() {
       return this;
     }
 
     @Override
-    ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
@@ -2231,17 +2231,17 @@ class MapMakerInternalMap<
     }
 
     @Override
-    WeakKeyWeakValueSegment<K, V> self() {
+    @ReceiverDependentMutable WeakKeyWeakValueSegment<K, V> self() {
       return this;
     }
 
     @Override
-    ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
     @Override
-    ReferenceQueue<V> getValueReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
       return queueForValues;
     }
 
@@ -2302,12 +2302,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    WeakKeyDummyValueSegment<K> self() {
+    @ReceiverDependentMutable WeakKeyDummyValueSegment<K> self() {
       return this;
     }
 
     @Override
-    ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
@@ -2555,7 +2555,7 @@ class MapMakerInternalMap<
   @LazyInit @CheckForNull transient @Assignable Set<K> keySet;
 
   @Override
-  public Set<@KeyFor({"this"}) K> keySet() {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet() {
     Set<K> ks = keySet;
     return (ks != null) ? ks : (keySet = new KeySet());
   }
@@ -2563,7 +2563,7 @@ class MapMakerInternalMap<
   @LazyInit @CheckForNull transient @Assignable Collection<V> values;
 
   @Override
-  public Collection<V> values() {
+  public @ReceiverDependentMutable Collection<V> values() {
     Collection<V> vs = values;
     return (vs != null) ? vs : (values = new Values());
   }
@@ -2571,7 +2571,7 @@ class MapMakerInternalMap<
   @LazyInit @CheckForNull transient @Assignable Set<Entry<K, V>> entrySet;
 
   @Override
-  public Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
     Set<Entry<K, V>> es = entrySet;
     return (es != null) ? es : (entrySet = new EntrySet());
   }
@@ -2965,7 +2965,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    protected ConcurrentMap<K, V> delegate() {
+    protected @ReceiverDependentMutable ConcurrentMap<K, V> delegate() {
       return delegate;
     }
 

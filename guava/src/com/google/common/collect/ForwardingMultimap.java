@@ -57,7 +57,7 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
   protected ForwardingMultimap() {}
 
   @Override
-  protected abstract @PolyMutable Multimap<K, V> delegate(@PolyMutable ForwardingMultimap<K, V> this);
+  protected abstract @ReceiverDependentMutable Multimap<K, V> delegate(@ReceiverDependentMutable ForwardingMultimap<K, V> this);
 
   @Override
   public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable ForwardingMultimap<K, V> this) {

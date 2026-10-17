@@ -1552,7 +1552,7 @@ public final class Multimaps {
     }
 
     @Override
-    Map<K, Collection<V2>> createAsMap() {
+    @ReceiverDependentMutable Map<K, Collection<V2>> createAsMap() {
       return Maps.transformEntries(fromMultimap.asMap(), (key, value) -> transform(key, value));
     }
 

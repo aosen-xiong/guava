@@ -715,7 +715,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public Set<K> values() {
+    public @ReceiverDependentMutable Set<K> values() {
       return forward().keySet();
     }
 

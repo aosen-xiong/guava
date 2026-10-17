@@ -68,7 +68,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
   protected ForwardingCollection() {}
 
   @Override
-  protected abstract @PolyMutable Collection<E> delegate(@PolyMutable ForwardingCollection<E> this);
+  protected abstract @ReceiverDependentMutable Collection<E> delegate(@ReceiverDependentMutable ForwardingCollection<E> this);
 
   @Override
   public Iterator<E> iterator(@Readonly ForwardingCollection<E> this) {

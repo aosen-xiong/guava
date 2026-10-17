@@ -113,7 +113,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    protected @PolyMutable Collection<Range<C>> delegate(@PolyMutable AsRanges this) {
+    protected @ReceiverDependentMutable Collection<Range<C>> delegate(@ReceiverDependentMutable AsRanges this) {
       return delegate;
     }
 

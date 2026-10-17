@@ -60,7 +60,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   @LazyInit @CheckForNull private transient @Assignable NavigableSet<E> elementSet;
 
   @Override
-  public NavigableSet<E> elementSet() {
+  public @ReceiverDependentMutable NavigableSet<E> elementSet() {
     NavigableSet<E> result = elementSet;
     if (result == null) {
       return elementSet = new SortedMultisets.NavigableElementSet<>(this);
@@ -129,7 +129,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   @LazyInit @CheckForNull private transient @Assignable Set<Entry<E>> entrySet;
 
   @Override
-  public Set<Entry<E>> entrySet() {
+  public @ReceiverDependentMutable Set<Entry<E>> entrySet() {
     Set<Entry<E>> result = entrySet;
     return (result == null) ? entrySet = createEntrySet() : result;
   }

@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -45,27 +46,27 @@ public abstract class ForwardingSetMultimap<K extends @Nullable @Immutable Objec
     extends ForwardingMultimap<K, V> implements SetMultimap<K, V> {
 
   @Override
-  protected abstract SetMultimap<K, V> delegate();
+  protected abstract @ReceiverDependentMutable SetMultimap<K, V> delegate();
 
   @Override
-  public Set<Entry<K, V>> entries() {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries() {
     return delegate().entries();
   }
 
   @Override
-  public Set<V> get(@ParametricNullness K key) {
+  public @ReceiverDependentMutable Set<V> get(@ParametricNullness K key) {
     return delegate().get(key);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public Set<V> removeAll(@CheckForNull @Readonly Object key) {
+  public Set<V> removeAll(@Mutable ForwardingSetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     return delegate().removeAll(key);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public Set<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+  public Set<V> replaceValues(@Mutable ForwardingSetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 }

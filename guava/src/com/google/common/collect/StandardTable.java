@@ -701,7 +701,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * etc., skipping any columns that have appeared previously.
    */
   @Override
-  public Set<C> columnKeySet() {
+  public @ReceiverDependentMutable Set<C> columnKeySet() {
     Set<C> result = columnKeySet;
     return (result == null) ? columnKeySet = new ColumnKeySet() : result;
   }

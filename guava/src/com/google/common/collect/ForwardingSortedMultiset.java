@@ -56,7 +56,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
   protected ForwardingSortedMultiset() {}
 
   @Override
-  protected abstract @PolyMutable SortedMultiset<E> delegate(@PolyMutable ForwardingSortedMultiset<E> this);
+  protected abstract @ReceiverDependentMutable SortedMultiset<E> delegate(@ReceiverDependentMutable ForwardingSortedMultiset<E> this);
 
   @Override
   public @ReceiverDependentMutable NavigableSet<E> elementSet(@ReceiverDependentMutable ForwardingSortedMultiset<E> this) {
