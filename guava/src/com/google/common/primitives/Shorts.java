@@ -604,7 +604,7 @@ public final class Shorts extends ShortsMethodsForWeb {
       return ((ShortArrayAsList) collection).toShortArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     short[] array = new short[len];
     for (int i = 0; i < len; i++) {

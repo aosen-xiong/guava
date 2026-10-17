@@ -430,7 +430,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
     @Override
     public Iterator<V> iterator(@ReceiverDependentMutable ValueSet this) {
       return new @Mutable Iterator<V>() {
-        ValueSetLink<K, V> nextEntry = firstEntry;
+        @Readonly ValueSetLink<K, V> nextEntry = firstEntry;
         @CheckForNull ValueEntry<K, V> toRemove;
         int expectedModCount = modCount;
 

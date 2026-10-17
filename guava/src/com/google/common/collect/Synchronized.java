@@ -993,7 +993,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Comparator<? super V> valueComparator(@Readonly SynchronizedSortedSetMultimap<K, V> this) {
+    public @Readonly Comparator<? super V> valueComparator(@Readonly SynchronizedSortedSetMultimap<K, V> this) {
       synchronized (mutex) {
         return delegate().valueComparator();
       }

@@ -630,7 +630,7 @@ public final class Ints extends IntsMethodsForWeb {
       return ((IntArrayAsList) collection).toIntArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     int[] array = new int[len];
     for (int i = 0; i < len; i++) {

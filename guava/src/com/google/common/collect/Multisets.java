@@ -1095,7 +1095,7 @@ public final class Multisets {
   static final class MultisetIteratorImpl<E extends @Nullable @Readonly Object> implements Iterator<E> {
     private final Multiset<E> multiset;
     private final Iterator<@Readonly Entry<E>> entryIterator;
-    @CheckForNull private Entry<E> currentEntry;
+    @CheckForNull private @Readonly Entry<E> currentEntry;
 
     /** Count of subsequent elements equal to current element */
     private int laterCount;

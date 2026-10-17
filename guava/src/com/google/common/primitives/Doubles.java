@@ -558,7 +558,7 @@ public final class Doubles extends DoublesMethodsForWeb {
       return ((DoubleArrayAsList) collection).toDoubleArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     double[] array = new double[len];
     for (int i = 0; i < len; i++) {

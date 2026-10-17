@@ -172,7 +172,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public @Nullable Comparator<? super V> valueComparator(@Readonly TreeMultimap<K, V> this) {
+  public @Nullable @Readonly Comparator<? super V> valueComparator(@Readonly TreeMultimap<K, V> this) {
     return valueComparator;
   }
 

@@ -451,7 +451,7 @@ public final class Chars {
       return ((CharArrayAsList) collection).toCharArray();
     }
 
-    @Unsigned Object[] boxedArray = collection.toArray();
+    @Unsigned @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     char[] array = new char[len];
     for (int i = 0; i < len; i++) {

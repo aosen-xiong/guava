@@ -547,7 +547,7 @@ public final class Multimaps {
           K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends AbstractSortedSetMultimap<K, V> {
     transient Supplier<? extends @ReceiverDependentMutable SortedSet<V>> factory;
-    @CheckForNull transient @Mutable Comparator<? super V> valueComparator;
+    @CheckForNull transient @Readonly Comparator<? super V> valueComparator;
 
     CustomSortedSetMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, Supplier<? extends @ReceiverDependentMutable SortedSet<V>> factory) {
       super(map);
@@ -572,7 +572,7 @@ public final class Multimaps {
 
     @Override
     @CheckForNull
-    public Comparator<? super V> valueComparator() {
+    public @Readonly Comparator<? super V> valueComparator() {
       return valueComparator;
     }
 
@@ -913,7 +913,7 @@ public final class Multimaps {
 
     @Override
     @CheckForNull
-    public Comparator<? super V> valueComparator() {
+    public @Readonly Comparator<? super V> valueComparator() {
       return delegate().valueComparator();
     }
 

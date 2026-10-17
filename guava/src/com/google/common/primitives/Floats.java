@@ -553,7 +553,7 @@ public final class Floats extends FloatsMethodsForWeb {
       return ((FloatArrayAsList) collection).toFloatArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     float[] array = new float[len];
     for (int i = 0; i < len; i++) {

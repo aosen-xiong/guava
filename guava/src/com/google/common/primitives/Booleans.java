@@ -369,7 +369,7 @@ public final class Booleans {
       return ((BooleanArrayAsList) collection).toBooleanArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     boolean[] array = new boolean[len];
     for (int i = 0; i < len; i++) {

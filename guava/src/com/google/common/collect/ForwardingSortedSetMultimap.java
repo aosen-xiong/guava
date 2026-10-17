@@ -68,7 +68,7 @@ public abstract class ForwardingSortedSetMultimap<
 
   @Override
   @CheckForNull
-  public Comparator<? super V> valueComparator() {
+  public @Readonly Comparator<? super V> valueComparator() {
     return delegate().valueComparator();
   }
 }

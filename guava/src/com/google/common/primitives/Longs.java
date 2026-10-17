@@ -713,7 +713,7 @@ public final class Longs {
       return ((LongArrayAsList) collection).toLongArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     long[] array = new long[len];
     for (int i = 0; i < len; i++) {

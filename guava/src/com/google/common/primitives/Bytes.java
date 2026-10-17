@@ -237,7 +237,7 @@ public final class Bytes {
       return ((ByteArrayAsList) collection).toByteArray();
     }
 
-    @PolySigned Object[] boxedArray = collection.toArray();
+    @PolySigned @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     @PolySigned byte[] array = new byte[len];
     for (int i = 0; i < len; i++) {

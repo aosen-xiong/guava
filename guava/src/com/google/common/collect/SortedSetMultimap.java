@@ -123,5 +123,5 @@ public interface SortedSetMultimap<K extends @Nullable @Immutable Object, V exte
    * natural ordering is used.
    */
   @CheckForNull
-  Comparator<? super V> valueComparator();
+  @Readonly Comparator<? super V> valueComparator();
 }
