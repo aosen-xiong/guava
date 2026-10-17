@@ -1004,7 +1004,7 @@ public final class Maps {
 
     @Override
     @ReceiverDependentMutable SortedSet<K> backingSet(@ReceiverDependentMutable SortedAsMapView<K, V> this) {
-      return (SortedSet<K>) super.backingSet();
+      return (@ReceiverDependentMutable SortedSet<K>) super.backingSet();
     }
 
     @Override

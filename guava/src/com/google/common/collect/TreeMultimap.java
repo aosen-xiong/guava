@@ -195,7 +195,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   @SideEffectFree
   @Override
   public @ReceiverDependentMutable NavigableSet<K> keySet(@ReceiverDependentMutable TreeMultimap<K, V> this) {
-    return (NavigableSet<K>) super.keySet();
+    return (@ReceiverDependentMutable NavigableSet<K>) super.keySet();
   }
 
   /**

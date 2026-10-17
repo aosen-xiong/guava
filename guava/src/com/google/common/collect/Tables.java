@@ -588,7 +588,7 @@ public final class Tables {
     @SuppressWarnings("unchecked") // safe, covariant cast
     @Override
     protected @ReceiverDependentMutable Table<R, C, V> delegate() {
-      return (Table<R, C, V>) delegate;
+      return (@ReceiverDependentMutable Table<R, C, V>) delegate;
     }
 
     @Override

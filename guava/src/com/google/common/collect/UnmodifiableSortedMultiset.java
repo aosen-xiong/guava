@@ -64,7 +64,7 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
 
   @Override
   public @ReceiverDependentMutable NavigableSet<E> elementSet(@ReceiverDependentMutable UnmodifiableSortedMultiset<E> this) {
-    return (NavigableSet<E>) super.elementSet();
+    return (@ReceiverDependentMutable NavigableSet<E>) super.elementSet();
   }
 
   @LazyInit @CheckForNull private transient @Assignable UnmodifiableSortedMultiset<E> descendingMultiset;

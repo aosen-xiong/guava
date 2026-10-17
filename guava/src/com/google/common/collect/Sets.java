@@ -1237,7 +1237,7 @@ public final class Sets {
     }
 
     @ReceiverDependentMutable NavigableSet<E> unfiltered(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
-      return (NavigableSet<E>) unfiltered;
+      return (@ReceiverDependentMutable NavigableSet<E>) unfiltered;
     }
 
     @Override
