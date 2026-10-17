@@ -301,8 +301,8 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
   @SuppressWarnings("GoodTime") // should be a java.time.Duration
   long refreshNanos = UNSET_INT;
 
-  @CheckForNull Equivalence<Object> keyEquivalence;
-  @CheckForNull Equivalence<Object> valueEquivalence;
+  @CheckForNull Equivalence<@Readonly Object> keyEquivalence;
+  @CheckForNull Equivalence<@Readonly Object> valueEquivalence;
 
   @CheckForNull RemovalListener<? super K, ? super V> removalListener;
   @CheckForNull Ticker ticker;
@@ -366,13 +366,13 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    */
   @GwtIncompatible // To be supported
   @CanIgnoreReturnValue
-  CacheBuilder<K, V> keyEquivalence(Equivalence<Object> equivalence) {
+  CacheBuilder<K, V> keyEquivalence(Equivalence<@Readonly Object> equivalence) {
     checkState(keyEquivalence == null, "key equivalence was already set to %s", keyEquivalence);
     keyEquivalence = checkNotNull(equivalence);
     return this;
   }
 
-  Equivalence<Object> getKeyEquivalence() {
+  Equivalence<@Readonly Object> getKeyEquivalence() {
     return MoreObjects.firstNonNull(keyEquivalence, getKeyStrength().defaultEquivalence());
   }
 
@@ -387,14 +387,14 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    */
   @GwtIncompatible // To be supported
   @CanIgnoreReturnValue
-  CacheBuilder<K, V> valueEquivalence(Equivalence<Object> equivalence) {
+  CacheBuilder<K, V> valueEquivalence(Equivalence<@Readonly Object> equivalence) {
     checkState(
         valueEquivalence == null, "value equivalence was already set to %s", valueEquivalence);
     this.valueEquivalence = checkNotNull(equivalence);
     return this;
   }
 
-  Equivalence<Object> getValueEquivalence() {
+  Equivalence<@Readonly Object> getValueEquivalence() {
     return MoreObjects.firstNonNull(valueEquivalence, getValueStrength().defaultEquivalence());
   }
 

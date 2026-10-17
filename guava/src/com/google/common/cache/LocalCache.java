@@ -196,10 +196,10 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   final int concurrencyLevel;
 
   /** Strategy for comparing keys. */
-  final Equivalence<Object> keyEquivalence;
+  final Equivalence<@Readonly Object> keyEquivalence;
 
   /** Strategy for comparing values. */
-  final Equivalence<Object> valueEquivalence;
+  final Equivalence<@Readonly Object> valueEquivalence;
 
   /** Strategy for referencing keys. */
   final Strength keyStrength;
@@ -404,7 +404,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
       }
 
       @Override
-      Equivalence<Object> defaultEquivalence() {
+      Equivalence<@Readonly Object> defaultEquivalence() {
         return Equivalence.equals();
       }
     },
@@ -419,7 +419,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
       }
 
       @Override
-      Equivalence<Object> defaultEquivalence() {
+      Equivalence<@Readonly Object> defaultEquivalence() {
         return Equivalence.identity();
       }
     },
@@ -4757,8 +4757,8 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
 
     final Strength keyStrength;
     final Strength valueStrength;
-    final Equivalence<Object> keyEquivalence;
-    final Equivalence<Object> valueEquivalence;
+    final Equivalence<@Readonly Object> keyEquivalence;
+    final Equivalence<@Readonly Object> valueEquivalence;
     final long expireAfterWriteNanos;
     final long expireAfterAccessNanos;
     final long maxWeight;
@@ -4789,8 +4789,8 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     private ManualSerializationProxy(
         Strength keyStrength,
         Strength valueStrength,
-        Equivalence<Object> keyEquivalence,
-        Equivalence<Object> valueEquivalence,
+        Equivalence<@Readonly Object> keyEquivalence,
+        Equivalence<@Readonly Object> valueEquivalence,
         long expireAfterWriteNanos,
         long expireAfterAccessNanos,
         long maxWeight,
