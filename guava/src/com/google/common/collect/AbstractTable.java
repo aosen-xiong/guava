@@ -120,7 +120,7 @@ abstract class AbstractTable<
   }
 
   @Override
-  public void putAll(@Mutable AbstractTable<R, C, V> this, Table<? extends R, ? extends C, ? extends V> table) {
+  public void putAll(@Mutable AbstractTable<R, C, V> this, @Readonly Table<? extends R, ? extends C, ? extends V> table) {
     for (Table.Cell<? extends R, ? extends C, ? extends V> cell : table.cellSet()) {
       put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
     }

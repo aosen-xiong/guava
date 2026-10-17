@@ -1172,7 +1172,7 @@ public final class Multisets {
   }
 
   /** Used to avoid http://bugs.sun.com/view_bug.do?bug_id=6558557 */
-  static <T extends @Nullable @Readonly Object> Multiset<T> cast(Iterable<T> iterable) {
+  static <T extends @Nullable @Readonly Object> Multiset<T> cast(@Readonly Iterable<T> iterable) {
     return (Multiset<T>) iterable;
   }
 

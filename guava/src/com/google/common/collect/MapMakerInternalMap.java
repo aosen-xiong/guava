@@ -1478,7 +1478,7 @@ class MapMakerInternalMap<
     }
 
     @CheckForNull
-    V get(Object key, int hash) {
+    V get(@Readonly Object key, int hash) {
       try {
         E e = getLiveEntry(key, hash);
         if (e == null) {
@@ -1495,7 +1495,7 @@ class MapMakerInternalMap<
       }
     }
 
-    boolean containsKey(@UnknownSignedness Object key, int hash) {
+    boolean containsKey(@UnknownSignedness @Readonly Object key, int hash) {
       try {
         if (count != 0) { // read-volatile
           E e = getLiveEntry(key, hash);

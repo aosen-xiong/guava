@@ -2160,7 +2160,7 @@ public final class Sets {
     }
 
     // If we inline this, we get a javac error.
-    private static <T extends @Nullable @Readonly Object> Ordering<T> reverse(Comparator<T> forward) {
+    private static <T extends @Nullable @Readonly Object> Ordering<T> reverse(@Readonly Comparator<T> forward) {
       return Ordering.from(forward).reverse();
     }
 

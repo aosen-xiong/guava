@@ -111,7 +111,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
 
   @CanIgnoreReturnValue
   @Override
-  public boolean putAll(@Mutable AbstractMultimap<K, V> this, Multimap<? extends K, ? extends V> multimap) {
+  public boolean putAll(@Mutable AbstractMultimap<K, V> this, @Readonly Multimap<? extends K, ? extends V> multimap) {
     boolean changed = false;
     for (Entry<? extends K, ? extends V> entry : multimap.entries()) {
       changed |= put(entry.getKey(), entry.getValue());

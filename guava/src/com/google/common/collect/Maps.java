@@ -524,8 +524,8 @@ public final class Maps {
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       MapDifference<K, V> difference(
-          Map<? extends K, ? extends V> left,
-          Map<? extends K, ? extends V> right,
+          @Readonly Map<? extends K, ? extends V> left,
+          @Readonly Map<? extends K, ? extends V> right,
           Equivalence<? super @NonNull V> valueEquivalence) {
     Preconditions.checkNotNull(valueEquivalence);
 
@@ -4114,7 +4114,7 @@ public final class Maps {
 
   /** An implementation of {@link Map#putAll}. */
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> void putAllImpl(
-      @Mutable Map<K, V> self, Map<? extends K, ? extends V> map) {
+      @Mutable Map<K, V> self, @Readonly Map<? extends K, ? extends V> map) {
     for (Entry<? extends K, ? extends V> entry : map.entrySet()) {
       self.put(entry.getKey(), entry.getValue());
     }
@@ -4522,7 +4522,7 @@ public final class Maps {
     }
 
     // If we inline this, we get a javac error.
-    private static <T extends @Nullable @Readonly Object> Ordering<T> reverse(Comparator<T> forward) {
+    private static <T extends @Nullable @Readonly Object> Ordering<T> reverse(@Readonly Comparator<T> forward) {
       return Ordering.from(forward).reverse();
     }
 
