@@ -2100,18 +2100,18 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> descendingSet(@PolyMutable DescendingSet<E> this) {
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward;
     }
 
     @Override
-    public @PolyMutable Iterator<E> descendingIterator(@PolyMutable DescendingSet<E> this) {
+    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward.iterator();
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> subSet(
-            @PolyMutable DescendingSet<E> this,
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
+            @ReceiverDependentMutable DescendingSet<E> this,
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
@@ -2125,17 +2125,17 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> headSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> headSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
       return forward.tailSet(toElement, inclusive).descendingSet();
     }
 
     @Override
-    public @PolyMutable SortedSet<E> headSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E toElement) {
       return standardHeadSet(toElement);
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> tailSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
       return forward.headSet(fromElement, inclusive).descendingSet();
     }
 

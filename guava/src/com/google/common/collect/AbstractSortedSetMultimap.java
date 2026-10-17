@@ -95,7 +95,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    * Multimap} interface.
    */
   @Override
-  public @PolyMutable SortedSet<V> get(@PolyMutable AbstractSortedSetMultimap<K, V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable SortedSet<V> get(@ReceiverDependentMutable AbstractSortedSetMultimap<K, V> this, @ParametricNullness K key) {
     return (@PolyMutable SortedSet<V>) super.get(key);
   }
 
@@ -141,7 +141,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    * SortedSet} values.
    */
   @Override
-  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractSortedSetMultimap<K,V> this) {
+  public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractSortedSetMultimap<K,V> this) {
     return super.asMap();
   }
 
