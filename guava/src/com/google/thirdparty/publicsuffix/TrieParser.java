@@ -114,7 +114,7 @@ final class TrieParser {
     return idx - start;
   }
 
-  private static CharSequence reverse(CharSequence s) {
+  private static CharSequence reverse(@Readonly CharSequence s) {
     return new StringBuilder(s).reverse();
   }
 }

@@ -57,7 +57,7 @@ public abstract class ForwardingSortedSetMultimap<
   }
 
   @Override
-  public @Readonly SortedSet<V> removeAll(@Mutable ForwardingSortedSetMultimap<K,V> this, @CheckForNull @Mutable Object key) {
+  public @Readonly SortedSet<V> removeAll(@Mutable ForwardingSortedSetMultimap<K,V> this, @CheckForNull @Readonly Object key) {
     return delegate().removeAll(key);
   }
 

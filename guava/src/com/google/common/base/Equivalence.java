@@ -355,21 +355,21 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
    * @since 13.0
    * @since 4.0 (in Equivalences)
    */
-  public static Equivalence<Object> identity() {
+  public static Equivalence<@Readonly Object> identity() {
     return Identity.INSTANCE;
   }
 
-  static final class Equals extends Equivalence<Object> implements Serializable {
+  static final class Equals extends Equivalence<@Readonly Object> implements Serializable {
 
     static final Equals INSTANCE = new Equals();
 
     @Override
-    protected boolean doEquivalent(Object a, Object b) {
+    protected boolean doEquivalent(@Readonly Object a, @Readonly Object b) {
       return a.equals(b);
     }
 
     @Override
-    protected int doHash(Object o) {
+    protected int doHash(@Readonly Object o) {
       return o.hashCode();
     }
 
@@ -380,17 +380,17 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
     private static final long serialVersionUID = 1;
   }
 
-  static final class Identity extends Equivalence<Object> implements Serializable {
+  static final class Identity extends Equivalence<@Readonly Object> implements Serializable {
 
     static final Identity INSTANCE = new Identity();
 
     @Override
-    protected boolean doEquivalent(Object a, Object b) {
+    protected boolean doEquivalent(@Readonly Object a, @Readonly Object b) {
       return false;
     }
 
     @Override
-    protected int doHash(Object o) {
+    protected int doHash(@Readonly Object o) {
       return System.identityHashCode(o);
     }
 

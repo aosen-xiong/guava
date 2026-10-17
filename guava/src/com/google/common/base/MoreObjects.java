@@ -386,7 +386,7 @@ public final class MoreObjects {
             builder.append(valueHolder.name).append('=');
           }
           if (value != null && value.getClass().isArray()) {
-            Object[] objectArray = {value};
+            @Readonly Object[] objectArray = {value};
             String arrayString = Arrays.deepToString(objectArray);
             builder.append(arrayString, 1, arrayString.length() - 1);
           } else {

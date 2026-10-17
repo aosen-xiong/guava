@@ -536,9 +536,9 @@ public abstract class CharSource {
 
     private static final Splitter LINE_SPLITTER = Splitter.onPattern("\r\n|\n|\r");
 
-    protected final CharSequence seq;
+    protected final @Readonly CharSequence seq;
 
-    protected CharSequenceCharSource(CharSequence seq) {
+    protected CharSequenceCharSource(@Readonly CharSequence seq) {
       this.seq = checkNotNull(seq);
     }
 

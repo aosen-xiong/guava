@@ -188,7 +188,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Comparable<?> greatestValueBelow(DiscreteDomain<@Immutable Comparable<?>> domain) {
+    @Immutable Comparable<?> greatestValueBelow(DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new AssertionError();
     }
 
@@ -284,7 +284,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Comparable<?> leastValueAbove(DiscreteDomain<@Immutable Comparable<?>> domain) {
+    @Immutable Comparable<?> leastValueAbove(DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new AssertionError();
     }
 
