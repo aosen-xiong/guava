@@ -696,13 +696,13 @@ public final class Multimaps {
   private static class UnmodifiableMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingMultimap<K, @Immutable V> implements Serializable {
     final @ReceiverDependentMutable Multimap<K, V> delegate;
-    @LazyInit @CheckForNull transient @Assignable @Readonly Collection<@Readonly Entry<K, V>> entries;
-    @LazyInit @CheckForNull transient @Assignable @Readonly Multiset<K> keys;
-    @LazyInit @CheckForNull transient @Assignable @Readonly Set<K> keySet;
-    @LazyInit @CheckForNull transient @Assignable @Readonly Collection<V> values;
-    @LazyInit @CheckForNull transient @Assignable @Readonly Map<K, @Readonly Collection<V>> map;
+    @LazyInit @CheckForNull transient @Assignable @ReceiverDependentMutable Collection<@Readonly Entry<K, V>> entries;
+    @LazyInit @CheckForNull transient @Assignable @ReceiverDependentMutable Multiset<K> keys;
+    @LazyInit @CheckForNull transient @Assignable @ReceiverDependentMutable Set<K> keySet;
+    @LazyInit @CheckForNull transient @Assignable @ReceiverDependentMutable Collection<V> values;
+    @LazyInit @CheckForNull transient @Assignable @ReceiverDependentMutable Map<K, @Readonly Collection<V>> map;
 
-    UnmodifiableMultimap(final @Readonly Multimap<K, V> delegate) {
+    UnmodifiableMultimap(final @ReceiverDependentMutable Multimap<K, V> delegate) {
       this.delegate = checkNotNull(delegate);
     }
 
