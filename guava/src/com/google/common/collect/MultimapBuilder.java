@@ -135,7 +135,7 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
    * cast to a {@link java.util.SortedMap}.
    */
   @SuppressWarnings("rawtypes")
-  public static MultimapBuilderWithKeys<Comparable> treeKeys() {
+  public static MultimapBuilderWithKeys<@Immutable Comparable> treeKeys() {
     return treeKeys(Ordering.natural());
   }
 
@@ -283,7 +283,7 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
     abstract <K extends K0, V extends @Nullable @Readonly Object> Map<K, Collection<V>> createMap();
 
     /** Uses an {@link ArrayList} to store value collections. */
-    public ListMultimapBuilder<K0, @Nullable Object> arrayListValues() {
+    public ListMultimapBuilder<K0, @Nullable @Readonly Object> arrayListValues() {
       return arrayListValues(DEFAULT_EXPECTED_VALUES_PER_KEY);
     }
 
@@ -293,9 +293,9 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
      *
      * @throws IllegalArgumentException if {@code expectedValuesPerKey < 0}
      */
-    public ListMultimapBuilder<K0, @Nullable Object> arrayListValues(int expectedValuesPerKey) {
+    public ListMultimapBuilder<K0, @Nullable @Readonly Object> arrayListValues(int expectedValuesPerKey) {
       checkNonnegative(expectedValuesPerKey, "expectedValuesPerKey");
-      return new ListMultimapBuilder<K0, @Nullable Object>() {
+      return new ListMultimapBuilder<K0, @Nullable @Readonly Object>() {
         @Override
         public <K extends K0, V extends @Nullable @Readonly Object> ListMultimap<K, V> build() {
           return Multimaps.newListMultimap(
@@ -306,8 +306,8 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
     }
 
     /** Uses a {@link LinkedList} to store value collections. */
-    public ListMultimapBuilder<K0, @Nullable Object> linkedListValues() {
-      return new ListMultimapBuilder<K0, @Nullable Object>() {
+    public ListMultimapBuilder<K0, @Nullable @Readonly Object> linkedListValues() {
+      return new ListMultimapBuilder<K0, @Nullable @Readonly Object>() {
         @Override
         public <K extends K0, V extends @Nullable @Readonly Object> ListMultimap<K, V> build() {
           return Multimaps.newListMultimap(
@@ -317,7 +317,7 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
     }
 
     /** Uses a hash-based {@code Set} to store value collections. */
-    public SetMultimapBuilder<K0, @Nullable Object> hashSetValues() {
+    public SetMultimapBuilder<K0, @Nullable @Readonly Object> hashSetValues() {
       return hashSetValues(DEFAULT_EXPECTED_VALUES_PER_KEY);
     }
 
@@ -327,9 +327,9 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
      *
      * @throws IllegalArgumentException if {@code expectedValuesPerKey < 0}
      */
-    public SetMultimapBuilder<K0, @Nullable Object> hashSetValues(int expectedValuesPerKey) {
+    public SetMultimapBuilder<K0, @Nullable @Readonly Object> hashSetValues(int expectedValuesPerKey) {
       checkNonnegative(expectedValuesPerKey, "expectedValuesPerKey");
-      return new SetMultimapBuilder<K0, @Nullable Object>() {
+      return new SetMultimapBuilder<K0, @Nullable @Readonly Object>() {
         @Override
         public <K extends K0, V extends @Nullable @Readonly Object> SetMultimap<K, V> build() {
           return Multimaps.newSetMultimap(
@@ -340,7 +340,7 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
     }
 
     /** Uses an insertion-ordered hash-based {@code Set} to store value collections. */
-    public SetMultimapBuilder<K0, @Nullable Object> linkedHashSetValues() {
+    public SetMultimapBuilder<K0, @Nullable @Readonly Object> linkedHashSetValues() {
       return linkedHashSetValues(DEFAULT_EXPECTED_VALUES_PER_KEY);
     }
 
@@ -350,9 +350,9 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
      *
      * @throws IllegalArgumentException if {@code expectedValuesPerKey < 0}
      */
-    public SetMultimapBuilder<K0, @Nullable Object> linkedHashSetValues(int expectedValuesPerKey) {
+    public SetMultimapBuilder<K0, @Nullable @Readonly Object> linkedHashSetValues(int expectedValuesPerKey) {
       checkNonnegative(expectedValuesPerKey, "expectedValuesPerKey");
-      return new SetMultimapBuilder<K0, @Nullable Object>() {
+      return new SetMultimapBuilder<K0, @Nullable @Readonly Object>() {
         @Override
         public <K extends K0, V extends @Nullable @Readonly Object> SetMultimap<K, V> build() {
           return Multimaps.newSetMultimap(
@@ -364,7 +364,7 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
 
     /** Uses a naturally-ordered {@link TreeSet} to store value collections. */
     @SuppressWarnings("rawtypes")
-    public SortedSetMultimapBuilder<K0, Comparable> treeSetValues() {
+    public SortedSetMultimapBuilder<K0, @Immutable Comparable> treeSetValues() {
       return treeSetValues(Ordering.natural());
     }
 
@@ -379,7 +379,7 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
       checkNotNull(comparator, "comparator");
       return new SortedSetMultimapBuilder<K0, V0>() {
         @Override
-        public <K extends K0, V extends @Readonly V0> SortedSetMultimap<K, V> build() {
+        public <K extends K0, V extends V0> SortedSetMultimap<K, V> build() {
           return Multimaps.newSortedSetMultimap(
               MultimapBuilderWithKeys.this.<K, V>createMap(), new TreeSetSupplier<V>(comparator));
         }
@@ -391,7 +391,7 @@ public abstract class MultimapBuilder<K0 extends @Nullable @Immutable Object, V0
       checkNotNull(valueClass, "valueClass");
       return new SetMultimapBuilder<K0, V0>() {
         @Override
-        public <K extends K0, V extends @Readonly V0> SetMultimap<K, V> build() {
+        public <K extends K0, V extends V0> SetMultimap<K, V> build() {
           // V must actually be V0, since enums are effectively final
           // (their subclasses are inaccessible)
           @SuppressWarnings({"unchecked", "rawtypes"})

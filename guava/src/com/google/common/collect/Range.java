@@ -274,7 +274,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
     }
   }
 
-  private static final Range<Comparable> ALL = new Range<>(Cut.belowAll(), Cut.aboveAll());
+  private static final Range<@org.checkerframework.checker.mutability.qual.Immutable Comparable> ALL = new Range<>(Cut.belowAll(), Cut.aboveAll());
 
   /**
    * Returns a range that contains every value of type {@code C}.

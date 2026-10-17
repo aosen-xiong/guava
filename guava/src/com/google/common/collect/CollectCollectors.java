@@ -61,7 +61,7 @@ final class CollectCollectors {
           ImmutableSet.Builder::build);
 
   @GwtIncompatible
-  private static final Collector<Range<Comparable<?>>, ?, ImmutableRangeSet<Comparable<?>>>
+  private static final Collector<Range<@Immutable Comparable<?>>, ?, ImmutableRangeSet<@Immutable Comparable<?>>>
       TO_IMMUTABLE_RANGE_SET =
           Collector.of(
               ImmutableRangeSet::builder,

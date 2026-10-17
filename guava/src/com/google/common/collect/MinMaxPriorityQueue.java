@@ -145,8 +145,8 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * sized appropriately to hold {@code expectedSize} elements.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static Builder<Comparable> expectedSize(int expectedSize) {
-    return new Builder<Comparable>(Ordering.natural()).expectedSize(expectedSize);
+  public static Builder<@Immutable Comparable> expectedSize(int expectedSize) {
+    return new Builder<@Immutable Comparable>(Ordering.natural()).expectedSize(expectedSize);
   }
 
   /**
@@ -156,8 +156,8 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * element that was just added.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static Builder<Comparable> maximumSize(int maximumSize) {
-    return new Builder<Comparable>(Ordering.natural()).maximumSize(maximumSize);
+  public static Builder<@Immutable Comparable> maximumSize(int maximumSize) {
+    return new Builder<@Immutable Comparable>(Ordering.natural()).maximumSize(maximumSize);
   }
 
   /**
