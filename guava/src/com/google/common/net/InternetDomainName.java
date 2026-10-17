@@ -78,6 +78,7 @@ import org.checkerframework.checker.mutability.qual.Assignable;
 @GwtCompatible(emulated = true)
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public final class InternetDomainName {
 
   private static final CharMatcher DOTS_MATCHER = CharMatcher.anyOf(".\u3002\uFF0E\uFF61");
@@ -271,7 +272,7 @@ public final class InternetDomainName {
    *
    * @return Is the domain name syntactically valid?
    */
-  private static boolean validateSyntax(List<String> parts) {
+  private static boolean validateSyntax(@Readonly List<String> parts) {
     int lastIndex = parts.size() - 1;
 
     // Validate the last part specially, as it has different syntax rules.

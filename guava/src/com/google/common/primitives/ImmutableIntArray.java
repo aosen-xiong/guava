@@ -104,6 +104,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 @GwtCompatible
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public final class ImmutableIntArray implements Serializable {
   private static final ImmutableIntArray EMPTY = new ImmutableIntArray(new int[0]);
 
@@ -382,7 +383,7 @@ public final class ImmutableIntArray implements Serializable {
   // it doesn't escape this class
   @SuppressWarnings("Immutable")
   @HasSubsequence(subsequence="this", from="this.start", to="this.end")
-  private final int [] array;
+  private final int @Readonly [] array;
 
   /*
    * TODO(kevinb): evaluate the trade-offs of going bimorphic to save these two fields from most
@@ -393,7 +394,7 @@ public final class ImmutableIntArray implements Serializable {
   private final transient @IndexOrHigh("array") @LessThan("this.end + 1") int start; // it happens that we only serialize instances where this is 0
   private final @IndexOrHigh("array") int end; // exclusive
 
-  private ImmutableIntArray(int[] array) {
+  private ImmutableIntArray(int @Readonly [] array) {
     this(array, 0, array.length);
   }
 
@@ -402,7 +403,7 @@ public final class ImmutableIntArray implements Serializable {
   // leads to the first two issuing errors - since each field is dependent on
   // at least one of the others
   )
-  private ImmutableIntArray(int[] array, @IndexOrHigh("#1") @LessThan("#3 + 1") int start, @IndexOrHigh("#1") int end) {
+  private ImmutableIntArray(int @Readonly [] array, @IndexOrHigh("#1") @LessThan("#3 + 1") int start, @IndexOrHigh("#1") int end) {
     this.array = array;
     this.start = start;
     this.end = end;

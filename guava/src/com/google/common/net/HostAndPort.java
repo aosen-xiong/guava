@@ -65,6 +65,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Immutable
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public final class HostAndPort implements Serializable {
   /** Magic value indicating the absence of a port number. */
   private static final int NO_PORT = -1;
