@@ -665,7 +665,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T find(
-      Iterable<T> iterable, Predicate<? super T> predicate) {
+      @Readonly Iterable<T> iterable, Predicate<? super T> predicate) {
     return Iterators.find(iterable.iterator(), predicate);
   }
 
@@ -682,7 +682,7 @@ public final class Iterables {
   // The signature we really want here is...
   //
   // <T extends @Nullable Object> @JointlyNullable T find(
-  //     Iterable<? extends T> iterable,
+  @Readonly //     Iterable<? extends T> iterable,
   //     Predicate<? super T> predicate,
   //     @JointlyNullable T defaultValue);
   //
@@ -696,7 +696,7 @@ public final class Iterables {
   // - @JointlyNullable means "@Nullable or no annotation"
   @CheckForNull
   public static <T extends @Nullable @Readonly Object> T find(
-      Iterable<? extends T> iterable,
+      @Readonly Iterable<? extends T> iterable,
       Predicate<? super T> predicate,
       @CheckForNull T defaultValue) {
     return Iterators.find(iterable.iterator(), predicate, defaultValue);

@@ -960,7 +960,7 @@ public final class MediaType {
   }
 
   private static MediaType create(
-      String type, String subtype, Multimap<String, String> parameters) {
+      String type, String subtype, @Readonly Multimap<String, String> parameters) {
     checkNotNull(type);
     checkNotNull(subtype);
     checkNotNull(parameters);

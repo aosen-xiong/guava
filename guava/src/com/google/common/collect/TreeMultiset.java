@@ -251,7 +251,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     return Ints.saturatedCast(aggregateForEntries(Aggregate.DISTINCT));
   }
 
-  static int distinctElements(@CheckForNull AvlNode<?> node) {
+  static int distinctElements(@CheckForNull @Readonly AvlNode<?> node) {
     return (node == null) ? 0 : node.distinctElements;
   }
 
@@ -1020,11 +1020,11 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return newTop;
     }
 
-    private static long totalCount(@CheckForNull AvlNode<?> node) {
+    private static long totalCount(@CheckForNull @Readonly AvlNode<?> node) {
       return (node == null) ? 0 : node.totalCount;
     }
 
-    private static int height(@CheckForNull AvlNode<?> node) {
+    private static int height(@CheckForNull @Readonly AvlNode<?> node) {
       return (node == null) ? 0 : node.height;
     }
 
