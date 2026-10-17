@@ -1727,7 +1727,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> ceilingEntry(K key) {
+    public Map.@Immutable Entry<K, V> ceilingEntry(K key) {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().ceilingEntry(key), mutex);
       }
@@ -1767,7 +1767,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> firstEntry() {
+    public Map.@Immutable Entry<K, V> firstEntry() {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().firstEntry(), mutex);
       }
@@ -1775,7 +1775,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> floorEntry(K key) {
+    public Map.@Immutable Entry<K, V> floorEntry(K key) {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().floorEntry(key), mutex);
       }
@@ -1803,7 +1803,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> higherEntry(K key) {
+    public Map.@Immutable Entry<K, V> higherEntry(K key) {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().higherEntry(key), mutex);
       }
@@ -1819,7 +1819,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> lastEntry() {
+    public Map.@Immutable Entry<K, V> lastEntry() {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().lastEntry(), mutex);
       }
@@ -1827,7 +1827,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> lowerEntry(K key) {
+    public Map.@Immutable Entry<K, V> lowerEntry(K key) {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().lowerEntry(key), mutex);
       }
@@ -1860,7 +1860,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> pollFirstEntry() {
+    public Map.@Immutable Entry<K, V> pollFirstEntry() {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().pollFirstEntry(), mutex);
       }
@@ -1868,7 +1868,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Map.Entry<K, V> pollLastEntry() {
+    public Map.@Immutable Entry<K, V> pollLastEntry() {
       synchronized (mutex) {
         return nullableSynchronizedEntry(delegate().pollLastEntry(), mutex);
       }

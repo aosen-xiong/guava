@@ -2371,7 +2371,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V2> ceilingEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this,  @ParametricNullness K key) {
+    public @Immutable Entry<K, V2> ceilingEntry(@Readonly TransformedEntriesNavigableMap<K, V1, V2> this,  @ParametricNullness K key) {
       return transformEntry(fromMap().ceilingEntry(key));
     }
 
@@ -2393,13 +2393,13 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V2> firstEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @Immutable Entry<K, V2> firstEntry(@Readonly TransformedEntriesNavigableMap<K, V1, V2> this) {
       return transformEntry(fromMap().firstEntry());
     }
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V2> floorEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K key) {
+    public @Immutable Entry<K, V2> floorEntry(@Readonly TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K key) {
       return transformEntry(fromMap().floorEntry(key));
     }
 
@@ -2421,7 +2421,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V2> higherEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K key) {
+    public @Immutable Entry<K, V2> higherEntry(@Readonly TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K key) {
       return transformEntry(fromMap().higherEntry(key));
     }
 
@@ -2433,13 +2433,13 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V2> lastEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @Immutable Entry<K, V2> lastEntry(@Readonly TransformedEntriesNavigableMap<K, V1, V2> this) {
       return transformEntry(fromMap().lastEntry());
     }
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V2> lowerEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K key) {
+    public @Immutable Entry<K, V2> lowerEntry(@Readonly TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K key) {
       return transformEntry(fromMap().lowerEntry(key));
     }
 
@@ -2456,13 +2456,13 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Entry<K, V2> pollFirstEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @Immutable Entry<K, V2> pollFirstEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
       return transformEntry(fromMap().pollFirstEntry());
     }
 
     @Override
     @CheckForNull
-    public Entry<K, V2> pollLastEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @Immutable Entry<K, V2> pollLastEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
       return transformEntry(fromMap().pollLastEntry());
     }
 
@@ -3619,7 +3619,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Readonly Entry<K, V> lowerEntry(@ParametricNullness K key) {
+    public @Immutable Entry<K, V> lowerEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.lowerEntry(key));
     }
 
@@ -3631,7 +3631,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Readonly Entry<K, V> floorEntry(@ParametricNullness K key) {
+    public @Immutable Entry<K, V> floorEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.floorEntry(key));
     }
 
@@ -3643,7 +3643,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Readonly Entry<K, V> ceilingEntry(@ParametricNullness K key) {
+    public @Immutable Entry<K, V> ceilingEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.ceilingEntry(key));
     }
 
@@ -3655,7 +3655,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Readonly Entry<K, V> higherEntry(@ParametricNullness K key) {
+    public @Immutable Entry<K, V> higherEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.higherEntry(key));
     }
 
@@ -3667,25 +3667,25 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Readonly Entry<K, V> firstEntry() {
+    public @Immutable Entry<K, V> firstEntry() {
       return unmodifiableOrNull(delegate.firstEntry());
     }
 
     @Override
     @CheckForNull
-    public @Readonly Entry<K, V> lastEntry() {
+    public @Immutable Entry<K, V> lastEntry() {
       return unmodifiableOrNull(delegate.lastEntry());
     }
 
     @Override
     @CheckForNull
-    public final @Readonly Entry<K, V> pollFirstEntry() {
+    public final @Immutable Entry<K, V> pollFirstEntry() {
       throw new UnsupportedOperationException();
     }
 
     @Override
     @CheckForNull
-    public final @Readonly Entry<K, V> pollLastEntry() {
+    public final @Immutable Entry<K, V> pollLastEntry() {
       throw new UnsupportedOperationException();
     }
 
@@ -4510,7 +4510,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V> lowerEntry(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K key) {
+    public @Immutable Entry<K, V> lowerEntry(@Readonly DescendingMap<K, V> this, @ParametricNullness K key) {
       return forward().higherEntry(key);
     }
 
@@ -4522,7 +4522,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V> floorEntry(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K key) {
+    public @Immutable Entry<K, V> floorEntry(@Readonly DescendingMap<K, V> this, @ParametricNullness K key) {
       return forward().ceilingEntry(key);
     }
 
@@ -4534,7 +4534,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V> ceilingEntry(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K key) {
+    public @Immutable Entry<K, V> ceilingEntry(@Readonly DescendingMap<K, V> this, @ParametricNullness K key) {
       return forward().floorEntry(key);
     }
 
@@ -4546,7 +4546,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V> higherEntry(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K key) {
+    public @Immutable Entry<K, V> higherEntry(@Readonly DescendingMap<K, V> this, @ParametricNullness K key) {
       return forward().lowerEntry(key);
     }
 
@@ -4558,25 +4558,25 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V> firstEntry(@PolyMutable DescendingMap<K, V> this) {
+    public @Immutable Entry<K, V> firstEntry(@Readonly DescendingMap<K, V> this) {
       return forward().lastEntry();
     }
 
     @Override
     @CheckForNull
-    public @PolyMutable Entry<K, V> lastEntry(@PolyMutable DescendingMap<K, V> this) {
+    public @Immutable Entry<K, V> lastEntry(@Readonly DescendingMap<K, V> this) {
       return forward().firstEntry();
     }
 
     @Override
     @CheckForNull
-    public Entry<K, V> pollFirstEntry(@Mutable DescendingMap<K, V> this) {
+    public @Immutable Entry<K, V> pollFirstEntry(@Mutable DescendingMap<K, V> this) {
       return forward().pollLastEntry();
     }
 
     @Override
     @CheckForNull
-    public Entry<K, V> pollLastEntry(@Mutable DescendingMap<K, V> this) {
+    public @Immutable Entry<K, V> pollLastEntry(@Mutable DescendingMap<K, V> this) {
       return forward().pollFirstEntry();
     }
 

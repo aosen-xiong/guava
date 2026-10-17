@@ -76,7 +76,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> lowerEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> lowerEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return delegate().lowerEntry(key);
   }
 
@@ -108,7 +108,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> floorEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> floorEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return delegate().floorEntry(key);
   }
 
@@ -140,7 +140,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> ceilingEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> ceilingEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return delegate().ceilingEntry(key);
   }
 
@@ -172,7 +172,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> higherEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> higherEntry(@Readonly ForwardingNavigableMap<K, V> this, @ParametricNullness K key) {
     return delegate().higherEntry(key);
   }
 
@@ -204,7 +204,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> firstEntry(@Readonly ForwardingNavigableMap<K, V> this) {
+  public @Immutable Entry<K, V> firstEntry(@Readonly ForwardingNavigableMap<K, V> this) {
     return delegate().firstEntry();
   }
 
@@ -234,7 +234,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> lastEntry(@Readonly ForwardingNavigableMap<K, V> this) {
+  public @Immutable Entry<K, V> lastEntry(@Readonly ForwardingNavigableMap<K, V> this) {
     return delegate().lastEntry();
   }
 
@@ -263,7 +263,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> pollFirstEntry(@Mutable ForwardingNavigableMap<K, V> this) {
+  public @Immutable Entry<K, V> pollFirstEntry(@Mutable ForwardingNavigableMap<K, V> this) {
     return delegate().pollFirstEntry();
   }
 
@@ -279,7 +279,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
 
   @Override
   @CheckForNull
-  public Entry<K, V> pollLastEntry(@Mutable ForwardingNavigableMap<K, V> this) {
+  public @Immutable Entry<K, V> pollLastEntry(@Mutable ForwardingNavigableMap<K, V> this) {
     return delegate().pollLastEntry();
   }
 

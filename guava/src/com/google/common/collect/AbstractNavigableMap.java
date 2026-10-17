@@ -53,13 +53,13 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   @CheckForNull
-  public Entry<K, V> firstEntry() {
+  public @Immutable Entry<K, V> firstEntry() {
     return Iterators.<@Nullable Entry<K, V>>getNext(entryIterator(), null);
   }
 
   @Override
   @CheckForNull
-  public Entry<K, V> lastEntry() {
+  public @Immutable Entry<K, V> lastEntry() {
     return Iterators.<@Nullable Entry<K, V>>getNext(descendingEntryIterator(), null);
   }
 
@@ -99,25 +99,25 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> lowerEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> lowerEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return headMap(key, false).lastEntry();
   }
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> floorEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> floorEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return headMap(key, true).lastEntry();
   }
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> ceilingEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> ceilingEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return tailMap(key, true).firstEntry();
   }
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> higherEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Immutable Entry<K, V> higherEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return tailMap(key, false).firstEntry();
   }
 
