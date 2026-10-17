@@ -49,6 +49,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Registry of subscribers to a single event bus.
@@ -245,10 +246,11 @@ final class SubscriberRegistry {
     }
   }
 
+  @Immutable
   private static final class MethodIdentifier {
 
     private final String name;
-    private final List<Class<?>> parameterTypes;
+    private final @Readonly List<Class<?>> parameterTypes;
 
     MethodIdentifier(Method method) {
       this.name = method.getName();

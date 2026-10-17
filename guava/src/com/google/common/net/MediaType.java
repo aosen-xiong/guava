@@ -75,6 +75,7 @@ import org.checkerframework.checker.mutability.qual.Assignable;
  */
 @GwtCompatible
 @Immutable
+@org.checkerframework.checker.mutability.qual.Immutable
 @ElementTypesAreNonnullByDefault
 public final class MediaType {
   private static final String CHARSET_ATTRIBUTE = "charset";

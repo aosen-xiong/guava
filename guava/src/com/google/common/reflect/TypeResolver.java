@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An object of this class encapsulates type mappings from type variables. Mappings are established
@@ -550,10 +551,11 @@ public final class TypeResolver {
    * List<A extends String>}, we need to compare that {@code <A extends B>} is unequal to {@code <A
    * extends String>} in order to decide to use the transformed type instead of the original type.
    */
+  @Immutable
   static final class TypeVariableKey {
-    private final TypeVariable<?> var;
+    private final @Readonly TypeVariable<?> var;
 
-    TypeVariableKey(TypeVariable<?> var) {
+    TypeVariableKey(@Readonly TypeVariable<?> var) {
       this.var = checkNotNull(var);
     }
 
