@@ -127,7 +127,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
   private static final long serialVersionUID = 0;
 
   @Immutable
-  private static final class BelowAll extends Cut<@Readonly Comparable<?>> {
+  private static final class BelowAll extends Cut<@Immutable Comparable<?>> {
     private static final BelowAll INSTANCE = new BelowAll();
 
     private BelowAll() {
@@ -161,14 +161,14 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Cut<Comparable<?>> withLowerBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Immutable Comparable<?>> withLowerBoundType(
+        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new IllegalStateException();
     }
 
     @Override
-    Cut<Comparable<?>> withUpperBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Immutable Comparable<?>> withUpperBoundType(
+        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new AssertionError("this statement should be unreachable");
     }
 
@@ -183,26 +183,26 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Comparable<?> leastValueAbove(DiscreteDomain<@Readonly Comparable<?>> domain) {
+    Comparable<?> leastValueAbove(DiscreteDomain<@Immutable Comparable<?>> domain) {
       return domain.minValue();
     }
 
     @Override
-    Comparable<?> greatestValueBelow(DiscreteDomain<@Readonly Comparable<?>> domain) {
+    Comparable<?> greatestValueBelow(DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new AssertionError();
     }
 
     @Override
-    Cut<@Readonly Comparable<?>> canonical(DiscreteDomain<@Readonly Comparable<?>> domain) {
+    Cut<@Immutable Comparable<?>> canonical(DiscreteDomain<@Immutable Comparable<?>> domain) {
       try {
-        return Cut.<@Readonly Comparable<?>>belowValue(domain.minValue());
+        return Cut.<@Immutable Comparable<?>>belowValue(domain.minValue());
       } catch (NoSuchElementException e) {
         return this;
       }
     }
 
     @Override
-    public int compareTo(Cut<@Readonly Comparable<?>> o) {
+    public int compareTo(Cut<@Immutable Comparable<?>> o) {
       return (o == this) ? 0 : -1;
     }
 
@@ -233,7 +233,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
   }
 
   @Immutable
-  private static final class AboveAll extends Cut<@Readonly Comparable<?>> {
+  private static final class AboveAll extends Cut<@Immutable Comparable<?>> {
     private static final AboveAll INSTANCE = new AboveAll();
 
     private AboveAll() {
@@ -262,14 +262,14 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Cut<Comparable<?>> withLowerBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Immutable Comparable<?>> withLowerBoundType(
+        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new AssertionError("this statement should be unreachable");
     }
 
     @Override
-    Cut<Comparable<?>> withUpperBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Immutable Comparable<?>> withUpperBoundType(
+        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new IllegalStateException();
     }
 
@@ -284,17 +284,17 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Comparable<?> leastValueAbove(DiscreteDomain<Comparable<?>> domain) {
+    Comparable<?> leastValueAbove(DiscreteDomain<@Immutable Comparable<?>> domain) {
       throw new AssertionError();
     }
 
     @Override
-    Comparable<?> greatestValueBelow(DiscreteDomain<Comparable<?>> domain) {
+    Comparable<?> greatestValueBelow(DiscreteDomain<@Immutable Comparable<?>> domain) {
       return domain.maxValue();
     }
 
     @Override
-    public int compareTo(Cut<Comparable<?>> o) {
+    public int compareTo(Cut<@Immutable Comparable<?>> o) {
       return (o == this) ? 0 : 1;
     }
 

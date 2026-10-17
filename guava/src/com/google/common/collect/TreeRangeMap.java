@@ -393,8 +393,8 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
   @SuppressWarnings("ConstantCaseForConstants") // This RangeMap is immutable.
   @Immutable
-  private static final RangeMap<Comparable<?>, Object> EMPTY_SUB_RANGE_MAP =
-      new @Mutable RangeMap<Comparable<?>, Object>() {
+  private static final RangeMap<@Immutable Comparable<?>, Object> EMPTY_SUB_RANGE_MAP =
+      new @Mutable RangeMap<@Immutable Comparable<?>, Object>() {
         @Override
         @CheckForNull
         public Object get(Comparable<?> key) {
@@ -403,31 +403,31 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
         @Override
         @CheckForNull
-        public Entry<Range<Comparable<?>>, Object> getEntry(Comparable<?> key) {
+        public Entry<Range<@Immutable Comparable<?>>, Object> getEntry(Comparable<?> key) {
           return null;
         }
 
         @Override
-        public Range<Comparable<?>> span() {
+        public Range<@Immutable Comparable<?>> span() {
           throw new NoSuchElementException();
         }
 
         @Override
-        public void put(Range<Comparable<?>> range, Object value) {
+        public void put(Range<@Immutable Comparable<?>> range, Object value) {
           checkNotNull(range);
           throw new IllegalArgumentException(
               "Cannot insert range " + range + " into an empty subRangeMap");
         }
 
         @Override
-        public void putCoalescing(Range<Comparable<?>> range, Object value) {
+        public void putCoalescing(Range<@Immutable Comparable<?>> range, Object value) {
           checkNotNull(range);
           throw new IllegalArgumentException(
               "Cannot insert range " + range + " into an empty subRangeMap");
         }
 
         @Override
-        public void putAll(RangeMap<Comparable<?>, ? extends Object> rangeMap) {
+        public void putAll(RangeMap<@Immutable Comparable<?>, ? extends Object> rangeMap) {
           if (!rangeMap.asMapOfRanges().isEmpty()) {
             throw new IllegalArgumentException(
                 "Cannot putAll(nonEmptyRangeMap) into an empty subRangeMap");
@@ -438,13 +438,13 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
         public void clear() {}
 
         @Override
-        public void remove(Range<Comparable<?>> range) {
+        public void remove(Range<@Immutable Comparable<?>> range) {
           checkNotNull(range);
         }
 
         @Override
         public void merge(
-            Range<Comparable<?>> range,
+            Range<@Immutable Comparable<?>> range,
             @CheckForNull Object value,
             BiFunction<? super Object, ? super @Nullable Object, ? extends @Nullable Object>
                 remappingFunction) {
@@ -454,17 +454,17 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
         }
 
         @Override
-        public Map<Range<Comparable<?>>, Object> asMapOfRanges() {
+        public Map<Range<@Immutable Comparable<?>>, Object> asMapOfRanges() {
           return Collections.emptyMap();
         }
 
         @Override
-        public Map<Range<Comparable<?>>, Object> asDescendingMapOfRanges() {
+        public Map<Range<@Immutable Comparable<?>>, Object> asDescendingMapOfRanges() {
           return Collections.emptyMap();
         }
 
         @Override
-        public RangeMap<Comparable<?>, Object> subRangeMap(Range<Comparable<?>> range) {
+        public RangeMap<@Immutable Comparable<?>, Object> subRangeMap(Range<@Immutable Comparable<?>> range) {
           checkNotNull(range);
           return this;
         }
