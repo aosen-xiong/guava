@@ -27,6 +27,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.Covariant;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An immutable object that may contain a non-null reference to another object. Each instance of
@@ -283,7 +284,7 @@ public abstract class Optional<T> implements Serializable {
    *
    * @since 11.0
    */
-  public abstract Set<@NonNull T> asSet();
+  public abstract @Immutable Set<@NonNull T> asSet();
 
   /**
    * If the instance is present, it is transformed with the given {@link Function}; otherwise,
