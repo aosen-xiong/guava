@@ -173,7 +173,7 @@ public final class ArrayListMultimap<K extends @Nullable @Immutable Object, V ex
 
   @GwtIncompatible // java.io.ObjectOutputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable ArrayListMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     expectedValuesPerKey = DEFAULT_VALUES_PER_KEY;
     int distinctKeys = Serialization.readCount(stream);

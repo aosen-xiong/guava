@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -85,7 +86,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public @Readonly Collection<V> removeAll(@CheckForNull @Readonly Object key) {
+  public @Readonly Collection<V> removeAll(@Mutable FilteredKeyMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     return containsKey(key) ? unfiltered.removeAll(key) : unmodifiableEmptyCollection();
   }
 
@@ -98,7 +99,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable FilteredKeyMultimap<K, V> this) {
     keySet().clear();
   }
 

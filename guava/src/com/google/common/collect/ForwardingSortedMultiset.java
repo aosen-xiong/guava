@@ -176,7 +176,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    * forward to this implementation.
    */
   @CheckForNull
-  protected Entry<E> standardPollFirstEntry() {
+  protected Entry<E> standardPollFirstEntry(@Mutable ForwardingSortedMultiset<E> this) {
     Iterator<Entry<E>> entryIterator = entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;

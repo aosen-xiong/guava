@@ -187,7 +187,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   }
 
   @Override
-  public void add(Range<C> rangeToAdd) {
+  public void add(@Mutable TreeRangeSet<C> this, Range<C> rangeToAdd) {
     checkNotNull(rangeToAdd);
 
     if (rangeToAdd.isEmpty()) {
@@ -234,7 +234,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   }
 
   @Override
-  public void remove(Range<C> rangeToRemove) {
+  public void remove(@Mutable TreeRangeSet<C> this, Range<C> rangeToRemove) {
     checkNotNull(rangeToRemove);
 
     if (rangeToRemove.isEmpty()) {
@@ -276,7 +276,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     rangesByLowerBound.subMap(rangeToRemove.lowerBound, rangeToRemove.upperBound).clear();
   }
 
-  private void replaceRangeWithSameLowerBound(Range<C> range) {
+  private void replaceRangeWithSameLowerBound(@Mutable TreeRangeSet<C> this, Range<C> range) {
     if (range.isEmpty()) {
       rangesByLowerBound.remove(range.lowerBound);
     } else {

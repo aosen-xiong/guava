@@ -501,7 +501,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    *     in {@link #rowKeySet()} or {@link #columnKeySet()}
    */
   @Override
-  public void putAll(@Readonly Table<? extends R, ? extends C, ? extends @Nullable V> table) {
+  public void putAll(@Mutable ArrayTable<R, C, V> this, @Readonly Table<? extends R, ? extends C, ? extends @Nullable V> table) {
     super.putAll(table);
   }
 

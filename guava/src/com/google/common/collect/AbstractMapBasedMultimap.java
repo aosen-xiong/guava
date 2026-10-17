@@ -1182,7 +1182,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   /** Removes all values for the provided key. */
-  private void removeValuesForKey(@CheckForNull @Readonly Object key) {
+  private void removeValuesForKey(@Mutable AbstractMapBasedMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     Collection<V> collection = Maps.safeRemove(map, key);
 
     if (collection != null) {

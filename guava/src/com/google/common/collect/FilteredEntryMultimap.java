@@ -108,7 +108,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public @Readonly Collection<V> removeAll(@CheckForNull @Readonly Object key) {
+  public @Readonly Collection<V> removeAll(@Mutable FilteredEntryMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     return MoreObjects.firstNonNull(asMap().remove(key), unmodifiableEmptyCollection());
   }
 
@@ -120,7 +120,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable FilteredEntryMultimap<K, V> this) {
     entries().clear();
   }
 
@@ -154,7 +154,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
     return asMap().keySet();
   }
 
-  boolean removeEntriesIf(Predicate<? super Entry<K, Collection<V>>> predicate) {
+  boolean removeEntriesIf(@Mutable FilteredEntryMultimap<K, V> this, Predicate<? super Entry<K, Collection<V>>> predicate) {
     Iterator<Entry<K, Collection<V>>> entryIterator = unfiltered.asMap().entrySet().iterator();
     boolean changed = false;
     while (entryIterator.hasNext()) {

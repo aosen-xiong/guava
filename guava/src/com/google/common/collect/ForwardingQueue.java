@@ -130,7 +130,7 @@ public abstract class ForwardingQueue<E extends @Nullable @Readonly Object> exte
    * @since 7.0
    */
   @CheckForNull
-  protected E standardPoll() {
+  protected E standardPoll(@Mutable ForwardingQueue<E> this) {
     try {
       return remove();
     } catch (NoSuchElementException caught) {

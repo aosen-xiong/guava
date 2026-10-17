@@ -697,7 +697,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> removeAll(@CheckForNull @Readonly Object key) {
+  public List<V> removeAll(@Mutable LinkedListMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     /*
      * Safe because all we do is remove values for the key, not add them. (If we wanted to make sure
      * to call getCopy and removeAllNodes only with a true K, then we could check containsKey first.
@@ -898,7 +898,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable LinkedListMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     keyToKeyList = Maps.newLinkedHashMap();
     int size = stream.readInt();

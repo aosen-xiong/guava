@@ -131,7 +131,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   }
 
   @Override
-  public void put(Range<K> range, V value) {
+  public void put(@Mutable TreeRangeMap<K, V> this, Range<K> range, V value) {
     if (!range.isEmpty()) {
       checkNotNull(value);
       remove(range);
@@ -184,7 +184,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable TreeRangeMap<K, V> this) {
     entriesByLowerBound.clear();
   }
 
@@ -200,12 +200,12 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
         firstEntry.getValue().getKey().lowerBound, lastEntry.getValue().getKey().upperBound);
   }
 
-  private void putRangeMapEntry(Cut<K> lowerBound, Cut<K> upperBound, V value) {
+  private void putRangeMapEntry(@Mutable TreeRangeMap<K, V> this, Cut<K> lowerBound, Cut<K> upperBound, V value) {
     entriesByLowerBound.put(lowerBound, new RangeMapEntry<K, V>(lowerBound, upperBound, value));
   }
 
   @Override
-  public void remove(Range<K> rangeToRemove) {
+  public void remove(@Mutable TreeRangeMap<K, V> this, Range<K> rangeToRemove) {
     if (rangeToRemove.isEmpty()) {
       return;
     }
@@ -274,7 +274,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   }
 
   @Override
-  public void merge(
+  public void merge(@Mutable TreeRangeMap<K, V> this, 
       Range<K> range,
       @CheckForNull V value,
       BiFunction<? super V, ? super @Nullable V, ? extends @Nullable V> remappingFunction) {

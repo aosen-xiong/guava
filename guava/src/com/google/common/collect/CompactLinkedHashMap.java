@@ -33,6 +33,7 @@ import java.util.Spliterators;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
@@ -208,7 +209,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void moveLastEntry(int dstIndex, int mask) {
+  void moveLastEntry(@Mutable CompactLinkedHashMap<K, V> this, int dstIndex, int mask) {
     int srcIndex = size() - 1;
     super.moveLastEntry(dstIndex, mask);
 

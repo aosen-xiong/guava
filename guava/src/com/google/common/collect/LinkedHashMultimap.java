@@ -653,7 +653,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable LinkedHashMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     multimapHeaderEntry = ValueEntry.newHeader();
     succeedsInMultimap(multimapHeaderEntry, multimapHeaderEntry);

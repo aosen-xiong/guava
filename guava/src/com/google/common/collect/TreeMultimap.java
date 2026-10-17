@@ -228,7 +228,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
   @SuppressWarnings("unchecked") // reading data stored by writeObject
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable TreeMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     keyComparator = requireNonNull((Comparator<? super K>) stream.readObject());
     valueComparator = requireNonNull((Comparator<? super V>) stream.readObject());

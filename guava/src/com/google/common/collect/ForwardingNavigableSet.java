@@ -210,7 +210,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * {@code headSet} and {@code tailSet} methods. In many cases, you may wish to override {@link
    * #subSet(Object, boolean, Object, boolean)} to forward to this implementation.
    */
-  protected NavigableSet<E> standardSubSet(
+  protected @ReceiverDependentMutable NavigableSet<E> standardSubSet(
       @ParametricNullness E fromElement,
       boolean fromInclusive,
       @ParametricNullness E toElement,

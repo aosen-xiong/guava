@@ -416,7 +416,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   /**
    * Creates a fresh entry with the specified object at the specified position in the entry arrays.
    */
-  void insertEntry(
+  void insertEntry(@Mutable CompactHashMap<K, V> this, 
       int entryIndex, @ParametricNullness K key, @ParametricNullness V value, int hash, int mask) {
     this.setEntry(entryIndex, CompactHashing.maskCombine(hash, UNSET, mask));
     this.setKey(entryIndex, key);
@@ -550,7 +550,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return (oldValue == NOT_FOUND) ? null : (V) oldValue;
   }
 
-  private @Nullable Object removeHelper(@CheckForNull Object key) {
+  private @Nullable Object removeHelper(@Mutable CompactHashMap<K, V> this, @CheckForNull Object key) {
     if (needsAllocArrays()) {
       return NOT_FOUND;
     }
@@ -689,7 +689,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+  public void replaceAll(@Mutable CompactHashMap<K, V> this, BiFunction<? super K, ? super V, ? extends V> function) {
     checkNotNull(function);
     Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
@@ -1144,7 +1144,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
   @SuppressWarnings("unchecked")
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable CompactHashMap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int elementCount = stream.readInt();
     if (elementCount < 0) {

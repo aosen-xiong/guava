@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -124,7 +125,7 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
   public @NonNegative int count(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.count(arg0); }
 
   @Override
-  public int remove(@Nullable @Readonly Object arg0, int arg1) { return super.remove(arg0, arg1); }
+  public int remove(@Mutable LinkedHashMultiset<E> this, @Nullable @Readonly Object arg0, int arg1) { return super.remove(arg0, arg1); }
 
   @Pure
   @Override

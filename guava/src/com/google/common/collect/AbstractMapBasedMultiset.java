@@ -180,7 +180,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable AbstractMapBasedMultiset<E> this) {
     for (Count frequency : backingMap.values()) {
       frequency.set(0);
     }

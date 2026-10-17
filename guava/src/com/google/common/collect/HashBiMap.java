@@ -400,7 +400,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return Maps.keyOrNull(oldEntryForValue);
   }
 
-  private void rehashIfNecessary() {
+  private void rehashIfNecessary(@Mutable HashBiMap<K, V> this) {
     @Nullable BiEntry<K, V>[] oldKToV = hashTableKToV;
     if (Hashing.needsResizing(size, oldKToV.length, LOAD_FACTOR)) {
       int newTableSize = oldKToV.length * 2;
@@ -602,7 +602,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+  public void replaceAll(@Mutable HashBiMap<K, V> this, BiFunction<? super K, ? super V, ? extends V> function) {
     checkNotNull(function);
     BiEntry<K, V> oldFirst = firstInKeyInsertionOrder;
     clear();
