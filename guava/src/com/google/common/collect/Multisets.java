@@ -112,14 +112,15 @@ public final class Multisets {
    * @param multiset the multiset for which an unmodifiable view is to be generated
    * @return an unmodifiable view of the multiset
    */
-  public static <E extends @Nullable @Readonly Object> @Readonly Multiset<E> unmodifiableMultiset(
-      Multiset<? extends E> multiset) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing multiset and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <E extends @Nullable @Readonly Object> @PolyMutable Multiset<E> unmodifiableMultiset(
+      @PolyMutable Multiset<? extends E> multiset) {
     if (multiset instanceof UnmodifiableMultiset || multiset instanceof ImmutableMultiset) {
       @SuppressWarnings("unchecked") // Since it's unmodifiable, the covariant cast is safe
-      Multiset<E> result = (Multiset<E>) multiset;
+      @PolyMutable Multiset<E> result = (@PolyMutable Multiset<E>) multiset;
       return result;
     }
-    return new UnmodifiableMultiset<E>(checkNotNull(multiset));
+    return new @PolyMutable UnmodifiableMultiset<E>(checkNotNull(multiset));
   }
 
   /**
@@ -133,42 +134,42 @@ public final class Multisets {
     return checkNotNull(multiset);
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   static class UnmodifiableMultiset<E extends @Nullable @Readonly Object> extends ForwardingMultiset<E>
       implements Serializable {
-    final @Readonly Multiset<? extends E> delegate;
+    final @ReceiverDependentMutable Multiset<? extends E> delegate;
 
-    UnmodifiableMultiset(@Readonly Multiset<? extends E> delegate) {
+    UnmodifiableMultiset(@ReceiverDependentMutable Multiset<? extends E> delegate) {
       this.delegate = delegate;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected @Readonly Multiset<E> delegate() {
+    protected @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       // This is safe because all non-covariant methods are overridden
-      return (Multiset<E>) delegate;
+      return (@ReceiverDependentMutable Multiset<E>) delegate;
     }
 
     @LazyInit @CheckForNull transient @Assignable Set<E> elementSet;
 
-    Set<E> createElementSet() {
+    @ReceiverDependentMutable Set<E> createElementSet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       return Collections.<E>unmodifiableSet(delegate.elementSet());
     }
 
     @SideEffectFree
     @Override
-    public @Immutable Set<E> elementSet(@Immutable UnmodifiableMultiset<E> this) {
+    public @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       Set<E> es = elementSet;
       return (es == null) ? elementSet = createElementSet() : es;
     }
 
-    @LazyInit @CheckForNull transient @Assignable Set<Multiset.Entry<E>> entrySet;
+    @LazyInit @CheckForNull transient @Assignable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet;
 
     @SideEffectFree
     @SuppressWarnings("unchecked")
     @Override
-    public @Immutable Set<Multiset.Entry<E>> entrySet(@Immutable UnmodifiableMultiset<E> this) {
-      Set<Multiset.Entry<E>> es = entrySet;
+    public @ReceiverDependentMutable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
+      Set<Multiset.@ReceiverDependentMutable Entry<E>> es = entrySet;
       return (es == null)
           // Safe because the returned set is made unmodifiable and Entry
           // itself is readonly
@@ -177,7 +178,7 @@ public final class Multisets {
     }
 
     @Override
-    public @Readonly Iterator<E> iterator() {
+    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       return Iterators.<E>unmodifiableIterator(delegate.iterator());
     }
 
@@ -250,10 +251,11 @@ public final class Multisets {
    * @return an unmodifiable view of the multiset
    * @since 11.0
    */
-  public static <E extends @Nullable Object> @Immutable SortedMultiset<E> unmodifiableSortedMultiset(
-      SortedMultiset<E> sortedMultiset) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <E extends @Nullable @Readonly Object> @PolyMutable SortedMultiset<E> unmodifiableSortedMultiset(
+      @PolyMutable SortedMultiset<E> sortedMultiset) {
     // it's in its own file so it can be emulated for GWT
-    return new UnmodifiableSortedMultiset<E>(checkNotNull(sortedMultiset));
+    return new @PolyMutable UnmodifiableSortedMultiset<E>(checkNotNull(sortedMultiset));
   }
 
   /**

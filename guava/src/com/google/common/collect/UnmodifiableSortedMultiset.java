@@ -28,6 +28,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * Implementation of {@link Multisets#unmodifiableSortedMultiset(SortedMultiset)}, split out into
@@ -39,16 +40,16 @@ import org.checkerframework.framework.qual.CFComment;
 @AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-@Immutable
+@ReceiverDependentMutable
 final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> extends UnmodifiableMultiset<E>
     implements SortedMultiset<E> {
-  UnmodifiableSortedMultiset(@Readonly SortedMultiset<E> delegate) {
+  UnmodifiableSortedMultiset(@ReceiverDependentMutable SortedMultiset<E> delegate) {
     super(delegate);
   }
 
   @Override
-  protected @Readonly SortedMultiset<E> delegate(UnmodifiableSortedMultiset<E> this) {
-    return (@Readonly SortedMultiset<E>) super.delegate();
+  protected @ReceiverDependentMutable SortedMultiset<E> delegate(@ReceiverDependentMutable UnmodifiableSortedMultiset<E> this) {
+    return (@ReceiverDependentMutable SortedMultiset<E>) super.delegate();
   }
 
   @Override
@@ -57,22 +58,22 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
   }
 
   @Override
-  @Readonly NavigableSet<E> createElementSet(UnmodifiableSortedMultiset<E> this) {
+  @ReceiverDependentMutable NavigableSet<E> createElementSet(@ReceiverDependentMutable UnmodifiableSortedMultiset<E> this) {
     return Sets.unmodifiableNavigableSet(delegate().elementSet());
   }
 
   @Override
-  public @Readonly NavigableSet<E> elementSet(UnmodifiableSortedMultiset<E> this) {
+  public @ReceiverDependentMutable NavigableSet<E> elementSet(@ReceiverDependentMutable UnmodifiableSortedMultiset<E> this) {
     return (NavigableSet<E>) super.elementSet();
   }
 
   @LazyInit @CheckForNull private transient @Assignable UnmodifiableSortedMultiset<E> descendingMultiset;
 
   @Override
-  public @Readonly SortedMultiset<E> descendingMultiset(UnmodifiableSortedMultiset<E> this) {
+  public @ReceiverDependentMutable SortedMultiset<E> descendingMultiset(@ReceiverDependentMutable UnmodifiableSortedMultiset<E> this) {
     UnmodifiableSortedMultiset<E> result = descendingMultiset;
     if (result == null) {
-      result = new UnmodifiableSortedMultiset<>(delegate().descendingMultiset());
+      result = new @ReceiverDependentMutable UnmodifiableSortedMultiset<>(delegate().descendingMultiset());
       result.descendingMultiset = this;
       return descendingMultiset = result;
     }
@@ -104,13 +105,13 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
   }
 
   @Override
-  public @Readonly SortedMultiset<E> headMultiset(UnmodifiableSortedMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType) {
+  public @ReceiverDependentMutable SortedMultiset<E> headMultiset(@ReceiverDependentMutable UnmodifiableSortedMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType) {
     return Multisets.unmodifiableSortedMultiset(delegate().headMultiset(upperBound, boundType));
   }
 
   @Override
-  public @Readonly SortedMultiset<E> subMultiset(
-          UnmodifiableSortedMultiset<E> this,
+  public @ReceiverDependentMutable SortedMultiset<E> subMultiset(
+          @ReceiverDependentMutable UnmodifiableSortedMultiset<E> this,
       @ParametricNullness E lowerBound,
       BoundType lowerBoundType,
       @ParametricNullness E upperBound,
@@ -120,7 +121,7 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
   }
 
   @Override
-  public @Readonly SortedMultiset<E> tailMultiset(UnmodifiableSortedMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType) {
+  public @ReceiverDependentMutable SortedMultiset<E> tailMultiset(@ReceiverDependentMutable UnmodifiableSortedMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType) {
     return Multisets.unmodifiableSortedMultiset(delegate().tailMultiset(lowerBound, boundType));
   }
 

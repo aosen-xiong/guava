@@ -1845,27 +1845,28 @@ public final class Sets {
    * @return an unmodifiable view of the specified navigable set
    * @since 12.0
    */
-  public static <E extends @Nullable @Readonly Object> @Readonly NavigableSet<E> unmodifiableNavigableSet(
-      @Readonly NavigableSet<E> set) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> unmodifiableNavigableSet(
+      @PolyMutable NavigableSet<E> set) {
     if (set instanceof ImmutableCollection || set instanceof UnmodifiableNavigableSet) {
       return set;
     }
-    return new UnmodifiableNavigableSet<E>(set);
+    return new @PolyMutable UnmodifiableNavigableSet<E>(set);
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   static final class UnmodifiableNavigableSet<E extends @Nullable @Readonly Object>
       extends ForwardingSortedSet<E> implements NavigableSet<E>, Serializable {
-    private final @Readonly NavigableSet<E> delegate;
-    private final @Readonly SortedSet<E> unmodifiableDelegate;
+    private final @ReceiverDependentMutable NavigableSet<E> delegate;
+    private final @ReceiverDependentMutable SortedSet<E> unmodifiableDelegate;
 
-    UnmodifiableNavigableSet(@Readonly NavigableSet<E> delegate) {
+    UnmodifiableNavigableSet(@ReceiverDependentMutable NavigableSet<E> delegate) {
       this.delegate = checkNotNull(delegate);
       this.unmodifiableDelegate = Collections.unmodifiableSortedSet(delegate);
     }
 
     @Override
-    protected @Readonly SortedSet<E> delegate() {
+    protected @ReceiverDependentMutable SortedSet<E> delegate() {
       return unmodifiableDelegate;
     }
 
@@ -1930,23 +1931,23 @@ public final class Sets {
     @LazyInit @CheckForNull private transient @Assignable UnmodifiableNavigableSet<E> descendingSet;
 
     @Override
-    public @Readonly NavigableSet<E> descendingSet(UnmodifiableNavigableSet<E> this) {
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this) {
       UnmodifiableNavigableSet<E> result = descendingSet;
       if (result == null) {
-        result = descendingSet = new UnmodifiableNavigableSet<E>(delegate.descendingSet());
+        result = descendingSet = new @ReceiverDependentMutable UnmodifiableNavigableSet<E>(delegate.descendingSet());
         result.descendingSet = this;
       }
       return result;
     }
 
     @Override
-    public @Readonly Iterator<E> descendingIterator(UnmodifiableNavigableSet<E> this) {
+    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this) {
       return Iterators.unmodifiableIterator(delegate.descendingIterator());
     }
 
     @Override
-    public @Readonly NavigableSet<E> subSet(
-            UnmodifiableNavigableSet<E> this,
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
+            @ReceiverDependentMutable UnmodifiableNavigableSet<E> this,
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
@@ -1956,12 +1957,12 @@ public final class Sets {
     }
 
     @Override
-    public @Readonly NavigableSet<E> headSet(UnmodifiableNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> headSet(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
       return unmodifiableNavigableSet(delegate.headSet(toElement, inclusive));
     }
 
     @Override
-    public @Readonly NavigableSet<E> tailSet(UnmodifiableNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
       return unmodifiableNavigableSet(delegate.tailSet(fromElement, inclusive));
     }
 

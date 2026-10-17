@@ -1536,21 +1536,22 @@ public final class Maps {
   }
 
   /** The implementation of {@link Multimaps#unmodifiableEntries}. */
+  @ReceiverDependentMutable
   static class UnmodifiableEntries<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends ForwardingCollection<Entry<K, V>> {
     private final Collection<Entry<K, V>> entries;
 
-    UnmodifiableEntries(@Readonly Collection<@Readonly Entry<K, V>> entries) {
+    UnmodifiableEntries(@ReceiverDependentMutable Collection<@Readonly Entry<K, V>> entries) {
       this.entries = entries;
     }
 
     @Override
-    protected @Readonly Collection<@Readonly Entry<K, V>> delegate() {
+    protected @ReceiverDependentMutable Collection<@Readonly Entry<K, V>> delegate() {
       return entries;
     }
 
     @Override
-    public @Readonly Iterator<@Readonly Entry<K, V>> iterator() {
+    public @ReceiverDependentMutable Iterator<@Readonly Entry<K, V>> iterator() {
       return unmodifiableEntryIterator(entries.iterator());
     }
 
@@ -1585,6 +1586,7 @@ public final class Maps {
   }
 
   /** The implementation of {@link Maps#unmodifiableEntrySet(Set)}. */
+  @ReceiverDependentMutable
   static class UnmodifiableEntrySet<K extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends UnmodifiableEntries<K, V> implements Set<Entry<K, V>> {
     UnmodifiableEntrySet(Set<Entry<K, V>> entries) {
@@ -1713,14 +1715,16 @@ public final class Maps {
    * @param bimap the bimap for which an unmodifiable view is to be returned
    * @return an unmodifiable view of the specified bimap
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
-      BiMap<K, V> unmodifiableBiMap(BiMap<? extends K, ? extends V> bimap) {
-    return new UnmodifiableBiMap<>(bimap, null);
+      @PolyMutable BiMap<K, V> unmodifiableBiMap(@PolyMutable BiMap<? extends K, ? extends V> bimap) {
+    return new @PolyMutable UnmodifiableBiMap<>(bimap, null);
   }
 
   /**
    * @see Maps#unmodifiableBiMap(BiMap)
    */
+  @ReceiverDependentMutable
   private static class UnmodifiableBiMap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends ForwardingMap<K, V> implements BiMap<K, V>, Serializable {
     final Map<K, V> unmodifiableMap;
@@ -1728,14 +1732,14 @@ public final class Maps {
     @LazyInit @RetainedWith @CheckForNull BiMap<V, K> inverse;
     @LazyInit @CheckForNull transient Set<V> values;
 
-    UnmodifiableBiMap(@Readonly BiMap<? extends K, ? extends V> delegate, @CheckForNull @Readonly BiMap<V, K> inverse) {
+    UnmodifiableBiMap(@ReceiverDependentMutable BiMap<? extends K, ? extends V> delegate, @CheckForNull @Readonly BiMap<V, K> inverse) {
       unmodifiableMap = Collections.unmodifiableMap(delegate);
       this.delegate = delegate;
       this.inverse = inverse;
     }
 
     @Override
-    protected @Readonly Map<K, V> delegate() {
+    protected @ReceiverDependentMutable Map<K, V> delegate() {
       return unmodifiableMap;
     }
 
@@ -1808,16 +1812,16 @@ public final class Maps {
     }
 
     @Override
-    public @Readonly BiMap<V, K> inverse() {
+    public @ReceiverDependentMutable BiMap<V, K> inverse() {
       BiMap<V, K> result = inverse;
       return (result == null)
-          ? inverse = new UnmodifiableBiMap<>(delegate.inverse(), this)
+          ? inverse = new @ReceiverDependentMutable UnmodifiableBiMap<>(delegate.inverse(), this)
           : result;
     }
 
     @SideEffectFree
     @Override
-    public @Readonly Set<V> values() {
+    public @ReceiverDependentMutable Set<V> values() {
       Set<V> result = values;
       return (result == null) ? values = Collections.unmodifiableSet(delegate.values()) : result;
     }
@@ -3578,15 +3582,16 @@ public final class Maps {
    * @since 12.0
    */
   @GwtIncompatible // NavigableMap
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      NavigableMap<K, V> unmodifiableNavigableMap(NavigableMap<K, ? extends V> map) {
+      @PolyMutable NavigableMap<K, V> unmodifiableNavigableMap(@PolyMutable NavigableMap<K, ? extends V> map) {
     checkNotNull(map);
     if (map instanceof UnmodifiableNavigableMap) {
       @SuppressWarnings("unchecked") // covariant
-      NavigableMap<K, V> result = (NavigableMap<K, V>) map;
+      @PolyMutable NavigableMap<K, V> result = (@PolyMutable NavigableMap<K, V>) map;
       return result;
     } else {
-      return new UnmodifiableNavigableMap<>(map);
+      return new @PolyMutable UnmodifiableNavigableMap<>(map);
     }
   }
 
@@ -3597,12 +3602,12 @@ public final class Maps {
   }
 
   @GwtIncompatible // NavigableMap
-  @Immutable
+  @ReceiverDependentMutable
   static class UnmodifiableNavigableMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingSortedMap<K, V> implements NavigableMap<K, V>, Serializable {
-    private final @Readonly NavigableMap<K, ? extends V> delegate;
+    private final @ReceiverDependentMutable NavigableMap<K, ? extends V> delegate;
 
-    UnmodifiableNavigableMap(@Readonly NavigableMap<K, ? extends V> delegate) {
+    UnmodifiableNavigableMap(@ReceiverDependentMutable NavigableMap<K, ? extends V> delegate) {
       this.delegate = delegate;
     }
 
@@ -3613,7 +3618,7 @@ public final class Maps {
     }
 
     @Override
-    protected @Readonly SortedMap<K, V> delegate() {
+    protected @ReceiverDependentMutable SortedMap<K, V> delegate() {
       return Collections.unmodifiableSortedMap(delegate);
     }
 
@@ -3757,10 +3762,10 @@ public final class Maps {
     @LazyInit @CheckForNull private transient @Assignable UnmodifiableNavigableMap<K, V> descendingMap;
 
     @Override
-    public @Readonly NavigableMap<K, V> descendingMap() {
+    public @ReceiverDependentMutable NavigableMap<K, V> descendingMap() {
       UnmodifiableNavigableMap<K, V> result = descendingMap;
       return (result == null)
-          ? descendingMap = new UnmodifiableNavigableMap<>(delegate.descendingMap(), this)
+          ? descendingMap = new @ReceiverDependentMutable UnmodifiableNavigableMap<>(delegate.descendingMap(), this)
           : result;
     }
 
@@ -3780,12 +3785,12 @@ public final class Maps {
     }
 
     @Override
-    public @Readonly SortedMap<K, V> subMap(@ParametricNullness K fromKey, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return subMap(fromKey, true, toKey, false);
     }
 
     @Override
-    public @Readonly NavigableMap<K, V> subMap(
+    public @ReceiverDependentMutable NavigableMap<K, V> subMap(
         @ParametricNullness K fromKey,
         boolean fromInclusive,
         @ParametricNullness K toKey,
@@ -3795,22 +3800,22 @@ public final class Maps {
     }
 
     @Override
-    public @Readonly SortedMap<K, V> headMap(@ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ParametricNullness K toKey) {
       return headMap(toKey, false);
     }
 
     @Override
-    public @Readonly NavigableMap<K, V> headMap(@ParametricNullness K toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ParametricNullness K toKey, boolean inclusive) {
       return Maps.unmodifiableNavigableMap(delegate.headMap(toKey, inclusive));
     }
 
     @Override
-    public @Readonly SortedMap<K, V> tailMap(@ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ParametricNullness K fromKey) {
       return tailMap(fromKey, true);
     }
 
     @Override
-    public @Readonly NavigableMap<K, V> tailMap(@ParametricNullness K fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ParametricNullness K fromKey, boolean inclusive) {
       return Maps.unmodifiableNavigableMap(delegate.tailMap(fromKey, inclusive));
     }
   }

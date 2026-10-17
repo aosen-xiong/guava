@@ -567,29 +567,30 @@ public final class Tables {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly Table<R, C, V> unmodifiableTable(Table<? extends R, ? extends C, ? extends V> table) {
-    return new UnmodifiableTable<>(table);
+    @PolyMutable Table<R, C, V> unmodifiableTable(@PolyMutable Table<? extends R, ? extends C, ? extends V> table) {
+    return new @PolyMutable UnmodifiableTable<>(table);
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   private static class UnmodifiableTable<
           R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingTable<R, C, V> implements Serializable {
-    final @Readonly Table<? extends R, ? extends C, ? extends V> delegate;
+    final @ReceiverDependentMutable Table<? extends R, ? extends C, ? extends V> delegate;
 
-    UnmodifiableTable(@Readonly Table<? extends R, ? extends C, ? extends V> delegate) {
+    UnmodifiableTable(@ReceiverDependentMutable Table<? extends R, ? extends C, ? extends V> delegate) {
       this.delegate = checkNotNull(delegate);
     }
 
     @SuppressWarnings("unchecked") // safe, covariant cast
     @Override
-    protected @Readonly Table<R, C, V> delegate() {
+    protected @ReceiverDependentMutable Table<R, C, V> delegate() {
       return (Table<R, C, V>) delegate;
     }
 
     @Override
-    public @Readonly Set<@Readonly Cell<R, C, V>> cellSet() {
+    public @ReceiverDependentMutable Set<@Readonly Cell<R, C, V>> cellSet() {
       return Collections.unmodifiableSet(super.cellSet());
     }
 
@@ -599,17 +600,17 @@ public final class Tables {
     }
 
     @Override
-    public @Immutable Map<R, V> column(@ParametricNullness C columnKey) {
+    public @ReceiverDependentMutable Map<R, V> column(@ParametricNullness C columnKey) {
       return Collections.unmodifiableMap(super.column(columnKey));
     }
 
     @Override
-    public @Immutable Set<C> columnKeySet() {
+    public @ReceiverDependentMutable Set<C> columnKeySet() {
       return Collections.unmodifiableSet(super.columnKeySet());
     }
 
     @Override
-    public @Readonly Map<C, @Readonly Map<R, V>> columnMap() {
+    public @ReceiverDependentMutable Map<C, @Readonly Map<R, V>> columnMap() {
       Function<Map<R, V>, Map<R, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.columnMap(), wrapper));
     }
@@ -635,23 +636,23 @@ public final class Tables {
     }
 
     @Override
-    public @Immutable Map<C, V> row(@ParametricNullness R rowKey) {
+    public @ReceiverDependentMutable Map<C, V> row(@ParametricNullness R rowKey) {
       return Collections.unmodifiableMap(super.row(rowKey));
     }
 
     @Override
-    public @Immutable Set<R> rowKeySet() {
+    public @ReceiverDependentMutable Set<R> rowKeySet() {
       return Collections.unmodifiableSet(super.rowKeySet());
     }
 
     @Override
-    public @Immutable Map<R, Map<C, V>> rowMap() {
+    public @ReceiverDependentMutable Map<R, Map<C, V>> rowMap() {
       Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.rowMap(), wrapper));
     }
 
     @Override
-    public @Immutable Collection<V> values() {
+    public @ReceiverDependentMutable Collection<V> values() {
       return Collections.unmodifiableCollection(super.values());
     }
 
@@ -670,38 +671,40 @@ public final class Tables {
    * @return an unmodifiable view of the specified table
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
-      RowSortedTable<R, C, V> unmodifiableRowSortedTable(
-          RowSortedTable<R, ? extends C, ? extends V> table) {
+      @PolyMutable RowSortedTable<R, C, V> unmodifiableRowSortedTable(
+          @PolyMutable RowSortedTable<R, ? extends C, ? extends V> table) {
     /*
      * It's not ? extends R, because it's technically not covariant in R. Specifically,
      * table.rowMap().comparator() could return a comparator that only works for the ? extends R.
      * Collections.unmodifiableSortedMap makes the same distinction.
      */
-    return new UnmodifiableRowSortedMap<>(table);
+    return new @PolyMutable UnmodifiableRowSortedMap<>(table);
   }
 
+  @ReceiverDependentMutable
   private static final class UnmodifiableRowSortedMap<
           R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
       extends UnmodifiableTable<R, C, V> implements RowSortedTable<R, C, V> {
 
-    public UnmodifiableRowSortedMap(@Readonly RowSortedTable<R, ? extends C, ? extends V> delegate) {
+    public UnmodifiableRowSortedMap(@ReceiverDependentMutable RowSortedTable<R, ? extends C, ? extends V> delegate) {
       super(delegate);
     }
 
     @Override
-    protected @Readonly RowSortedTable<R, C, V> delegate() {
+    protected @ReceiverDependentMutable RowSortedTable<R, C, V> delegate() {
       return (@ReceiverDependentMutable RowSortedTable<R, C, V>) super.delegate();
     }
 
     @Override
-    public @Readonly SortedMap<R, Map<C, V>> rowMap() {
+    public @ReceiverDependentMutable SortedMap<R, Map<C, V>> rowMap() {
       Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableSortedMap(Maps.transformValues(delegate().rowMap(), wrapper));
     }
 
     @Override
-    public @Readonly SortedSet<R> rowKeySet() {
+    public @ReceiverDependentMutable SortedSet<R> rowKeySet() {
       return Collections.unmodifiableSortedSet(delegate().rowKeySet());
     }
 

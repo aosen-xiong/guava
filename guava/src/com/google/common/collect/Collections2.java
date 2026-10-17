@@ -146,7 +146,7 @@ public final class Collections2 {
       this.predicate = predicate;
     }
 
-    FilteredCollection<E> createCombined(Predicate<? super E> newPredicate) {
+    @ReceiverDependentMutable FilteredCollection<E> createCombined(Predicate<? super E> newPredicate) {
       return new @ReceiverDependentMutable FilteredCollection<E>(unfiltered, Predicates.<E>and(predicate, newPredicate));
       // .<E> above needed to compile in JDK 5
     }

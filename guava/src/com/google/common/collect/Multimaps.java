@@ -672,12 +672,13 @@ public final class Multimaps {
    * @param delegate the multimap for which an unmodifiable view is to be returned
    * @return an unmodifiable view of the specified multimap
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly Multimap<K, V> unmodifiableMultimap(@Readonly Multimap<K, V> delegate) {
+    @PolyMutable Multimap<K, V> unmodifiableMultimap(@PolyMutable Multimap<K, V> delegate) {
     if (delegate instanceof UnmodifiableMultimap || delegate instanceof ImmutableMultimap) {
       return delegate;
     }
-    return new UnmodifiableMultimap<>(delegate);
+    return new @PolyMutable UnmodifiableMultimap<>(delegate);
   }
 
   /**
@@ -691,10 +692,10 @@ public final class Multimaps {
     return checkNotNull(delegate);
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   private static class UnmodifiableMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingMultimap<K, @Immutable V> implements Serializable {
-    final @Readonly Multimap<K, V> delegate;
+    final @ReceiverDependentMutable Multimap<K, V> delegate;
     @LazyInit @CheckForNull transient @Assignable @Readonly Collection<@Readonly Entry<K, V>> entries;
     @LazyInit @CheckForNull transient @Assignable @Readonly Multiset<K> keys;
     @LazyInit @CheckForNull transient @Assignable @Readonly Set<K> keySet;
@@ -706,7 +707,7 @@ public final class Multimaps {
     }
 
     @Override
-    protected @Readonly Multimap<K, V> delegate() {
+    protected @ReceiverDependentMutable Multimap<K, V> delegate() {
       return delegate;
     }
 
@@ -716,7 +717,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly Map<K, @Readonly Collection<V>> asMap() {
+    public @ReceiverDependentMutable Map<K, @Readonly Collection<V>> asMap() {
       Map<K, @Readonly Collection<V>> result = map;
       if (result == null) {
         result =
@@ -730,7 +731,7 @@ public final class Multimaps {
 
     @SideEffectFree
     @Override
-    public @Readonly Collection<@Readonly Entry<K, V>> entries() {
+    public @ReceiverDependentMutable Collection<@Readonly Entry<K, V>> entries() {
       Collection<@Readonly Entry<K, V>> result = entries;
       if (result == null) {
         entries = result = unmodifiableEntries(delegate.entries());
@@ -744,12 +745,12 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly Collection<V> get(@ParametricNullness K key) {
+    public @ReceiverDependentMutable Collection<V> get(@ParametricNullness K key) {
       return unmodifiableValueCollection(delegate.get(key));
     }
 
     @Override
-    public @Readonly Multiset<K> keys() {
+    public @ReceiverDependentMutable Multiset<K> keys() {
       Multiset<K> result = keys;
       if (result == null) {
         keys = result = Multisets.unmodifiableMultiset(delegate.keys());
@@ -759,7 +760,7 @@ public final class Multimaps {
 
     @SideEffectFree
     @Override
-    public @Readonly Set<K> keySet() {
+    public @ReceiverDependentMutable Set<K> keySet() {
       Set<K> result = keySet;
       if (result == null) {
         keySet = result = Collections.unmodifiableSet(delegate.keySet());
@@ -799,7 +800,7 @@ public final class Multimaps {
 
     @SideEffectFree
     @Override
-    public @Readonly Collection<V> values() {
+    public @ReceiverDependentMutable Collection<V> values() {
       Collection<V> result = values;
       if (result == null) {
         values = result = Collections.unmodifiableCollection(delegate.values());
@@ -810,21 +811,21 @@ public final class Multimaps {
     private static final long serialVersionUID = 0;
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   private static class UnmodifiableListMultimap<
           K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends UnmodifiableMultimap<K, V> implements ListMultimap<K, V> {
-    UnmodifiableListMultimap(@Readonly ListMultimap<K, V> delegate) {
+    UnmodifiableListMultimap(@ReceiverDependentMutable ListMultimap<K, V> delegate) {
       super(delegate);
     }
 
     @Override
-    public @Readonly ListMultimap<K, V> delegate() {
-      return (@Readonly ListMultimap<K, V>) super.delegate();
+    public @ReceiverDependentMutable ListMultimap<K, V> delegate() {
+      return (@ReceiverDependentMutable ListMultimap<K, V>) super.delegate();
     }
 
     @Override
-    public @Readonly List<V> get(@ParametricNullness K key) {
+    public @ReceiverDependentMutable List<V> get(@ParametricNullness K key) {
       return Collections.unmodifiableList(delegate().get(key));
     }
 
@@ -841,21 +842,21 @@ public final class Multimaps {
     private static final long serialVersionUID = 0;
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   private static class UnmodifiableSetMultimap<
           K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends UnmodifiableMultimap<K, V> implements SetMultimap<K, V> {
-    UnmodifiableSetMultimap(@Readonly SetMultimap<K, V> delegate) {
+    UnmodifiableSetMultimap(@ReceiverDependentMutable SetMultimap<K, V> delegate) {
       super(delegate);
     }
 
     @Override
-    public @Readonly SetMultimap<K, V> delegate() {
-      return (@Readonly SetMultimap<K, V>) super.delegate();
+    public @ReceiverDependentMutable SetMultimap<K, V> delegate() {
+      return (@ReceiverDependentMutable SetMultimap<K, V>) super.delegate();
     }
 
     @Override
-    public @Readonly Set<V> get(@ParametricNullness K key) {
+    public @ReceiverDependentMutable Set<V> get(@ParametricNullness K key) {
       /*
        * Note that this doesn't return a SortedSet when delegate is a
        * SortedSetMultiset, unlike (SortedSet<V>) super.get().
@@ -865,7 +866,7 @@ public final class Multimaps {
 
     @SideEffectFree
     @Override
-    public @Readonly Set<Map.@Readonly Entry<K, V>> entries() {
+    public @ReceiverDependentMutable Set<Map.@Readonly Entry<K, V>> entries() {
       return Maps.unmodifiableEntrySet(delegate().entries());
     }
 
@@ -882,21 +883,21 @@ public final class Multimaps {
     private static final long serialVersionUID = 0;
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   private static class UnmodifiableSortedSetMultimap<
           K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends UnmodifiableSetMultimap<K, V> implements SortedSetMultimap<K, V> {
-    UnmodifiableSortedSetMultimap(@Readonly SortedSetMultimap<K, V> delegate) {
+    UnmodifiableSortedSetMultimap(@ReceiverDependentMutable SortedSetMultimap<K, V> delegate) {
       super(delegate);
     }
 
     @Override
-    public @Readonly SortedSetMultimap<K, V> delegate() {
-      return (@Readonly SortedSetMultimap<K, V>) super.delegate();
+    public @ReceiverDependentMutable SortedSetMultimap<K, V> delegate() {
+      return (@ReceiverDependentMutable SortedSetMultimap<K, V>) super.delegate();
     }
 
     @Override
-    public @Readonly SortedSet<V> get(@ParametricNullness K key) {
+    public @ReceiverDependentMutable SortedSet<V> get(@ParametricNullness K key) {
       return Collections.unmodifiableSortedSet(delegate().get(key));
     }
 
@@ -945,12 +946,13 @@ public final class Multimaps {
    * @param delegate the multimap for which an unmodifiable view is to be returned
    * @return an unmodifiable view of the specified multimap
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly SetMultimap<K, V> unmodifiableSetMultimap(@Readonly SetMultimap<K, V> delegate) {
+    @PolyMutable SetMultimap<K, V> unmodifiableSetMultimap(@PolyMutable SetMultimap<K, V> delegate) {
     if (delegate instanceof UnmodifiableSetMultimap || delegate instanceof ImmutableSetMultimap) {
       return delegate;
     }
-    return new UnmodifiableSetMultimap<>(delegate);
+    return new @PolyMutable UnmodifiableSetMultimap<>(delegate);
   }
 
   /**
@@ -992,12 +994,13 @@ public final class Multimaps {
    * @param delegate the multimap for which an unmodifiable view is to be returned
    * @return an unmodifiable view of the specified multimap
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly SortedSetMultimap<K, V> unmodifiableSortedSetMultimap(@Readonly SortedSetMultimap<K, V> delegate) {
+    @PolyMutable SortedSetMultimap<K, V> unmodifiableSortedSetMultimap(@PolyMutable SortedSetMultimap<K, V> delegate) {
     if (delegate instanceof UnmodifiableSortedSetMultimap) {
       return delegate;
     }
-    return new UnmodifiableSortedSetMultimap<>(delegate);
+    return new @PolyMutable UnmodifiableSortedSetMultimap<>(delegate);
   }
 
   /**
@@ -1024,12 +1027,13 @@ public final class Multimaps {
    * @param delegate the multimap for which an unmodifiable view is to be returned
    * @return an unmodifiable view of the specified multimap
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly ListMultimap<K, V> unmodifiableListMultimap(@Readonly ListMultimap<K, V> delegate) {
+    @PolyMutable ListMultimap<K, V> unmodifiableListMultimap(@PolyMutable ListMultimap<K, V> delegate) {
     if (delegate instanceof UnmodifiableListMultimap || delegate instanceof ImmutableListMultimap) {
       return delegate;
     }
-    return new UnmodifiableListMultimap<>(delegate);
+    return new @PolyMutable UnmodifiableListMultimap<>(delegate);
   }
 
   /**
