@@ -32,6 +32,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * A skeleton implementation of a descending multiset. Only needs {@code forwardMultiset()} and
@@ -161,13 +162,13 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   }
 
   @Override
-  public @PolyNull @PolySigned Object[] toArray(DescendingMultiset<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly DescendingMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
     return standardToArray();
   }
 
   @Override
   @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-  public <T extends @Nullable @UnknownSignedness Object> T[] toArray(@PolyNull T[] array) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] array) {
     return standardToArray(array);
   }
 

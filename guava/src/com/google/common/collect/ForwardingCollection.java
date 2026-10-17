@@ -137,14 +137,14 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
   }
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object @ReceiverDependentMutable [] toArray(ForwardingCollection<@PolyNull @PolySigned @PolyMutable E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly ForwardingCollection<@PolyNull @PolySigned @PolyMutable E> this) {
     return delegate().toArray();
   }
 
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:return")
-  public <T extends @Nullable @UnknownSignedness @Readonly Object> T @ReceiverDependentMutable [] toArray(@ReceiverDependentMutable ForwardingCollection<E> this, @PolyNull T @ReceiverDependentMutable[] array) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@Readonly ForwardingCollection<E> this, @PolyNull T[] array) {
     return delegate().toArray(array);
   }
 

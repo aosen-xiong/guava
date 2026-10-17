@@ -39,6 +39,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * CompactLinkedHashMap is an implementation of a Map with insertion or LRU iteration order,
@@ -261,7 +262,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
 
       @Override
       @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-      public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+      public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
         return ObjectArrays.toArrayImpl(this, a);
       }
 
@@ -285,7 +286,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
 
       @Override
       @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-      public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+      public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
         return ObjectArrays.toArrayImpl(this, a);
       }
 

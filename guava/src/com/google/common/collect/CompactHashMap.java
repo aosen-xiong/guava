@@ -731,7 +731,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
     @Override
     @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-    public <T extends @Nullable @UnknownSignedness Object> T[] toArray(@PolyNull T[] a) {
+    public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] a) {
       if (needsAllocArrays()) {
         if (a.length > 0) {
           @Nullable Object[] unsoundlyCovariantArray = a;

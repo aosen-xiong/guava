@@ -55,6 +55,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * CompactHashSet is an implementation of a Set. All optional operations (adding and removing) are
@@ -637,7 +638,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   @Override
-  public @PolyNull @PolySigned Object[] toArray(CompactHashSet<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactHashSet<@PolyNull @PolySigned @PolyMutable E> this) {
     if (needsAllocArrays()) {
       return new Object[0];
     }
@@ -648,7 +649,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-  public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
     if (needsAllocArrays()) {
       if (a.length > 0) {
         a[0] = null;

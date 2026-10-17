@@ -3237,7 +3237,7 @@ public final class Maps {
 
       @Override
       @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-      public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] array) {
+      public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] array) {
         return Lists.newArrayList(iterator()).toArray(array);
       }
 

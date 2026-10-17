@@ -64,6 +64,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * The concurrent hash map implementation built by {@link MapMaker}.
@@ -2896,7 +2897,7 @@ class MapMakerInternalMap<
     // https://code.google.com/p/android/issues/detail?id=36519 / http://r.android.com/47508
 
     @Override
-    public @PolyNull @PolySigned Object[] toArray(SafeToArraySet<@PolyNull @PolySigned E> this) {
+    public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly SafeToArraySet<@PolyNull @PolySigned @PolyMutable E> this) {
       return toArrayList(this).toArray();
     }
 

@@ -33,6 +33,8 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * CompactLinkedHashSet is an implementation of a Set, which a predictable iteration order that
@@ -240,13 +242,13 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  public @PolyNull @PolySigned Object[] toArray(CompactLinkedHashSet<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactLinkedHashSet<@PolyNull @PolySigned @PolyMutable E> this) {
     return ObjectArrays.toArrayImpl(this);
   }
 
   @Override
   @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-  public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
     return ObjectArrays.toArrayImpl(this, a);
   }
 

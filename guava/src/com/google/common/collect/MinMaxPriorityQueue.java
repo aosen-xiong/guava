@@ -50,6 +50,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * A double-ended priority queue, which provides constant-time access to both its least element and
@@ -926,7 +927,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
-  public @PolyNull @PolySigned Object[] toArray(MinMaxPriorityQueue<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly MinMaxPriorityQueue<@PolyNull @PolySigned @PolyMutable E> this) {
     Object[] copyTo = new Object[size];
     System.arraycopy(queue, 0, copyTo, 0, size);
     return copyTo;

@@ -181,7 +181,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    */
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object @ReceiverDependentMutable [] toArray(@ReceiverDependentMutable ConcurrentHashMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly ConcurrentHashMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
     return snapshot().toArray();
   }
 
