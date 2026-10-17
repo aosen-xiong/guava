@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
@@ -65,7 +66,7 @@ public abstract class AbstractCache<K extends @Immutable Object, V> implements C
    * differ: <? extends Object> means "non-null types," while <?> means "all types."
    */
   @Override
-  public ImmutableMap<K, V> getAllPresent(Iterable<? extends Object> keys) {
+  public ImmutableMap<K, V> getAllPresent(@Readonly Iterable<? extends Object> keys) {
     Map<K, V> result = Maps.newLinkedHashMap();
     for (Object key : keys) {
       if (!result.containsKey(key)) {
@@ -88,7 +89,7 @@ public abstract class AbstractCache<K extends @Immutable Object, V> implements C
 
   /** @since 12.0 */
   @Override
-  public void putAll(Map<? extends K, ? extends V> m) {
+  public void putAll(@Readonly Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
@@ -103,14 +104,14 @@ public abstract class AbstractCache<K extends @Immutable Object, V> implements C
   }
 
   @Override
-  public void invalidate(Object key) {
+  public void invalidate(@Readonly Object key) {
     throw new UnsupportedOperationException();
   }
 
   /** @since 11.0 */
   @Override
   // For discussion of <? extends Object>, see getAllPresent.
-  public void invalidateAll(Iterable<? extends Object> keys) {
+  public void invalidateAll(@Readonly Iterable<? extends Object> keys) {
     for (Object key : keys) {
       invalidate(key);
     }

@@ -525,7 +525,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     // The following methods are provided for better performance.
 
     @Override
-    public boolean addAll(Collection<? extends V> collection) {
+    public boolean addAll(@Readonly Collection<? extends V> collection) {
       if (collection.isEmpty()) {
         return false;
       }
@@ -542,13 +542,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
       refreshIfEmpty();
       return delegate.contains(o);
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
+    public boolean containsAll(@Readonly Collection<?> c) {
       refreshIfEmpty();
       return delegate.containsAll(c);
     }
@@ -576,7 +576,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(@Readonly Collection<?> c) {
       if (c.isEmpty()) {
         return false;
       }
@@ -591,7 +591,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(@Readonly Collection<?> c) {
       checkNotNull(c);
       int oldSize = size(); // calls refreshIfEmpty
       boolean changed = delegate.retainAll(c);
@@ -802,7 +802,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean addAll(int index, Collection<? extends V> c) {
+    public boolean addAll(int index, @Readonly Collection<? extends V> c) {
       if (c.isEmpty()) {
         return false;
       }
@@ -854,13 +854,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public int indexOf(@CheckForNull @UnknownSignedness Object o) {
+    public int indexOf(@CheckForNull @UnknownSignedness @Readonly Object o) {
       refreshIfEmpty();
       return getListDelegate().indexOf(o);
     }
 
     @Override
-    public int lastIndexOf(@CheckForNull @UnknownSignedness Object o) {
+    public int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object o) {
       refreshIfEmpty();
       return getListDelegate().lastIndexOf(o);
     }
@@ -1026,7 +1026,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean containsAll(Collection<?> c) {
+    public boolean containsAll(@Readonly Collection<?> c) {
       return map().keySet().containsAll(c);
     }
 

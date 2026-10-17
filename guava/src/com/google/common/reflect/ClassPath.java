@@ -50,6 +50,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -278,7 +279,7 @@ public final class ClassPath {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof ResourceInfo) {
         ResourceInfo that = (ResourceInfo) obj;
         return resourceName.equals(that.resourceName) && loader == that.loader;
@@ -551,7 +552,7 @@ public final class ClassPath {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof LocationInfo) {
         LocationInfo that = (LocationInfo) obj;
         return home.equals(that.home) && classloader.equals(that.classloader);

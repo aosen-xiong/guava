@@ -75,28 +75,28 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public boolean contains(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public boolean contains(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     return delegate().contains(rowKey, columnKey);
   }
 
   @Override
-  public boolean containsColumn(@CheckForNull Object columnKey) {
+  public boolean containsColumn(@CheckForNull @Readonly Object columnKey) {
     return delegate().containsColumn(columnKey);
   }
 
   @Override
-  public boolean containsRow(@CheckForNull Object rowKey) {
+  public boolean containsRow(@CheckForNull @Readonly Object rowKey) {
     return delegate().containsRow(rowKey);
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     return delegate().containsValue(value);
   }
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V get(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     return delegate().get(rowKey, columnKey);
   }
 
@@ -121,7 +121,7 @@ public abstract class ForwardingTable<
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V remove(@Mutable ForwardingTable<R, C, V> this, @CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V remove(@Mutable ForwardingTable<R, C, V> this, @CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     return delegate().remove(rowKey, columnKey);
   }
 
@@ -151,7 +151,7 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     return (obj == this) || delegate().equals(obj);
   }
 

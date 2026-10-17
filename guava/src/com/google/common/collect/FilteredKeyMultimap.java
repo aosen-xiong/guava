@@ -132,7 +132,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    public boolean addAll(Collection<? extends V> collection) {
+    public boolean addAll(@Readonly Collection<? extends V> collection) {
       checkNotNull(collection);
       throw new IllegalArgumentException("Key does not satisfy predicate: " + key);
     }
@@ -164,14 +164,14 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    public boolean addAll(Collection<? extends V> collection) {
+    public boolean addAll(@Readonly Collection<? extends V> collection) {
       addAll(0, collection);
       return true;
     }
 
     @CanIgnoreReturnValue
     @Override
-    public boolean addAll(int index, Collection<? extends V> elements) {
+    public boolean addAll(int index, @Readonly Collection<? extends V> elements) {
       checkNotNull(elements);
       checkPositionIndex(index, 0);
       throw new IllegalArgumentException("Key does not satisfy predicate: " + key);
@@ -202,7 +202,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
       if (o instanceof Entry) {
         Entry<?, ?> entry = (Entry<?, ?>) o;
         if (unfiltered.containsKey(entry.getKey())

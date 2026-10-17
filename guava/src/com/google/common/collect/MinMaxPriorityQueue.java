@@ -43,6 +43,7 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
@@ -275,7 +276,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @CanIgnoreReturnValue
   @Override
-  public boolean addAll(Collection<? extends E> newElements) {
+  public boolean addAll(@Readonly Collection<? extends E> newElements) {
     boolean modified = false;
     for (E element : newElements) {
       offer(element);

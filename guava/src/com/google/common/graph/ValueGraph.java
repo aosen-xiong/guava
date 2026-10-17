@@ -20,6 +20,7 @@ import com.google.common.annotations.Beta;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -394,7 +395,7 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
    * <p>A reference implementation of this is provided by {@link AbstractValueGraph#equals(Object)}.
    */
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns the hash code for this graph. The hash code of a graph is defined as the hash code of a

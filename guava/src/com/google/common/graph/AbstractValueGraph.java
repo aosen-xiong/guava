@@ -122,7 +122,7 @@ public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
   }
 
   @Override
-  public final boolean equals(@CheckForNull Object obj) {
+  public final boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     }

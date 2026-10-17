@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -82,7 +83,7 @@ abstract class AbstractDirectedNetworkConnections<N, E> implements NetworkConnec
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
         return inEdgeMap.containsKey(obj) || outEdgeMap.containsKey(obj);
       }
     };

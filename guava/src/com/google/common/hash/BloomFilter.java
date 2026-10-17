@@ -287,7 +287,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

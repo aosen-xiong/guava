@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLongArray;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.IntRange;
@@ -305,7 +306,7 @@ enum BloomFilterStrategies implements BloomFilter.Strategy {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof LockFreeBitArray) {
         LockFreeBitArray lockFreeBitArray = (LockFreeBitArray) o;
         // TODO(lowasser): avoid allocation here

@@ -171,7 +171,7 @@ public final class Functions {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof FunctionForMapNoDefault) {
         FunctionForMapNoDefault<?, ?> that = (FunctionForMapNoDefault<?, ?>) o;
         return map.equals(that.map);
@@ -216,7 +216,7 @@ public final class Functions {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof ForMapWithDefault) {
         ForMapWithDefault<?, ?> that = (ForMapWithDefault<?, ?>) o;
         return map.equals(that.map) && Objects.equal(defaultValue, that.defaultValue);
@@ -276,7 +276,7 @@ public final class Functions {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof FunctionComposition) {
         FunctionComposition<?, ?, ?> that = (FunctionComposition<?, ?, ?>) obj;
         return f.equals(that.f) && g.equals(that.g);
@@ -329,7 +329,7 @@ public final class Functions {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof PredicateFunction) {
         PredicateFunction<?> that = (PredicateFunction<?>) obj;
         return predicate.equals(that.predicate);
@@ -381,7 +381,7 @@ public final class Functions {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof ConstantFunction) {
         ConstantFunction<?> that = (ConstantFunction<?>) obj;
         return Objects.equal(value, that.value);
@@ -433,7 +433,7 @@ public final class Functions {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof SupplierFunction) {
         SupplierFunction<?, ?> that = (SupplierFunction<?, ?>) obj;
         return this.supplier.equals(that.supplier);

@@ -25,6 +25,7 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import java.math.BigInteger;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.PolyValue;
@@ -240,7 +241,7 @@ public final class UnsignedInteger extends Number implements Comparable<Unsigned
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj instanceof UnsignedInteger) {
       UnsignedInteger other = (UnsignedInteger) obj;
       return value == other.value;

@@ -82,7 +82,7 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@Mutable ForwardingMultiset<E> this, @CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable ForwardingMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
     return delegate().remove(element, occurrences);
   }
 

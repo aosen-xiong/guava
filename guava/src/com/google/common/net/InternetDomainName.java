@@ -32,6 +32,7 @@ import com.google.thirdparty.publicsuffix.PublicSuffixPatterns;
 import com.google.thirdparty.publicsuffix.PublicSuffixType;
 import java.util.List;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Assignable;
 
@@ -676,7 +677,7 @@ public final class InternetDomainName {
    * version of the same domain name would not be considered equal.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

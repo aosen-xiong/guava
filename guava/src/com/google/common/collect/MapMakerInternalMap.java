@@ -2407,7 +2407,7 @@ class MapMakerInternalMap<
 
   @CheckForNull
   @Override
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return null;
     }
@@ -2429,7 +2429,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return false;
     }
@@ -2438,7 +2438,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     if (value == null) {
       return false;
     }
@@ -2496,7 +2496,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public void putAll(Map<? extends K, ? extends V> m) {
+  public void putAll(@Readonly Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> e : m.entrySet()) {
       put(e.getKey(), e.getValue());
     }
@@ -2505,7 +2505,7 @@ class MapMakerInternalMap<
   @CheckForNull
   @CanIgnoreReturnValue
   @Override
-  public V remove(@CheckForNull @UnknownSignedness Object key) {
+  public V remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return null;
     }
@@ -2515,7 +2515,7 @@ class MapMakerInternalMap<
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness Object key, @CheckForNull @UnknownSignedness Object value) {
+  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
     if (key == null || value == null) {
       return false;
     }
@@ -2730,7 +2730,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       // Cannot use key and value equivalence
       if (object instanceof Entry) {
         Entry<?, ?> that = (Entry<?, ?>) object;
@@ -2782,12 +2782,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean contains(@UnknownSignedness Object o) {
+    public boolean contains(@UnknownSignedness @Readonly Object o) {
       return MapMakerInternalMap.this.containsKey(o);
     }
 
     @Override
-    public boolean remove(@UnknownSignedness Object o) {
+    public boolean remove(@UnknownSignedness @Readonly Object o) {
       return MapMakerInternalMap.this.remove(o) != null;
     }
 
@@ -2817,7 +2817,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean contains(@UnknownSignedness Object o) {
+    public boolean contains(@UnknownSignedness @Readonly Object o) {
       return MapMakerInternalMap.this.containsValue(o);
     }
 
@@ -2851,7 +2851,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean contains(@UnknownSignedness Object o) {
+    public boolean contains(@UnknownSignedness @Readonly Object o) {
       if (!(o instanceof Entry)) {
         return false;
       }
@@ -2866,7 +2866,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean remove(@UnknownSignedness Object o) {
+    public boolean remove(@UnknownSignedness @Readonly Object o) {
       if (!(o instanceof Entry)) {
         return false;
       }

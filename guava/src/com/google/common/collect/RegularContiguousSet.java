@@ -82,7 +82,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
 
   @GwtIncompatible // not used by GWT emulation
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@CheckForNull @Readonly Object target) {
     if (!contains(target)) {
       return -1;
     }
@@ -177,7 +177,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == null) {
       return false;
     }
@@ -191,7 +191,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
   }
 
   @Override
-  public boolean containsAll(Collection<?> targets) {
+  public boolean containsAll(@Readonly Collection<?> targets) {
     return Collections2.containsAllImpl(this, targets);
   }
 
@@ -229,7 +229,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
   }
 
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == this) {
       return true;
     } else if (object instanceof RegularContiguousSet) {

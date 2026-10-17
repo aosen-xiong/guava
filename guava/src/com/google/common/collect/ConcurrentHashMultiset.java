@@ -473,22 +473,22 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return object != null && Collections2.safeContains(delegate, object);
       }
 
       @Override
-      public boolean containsAll(Collection<?> collection) {
+      public boolean containsAll(@Readonly Collection<?> collection) {
         return standardContainsAll(collection);
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object object) {
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return object != null && Collections2.safeRemove(delegate, object);
       }
 
       @Override
-      public boolean removeAll(Collection<?> c) {
+      public boolean removeAll(@Readonly Collection<?> c) {
         return standardRemoveAll(c);
       }
     };

@@ -638,7 +638,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean remove(@CheckForNull @UnknownSignedness Object object) {
+    public final boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
       throw new UnsupportedOperationException();
     }
 
@@ -652,7 +652,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean addAll(Collection<? extends E> newElements) {
+    public final boolean addAll(@Readonly Collection<? extends E> newElements) {
       throw new UnsupportedOperationException();
     }
 
@@ -666,7 +666,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean removeAll(Collection<?> oldElements) {
+    public final boolean removeAll(@Readonly Collection<?> oldElements) {
       throw new UnsupportedOperationException();
     }
 
@@ -694,7 +694,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean retainAll(Collection<?> elementsToKeep) {
+    public final boolean retainAll(@Readonly Collection<?> elementsToKeep) {
       throw new UnsupportedOperationException();
     }
 
@@ -890,12 +890,12 @@ public final class Sets {
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return set1.contains(object) && set2.contains(object);
       }
 
       @Override
-      public boolean containsAll(Collection<?> collection) {
+      public boolean containsAll(@Readonly Collection<?> collection) {
         return set1.containsAll(collection) && set2.containsAll(collection);
       }
     };

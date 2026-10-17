@@ -430,7 +430,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (needsAllocArrays()) {
       return false;
     }

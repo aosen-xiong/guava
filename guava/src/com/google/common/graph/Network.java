@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -526,7 +527,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * <p>A reference implementation of this is provided by {@link AbstractNetwork#equals(Object)}.
    */
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns the hash code for this network. The hash code of a network is defined as the hash code

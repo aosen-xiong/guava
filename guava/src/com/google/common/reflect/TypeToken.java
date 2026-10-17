@@ -832,7 +832,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
    * Returns true if {@code o} is another {@code TypeToken} that represents the same {@link Type}.
    */
   @Override
-  public boolean equals(@CheckForNull Object o) {
+  public boolean equals(@CheckForNull @Readonly Object o) {
     if (o instanceof TypeToken) {
       TypeToken<?> that = (TypeToken<?>) o;
       return runtimeType.equals(that.runtimeType);

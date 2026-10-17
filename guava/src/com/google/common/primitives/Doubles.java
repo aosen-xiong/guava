@@ -639,14 +639,14 @@ public final class Doubles extends DoublesMethodsForWeb {
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Double)
           && Doubles.indexOf(array, (Double) target, start, end) != -1;
     }
 
     @Override
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Double) {
         int i = Doubles.indexOf(array, (Double) target, start, end);
@@ -658,7 +658,7 @@ public final class Doubles extends DoublesMethodsForWeb {
     }
 
     @Override
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Double) {
         int i = Doubles.lastIndexOf(array, (Double) target, start, end);
@@ -690,7 +690,7 @@ public final class Doubles extends DoublesMethodsForWeb {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

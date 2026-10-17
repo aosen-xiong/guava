@@ -630,7 +630,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     }
 
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof RangeMap) {
         RangeMap<?, ?> rangeMap = (RangeMap<?, ?>) o;
         return asMapOfRanges().equals(rangeMap.asMapOfRanges());
@@ -725,12 +725,12 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       public Set<Range<K>> keySet() {
         return new Maps.KeySet<Range<K>, V>(SubRangeMapAsMap.this) {
           @Override
-          public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+          public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
             return SubRangeMapAsMap.this.remove(o) != null;
           }
 
           @Override
-          public boolean retainAll(Collection<?> c) {
+          public boolean retainAll(@Readonly Collection<?> c) {
             return removeEntryIf(compose(not(in(c)), Maps.<Range<K>>keyFunction()));
           }
         };
@@ -750,7 +750,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
           }
 
           @Override
-          public boolean retainAll(Collection<?> c) {
+          public boolean retainAll(@Readonly Collection<?> c) {
             return removeEntryIf(not(in(c)));
           }
 
@@ -798,12 +798,12 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       public @PolyMutable Collection<V> values(@PolyMutable SubRangeMapAsMap this) {
         return new Maps.Values<Range<K>, V>(this) {
           @Override
-          public boolean removeAll(Collection<?> c) {
+          public boolean removeAll(@Readonly Collection<?> c) {
             return removeEntryIf(compose(in(c), Maps.<V>valueFunction()));
           }
 
           @Override
-          public boolean retainAll(Collection<?> c) {
+          public boolean retainAll(@Readonly Collection<?> c) {
             return removeEntryIf(compose(not(in(c)), Maps.<V>valueFunction()));
           }
         };

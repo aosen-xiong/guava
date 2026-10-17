@@ -224,7 +224,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
      * equivalence.
      */
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj == this) {
         return true;
       }
@@ -309,7 +309,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (this == obj) {
         return true;
       }

@@ -109,7 +109,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:argument")
-  public boolean remove(@Mutable ForwardingCollection<E> this, @CheckForNull @UnknownSignedness Object object) {
+  public boolean remove(@Mutable ForwardingCollection<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     return delegate().remove(object);
   }
 

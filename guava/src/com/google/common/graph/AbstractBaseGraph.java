@@ -32,6 +32,7 @@ import com.google.common.primitives.Ints;
 import java.util.AbstractSet;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -82,7 +83,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
         throw new UnsupportedOperationException();
       }
 
@@ -91,7 +92,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
       // Graph<LinkedList>.
       @SuppressWarnings("unchecked")
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
         if (!(obj instanceof EndpointPair)) {
           return false;
         }

@@ -119,7 +119,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
    * @since 7.0
    */
   @Override
-  protected boolean standardContains(@CheckForNull Object object) {
+  protected boolean standardContains(@CheckForNull @Readonly Object object) {
     try {
       // any ClassCastExceptions and NullPointerExceptions are caught
       @SuppressWarnings({"unchecked", "nullness"})
@@ -139,7 +139,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
    * @since 7.0
    */
   @Override
-  protected boolean standardRemove(@CheckForNull Object object) {
+  protected boolean standardRemove(@CheckForNull @Readonly Object object) {
     try {
       // any ClassCastExceptions and NullPointerExceptions are caught
       @SuppressWarnings({"unchecked", "nullness"})

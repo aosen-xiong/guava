@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -45,7 +46,7 @@ final class MapRetrievalCache<K extends @Immutable Object, V> extends MapIterato
   @SuppressWarnings("unchecked") // Safe because we only cast if key is found in map.
   @Override
   @CheckForNull
-  V get(Object key) {
+  V get(@Readonly Object key) {
     checkNotNull(key);
     V value = getIfCached(key);
     if (value != null) {
@@ -63,7 +64,7 @@ final class MapRetrievalCache<K extends @Immutable Object, V> extends MapIterato
 
   @Override
   @CheckForNull
-  V getIfCached(@CheckForNull Object key) {
+  V getIfCached(@CheckForNull @Readonly Object key) {
     V value = super.getIfCached(key);
     if (value != null) {
       return value;

@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -305,7 +306,7 @@ public abstract class Optional<T> implements Serializable {
    * <p><b>Comparison to {@code java.util.Optional}:</b> no differences.
    */
   @Override
-  public abstract boolean equals(@CheckForNull Object object);
+  public abstract boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns a hash code for this instance.

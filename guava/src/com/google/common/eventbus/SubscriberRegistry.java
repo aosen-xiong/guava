@@ -47,6 +47,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -260,7 +261,7 @@ final class SubscriberRegistry {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof MethodIdentifier) {
         MethodIdentifier ident = (MethodIdentifier) o;
         return name.equals(ident.name) && parameterTypes.equals(ident.parameterTypes);

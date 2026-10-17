@@ -24,6 +24,7 @@ import com.google.common.collect.UnmodifiableIterator;
 import java.util.AbstractSet;
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -61,7 +62,7 @@ final class EdgesConnecting<E> extends AbstractSet<E> {
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object edge) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object edge) {
     E connectingEdge = getConnectingEdge();
     return (connectingEdge != null && connectingEdge.equals(edge));
   }

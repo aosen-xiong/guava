@@ -623,13 +623,13 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @Pure
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return keyToKeyList.containsKey(key);
   }
 
   @Pure
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     return values().contains(value);
   }
 
@@ -697,7 +697,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> removeAll(@CheckForNull Object key) {
+  public List<V> removeAll(@CheckForNull @Readonly Object key) {
     /*
      * Safe because all we do is remove values for the key, not add them. (If we wanted to make sure
      * to call getCopy and removeAllNodes only with a true K, then we could check containsKey first.
@@ -763,12 +763,12 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
       @Pure
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object key) { // for performance
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object key) { // for performance
         return containsKey(key);
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object o) { // for performance
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) { // for performance
         return !LinkedListMultimap.this.removeAll(o).isEmpty();
       }
     }
@@ -917,11 +917,11 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
 @Pure
 @Override
-public boolean containsEntry(@Nullable Object arg0, @Nullable Object arg1) { return super.containsEntry(arg0, arg1); }
+public boolean containsEntry(@Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.containsEntry(arg0, arg1); }
 
 @Pure
 @Override
-public boolean equals(@Nullable Object arg0) { return super.equals(arg0); }
+public boolean equals(@Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
 public boolean remove(@Mutable LinkedListMultimap<K,V> this, @Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.remove(arg0, arg1); }

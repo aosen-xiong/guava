@@ -711,14 +711,14 @@ public final class Ints extends IntsMethodsForWeb {
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Integer) && Ints.indexOf(array, (@Signed Integer) target, start, end) != -1;
     }
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Integer) {
         int i = Ints.indexOf(array, (@Signed Integer) target, start, end);
@@ -731,7 +731,7 @@ public final class Ints extends IntsMethodsForWeb {
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Integer) {
         int i = Ints.lastIndexOf(array, (@Signed Integer) target, start, end);
@@ -763,7 +763,7 @@ public final class Ints extends IntsMethodsForWeb {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

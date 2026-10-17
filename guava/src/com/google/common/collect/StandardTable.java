@@ -456,7 +456,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
         }
 
         @Override
-        public boolean equals(@CheckForNull Object object) {
+        public boolean equals(@CheckForNull @Readonly Object object) {
           // TODO(lowasser): identify why this affects GWT tests
           return standardEquals(object);
         }
@@ -577,7 +577,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(Collection<?> c) {
+      public boolean retainAll(@Readonly Collection<?> c) {
         return removeFromColumnIf(not(in(c)));
       }
     }
@@ -652,7 +652,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(final Collection<?> c) {
+      public boolean retainAll(final @Readonly Collection<?> c) {
         return removeFromColumnIf(Maps.<R>keyPredicateOnEntries(not(in(c))));
       }
     }
@@ -674,12 +674,12 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean removeAll(final Collection<?> c) {
+      public boolean removeAll(final @Readonly Collection<?> c) {
         return removeFromColumnIf(Maps.<V>valuePredicateOnEntries(in(c)));
       }
 
       @Override
-      public boolean retainAll(final Collection<?> c) {
+      public boolean retainAll(final @Readonly Collection<?> c) {
         return removeFromColumnIf(Maps.<V>valuePredicateOnEntries(not(in(c))));
       }
     }
@@ -739,7 +739,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(@Readonly Collection<?> c) {
       checkNotNull(c);
       boolean changed = false;
       Iterator<Map<C, V>> iterator = backingMap.values().iterator();
@@ -758,7 +758,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(@Readonly Collection<?> c) {
       checkNotNull(c);
       boolean changed = false;
       Iterator<Map<C, V>> iterator = backingMap.values().iterator();
@@ -973,7 +973,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
         if (obj instanceof Entry) {
           Entry<?, ?> entry = (Entry<?, ?>) obj;
           if (containsColumn(entry.getKey())) {
@@ -999,7 +999,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean removeAll(Collection<?> c) {
+      public boolean removeAll(@Readonly Collection<?> c) {
         /*
          * We can't inherit the normal implementation (which calls
          * Sets.removeAllImpl(Set, *Collection*)) because, under some
@@ -1011,7 +1011,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(Collection<?> c) {
+      public boolean retainAll(@Readonly Collection<?> c) {
         checkNotNull(c);
         boolean changed = false;
         for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
@@ -1042,7 +1042,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean removeAll(Collection<?> c) {
+      public boolean removeAll(@Readonly Collection<?> c) {
         checkNotNull(c);
         boolean changed = false;
         for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
@@ -1055,7 +1055,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(Collection<?> c) {
+      public boolean retainAll(@Readonly Collection<?> c) {
         checkNotNull(c);
         boolean changed = false;
         for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {

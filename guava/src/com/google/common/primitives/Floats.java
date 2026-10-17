@@ -626,13 +626,13 @@ public final class Floats extends FloatsMethodsForWeb {
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Float) && Floats.indexOf(array, (Float) target, start, end) != -1;
     }
 
     @Override
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Float) {
         int i = Floats.indexOf(array, (Float) target, start, end);
@@ -644,7 +644,7 @@ public final class Floats extends FloatsMethodsForWeb {
     }
 
     @Override
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Float) {
         int i = Floats.lastIndexOf(array, (Float) target, start, end);
@@ -676,7 +676,7 @@ public final class Floats extends FloatsMethodsForWeb {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

@@ -78,7 +78,7 @@ public interface MapDifference<K extends @Nullable @Immutable Object, V extends 
    */
   @Pure
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns the hash code for this instance. This is defined as the hash code of
@@ -114,7 +114,7 @@ public interface MapDifference<K extends @Nullable @Immutable Object, V extends 
      */
     @Pure
     @Override
-    boolean equals(@CheckForNull Object other);
+    boolean equals(@CheckForNull @Readonly Object other);
 
     /**
      * The hash code equals the value {@code Arrays.asList(leftValue(), rightValue()).hashCode()}.

@@ -1159,7 +1159,7 @@ public final class Maps {
       }
 
       @Override
-      public boolean addAll(Collection<? extends E> es) {
+      public boolean addAll(@Readonly Collection<? extends E> es) {
         throw new UnsupportedOperationException();
       }
     };
@@ -1179,7 +1179,7 @@ public final class Maps {
       }
 
       @Override
-      public boolean addAll(Collection<? extends E> es) {
+      public boolean addAll(@Readonly Collection<? extends E> es) {
         throw new UnsupportedOperationException();
       }
 
@@ -1216,7 +1216,7 @@ public final class Maps {
       }
 
       @Override
-      public boolean addAll(Collection<? extends E> es) {
+      public boolean addAll(@Readonly Collection<? extends E> es) {
         throw new UnsupportedOperationException();
       }
 

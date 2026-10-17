@@ -460,7 +460,7 @@ public final class Multimaps {
 
     @Override
     <E extends @Nullable @Readonly Object> @Readonly Collection<E> unmodifiableCollectionSubclass(
-        Collection<E> collection) {
+        @Readonly Collection<E> collection) {
       if (collection instanceof NavigableSet) {
         return Sets.unmodifiableNavigableSet((NavigableSet<E>) collection);
       } else if (collection instanceof SortedSet) {
@@ -778,7 +778,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean putAll(Multimap<? extends K, ? extends V> multimap) {
+    public boolean putAll(@Readonly Multimap<? extends K, ? extends V> multimap) {
       throw new UnsupportedOperationException();
     }
 
@@ -1608,7 +1608,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean putAll(Multimap<? extends K, ? extends V2> multimap) {
+    public boolean putAll(@Readonly Multimap<? extends K, ? extends V2> multimap) {
       throw new UnsupportedOperationException();
     }
 

@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.HasSubsequence;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -309,13 +310,13 @@ public final class Bytes {
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Byte) && Bytes.indexOf(array, (Byte) target, start, end) != -1;
     }
 
     @Override
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Byte) {
         int i = Bytes.indexOf(array, (Byte) target, start, end);
@@ -327,7 +328,7 @@ public final class Bytes {
     }
 
     @Override
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Byte) {
         int i = Bytes.lastIndexOf(array, (Byte) target, start, end);
@@ -359,7 +360,7 @@ public final class Bytes {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

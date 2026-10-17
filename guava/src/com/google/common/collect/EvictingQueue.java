@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Queue;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 
@@ -118,7 +119,7 @@ public final class EvictingQueue<E> extends ForwardingQueue<E> implements Serial
 
   @Override
   @CanIgnoreReturnValue
-  public boolean addAll(Collection<? extends E> collection) {
+  public boolean addAll(@Readonly Collection<? extends E> collection) {
     int size = collection.size();
     if (size >= maxSize) {
       clear();

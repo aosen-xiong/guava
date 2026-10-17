@@ -23,6 +23,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -53,7 +54,7 @@ final class ByFunctionOrdering<F extends @Nullable Object, T extends @Nullable O
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

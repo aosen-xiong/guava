@@ -91,7 +91,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
           // Network<LinkedList>.
           @SuppressWarnings("unchecked")
           @Override
-          public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+          public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
             if (!(obj instanceof EndpointPair)) {
               return false;
             }
@@ -261,7 +261,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
   }
 
   @Override
-  public final boolean equals(@CheckForNull Object obj) {
+  public final boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     }

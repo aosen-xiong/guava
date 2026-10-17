@@ -146,7 +146,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    boolean isLessThan(Comparable<?> value) {
+    boolean isLessThan(@Readonly Comparable<?> value) {
       return true;
     }
 
@@ -247,7 +247,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    boolean isLessThan(Comparable<?> value) {
+    boolean isLessThan(@Readonly Comparable<?> value) {
       return false;
     }
 

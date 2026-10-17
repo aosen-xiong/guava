@@ -88,13 +88,13 @@ final class EmptyContiguousSet<C extends @Immutable Comparable> extends Contiguo
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return false;
   }
 
   @GwtIncompatible // not used by GWT emulation
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@CheckForNull @Readonly Object target) {
     return -1;
   }
 
@@ -130,7 +130,7 @@ final class EmptyContiguousSet<C extends @Immutable Comparable> extends Contiguo
   }
 
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object instanceof Set) {
       Set<?> that = (Set<?>) object;
       return that.isEmpty();

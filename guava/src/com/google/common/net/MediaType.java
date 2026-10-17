@@ -44,6 +44,7 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Assignable;
 
@@ -1142,7 +1143,7 @@ public final class MediaType {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof MediaType) {

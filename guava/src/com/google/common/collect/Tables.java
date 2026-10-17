@@ -624,13 +624,13 @@ public final class Tables {
     }
 
     @Override
-    public void putAll(Table<? extends R, ? extends C, ? extends V> table) {
+    public void putAll(@Readonly Table<? extends R, ? extends C, ? extends V> table) {
       throw new UnsupportedOperationException();
     }
 
     @Override
     @CheckForNull
-    public V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+    public V remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
       throw new UnsupportedOperationException();
     }
 

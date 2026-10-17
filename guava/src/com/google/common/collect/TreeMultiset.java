@@ -256,7 +256,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     try {
       @SuppressWarnings("unchecked")
       E e = (E) element;
@@ -294,7 +294,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@Mutable TreeMultiset<E> this, @CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable TreeMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
     checkNonnegative(occurrences, "occurrences");
     if (occurrences == 0) {
       return count(element);
@@ -1121,9 +1121,9 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
 @Override
 @Pure
-public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super.contains(arg0); }
+public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.contains(arg0); }
 
 @Override
-public boolean containsAll(Collection<?> arg0) { return super.containsAll(arg0); }
+public boolean containsAll(@Readonly Collection<?> arg0) { return super.containsAll(arg0); }
 
 }

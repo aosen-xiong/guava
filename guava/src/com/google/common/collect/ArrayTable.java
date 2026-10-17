@@ -273,13 +273,13 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     // TODO(lowasser): consider an optimized values() implementation
 
     @Override
-    public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+    public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
       return keyIndex.containsKey(key);
     }
 
     @CheckForNull
     @Override
-    public V get(@CheckForNull @UnknownSignedness Object key) {
+    public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
       Integer index = keyIndex.get(key);
       if (index == null) {
         return null;
@@ -416,7 +416,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * constructed.
    */
   @Override
-  public boolean contains(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public boolean contains(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     return containsRow(rowKey) && containsColumn(columnKey);
   }
 
@@ -425,7 +425,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * table was constructed.
    */
   @Override
-  public boolean containsColumn(@CheckForNull Object columnKey) {
+  public boolean containsColumn(@CheckForNull @Readonly Object columnKey) {
     return columnKeyToIndex.containsKey(columnKey);
   }
 
@@ -434,12 +434,12 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * constructed.
    */
   @Override
-  public boolean containsRow(@CheckForNull Object rowKey) {
+  public boolean containsRow(@CheckForNull @Readonly Object rowKey) {
     return rowKeyToIndex.containsKey(rowKey);
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     for (@Nullable V[] row : array) {
       for (V element : row) {
         if (Objects.equal(value, element)) {
@@ -452,7 +452,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V get(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     return (rowIndex == null || columnIndex == null) ? null : at(rowIndex, columnIndex);
@@ -501,7 +501,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    *     in {@link #rowKeySet()} or {@link #columnKeySet()}
    */
   @Override
-  public void putAll(Table<? extends R, ? extends C, ? extends @Nullable V> table) {
+  public void putAll(@Readonly Table<? extends R, ? extends C, ? extends @Nullable V> table) {
     super.putAll(table);
   }
 
@@ -516,7 +516,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @Override
   @Deprecated
   @CheckForNull
-  public V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     throw new UnsupportedOperationException();
   }
 

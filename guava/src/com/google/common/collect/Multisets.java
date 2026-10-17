@@ -192,7 +192,7 @@ public final class Multisets {
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> elementsToAdd) {
+    public boolean addAll(@Readonly Collection<? extends E> elementsToAdd) {
       throw new UnsupportedOperationException();
     }
 
@@ -217,7 +217,7 @@ public final class Multisets {
     }
 
     @Override
-    public boolean retainAll(Collection<?> elementsToRetain) {
+    public boolean retainAll(@Readonly Collection<?> elementsToRetain) {
       throw new UnsupportedOperationException();
     }
 
@@ -439,7 +439,7 @@ public final class Multisets {
 
     return new ViewMultiset<E>() {
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object element) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.contains(element) || multiset2.contains(element);
       }
 
@@ -449,7 +449,7 @@ public final class Multisets {
       }
 
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return Math.max(multiset1.count(element), multiset2.count(element));
       }
 
@@ -511,7 +511,7 @@ public final class Multisets {
 
     return new ViewMultiset<E>() {
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         int count1 = multiset1.count(element);
         return (count1 == 0) ? 0 : Math.min(count1, multiset2.count(element));
       }
@@ -569,7 +569,7 @@ public final class Multisets {
     // TODO(lowasser): consider making the entries live views
     return new ViewMultiset<E>() {
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object element) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.contains(element) || multiset2.contains(element);
       }
 
@@ -584,7 +584,7 @@ public final class Multisets {
       }
 
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.count(element) + multiset2.count(element);
       }
 
@@ -646,7 +646,7 @@ public final class Multisets {
     // TODO(lowasser): consider making the entries live views
     return new ViewMultiset<E>() {
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         int count1 = multiset1.count(element);
         return (count1 == 0) ? 0 : Math.max(0, count1 - multiset2.count(element));
       }

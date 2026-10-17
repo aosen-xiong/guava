@@ -31,6 +31,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -212,7 +213,7 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj instanceof Invokable) {
       Invokable<?, ?> that = (Invokable<?, ?>) obj;
       return getOwnerType().equals(that.getOwnerType()) && member.equals(that.member);

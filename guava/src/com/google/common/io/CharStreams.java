@@ -29,6 +29,7 @@ import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -308,12 +309,12 @@ public final class CharStreams {
     }
 
     @Override
-    public Writer append(@CheckForNull CharSequence csq) {
+    public Writer append(@CheckForNull @Readonly CharSequence csq) {
       return this;
     }
 
     @Override
-    public Writer append(@CheckForNull CharSequence csq, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
+    public Writer append(@CheckForNull @Readonly CharSequence csq, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
       checkPositionIndexes(start, end, csq == null ? "null".length() : csq.length());
       return this;
     }

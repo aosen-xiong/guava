@@ -234,17 +234,17 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<K>keyPredicateOnEntries(in(c)));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<K>keyPredicateOnEntries(not(in(c))));
         }
 
         @Override
-        public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+        public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
           return AsMap.this.remove(o) != null;
         }
       }
@@ -284,12 +284,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(in(c));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(not(in(c)));
         }
 
@@ -310,7 +310,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+        public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
           if (o instanceof Collection) {
             Collection<?> c = (Collection<?>) o;
             Iterator<Entry<K, Collection<V>>> entryIterator =
@@ -334,12 +334,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<Collection<V>>valuePredicateOnEntries(in(c)));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<Collection<V>>valuePredicateOnEntries(not(in(c))));
         }
       }
@@ -411,12 +411,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(in(c));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(not(in(c)));
         }
       };

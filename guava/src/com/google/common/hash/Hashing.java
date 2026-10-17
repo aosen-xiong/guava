@@ -34,6 +34,7 @@ import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 import javax.annotation.CheckForNull;
 import javax.crypto.spec.SecretKeySpec;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -814,7 +815,7 @@ public final class Hashing {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof ConcatenatedHashFunction) {
         ConcatenatedHashFunction other = (ConcatenatedHashFunction) object;
         return Arrays.equals(functions, other.functions);

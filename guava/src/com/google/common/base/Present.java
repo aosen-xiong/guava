@@ -20,6 +20,7 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Collections;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -80,7 +81,7 @@ final class Present<T> extends Optional<T> {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object instanceof Present) {
       Present<?> other = (Present<?>) object;
       return reference.equals(other.reference);

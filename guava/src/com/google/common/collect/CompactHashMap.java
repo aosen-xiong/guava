@@ -517,14 +517,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     Map<K, V> delegate = delegateOrNull();
     return (delegate != null) ? delegate.containsKey(key) : indexOf(key) != -1;
   }
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.get(key);
@@ -746,7 +746,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
       Map<K, V> delegate = delegateOrNull();
       return (delegate != null)
           ? delegate.keySet().remove(o)
@@ -844,7 +844,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
       Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.entrySet().contains(o);
@@ -857,7 +857,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
       Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.entrySet().remove(o);
@@ -981,7 +981,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.containsValue(value);

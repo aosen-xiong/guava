@@ -116,7 +116,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@CheckForNull @Readonly Object target) {
     int index = forward.indexOf(target);
     if (index == -1) {
       return index;

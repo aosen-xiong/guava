@@ -99,7 +99,7 @@ public final class MutableTypeToInstanceMap<B extends @Nullable Object>
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public void putAll(Map<? extends TypeToken<? extends @NonNull B>, ? extends B> map) {
+  public void putAll(@Readonly Map<? extends TypeToken<? extends @NonNull B>, ? extends B> map) {
     throw new UnsupportedOperationException("Please use putInstance() instead.");
   }
 

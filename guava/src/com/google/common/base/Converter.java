@@ -356,7 +356,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof ReverseConverter) {
         ReverseConverter<?, ?> that = (ReverseConverter<?, ?>) object;
         return this.original.equals(that.original);
@@ -433,7 +433,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof ConverterComposition) {
         ConverterComposition<?, ?, ?> that = (ConverterComposition<?, ?, ?>) object;
         return this.first.equals(that.first) && this.second.equals(that.second);
@@ -494,7 +494,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * interchangeable.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     return super.equals(object);
   }
 
@@ -543,7 +543,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof FunctionBasedConverter) {
         FunctionBasedConverter<?, ?> that = (FunctionBasedConverter<?, ?>) object;
         return this.forwardFunction.equals(that.forwardFunction)

@@ -113,7 +113,7 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * <p>Subclasses can override this method to provide custom equality.
    */
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     return super.equals(obj);
   }
 

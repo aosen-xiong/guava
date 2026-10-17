@@ -1928,7 +1928,7 @@ final class Synchronized {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       synchronized (mutex) {
         return delegate().equals(obj);
       }
@@ -2126,14 +2126,14 @@ final class Synchronized {
     }
 
     @Override
-    public boolean removeFirstOccurrence(@CheckForNull Object o) {
+    public boolean removeFirstOccurrence(@CheckForNull @Readonly Object o) {
       synchronized (mutex) {
         return delegate().removeFirstOccurrence(o);
       }
     }
 
     @Override
-    public boolean removeLastOccurrence(@CheckForNull Object o) {
+    public boolean removeLastOccurrence(@CheckForNull @Readonly Object o) {
       synchronized (mutex) {
         return delegate().removeLastOccurrence(o);
       }

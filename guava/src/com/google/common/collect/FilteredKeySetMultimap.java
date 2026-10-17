@@ -77,7 +77,7 @@ final class FilteredKeySetMultimap<K extends @Nullable @Immutable Object, V exte
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object o) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object o) {
       return Sets.equalsImpl(this, o);
     }
   }

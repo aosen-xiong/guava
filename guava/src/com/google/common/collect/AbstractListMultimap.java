@@ -65,7 +65,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   <E extends @Nullable @Readonly Object> @Immutable Collection<E> unmodifiableCollectionSubclass(
-      Collection<E> collection) {
+      @Readonly Collection<E> collection) {
     return Collections.unmodifiableList((List<E>) collection);
   }
 

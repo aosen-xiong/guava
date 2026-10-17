@@ -170,7 +170,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
   }
 
   @Override
-  public void putAll(Map<? extends Class<? extends @NonNull B>, ? extends B> map) {
+  public void putAll(@Readonly Map<? extends Class<? extends @NonNull B>, ? extends B> map) {
     Map<Class<? extends @NonNull B>, B> copy = new LinkedHashMap<>(map);
     for (Entry<? extends Class<? extends @NonNull B>, B> entry : copy.entrySet()) {
       cast(entry.getKey(), entry.getValue());

@@ -38,7 +38,7 @@ abstract class IncidentEdgeSet<N> extends AbstractSet<EndpointPair<N>> {
   }
 
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
     throw new UnsupportedOperationException();
   }
 
@@ -54,7 +54,7 @@ abstract class IncidentEdgeSet<N> extends AbstractSet<EndpointPair<N>> {
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
     if (!(obj instanceof EndpointPair)) {
       return false;
     }

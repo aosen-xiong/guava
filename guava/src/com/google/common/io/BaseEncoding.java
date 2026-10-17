@@ -37,6 +37,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Objects;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -610,7 +611,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object other) {
+    public boolean equals(@CheckForNull @Readonly Object other) {
       if (other instanceof Alphabet) {
         Alphabet that = (Alphabet) other;
         return this.ignoreCase == that.ignoreCase && Arrays.equals(this.chars, that.chars);
@@ -946,7 +947,7 @@ public abstract class BaseEncoding {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object other) {
+    public boolean equals(@CheckForNull @Readonly Object other) {
       if (other instanceof StandardBaseEncoding) {
         StandardBaseEncoding that = (StandardBaseEncoding) other;
         return this.alphabet.equals(that.alphabet)
@@ -1112,12 +1113,12 @@ public abstract class BaseEncoding {
       }
 
       @Override
-      public Appendable append(@CheckForNull CharSequence chars, int off, int len) {
+      public Appendable append(@CheckForNull @Readonly CharSequence chars, int off, int len) {
         throw new UnsupportedOperationException();
       }
 
       @Override
-      public Appendable append(@CheckForNull CharSequence chars) {
+      public Appendable append(@CheckForNull @Readonly CharSequence chars) {
         throw new UnsupportedOperationException();
       }
     };

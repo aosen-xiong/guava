@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -75,7 +76,7 @@ public final class Suppliers {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof SupplierComposition) {
         SupplierComposition<?, ?> that = (SupplierComposition<?, ?>) obj;
         return function.equals(that.function) && supplier.equals(that.supplier);
@@ -345,7 +346,7 @@ public final class Suppliers {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof SupplierOfInstance) {
         SupplierOfInstance<?> that = (SupplierOfInstance<?>) obj;
         return Objects.equal(instance, that.instance);
