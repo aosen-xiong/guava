@@ -86,8 +86,8 @@ class StandardRowSortedTable<R extends @Immutable Object, C extends @Immutable O
    * Table} interface.
    */
   @Override
-  public SortedMap<R, Map<C, V>> rowMap() {
-    return (SortedMap<R, Map<C, V>>) super.rowMap();
+  public @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable StandardRowSortedTable<R, C, V> this) {
+    return (@ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>>) super.rowMap();
   }
 
   @Override

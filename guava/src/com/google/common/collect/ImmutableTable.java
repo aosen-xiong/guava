@@ -358,7 +358,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * as well.
    */
   @Override
-  public abstract ImmutableMap<C, Map<R, V>> columnMap();
+  public abstract ImmutableMap<C, @Immutable Map<R, V>> columnMap();
 
   /**
    * {@inheritDoc}
@@ -384,7 +384,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * as well.
    */
   @Override
-  public abstract ImmutableMap<R, Map<C, V>> rowMap();
+  public abstract ImmutableMap<R, @Immutable Map<C, V>> rowMap();
 
   @Override
   public boolean contains(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {

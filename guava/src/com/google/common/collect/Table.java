@@ -256,7 +256,7 @@ public interface Table<
    *
    * @return a map view from each row key to a secondary map from column keys to values
    */
-  @ReceiverDependentMutable Map<R, Map<C, V>> rowMap(@ReceiverDependentMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Returns a view that associates each column key with the corresponding map from row keys to
@@ -269,7 +269,7 @@ public interface Table<
    *
    * @return a map view from each column key to a secondary map from row keys to values
    */
-  @ReceiverDependentMutable Map<C, Map<R, V>> columnMap(@ReceiverDependentMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> columnMap(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Row key / column key / value triplet corresponding to a mapping in a table.

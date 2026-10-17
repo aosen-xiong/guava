@@ -58,5 +58,5 @@ public interface RowSortedTable<
    * Table} interface.
    */
   @Override
-  SortedMap<R, Map<C, V>> rowMap();
+  @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable RowSortedTable<R, C, V> this);
 }

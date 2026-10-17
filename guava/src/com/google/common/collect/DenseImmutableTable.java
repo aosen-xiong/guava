@@ -300,17 +300,17 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
   }
 
   @Override
-  public ImmutableMap<C, Map<R, V>> columnMap() {
+  public ImmutableMap<C, @Immutable Map<R, V>> columnMap() {
     // Casts without copying.
     ImmutableMap<C, ImmutableMap<R, V>> columnMap = this.columnMap;
-    return ImmutableMap.<C, Map<R, V>>copyOf(columnMap);
+    return ImmutableMap.<C, @Immutable Map<R, V>>copyOf(columnMap);
   }
 
   @Override
-  public ImmutableMap<R, Map<C, V>> rowMap() {
+  public ImmutableMap<R, @Immutable Map<C, V>> rowMap() {
     // Casts without copying.
     ImmutableMap<R, ImmutableMap<C, V>> rowMap = this.rowMap;
-    return ImmutableMap.<R, Map<C, V>>copyOf(rowMap);
+    return ImmutableMap.<R, @Immutable Map<C, V>>copyOf(rowMap);
   }
 
   @Override

@@ -70,7 +70,7 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public Map<C, Map<R, V>> columnMap() {
+  public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> columnMap(@ReceiverDependentMutable ForwardingTable<R, C, V> this) {
     return delegate().columnMap();
   }
 
@@ -136,7 +136,7 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public Map<R, Map<C, V>> rowMap() {
+  public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable ForwardingTable<R, C, V> this) {
     return delegate().rowMap();
   }
 

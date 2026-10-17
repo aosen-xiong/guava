@@ -62,13 +62,13 @@ class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
-  public ImmutableMap<C, Map<R, V>> columnMap() {
-    return ImmutableMap.of(singleColumnKey, (Map<R, V>) ImmutableMap.of(singleRowKey, singleValue));
+  public ImmutableMap<C, @Immutable Map<R, V>> columnMap() {
+    return ImmutableMap.of(singleColumnKey, (@Immutable Map<R, V>) ImmutableMap.of(singleRowKey, singleValue));
   }
 
   @Override
-  public ImmutableMap<R, Map<C, V>> rowMap() {
-    return ImmutableMap.of(singleRowKey, (Map<C, V>) ImmutableMap.of(singleColumnKey, singleValue));
+  public ImmutableMap<R, @Immutable Map<C, V>> rowMap() {
+    return ImmutableMap.of(singleRowKey, (@Immutable Map<C, V>) ImmutableMap.of(singleColumnKey, singleValue));
   }
 
   @Override

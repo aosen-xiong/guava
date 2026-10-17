@@ -314,7 +314,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
   }
 
   @Override
-  public SortedMap<R, Map<C, V>> rowMap() {
+  public @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable TreeBasedTable<R, C, V> this) {
     return super.rowMap();
   }
 

@@ -251,7 +251,7 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<R, Map<C, V>> columnMap(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> columnMap(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.rowMap();
     }
 
@@ -313,7 +313,7 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<C, Map<R, V>> rowMap(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> rowMap(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.columnMap();
     }
 
@@ -531,7 +531,7 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<R, Map<C, V2>> rowMap(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V2>> rowMap(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       Function<Map<C, V1>, Map<C, V2>> rowFunction =
           new Function<Map<C, V1>, Map<C, V2>>() {
             @Override
@@ -543,7 +543,7 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<C, Map<R, V2>> columnMap(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V2>> columnMap(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       Function<Map<R, V1>, Map<R, V2>> columnFunction =
           new Function<Map<R, V1>, Map<R, V2>>() {
             @Override

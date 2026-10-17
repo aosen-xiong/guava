@@ -675,7 +675,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @LazyInit @CheckForNull private transient @Assignable ColumnMap columnMap;
 
   @Override
-  public Map<C, Map<R, @Nullable V>> columnMap() {
+  public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, @Nullable V>> columnMap(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     ColumnMap map = columnMap;
     return (map == null) ? columnMap = new ColumnMap() : map;
   }
@@ -770,7 +770,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @LazyInit @CheckForNull private transient @Assignable RowMap rowMap;
 
   @Override
-  public Map<R, Map<C, @Nullable V>> rowMap() {
+  public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, @Nullable V>> rowMap(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     RowMap map = rowMap;
     return (map == null) ? rowMap = new RowMap() : map;
   }

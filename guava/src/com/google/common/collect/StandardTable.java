@@ -826,7 +826,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   @LazyInit @CheckForNull private transient @Assignable Map<R, Map<C, V>> rowMap;
 
   @Override
-  public @PolyMutable Map<R, Map<C, V>> rowMap(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     Map<R, Map<C, V>> result = rowMap;
     return (result == null) ? rowMap = createRowMap() : result;
   }
@@ -909,7 +909,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   @LazyInit @CheckForNull private transient @Assignable ColumnMap columnMap;
 
   @Override
-  public @PolyMutable Map<C, Map<R, V>> columnMap(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> columnMap(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     ColumnMap result = columnMap;
     return (result == null) ? columnMap = new ColumnMap() : result;
   }

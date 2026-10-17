@@ -2308,7 +2308,7 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyMutable Map<R, Map<C, V>> rowMap(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @PolyMutable Map<R, @PolyMutable Map<C, V>> rowMap(@PolyMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return map(
             Maps.transformValues(
@@ -2324,7 +2324,7 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyMutable Map<C, Map<R, V>> columnMap(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @PolyMutable Map<C, @PolyMutable Map<R, V>> columnMap(@PolyMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return map(
             Maps.transformValues(
