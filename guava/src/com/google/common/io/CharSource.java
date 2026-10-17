@@ -440,7 +440,7 @@ public abstract class CharSource {
    * @return a {@code CharSource} containing the concatenated data
    * @since 15.0
    */
-  public static CharSource concat(Iterable<? extends CharSource> sources) {
+  public static CharSource concat(@Readonly Iterable<? extends CharSource> sources) {
     return new ConcatenatedCharSource(sources);
   }
 
@@ -462,7 +462,7 @@ public abstract class CharSource {
    * @throws NullPointerException if any of {@code sources} is {@code null}
    * @since 15.0
    */
-  public static CharSource concat(Iterator<? extends CharSource> sources) {
+  public static CharSource concat(@Readonly Iterator<? extends CharSource> sources) {
     return concat(ImmutableList.copyOf(sources));
   }
 
@@ -688,9 +688,9 @@ public abstract class CharSource {
 
   private static final class ConcatenatedCharSource extends CharSource {
 
-    private final Iterable<? extends CharSource> sources;
+    private final @Readonly Iterable<? extends CharSource> sources;
 
-    ConcatenatedCharSource(Iterable<? extends CharSource> sources) {
+    ConcatenatedCharSource(@Readonly Iterable<? extends CharSource> sources) {
       this.sources = checkNotNull(sources);
     }
 

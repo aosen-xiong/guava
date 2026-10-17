@@ -731,7 +731,7 @@ public final class Sets {
    * {@link TreeSet} or the {@link Map#keySet} of an {@code IdentityHashMap}.
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> union(
-      final Set<? extends E> set1, final Set<? extends E> set2) {
+      final @Readonly Set<? extends E> set1, final @Readonly Set<? extends E> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
@@ -839,7 +839,7 @@ public final class Sets {
    * <p>This is unfortunate, but should come up only very rarely.
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> intersection(
-      final Set<E> set1, final Set<?> set2) {
+      final @Readonly Set<E> set1, final @Readonly Set<?> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
@@ -912,7 +912,7 @@ public final class Sets {
    * {@link TreeSet} or the {@link Map#keySet} of an {@code IdentityHashMap}.
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> difference(
-      final Set<E> set1, final Set<?> set2) {
+      final @Readonly Set<E> set1, final @Readonly Set<?> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
@@ -920,7 +920,7 @@ public final class Sets {
       @Override
       public UnmodifiableIterator<E> iterator() {
         return new @Mutable AbstractIterator<E>() {
-          final Iterator<E> itr = set1.iterator();
+          final @Readonly Iterator<E> itr = set1.iterator();
 
           @Override
           @CheckForNull
@@ -981,7 +981,7 @@ public final class Sets {
    * @since 3.0
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> symmetricDifference(
-      final Set<? extends E> set1, final Set<? extends E> set2) {
+      final @Readonly Set<? extends E> set1, final @Readonly Set<? extends E> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 

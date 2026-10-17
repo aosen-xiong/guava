@@ -482,7 +482,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
      * @since 11.0
      */
     @CanIgnoreReturnValue
-    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    public Builder<K, V> put(@Readonly Entry<? extends K, ? extends V> entry) {
       return put(entry.getKey(), entry.getValue());
     }
 
@@ -494,7 +494,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
      * @throws NullPointerException if any key or value in {@code map} is null
      */
     @CanIgnoreReturnValue
-    public Builder<K, V> putAll(Map<? extends K, ? extends V> map) {
+    public Builder<K, V> putAll(@Readonly Map<? extends K, ? extends V> map) {
       return putAll(map.entrySet());
     }
 
@@ -507,7 +507,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
      * @since 19.0
      */
     @CanIgnoreReturnValue
-    public Builder<K, V> putAll(Iterable<? extends Entry<? extends K, ? extends V>> entries) {
+    public Builder<K, V> putAll(@Readonly Iterable<? extends @Readonly Entry<? extends K, ? extends V>> entries) {
       if (entries instanceof Collection) {
         ensureCapacity(size + ((Collection<?>) entries).size());
       }

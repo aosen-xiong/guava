@@ -652,7 +652,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    public Builder<K, V> put(@Readonly Entry<? extends K, ? extends V> entry) {
       super.put(entry);
       return this;
     }
@@ -666,7 +666,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(Map<? extends K, ? extends V> map) {
+    public Builder<K, V> putAll(@Readonly Map<? extends K, ? extends V> map) {
       super.putAll(map);
       return this;
     }
@@ -681,7 +681,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(Iterable<? extends Entry<? extends K, ? extends V>> entries) {
+    public Builder<K, V> putAll(@Readonly Iterable<? extends @Readonly Entry<? extends K, ? extends V>> entries) {
       super.putAll(entries);
       return this;
     }

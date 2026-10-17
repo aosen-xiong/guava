@@ -855,7 +855,7 @@ public final class MediaType {
    * @throws IllegalArgumentException if either {@code attribute} or {@code values} is invalid
    * @since 24.0
    */
-  public MediaType withParameters(String attribute, Iterable<String> values) {
+  public MediaType withParameters(String attribute, @Readonly Iterable<String> values) {
     checkNotNull(attribute);
     checkNotNull(values);
     String normalizedAttribute = normalizeToken(attribute);

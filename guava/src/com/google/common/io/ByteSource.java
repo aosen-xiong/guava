@@ -388,7 +388,7 @@ public abstract class ByteSource {
    * @return a {@code ByteSource} containing the concatenated data
    * @since 15.0
    */
-  public static ByteSource concat(Iterable<? extends ByteSource> sources) {
+  public static ByteSource concat(@Readonly Iterable<? extends ByteSource> sources) {
     return new ConcatenatedByteSource(sources);
   }
 
@@ -410,7 +410,7 @@ public abstract class ByteSource {
    * @throws NullPointerException if any of {@code sources} is {@code null}
    * @since 15.0
    */
-  public static ByteSource concat(Iterator<? extends ByteSource> sources) {
+  public static ByteSource concat(@Readonly Iterator<? extends ByteSource> sources) {
     return concat(ImmutableList.copyOf(sources));
   }
 
@@ -694,9 +694,9 @@ public abstract class ByteSource {
 
   private static final class ConcatenatedByteSource extends ByteSource {
 
-    final Iterable<? extends ByteSource> sources;
+    final @Readonly Iterable<? extends ByteSource> sources;
 
-    ConcatenatedByteSource(Iterable<? extends ByteSource> sources) {
+    ConcatenatedByteSource(@Readonly Iterable<? extends ByteSource> sources) {
       this.sources = checkNotNull(sources);
     }
 

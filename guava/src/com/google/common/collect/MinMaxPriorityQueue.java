@@ -122,7 +122,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * containing the given elements.
    */
   public static <E extends @Immutable Comparable<E>> MinMaxPriorityQueue<E> create(
-      Iterable<? extends E> initialContents) {
+      @Readonly Iterable<? extends E> initialContents) {
     return new Builder<E>(Ordering.<E>natural()).create(initialContents);
   }
 
@@ -221,7 +221,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
      * Builds a new min-max priority queue using the previously specified options, and having the
      * given initial elements.
      */
-    public <T extends B> MinMaxPriorityQueue<T> create(Iterable<? extends T> initialContents) {
+    public <T extends B> MinMaxPriorityQueue<T> create(@Readonly Iterable<? extends T> initialContents) {
       MinMaxPriorityQueue<T> queue =
           new MinMaxPriorityQueue<>(
               this, initialQueueSize(expectedSize, maximumSize, initialContents));

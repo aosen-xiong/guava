@@ -120,7 +120,7 @@ public final class ImmutableClassToInstanceMap<B>
      * @throws ClassCastException if any value is not an instance of the type specified by its key
      */
     @CanIgnoreReturnValue
-    public <T extends B> Builder<B> putAll(Map<? extends Class<? extends T>, ? extends T> map) {
+    public <T extends B> Builder<B> putAll(@Readonly Map<? extends Class<? extends T>, ? extends T> map) {
       for (Entry<? extends Class<? extends T>, ? extends T> entry : map.entrySet()) {
         Class<? extends T> type = entry.getKey();
         T value = entry.getValue();
