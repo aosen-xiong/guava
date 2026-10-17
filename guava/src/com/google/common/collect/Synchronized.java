@@ -102,7 +102,7 @@ final class Synchronized {
       this.mutex = (mutex == null) ? this : mutex;
     }
 
-    @PolyMutable Object delegate(@PolyMutable SynchronizedObject this) {
+    @ReceiverDependentMutable Object delegate(@ReceiverDependentMutable SynchronizedObject this) {
       return delegate;
     }
 
@@ -149,7 +149,7 @@ final class Synchronized {
 
     @SuppressWarnings("unchecked")
     @Override
-    @PolyMutable Collection<E> delegate(@PolyMutable SynchronizedCollection<E> this) {
+    @ReceiverDependentMutable Collection<E> delegate(@ReceiverDependentMutable SynchronizedCollection<E> this) {
       return (@PolyMutable Collection<E>) super.delegate();
     }
 
@@ -300,7 +300,7 @@ final class Synchronized {
     }
 
     @Override
-    @PolyMutable Set<E> delegate(@PolyMutable SynchronizedSet<E> this) {
+    @ReceiverDependentMutable Set<E> delegate(@ReceiverDependentMutable SynchronizedSet<E> this) {
       return (@PolyMutable Set<E>) super.delegate();
     }
 
@@ -339,7 +339,7 @@ final class Synchronized {
     }
 
     @Override
-    @PolyMutable SortedSet<E> delegate(@PolyMutable SynchronizedSortedSet<E> this) {
+    @ReceiverDependentMutable SortedSet<E> delegate(@ReceiverDependentMutable SynchronizedSortedSet<E> this) {
       return (@PolyMutable SortedSet<E>) super.delegate();
     }
 
@@ -402,14 +402,15 @@ final class Synchronized {
         : new SynchronizedList<E>(list, mutex);
   }
 
-  static class SynchronizedList<E extends @Nullable Object> extends SynchronizedCollection<E>
+  @ReceiverDependentMutable
+  static class SynchronizedList<E extends @Nullable @Readonly Object> extends SynchronizedCollection<E>
       implements List<E> {
     SynchronizedList(List<E> delegate, @CheckForNull Object mutex) {
       super(delegate, mutex);
     }
 
     @Override
-    @PolyMutable List<E> delegate(@PolyMutable SynchronizedList<E> this) {
+    @ReceiverDependentMutable List<E> delegate(@ReceiverDependentMutable SynchronizedList<E> this) {
       return (List<E>) super.delegate();
     }
 
@@ -451,12 +452,12 @@ final class Synchronized {
     }
 
     @Override
-    public ListIterator<E> listIterator(@Readonly SynchronizedList<E> this) {
+    public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable SynchronizedList<E> this) {
       return delegate().listIterator(); // manually synchronized
     }
 
     @Override
-    public ListIterator<E> listIterator(@Readonly SynchronizedList<E> this, int index) {
+    public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable SynchronizedList<E> this, int index) {
       return delegate().listIterator(index); // manually synchronized
     }
 
@@ -483,14 +484,14 @@ final class Synchronized {
     }
 
     @Override
-    public void sort(@Nullable Comparator<? super E> c) {
+    public void sort(@Mutable SynchronizedList<E> this, @Nullable Comparator<? super E> c) {
       synchronized (mutex) {
         delegate().sort(c);
       }
     }
 
     @Override
-    public @PolyMutable List<E> subList(@PolyMutable SynchronizedList<E> this, int fromIndex, int toIndex) {
+    public @ReceiverDependentMutable List<E> subList(@ReceiverDependentMutable SynchronizedList<E> this, int fromIndex, int toIndex) {
       synchronized (mutex) {
         return list(delegate().subList(fromIndex, toIndex), mutex);
       }
@@ -518,7 +519,8 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static final class SynchronizedRandomAccessList<E extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class SynchronizedRandomAccessList<E extends @Nullable @Readonly Object>
       extends SynchronizedList<E> implements RandomAccess {
     SynchronizedRandomAccessList(@ReceiverDependentMutable List<E> list, @CheckForNull @Readonly Object mutex) {
       super(list, mutex);
@@ -535,7 +537,8 @@ final class Synchronized {
     return new SynchronizedMultiset<E>(multiset, mutex);
   }
 
-  static final class SynchronizedMultiset<E extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class SynchronizedMultiset<E extends @Nullable @Readonly Object>
       extends SynchronizedCollection<E> implements Multiset<E> {
     @CheckForNull transient Set<E> elementSet;
     @CheckForNull transient Set<Multiset.Entry<E>> entrySet;
@@ -545,7 +548,7 @@ final class Synchronized {
     }
 
     @Override
-    @PolyMutable Multiset<E> delegate(@PolyMutable SynchronizedMultiset<E> this) {
+    @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable SynchronizedMultiset<E> this) {
       return (Multiset<E>) super.delegate();
     }
 
@@ -557,7 +560,7 @@ final class Synchronized {
     }
 
     @Override
-    public int add(@ParametricNullness E e, int n) {
+    public int add(@Mutable SynchronizedMultiset<E> this, @ParametricNullness E e, int n) {
       synchronized (mutex) {
         return delegate().add(e, n);
       }
@@ -571,14 +574,14 @@ final class Synchronized {
     }
 
     @Override
-    public int setCount(@ParametricNullness E element, int count) {
+    public int setCount(@Mutable SynchronizedMultiset<E> this, @ParametricNullness E element, int count) {
       synchronized (mutex) {
         return delegate().setCount(element, count);
       }
     }
 
     @Override
-    public boolean setCount(@ParametricNullness E element, int oldCount, int newCount) {
+    public boolean setCount(@Mutable SynchronizedMultiset<E> this, @ParametricNullness E element, int oldCount, int newCount) {
       synchronized (mutex) {
         return delegate().setCount(element, oldCount, newCount);
       }
@@ -586,7 +589,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<E> elementSet(@PolyMutable SynchronizedMultiset<E> this) {
+    public @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable SynchronizedMultiset<E> this) {
       synchronized (mutex) {
         if (elementSet == null) {
           elementSet = typePreservingSet(delegate().elementSet(), mutex);
@@ -597,7 +600,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<Multiset.Entry<E>> entrySet(@PolyMutable SynchronizedMultiset<E> this) {
+    public @ReceiverDependentMutable Set<Multiset.Entry<E>> entrySet(@ReceiverDependentMutable SynchronizedMultiset<E> this) {
       synchronized (mutex) {
         if (entrySet == null) {
           entrySet = typePreservingSet(delegate().entrySet(), mutex);
@@ -636,7 +639,8 @@ final class Synchronized {
     return new SynchronizedMultimap<>(multimap, mutex);
   }
 
-  static class SynchronizedMultimap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static class SynchronizedMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedObject implements Multimap<K, V> {
     @CheckForNull transient Set<K> keySet;
     @CheckForNull transient Collection<V> valuesCollection;
@@ -646,7 +650,7 @@ final class Synchronized {
 
     @SuppressWarnings("unchecked")
     @Override
-    @PolyMutable Multimap<K, V> delegate(@PolyMutable SynchronizedMultimap<K, V> this) {
+    @ReceiverDependentMutable Multimap<K, V> delegate(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
       return (Multimap<K, V>) super.delegate();
     }
 
@@ -702,14 +706,14 @@ final class Synchronized {
     }
 
     @Override
-    public boolean put(@ParametricNullness K key, @ParametricNullness V value) {
+    public boolean put(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, @ParametricNullness V value) {
       synchronized (mutex) {
         return delegate().put(key, value);
       }
     }
 
     @Override
-    public boolean putAll(@ParametricNullness K key, Iterable<? extends V> values) {
+    public boolean putAll(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().putAll(key, values);
       }
@@ -723,7 +727,7 @@ final class Synchronized {
     }
 
     @Override
-    public Collection<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+    public Collection<V> replaceValues(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -752,7 +756,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<K> keySet(@PolyMutable SynchronizedMultimap<K, V> this) {
+    public @ReceiverDependentMutable Set<K> keySet(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
       synchronized (mutex) {
         if (keySet == null) {
           keySet = typePreservingSet(delegate().keySet(), mutex);
@@ -763,7 +767,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable SynchronizedMultimap<K, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
       synchronized (mutex) {
         if (valuesCollection == null) {
           valuesCollection = collection(delegate().values(), mutex);
@@ -774,7 +778,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Collection<Map.Entry<K, V>> entries(@PolyMutable SynchronizedMultimap<K, V> this) {
+    public @ReceiverDependentMutable Collection<Map.Entry<K, V>> entries(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
       synchronized (mutex) {
         if (entries == null) {
           entries = typePreservingCollection(delegate().entries(), mutex);
@@ -791,7 +795,7 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyMutable Map<K, Collection<V>> asMap(@PolyMutable SynchronizedMultimap<K, V> this) {
+    public @ReceiverDependentMutable Map<K, Collection<V>> asMap(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
       synchronized (mutex) {
         if (asMap == null) {
           asMap = new SynchronizedAsMap<>(delegate().asMap(), mutex);
@@ -801,7 +805,7 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyMutable Multiset<K> keys(@PolyMutable SynchronizedMultimap<K, V> this) {
+    public @ReceiverDependentMutable Multiset<K> keys(@ReceiverDependentMutable SynchronizedMultimap<K, V> this) {
       synchronized (mutex) {
         if (keys == null) {
           keys = multiset(delegate().keys(), mutex);
@@ -840,15 +844,16 @@ final class Synchronized {
     return new SynchronizedListMultimap<>(multimap, mutex);
   }
 
+  @ReceiverDependentMutable
   static final class SynchronizedListMultimap<
-          K extends @Nullable @Immutable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedMultimap<K, V> implements ListMultimap<K, V> {
     SynchronizedListMultimap(@ReceiverDependentMutable ListMultimap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
     }
 
     @Override
-    @PolyMutable ListMultimap<K, V> delegate(@PolyMutable SynchronizedListMultimap<K, V> this) {
+    @ReceiverDependentMutable ListMultimap<K, V> delegate(@ReceiverDependentMutable SynchronizedListMultimap<K, V> this) {
       return (ListMultimap<K, V>) super.delegate();
     }
 
@@ -884,7 +889,8 @@ final class Synchronized {
     return new SynchronizedSetMultimap<>(multimap, mutex);
   }
 
-  static class SynchronizedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static class SynchronizedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedMultimap<K, V> implements SetMultimap<K, V> {
     @CheckForNull transient Set<Map.Entry<K, V>> entrySet;
 
@@ -893,7 +899,7 @@ final class Synchronized {
     }
 
     @Override
-    @PolyMutable SetMultimap<K, V> delegate(@PolyMutable SynchronizedSetMultimap<K, V> this) {
+    @ReceiverDependentMutable SetMultimap<K, V> delegate(@ReceiverDependentMutable SynchronizedSetMultimap<K, V> this) {
       return (SetMultimap<K, V>) super.delegate();
     }
 
@@ -920,7 +926,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<Map.Entry<K, V>> entries(@PolyMutable SynchronizedSetMultimap<K, V> this) {
+    public @ReceiverDependentMutable Set<Map.Entry<K, V>> entries(@ReceiverDependentMutable SynchronizedSetMultimap<K, V> this) {
       synchronized (mutex) {
         if (entrySet == null) {
           entrySet = set(delegate().entries(), mutex);
@@ -941,15 +947,16 @@ final class Synchronized {
     return new SynchronizedSortedSetMultimap<>(multimap, mutex);
   }
 
+  @ReceiverDependentMutable
   static final class SynchronizedSortedSetMultimap<
-          K extends @Nullable @Immutable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedSetMultimap<K, V> implements SortedSetMultimap<K, V> {
     SynchronizedSortedSetMultimap(@ReceiverDependentMutable SortedSetMultimap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
     }
 
     @Override
-    @PolyMutable SortedSetMultimap<K, V> delegate(@PolyMutable SynchronizedSortedSetMultimap<K, V> this) {
+    @ReceiverDependentMutable SortedSetMultimap<K, V> delegate(@ReceiverDependentMutable SynchronizedSortedSetMultimap<K, V> this) {
       return (SortedSetMultimap<K, V>) super.delegate();
     }
 
@@ -1008,8 +1015,9 @@ final class Synchronized {
     }
   }
 
+  @ReceiverDependentMutable
   static final class SynchronizedAsMapEntries<
-          K extends @Nullable @Immutable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedSet<Map.Entry<K, Collection<V>>> {
     SynchronizedAsMapEntries(
             @ReceiverDependentMutable Set<Map.Entry<K, Collection<V>>> delegate, @CheckForNull @Readonly Object mutex) {
@@ -1117,7 +1125,8 @@ final class Synchronized {
     return new SynchronizedMap<>(map, mutex);
   }
 
-  static class SynchronizedMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static class SynchronizedMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedObject implements Map<K, V> {
     @CheckForNull transient Set<K> keySet;
     @CheckForNull transient Collection<V> values;
@@ -1129,7 +1138,7 @@ final class Synchronized {
 
     @SuppressWarnings("unchecked")
     @Override
-    @PolyMutable Map<K, V> delegate(@PolyMutable SynchronizedMap<K, V> this) {
+    @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable SynchronizedMap<K, V> this) {
       return (Map<K, V>) super.delegate();
     }
 
@@ -1158,7 +1167,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<Map.Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable SynchronizedMap<K, V> this) {
+    public @ReceiverDependentMutable Set<Map.Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable SynchronizedMap<K, V> this) {
       synchronized (mutex) {
         if (entrySet == null) {
           entrySet = set(delegate().entrySet(), mutex);
@@ -1200,7 +1209,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable SynchronizedMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable SynchronizedMap<K, V> this) {
       synchronized (mutex) {
         if (keySet == null) {
           keySet = set(delegate().keySet(), mutex);
@@ -1249,7 +1258,7 @@ final class Synchronized {
 
     @Override
     @SuppressWarnings("nullness") // TODO(b/262880368): Remove once we see @NonNull in JDK APIs
-    public @PolyNull V computeIfPresent(
+    public @PolyNull V computeIfPresent(@Mutable SynchronizedMap<K, V> this, 
         K key, BiFunction<? super K, ? super @NonNull V, ? extends @PolyNull V> remappingFunction) {
       synchronized (mutex) {
         return delegate().computeIfPresent(key, remappingFunction);
@@ -1257,7 +1266,7 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyNull V compute(
+    public @PolyNull V compute(@Mutable SynchronizedMap<K, V> this, 
         K key,
         BiFunction<? super K, ? super @Nullable V, ? extends @PolyNull V> remappingFunction) {
       synchronized (mutex) {
@@ -1267,7 +1276,7 @@ final class Synchronized {
 
     @Override
     @SuppressWarnings("nullness") // TODO(b/262880368): Remove once we see @NonNull in JDK APIs
-    public @PolyNull V merge(
+    public @PolyNull V merge(@Mutable SynchronizedMap<K, V> this, 
         K key,
         @NonNull V value,
         BiFunction<? super @NonNull V, ? super @NonNull V, ? extends @PolyNull V>
@@ -1316,7 +1325,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable SynchronizedMap<K, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable SynchronizedMap<K, V> this) {
       synchronized (mutex) {
         if (values == null) {
           values = collection(delegate().values(), mutex);
@@ -1361,7 +1370,7 @@ final class Synchronized {
     }
 
     @Override
-    @PolyMutable SortedMap<K, V> delegate(@PolyMutable SynchronizedSortedMap<K, V> this) {
+    @ReceiverDependentMutable SortedMap<K, V> delegate(@ReceiverDependentMutable SynchronizedSortedMap<K, V> this) {
       return (SortedMap<K, V>) super.delegate();
     }
 
@@ -1419,7 +1428,8 @@ final class Synchronized {
     return new SynchronizedBiMap<>(bimap, mutex, null);
   }
 
-  static final class SynchronizedBiMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class SynchronizedBiMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedMap<K, V> implements BiMap<K, V>, Serializable {
     @CheckForNull private transient Set<V> valueSet;
     @RetainedWith @CheckForNull private transient BiMap<V, K> inverse;
@@ -1431,13 +1441,13 @@ final class Synchronized {
     }
 
     @Override
-    @PolyMutable BiMap<K, V> delegate(@PolyMutable SynchronizedBiMap<K, V> this) {
+    @ReceiverDependentMutable BiMap<K, V> delegate(@ReceiverDependentMutable SynchronizedBiMap<K, V> this) {
       return (BiMap<K, V>) super.delegate();
     }
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<V> values(@PolyMutable SynchronizedBiMap<K, V> this) {
+    public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable SynchronizedBiMap<K, V> this) {
       synchronized (mutex) {
         if (valueSet == null) {
           valueSet = set(delegate().values(), mutex);
@@ -1448,14 +1458,14 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public V forcePut(@ParametricNullness K key, @ParametricNullness V value) {
+    public V forcePut(@Mutable SynchronizedBiMap<K, V> this, @ParametricNullness K key, @ParametricNullness V value) {
       synchronized (mutex) {
         return delegate().forcePut(key, value);
       }
     }
 
     @Override
-    public @PolyMutable BiMap<V, K> inverse(@PolyMutable SynchronizedBiMap<K, V> this) {
+    public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable SynchronizedBiMap<K, V> this) {
       synchronized (mutex) {
         if (inverse == null) {
           inverse = new SynchronizedBiMap<>(delegate().inverse(), mutex, this);
@@ -1467,7 +1477,8 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static final class SynchronizedAsMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class SynchronizedAsMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedMap<K, Collection<V>> {
     @CheckForNull transient Set<Map.Entry<K, Collection<V>>> asMapEntrySet;
     @CheckForNull transient Collection<Collection<V>> asMapValues;
@@ -1487,7 +1498,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<Map.Entry<@KeyFor({"this"}) K, Collection<V>>> entrySet(@PolyMutable SynchronizedAsMap<K, V> this) {
+    public @ReceiverDependentMutable Set<Map.Entry<@KeyFor({"this"}) K, Collection<V>>> entrySet(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
       synchronized (mutex) {
         if (asMapEntrySet == null) {
           asMapEntrySet = new SynchronizedAsMapEntries<>(delegate().entrySet(), mutex);
@@ -1498,7 +1509,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Collection<Collection<V>> values(@PolyMutable SynchronizedAsMap<K, V> this) {
+    public @ReceiverDependentMutable Collection<Collection<V>> values(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
       synchronized (mutex) {
         if (asMapValues == null) {
           asMapValues = new SynchronizedAsMapValues<V>(delegate().values(), mutex);
@@ -1517,7 +1528,8 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  static final class SynchronizedAsMapValues<V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class SynchronizedAsMapValues<V extends @Nullable @Readonly Object>
       extends SynchronizedCollection<Collection<V>> {
     SynchronizedAsMapValues(@ReceiverDependentMutable Collection<Collection<V>> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
@@ -1568,14 +1580,15 @@ final class Synchronized {
 
   @GwtIncompatible // NavigableSet
   @VisibleForTesting
-  static final class SynchronizedNavigableSet<E extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class SynchronizedNavigableSet<E extends @Nullable @Readonly Object>
       extends SynchronizedSortedSet<E> implements NavigableSet<E> {
     SynchronizedNavigableSet(NavigableSet<E> delegate, @CheckForNull Object mutex) {
       super(delegate, mutex);
     }
 
     @Override
-    @PolyMutable NavigableSet<E> delegate(@PolyMutable SynchronizedNavigableSet<E> this) {
+    @ReceiverDependentMutable NavigableSet<E> delegate(@ReceiverDependentMutable SynchronizedNavigableSet<E> this) {
       return (NavigableSet<E>) super.delegate();
     }
 
@@ -1588,14 +1601,14 @@ final class Synchronized {
     }
 
     @Override
-    public Iterator<E> descendingIterator(@Readonly SynchronizedNavigableSet<E> this) {
+    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable SynchronizedNavigableSet<E> this) {
       return delegate().descendingIterator(); // manually synchronized
     }
 
     @CheckForNull transient NavigableSet<E> descendingSet;
 
     @Override
-    public @PolyMutable NavigableSet<E> descendingSet(@PolyMutable SynchronizedNavigableSet<E> this) {
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet(@ReceiverDependentMutable SynchronizedNavigableSet<E> this) {
       synchronized (mutex) {
         if (descendingSet == null) {
           NavigableSet<E> dS = Synchronized.navigableSet(delegate().descendingSet(), mutex);
@@ -1622,7 +1635,7 @@ final class Synchronized {
     }
 
     @Override
-    public SortedSet<E> headSet(E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> headSet(E toElement) {
       return headSet(toElement, false);
     }
 
@@ -1644,7 +1657,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public E pollFirst() {
+    public E pollFirst(@Mutable SynchronizedNavigableSet<E> this) {
       synchronized (mutex) {
         return delegate().pollFirst();
       }
@@ -1652,7 +1665,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public E pollLast() {
+    public E pollLast(@Mutable SynchronizedNavigableSet<E> this) {
       synchronized (mutex) {
         return delegate().pollLast();
       }
@@ -1668,7 +1681,7 @@ final class Synchronized {
     }
 
     @Override
-    public SortedSet<E> subSet(E fromElement, E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> subSet(E fromElement, E toElement) {
       return subSet(fromElement, true, toElement, false);
     }
 
@@ -1680,7 +1693,7 @@ final class Synchronized {
     }
 
     @Override
-    public SortedSet<E> tailSet(E fromElement) {
+    public @ReceiverDependentMutable SortedSet<E> tailSet(E fromElement) {
       return tailSet(fromElement, true);
     }
 
@@ -1712,8 +1725,9 @@ final class Synchronized {
 
   @GwtIncompatible // NavigableMap
   @VisibleForTesting
+  @ReceiverDependentMutable
   static final class SynchronizedNavigableMap<
-          K extends @Nullable @Immutable Object, V extends @Nullable Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedSortedMap<K, V> implements NavigableMap<K, V> {
 
     SynchronizedNavigableMap(@ReceiverDependentMutable NavigableMap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
@@ -1914,7 +1928,8 @@ final class Synchronized {
   }
 
   @GwtIncompatible // works but is needed only for NavigableMap
-  static final class SynchronizedEntry<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class SynchronizedEntry<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedObject implements Map.Entry<K, V> {
 
     SynchronizedEntry(Map.@ReceiverDependentMutable Entry<K, V> delegate, @CheckForNull @Readonly Object mutex) {
@@ -1969,7 +1984,8 @@ final class Synchronized {
     return (queue instanceof SynchronizedQueue) ? queue : new SynchronizedQueue<E>(queue, mutex);
   }
 
-  static class SynchronizedQueue<E extends @Nullable Object> extends SynchronizedCollection<E>
+  @ReceiverDependentMutable
+  static class SynchronizedQueue<E extends @Nullable @Readonly Object> extends SynchronizedCollection<E>
       implements Queue<E> {
 
     SynchronizedQueue(@ReceiverDependentMutable Queue<E> delegate, @CheckForNull @Readonly Object mutex) {
@@ -2025,7 +2041,8 @@ final class Synchronized {
     return new SynchronizedDeque<E>(deque, mutex);
   }
 
-  static final class SynchronizedDeque<E extends @Nullable Object> extends SynchronizedQueue<E>
+  @ReceiverDependentMutable
+  static final class SynchronizedDeque<E extends @Nullable @Readonly Object> extends SynchronizedQueue<E>
       implements Deque<E> {
 
     SynchronizedDeque(@ReceiverDependentMutable Deque<E> delegate, @CheckForNull @Readonly Object mutex) {
@@ -2154,7 +2171,7 @@ final class Synchronized {
     }
 
     @Override
-    public Iterator<E> descendingIterator() {
+    public @ReceiverDependentMutable Iterator<E> descendingIterator() {
       synchronized (mutex) {
         return delegate().descendingIterator();
       }
@@ -2168,8 +2185,9 @@ final class Synchronized {
     return new SynchronizedTable<>(table, mutex);
   }
 
+  @ReceiverDependentMutable
   static final class SynchronizedTable<
-          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable Object>
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends SynchronizedObject implements Table<R, C, V> {
 
     SynchronizedTable(@ReceiverDependentMutable Table<R, C, V> delegate, @CheckForNull @Readonly Object mutex) {
@@ -2178,7 +2196,7 @@ final class Synchronized {
 
     @SuppressWarnings("unchecked")
     @Override
-    @PolyMutable Table<R, C, V> delegate(@PolyMutable SynchronizedTable<R, C, V> this) {
+    @ReceiverDependentMutable Table<R, C, V> delegate(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       return (Table<R, C, V>) super.delegate();
     }
 
@@ -2241,7 +2259,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public V put(
+    public V put(@Mutable SynchronizedTable<R, C, V> this, 
         @ParametricNullness R rowKey,
         @ParametricNullness C columnKey,
         @ParametricNullness V value) {
@@ -2280,35 +2298,35 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyMutable Set<Cell<R, C, V>> cellSet(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return set(delegate().cellSet(), mutex);
       }
     }
 
     @Override
-    public @PolyMutable Set<R> rowKeySet(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @ReceiverDependentMutable Set<R> rowKeySet(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return set(delegate().rowKeySet(), mutex);
       }
     }
 
     @Override
-    public @PolyMutable Set<C> columnKeySet(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @ReceiverDependentMutable Set<C> columnKeySet(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return set(delegate().columnKeySet(), mutex);
       }
     }
 
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return collection(delegate().values(), mutex);
       }
     }
 
     @Override
-    public @PolyMutable Map<R, @PolyMutable Map<C, V>> rowMap(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return map(
             Maps.transformValues(
@@ -2324,7 +2342,7 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyMutable Map<C, @PolyMutable Map<R, V>> columnMap(@PolyMutable SynchronizedTable<R, C, V> this) {
+    public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> columnMap(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return map(
             Maps.transformValues(
