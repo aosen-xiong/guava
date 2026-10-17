@@ -32,6 +32,7 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An object that can traverse the nodes that are reachable from a specified (set of) start node(s)
@@ -98,7 +99,7 @@ public abstract class Traverser<N> {
    *
    * @param graph {@link SuccessorsFunction} representing a general graph that may have cycles.
    */
-  public static <N> Traverser<N> forGraph(SuccessorsFunction<N> graph) {
+  public static <N extends @Immutable Object> Traverser<N> forGraph(SuccessorsFunction<N> graph) {
     return new Traverser<N>(graph) {
       @Override
       Traversal<N> newTraversal() {
@@ -383,7 +384,7 @@ public abstract class Traverser<N> {
       this.successorFunction = successorFunction;
     }
 
-    static <N> Traversal<N> inGraph(SuccessorsFunction<N> graph) {
+    static <N extends @Immutable Object> Traversal<N> inGraph(SuccessorsFunction<N> graph) {
       Set<N> visited = new HashSet<>();
       return new Traversal<N>(graph) {
         @Override

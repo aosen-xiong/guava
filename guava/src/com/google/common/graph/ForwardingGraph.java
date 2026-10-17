@@ -18,6 +18,7 @@ package com.google.common.graph;
 
 import java.util.Set;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to allow {@link Graph} implementations to be backed by a {@link BaseGraph}. This is not
@@ -27,7 +28,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
  */
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-abstract class ForwardingGraph<N> extends AbstractGraph<N> {
+abstract class ForwardingGraph<N extends @Immutable Object> extends AbstractGraph<N> {
 
   abstract @ReceiverDependentMutable BaseGraph<N> delegate();
 

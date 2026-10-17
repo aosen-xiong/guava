@@ -27,6 +27,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * This class provides a skeletal implementation of {@link ValueGraph}. It is recommended to extend
@@ -43,7 +44,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
+public abstract class AbstractValueGraph<N extends @Immutable Object, V> extends AbstractBaseGraph<N>
     implements ValueGraph<N, V> {
 
   @Override

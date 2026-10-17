@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to allow {@link ValueGraph} implementations to be backed by a provided delegate. This is
@@ -30,7 +31,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
  */
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-abstract class ForwardingValueGraph<N, V> extends AbstractValueGraph<N, V> {
+abstract class ForwardingValueGraph<N extends @Immutable Object, V> extends AbstractValueGraph<N, V> {
 
   abstract @ReceiverDependentMutable ValueGraph<N, V> delegate();
 

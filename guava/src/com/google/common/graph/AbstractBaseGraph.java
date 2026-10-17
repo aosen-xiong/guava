@@ -37,6 +37,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * This class provides a skeletal implementation of {@link BaseGraph}.
@@ -49,7 +50,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
+abstract class AbstractBaseGraph<N extends @Immutable Object> implements BaseGraph<N> {
 
   /**
    * Returns the number of edges in this graph; used to calculate the size of {@link Graph#edges()}.

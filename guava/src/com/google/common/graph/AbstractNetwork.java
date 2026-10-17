@@ -43,6 +43,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * This class provides a skeletal implementation of {@link Network}. It is recommended to extend
@@ -59,7 +60,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public abstract class AbstractNetwork<N, E> implements Network<N, E> {
+public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Immutable Object> implements Network<N, E> {
   @Override
   public @ReceiverDependentMutable Graph<N> asGraph() {
     return new @ReceiverDependentMutable AbstractGraph<N>() {
@@ -331,7 +332,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
         () -> String.format(NODE_PAIR_REMOVED_FROM_GRAPH, nodeU, nodeV));
   }
 
-  private static <N, E> Map<E, EndpointPair<N>> edgeIncidentNodesMap(final @Readonly Network<N, E> network) {
+  private static <N, E extends @Immutable Object> Map<E, EndpointPair<N>> edgeIncidentNodesMap(final @Readonly Network<N, E> network) {
     return Maps.asMap(network.edges(), network::incidentNodes);
   }
 }

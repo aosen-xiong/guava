@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to facilitate the set returned by {@link Graph#edges()}.
@@ -43,7 +44,7 @@ abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>>
 
   @Readonly Iterator<N> successorIterator = ImmutableSet.<N>of().iterator();
 
-  static <N> EndpointPairIterator<N> of(BaseGraph<N> graph) {
+  static <N extends @Immutable Object> EndpointPairIterator<N> of(BaseGraph<N> graph) {
     return graph.isDirected() ? new Directed<N>(graph) : new Undirected<N>(graph);
   }
 
@@ -116,7 +117,7 @@ abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>>
    * Visited Nodes = {N1, N2, N3, N4}
    * </pre>
    */
-  private static final class Undirected<N> extends EndpointPairIterator<N> {
+  private static final class Undirected<N extends @Immutable Object> extends EndpointPairIterator<N> {
     // It's a little weird that we add `null` to this set, but it makes for slightly simpler code.
     @CheckForNull private Set<@Nullable N> visitedNodes;
 

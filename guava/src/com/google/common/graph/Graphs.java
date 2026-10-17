@@ -198,7 +198,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * @throws IllegalArgumentException if {@code node} is not present in {@code graph}
    * @since 33.1.0 (present with return type {@code Set} since 20.0)
    */
-  public static <N> ImmutableSet<N> reachableNodes(Graph<N> graph, N node) {
+  public static <N extends @Immutable Object> ImmutableSet<N> reachableNodes(Graph<N> graph, N node) {
     checkArgument(graph.nodes().contains(node), NODE_NOT_IN_GRAPH, node);
     return ImmutableSet.copyOf(Traverser.forGraph(graph).breadthFirst(node));
   }
@@ -211,7 +211,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * Returns a view of {@code graph} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code graph} will be reflected in the view.
    */
-  public static <N> Graph<N> transpose(Graph<N> graph) {
+  public static <N extends @Immutable Object> Graph<N> transpose(Graph<N> graph) {
     if (!graph.isDirected()) {
       return graph; // the transpose of an undirected graph is an identical graph
     }
@@ -227,7 +227,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * Returns a view of {@code graph} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code graph} will be reflected in the view.
    */
-  public static <N, V> ValueGraph<N, V> transpose(ValueGraph<N, V> graph) {
+  public static <N extends @Immutable Object, V> ValueGraph<N, V> transpose(ValueGraph<N, V> graph) {
     if (!graph.isDirected()) {
       return graph; // the transpose of an undirected graph is an identical graph
     }
@@ -243,7 +243,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * Returns a view of {@code network} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code network} will be reflected in the view.
    */
-  public static <N, E> Network<N, E> transpose(Network<N, E> network) {
+  public static <N extends @Immutable Object, E extends @Immutable Object> Network<N, E> transpose(Network<N, E> network) {
     if (!network.isDirected()) {
       return network; // the transpose of an undirected network is an identical network
     }
@@ -264,7 +264,7 @@ public final class Graphs extends GraphsBridgeMethods {
 
   // NOTE: this should work as long as the delegate graph's implementation of edges() (like that of
   // AbstractGraph) derives its behavior from calling successors().
-  private static class TransposedGraph<N> extends ForwardingGraph<N> {
+  private static class TransposedGraph<N extends @Immutable Object> extends ForwardingGraph<N> {
     private final Graph<N> graph;
 
     TransposedGraph(Graph<N> graph) {
@@ -321,7 +321,7 @@ public final class Graphs extends GraphsBridgeMethods {
 
   // NOTE: this should work as long as the delegate graph's implementation of edges() (like that of
   // AbstractValueGraph) derives its behavior from calling successors().
-  private static class TransposedValueGraph<N, V> extends ForwardingValueGraph<N, V> {
+  private static class TransposedValueGraph<N extends @Immutable Object, V> extends ForwardingValueGraph<N, V> {
     private final ValueGraph<N, V> graph;
 
     TransposedValueGraph(ValueGraph<N, V> graph) {
@@ -386,7 +386,7 @@ public final class Graphs extends GraphsBridgeMethods {
     }
   }
 
-  private static class TransposedNetwork<N, E> extends ForwardingNetwork<N, E> {
+  private static class TransposedNetwork<N extends @Immutable Object, E extends @Immutable Object> extends ForwardingNetwork<N, E> {
     private final Network<N, E> network;
 
     TransposedNetwork(Network<N, E> network) {

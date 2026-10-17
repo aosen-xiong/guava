@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to allow {@link Network} implementations to be backed by a provided delegate. This is not
@@ -30,7 +31,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
  */
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-abstract class ForwardingNetwork<N, E> extends AbstractNetwork<N, E> {
+abstract class ForwardingNetwork<N extends @Immutable Object, E extends @Immutable Object> extends AbstractNetwork<N, E> {
 
   abstract @ReceiverDependentMutable Network<N, E> delegate();
 
