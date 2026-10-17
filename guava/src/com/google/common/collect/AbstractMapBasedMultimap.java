@@ -952,7 +952,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @Override
   @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
-    return new @PolyMutable KeySet(map);
+    return new @ReceiverDependentMutable KeySet(map);
   }
 
   final @PolyMutable Set<K> createMaybeNavigableKeySet(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
@@ -1560,12 +1560,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     @Override
     public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> subMap(
         @ParametricNullness K fromKey, @ParametricNullness K toKey) {
-      return new @PolyMutable SortedAsMap(sortedMap().subMap(fromKey, toKey));
+      return new @ReceiverDependentMutable SortedAsMap(sortedMap().subMap(fromKey, toKey));
     }
 
     @Override
     public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> tailMap(@ParametricNullness K fromKey) {
-      return new @PolyMutable SortedAsMap(sortedMap().tailMap(fromKey));
+      return new @ReceiverDependentMutable SortedAsMap(sortedMap().tailMap(fromKey));
     }
 
     @CheckForNull SortedSet<K> sortedKeySet;

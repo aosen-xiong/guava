@@ -179,7 +179,7 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
-    return new @PolyMutable DescendingMap();
+    return new @ReceiverDependentMutable DescendingMap();
   }
 
   @ReceiverDependentMutable

@@ -1191,18 +1191,18 @@ public final class Sets {
 
     @Override
     public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
-      return new @PolyMutable FilteredSortedSet<E>(
+      return new @ReceiverDependentMutable FilteredSortedSet<E>(
           ((@PolyMutable SortedSet<E>) unfiltered).subSet(fromElement, toElement), predicate);
     }
 
     @Override
     public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E toElement) {
-      return new @PolyMutable FilteredSortedSet<E>(((@PolyMutable SortedSet<E>) unfiltered).headSet(toElement), predicate);
+      return new @ReceiverDependentMutable FilteredSortedSet<E>(((@ReceiverDependentMutable SortedSet<E>) unfiltered).headSet(toElement), predicate);
     }
 
     @Override
     public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement) {
-      return new @PolyMutable FilteredSortedSet<E>(((@PolyMutable SortedSet<E>) unfiltered).tailSet(fromElement), predicate);
+      return new @ReceiverDependentMutable FilteredSortedSet<E>(((@ReceiverDependentMutable SortedSet<E>) unfiltered).tailSet(fromElement), predicate);
     }
 
     @Override

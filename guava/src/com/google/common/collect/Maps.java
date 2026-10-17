@@ -2306,7 +2306,7 @@ public final class Maps {
 
     @Override
     public @ReceiverDependentMutable Collection<V2> values(@ReceiverDependentMutable TransformedEntriesMap<K, V1, V2> this) {
-      return new @PolyMutable Values<>(this);
+      return new @ReceiverDependentMutable Values<>(this);
     }
   }
 
@@ -3340,17 +3340,17 @@ public final class Maps {
 
     @Override
     public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K toKey) {
-      return new @PolyMutable FilteredEntrySortedMap<>(sortedMap().headMap(toKey), predicate);
+      return new @ReceiverDependentMutable FilteredEntrySortedMap<>(sortedMap().headMap(toKey), predicate);
     }
 
     @Override
     public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
-      return new @PolyMutable FilteredEntrySortedMap<>(sortedMap().subMap(fromKey, toKey), predicate);
+      return new @ReceiverDependentMutable FilteredEntrySortedMap<>(sortedMap().subMap(fromKey, toKey), predicate);
     }
 
     @Override
     public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K fromKey) {
-      return new @PolyMutable FilteredEntrySortedMap<>(sortedMap().tailMap(fromKey), predicate);
+      return new @ReceiverDependentMutable FilteredEntrySortedMap<>(sortedMap().tailMap(fromKey), predicate);
     }
   }
 
@@ -3366,7 +3366,7 @@ public final class Maps {
      */
 
     private final NavigableMap<K, V> unfiltered;
-    private final Predicate<? super @ReceiverDependentMutable Entry<K, V>> entryPredicate;
+    private final @Readonly Predicate<? super @ReceiverDependentMutable Entry<K, V>> entryPredicate;
     private final Map<K, V> filteredDelegate;
 
     FilteredEntryNavigableMap(
@@ -3399,7 +3399,7 @@ public final class Maps {
 
     @Override
     public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
-      return new @PolyMutable FilteredMapValues<>(this, unfiltered, entryPredicate);
+      return new @ReceiverDependentMutable FilteredMapValues<>(this, unfiltered, entryPredicate);
     }
 
     @Override
@@ -4175,17 +4175,17 @@ public final class Maps {
 
     @Override
     public @ReceiverDependentMutable SortedSet<K> subSet(@ReceiverDependentMutable SortedKeySet<K, V> this, @ParametricNullness K fromElement, @ParametricNullness K toElement) {
-      return new @PolyMutable SortedKeySet<>(map().subMap(fromElement, toElement));
+      return new @ReceiverDependentMutable SortedKeySet<>(map().subMap(fromElement, toElement));
     }
 
     @Override
     public @ReceiverDependentMutable SortedSet<K> headSet(@ReceiverDependentMutable SortedKeySet<K, V> this, @ParametricNullness K toElement) {
-      return new @PolyMutable SortedKeySet<>(map().headMap(toElement));
+      return new @ReceiverDependentMutable SortedKeySet<>(map().headMap(toElement));
     }
 
     @Override
     public @ReceiverDependentMutable SortedSet<K> tailSet(@ReceiverDependentMutable SortedKeySet<K, V> this, @ParametricNullness K fromElement) {
-      return new @PolyMutable SortedKeySet<>(map().tailMap(fromElement));
+      return new @ReceiverDependentMutable SortedKeySet<>(map().tailMap(fromElement));
     }
 
     @Override
@@ -4666,7 +4666,7 @@ public final class Maps {
 
     @Override
     public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable DescendingMap<K, V> this) {
-      return new @PolyMutable Values<>(this);
+      return new @ReceiverDependentMutable Values<>(this);
     }
 
     @Override
