@@ -343,7 +343,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   @ReceiverDependentMutable
   class WrappedCollection extends AbstractCollection<V> {
     @ParametricNullness final K key;
-    Collection<V> delegate;
+    @Assignable Collection<V> delegate;
     @CheckForNull final WrappedCollection ancestor;
     @CheckForNull final Collection<V> ancestorDelegate;
 
@@ -364,7 +364,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
      * <p>For a subcollection, refresh its ancestor and validate that the ancestor delegate hasn't
      * changed.
      */
-    void refreshIfEmpty(@Mutable WrappedCollection this) {
+    void refreshIfEmpty() {
       if (ancestor != null) {
         ancestor.refreshIfEmpty();
         if (ancestor.getDelegate() != ancestorDelegate) {
@@ -505,7 +505,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean add(@ParametricNullness V value) {
+    public boolean add(@Mutable WrappedCollection this, @ParametricNullness V value) {
       refreshIfEmpty();
       boolean wasEmpty = delegate.isEmpty();
       boolean changed = delegate.add(value);
@@ -526,7 +526,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     // The following methods are provided for better performance.
 
     @Override
-    public boolean addAll(@Readonly Collection<? extends V> collection) {
+    public boolean addAll(@Mutable WrappedCollection this, @Readonly Collection<? extends V> collection) {
       if (collection.isEmpty()) {
         return false;
       }
@@ -555,7 +555,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable WrappedCollection this) {
       int oldSize = size(); // calls refreshIfEmpty
       if (oldSize == 0) {
         return;
@@ -566,7 +566,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean remove(@Mutable  @CheckForNull @UnknownSignedness @Readonly Object o) {
+    public boolean remove(@Mutable WrappedCollection this, @Mutable  @CheckForNull @UnknownSignedness @Readonly Object o) {
       refreshIfEmpty();
       boolean changed = delegate.remove(o);
       if (changed) {
@@ -577,7 +577,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean removeAll(@Readonly Collection<?> c) {
+    public boolean removeAll(@Mutable WrappedCollection this, @Readonly Collection<?> c) {
       if (c.isEmpty()) {
         return false;
       }
@@ -592,7 +592,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean retainAll(@Readonly Collection<?> c) {
+    public boolean retainAll(@Mutable WrappedCollection this, @Readonly Collection<?> c) {
       checkNotNull(c);
       int oldSize = size(); // calls refreshIfEmpty
       boolean changed = delegate.retainAll(c);
@@ -803,7 +803,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean addAll(int index, @Readonly Collection<? extends V> c) {
+    public boolean addAll(@Mutable WrappedList this, int index, @Readonly Collection<? extends V> c) {
       if (c.isEmpty()) {
         return false;
       }
@@ -834,7 +834,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public void add(int index, @ParametricNullness V element) {
+    public void add(@Mutable WrappedList this, int index, @ParametricNullness V element) {
       refreshIfEmpty();
       boolean wasEmpty = getDelegate().isEmpty();
       getListDelegate().add(index, element);
@@ -846,7 +846,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     @ParametricNullness
-    public V remove(int index) {
+    public V remove(@Mutable WrappedList this, int index) {
       refreshIfEmpty();
       V value = getListDelegate().remove(index);
       totalSize--;

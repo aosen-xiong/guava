@@ -140,7 +140,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   }
 
   @Override
-  public void putCoalescing(Range<K> range, V value) {
+  public void putCoalescing(@Mutable TreeRangeMap<K, V> this, Range<K> range, V value) {
     // don't short-circuit if the range is empty - it may be between two ranges we can coalesce.
     if (entriesByLowerBound.isEmpty()) {
       put(range, value);
@@ -177,7 +177,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   }
 
   @Override
-  public void putAll(RangeMap<K, ? extends V> rangeMap) {
+  public void putAll(@Mutable TreeRangeMap<K, V> this, RangeMap<K, ? extends V> rangeMap) {
     for (Entry<Range<K>, ? extends V> entry : rangeMap.asMapOfRanges().entrySet()) {
       put(entry.getKey(), entry.getValue());
     }
@@ -254,7 +254,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     entriesByLowerBound.subMap(rangeToRemove.lowerBound, rangeToRemove.upperBound).clear();
   }
 
-  private void split(Cut<K> cut) {
+  private void split(@Mutable TreeRangeMap<K, V> this, Cut<K> cut) {
     /*
      * The comments for this method will use | to indicate the cut point and ( ) to indicate the
      * bounds of ranges in the range map.

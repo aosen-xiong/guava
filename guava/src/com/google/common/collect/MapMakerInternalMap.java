@@ -1375,13 +1375,13 @@ class MapMakerInternalMap<
 
     /** Unsafely removes the given entry from this segment's hash table. */
     @CanIgnoreReturnValue
-    boolean removeTableEntryForTesting(InternalEntry<K, V, ?> entry) {
+    boolean removeTableEntryForTesting(@Mutable Segment<K, V, E, S> this, InternalEntry<K, V, ?> entry) {
       return removeEntryForTesting(castForTesting(entry));
     }
 
     /** Unsafely removes the given entry from the given chain in this segment's hash table. */
     @CheckForNull
-    E removeFromChainForTesting(InternalEntry<K, V, ?> first, InternalEntry<K, V, ?> entry) {
+    E removeFromChainForTesting(@Mutable Segment<K, V, E, S> this, InternalEntry<K, V, ?> first, InternalEntry<K, V, ?> entry) {
       return removeFromChain(castForTesting(first), castForTesting(entry));
     }
 
@@ -1946,7 +1946,7 @@ class MapMakerInternalMap<
 
     /** Clears a value that has not yet been set, and thus does not require count to be modified. */
     @CanIgnoreReturnValue
-    boolean clearValueForTesting(
+    boolean clearValueForTesting(@Mutable Segment<K, V, E, S> this, 
         K key,
         int hash,
         WeakValueReference<K, V, ? extends InternalEntry<K, V, ?>> valueReference) {

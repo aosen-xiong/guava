@@ -372,7 +372,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   /** Resizes the entries storage if necessary. */
-  private void resizeMeMaybe(int newSize) {
+  private void resizeMeMaybe(@Mutable CompactHashSet<E> this, int newSize) {
     int entriesSize = requireEntries().length;
     if (newSize > entriesSize) {
       // 1.5x but round up to nearest odd (this is optimal for memory consumption on Android)
@@ -719,7 +719,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   @SuppressWarnings("unchecked")
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable CompactHashSet<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int elementCount = stream.readInt();
     if (elementCount < 0) {

@@ -189,7 +189,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void insertEntry(
+  void insertEntry(@Mutable CompactLinkedHashMap<K, V> this, 
       int entryIndex, @ParametricNullness K key, @ParametricNullness V value, int hash, int mask) {
     super.insertEntry(entryIndex, key, value, hash, mask);
     setSucceeds(lastEntry, entryIndex);

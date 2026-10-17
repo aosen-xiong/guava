@@ -821,7 +821,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable HashBiMap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int size = Serialization.readCount(stream);
     init(16); // resist hostile attempts to allocate gratuitous heap

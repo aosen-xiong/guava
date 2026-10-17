@@ -424,7 +424,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   /** Resizes the entries storage if necessary. */
-  private void resizeMeMaybe(int newSize) {
+  private void resizeMeMaybe(@Mutable CompactHashMap<K, V> this, int newSize) {
     int entriesSize = requireEntries().length;
     if (newSize > entriesSize) {
       // 1.5x but round up to nearest odd (this is optimal for memory consumption on Android)
