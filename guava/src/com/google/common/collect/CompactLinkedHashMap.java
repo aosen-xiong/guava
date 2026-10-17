@@ -123,14 +123,14 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void init(int expectedSize) {
+  void init(@Mutable CompactLinkedHashMap<K, V> this, int expectedSize) {
     super.init(expectedSize);
     this.firstEntry = ENDPOINT;
     this.lastEntry = ENDPOINT;
   }
 
   @Override
-  int allocArrays() {
+  int allocArrays(@Mutable CompactLinkedHashMap<K, V> this) {
     int expectedSize = super.allocArrays();
     this.links = new long[expectedSize];
     return expectedSize;
@@ -143,7 +143,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
 
   @Override
   @CanIgnoreReturnValue
-  Map<K, V> convertToHashFloodingResistantImplementation() {
+  Map<K, V> convertToHashFloodingResistantImplementation(@Mutable CompactLinkedHashMap<K, V> this) {
     Map<K, V> result = super.convertToHashFloodingResistantImplementation();
     links = null;
     return result;
@@ -174,7 +174,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
     setLink(entry, (link(entry) & ~predMask) | ((long) (pred + 1) << 32));
   }
 
-  private void setSucceeds(int pred, int succ) {
+  private void setSucceeds(@Mutable CompactLinkedHashMap<K, V> this, int pred, int succ) {
     if (pred == ENDPOINT) {
       firstEntry = succ;
     } else {
@@ -222,7 +222,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactLinkedHashMap<K, V> this, int newCapacity) {
     super.resizeEntries(newCapacity);
     links = Arrays.copyOf(requireLinks(), newCapacity);
   }
@@ -298,7 +298,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactLinkedHashMap<K, V> this) {
     if (needsAllocArrays()) {
       return;
     }

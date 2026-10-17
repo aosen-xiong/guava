@@ -278,7 +278,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
   /** Handle lazy allocation of arrays. */
   @CanIgnoreReturnValue
-  int allocArrays() {
+  int allocArrays(@Mutable CompactHashMap<K, V> this) {
     Preconditions.checkState(needsAllocArrays(), "Arrays already allocated");
 
     int expectedSize = metadata;
@@ -309,7 +309,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
   @VisibleForTesting
   @CanIgnoreReturnValue
-  Map<K, V> convertToHashFloodingResistantImplementation() {
+  Map<K, V> convertToHashFloodingResistantImplementation(@Mutable CompactHashMap<K, V> this) {
     Map<K, V> newDelegate = createHashFloodingResistantDelegate(hashTableMask() + 1);
     for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
       newDelegate.put(key(i), value(i));
@@ -440,14 +440,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * Resizes the internal entries array to the specified capacity, which may be greater or less than
    * the current capacity.
    */
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactHashMap<K, V> this, int newCapacity) {
     this.entries = Arrays.copyOf(requireEntries(), newCapacity);
     this.keys = Arrays.copyOf(requireKeys(), newCapacity);
     this.values = Arrays.copyOf(requireValues(), newCapacity);
   }
 
   @CanIgnoreReturnValue
-  private int resizeTable(int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
+  private int resizeTable(@Mutable CompactHashMap<K, V> this, int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
     Object newTable = CompactHashing.createTable(newCapacity);
     int newMask = newCapacity - 1;
 
@@ -1086,7 +1086,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * Ensures that this {@code CompactHashMap} has the smallest representation in memory, given its
    * current size.
    */
-  public void trimToSize() {
+  public void trimToSize(@Mutable CompactHashMap<K, V> this) {
     if (needsAllocArrays()) {
       return;
     }
@@ -1109,7 +1109,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactHashMap<K, V> this) {
     if (needsAllocArrays()) {
       return;
     }

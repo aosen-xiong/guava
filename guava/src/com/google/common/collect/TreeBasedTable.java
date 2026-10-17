@@ -38,6 +38,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Implementation of {@code Table} whose row keys and column keys are ordered by their natural
@@ -257,7 +258,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
       return ((SortedMap<C, V>) backingRowMap).lastKey();
     }
 
-    @CheckForNull transient SortedMap<C, V> wholeRow;
+    @CheckForNull transient @Assignable SortedMap<C, V> wholeRow;
 
     // If the row was previously empty, we check if there's a new row here every time we're queried.
     void updateWholeRowField() {
@@ -284,7 +285,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     }
 
     @Override
-    void maintainEmptyInvariant() {
+    void maintainEmptyInvariant(@Mutable TreeRow this) {
       updateWholeRowField();
       if (wholeRow != null && wholeRow.isEmpty()) {
         backingMap.remove(rowKey);

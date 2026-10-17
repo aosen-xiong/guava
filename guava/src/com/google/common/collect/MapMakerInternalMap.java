@@ -2680,7 +2680,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable HashIterator<T> this) {
       checkRemove(lastReturned != null);
       MapMakerInternalMap.this.remove(lastReturned.getKey());
       lastReturned = null;
@@ -2746,7 +2746,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public V setValue(V newValue) {
+    public V setValue(@Mutable WriteThroughEntry this, V newValue) {
       V oldValue = put(key, newValue);
       value = newValue; // only if put succeeds
       return oldValue;

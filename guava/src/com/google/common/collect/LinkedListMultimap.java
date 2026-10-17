@@ -482,7 +482,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable DistinctKeyIterator this) {
       checkForConcurrentModification();
       checkState(current != null, "no calls to next() since the last call to remove()");
       removeAllNodes(current.key);

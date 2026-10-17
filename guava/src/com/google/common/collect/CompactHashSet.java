@@ -225,7 +225,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   /** Pseudoconstructor for serialization support. */
-  void init(int expectedSize) {
+  void init(@Mutable CompactHashSet<E> this, int expectedSize) {
     Preconditions.checkArgument(expectedSize >= 0, "Expected size must be >= 0");
 
     // Save expectedSize for use in allocArrays()
@@ -240,7 +240,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   /** Handle lazy allocation of arrays. */
   @CanIgnoreReturnValue
-  int allocArrays() {
+  int allocArrays(@Mutable CompactHashSet<E> this) {
     Preconditions.checkState(needsAllocArrays(), "Arrays already allocated");
 
     int expectedSize = metadata;
@@ -270,7 +270,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   @VisibleForTesting
   @CanIgnoreReturnValue
-  Set<E> convertToHashFloodingResistantImplementation() {
+  Set<E> convertToHashFloodingResistantImplementation(@Mutable CompactHashSet<E> this) {
     Set<E> newDelegate = createHashFloodingResistantDelegate(hashTableMask() + 1);
     for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
       newDelegate.add(element(i));
@@ -288,7 +288,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   /** Stores the hash table mask as the number of bits needed to represent an index. */
-  private void setHashTableMask(int mask) {
+  private void setHashTableMask(@Mutable CompactHashSet<E> this, int mask) {
     int hashTableBits = Integer.SIZE - Integer.numberOfLeadingZeros(mask);
     metadata =
         CompactHashing.maskCombine(metadata, hashTableBits, CompactHashing.HASH_TABLE_BITS_MASK);
@@ -299,13 +299,13 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
     return (1 << (metadata & CompactHashing.HASH_TABLE_BITS_MASK)) - 1;
   }
 
-  void incrementModCount() {
+  void incrementModCount(@Mutable CompactHashSet<E> this) {
     metadata += CompactHashing.MODIFICATION_COUNT_INCREMENT;
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean add(@ParametricNullness E object) {
+  public boolean add(@Mutable CompactHashSet<E> this, @ParametricNullness E object) {
     if (needsAllocArrays()) {
       allocArrays();
     }
@@ -388,13 +388,13 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    * Resizes the internal entries array to the specified capacity, which may be greater or less than
    * the current capacity.
    */
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactHashSet<E> this, int newCapacity) {
     this.entries = Arrays.copyOf(requireEntries(), newCapacity);
     this.elements = Arrays.copyOf(requireElements(), newCapacity);
   }
 
   @CanIgnoreReturnValue
-  private int resizeTable(int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
+  private int resizeTable(@Mutable CompactHashSet<E> this, int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
     Object newTable = CompactHashing.createTable(newCapacity);
     int newMask = newCapacity - 1;
 
@@ -460,7 +460,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
+  public boolean remove(@Mutable CompactHashSet<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     if (needsAllocArrays()) {
       return false;
     }
@@ -665,7 +665,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    * Ensures that this {@code CompactHashSet} has the smallest representation in memory, given its
    * current size.
    */
-  public void trimToSize() {
+  public void trimToSize(@Mutable CompactHashSet<E> this) {
     if (needsAllocArrays()) {
       return;
     }
@@ -688,7 +688,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactHashSet<E> this) {
     if (needsAllocArrays()) {
       return;
     }

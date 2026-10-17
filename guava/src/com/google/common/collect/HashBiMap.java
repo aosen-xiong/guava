@@ -152,7 +152,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     init(expectedSize);
   }
 
-  private void init(int expectedSize) {
+  private void init(@Mutable HashBiMap<K, V> this, int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     int tableSize = Hashing.closedTableSize(expectedSize, LOAD_FACTOR);
     this.hashTableKToV = createTable(tableSize);

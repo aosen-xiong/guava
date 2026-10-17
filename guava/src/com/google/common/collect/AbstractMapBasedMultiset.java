@@ -79,7 +79,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   /** Used during deserialization only. The backing map must be empty. */
-  void setBackingMap(@ReceiverDependentMutable Map<E, Count> backingMap) {
+  void setBackingMap(@Mutable AbstractMapBasedMultiset<E> this, @ReceiverDependentMutable Map<E, Count> backingMap) {
     this.backingMap = backingMap;
   }
 
@@ -244,7 +244,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable MapBasedMultisetIterator this) {
       checkRemove(canRemove);
       /*
        * requireNonNull is safe because canRemove is set to true only after we initialize

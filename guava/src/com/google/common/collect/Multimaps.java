@@ -299,7 +299,7 @@ public final class Multimaps {
     @GwtIncompatible // java.io.ObjectInputStream
     @J2ktIncompatible
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable CustomMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
       stream.defaultReadObject();
       factory = (Supplier<? extends Collection<V>>) requireNonNull(stream.readObject());
       Map<K, Collection<V>> map = (Map<K, Collection<V>>) requireNonNull(stream.readObject());
@@ -386,7 +386,7 @@ public final class Multimaps {
     @GwtIncompatible // java.io.ObjectInputStream
     @J2ktIncompatible
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable CustomListMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
       stream.defaultReadObject();
       factory = (Supplier<? extends List<V>>) requireNonNull(stream.readObject());
       Map<K, Collection<V>> map = (Map<K, Collection<V>>) requireNonNull(stream.readObject());
@@ -495,7 +495,7 @@ public final class Multimaps {
     @GwtIncompatible // java.io.ObjectInputStream
     @J2ktIncompatible
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable CustomSetMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
       stream.defaultReadObject();
       factory = (Supplier<? extends Set<V>>) requireNonNull(stream.readObject());
       Map<K, Collection<V>> map = (Map<K, Collection<V>>) requireNonNull(stream.readObject());
@@ -590,7 +590,7 @@ public final class Multimaps {
     @GwtIncompatible // java.io.ObjectInputStream
     @J2ktIncompatible
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable CustomSortedSetMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
       stream.defaultReadObject();
       factory = (Supplier<? extends SortedSet<V>>) requireNonNull(stream.readObject());
       valueComparator = factory.get().comparator();

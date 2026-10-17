@@ -106,7 +106,7 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable LinkedHashMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int distinctElements = Serialization.readCount(stream);
     setBackingMap(new LinkedHashMap<E, Count>());

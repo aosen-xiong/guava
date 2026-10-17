@@ -335,7 +335,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       this.rowKey = checkNotNull(rowKey);
     }
 
-    @CheckForNull Map<C, V> backingRowMap;
+    @CheckForNull @Assignable Map<C, V> backingRowMap;
 
     final void updateBackingRowMapField() {
       if (backingRowMap == null || (backingRowMap.isEmpty() && backingMap.containsKey(rowKey))) {
@@ -349,7 +349,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     // Call this every time we perform a removal.
-    void maintainEmptyInvariant() {
+    void maintainEmptyInvariant(@Mutable Row this) {
       updateBackingRowMapField();
       if (backingRowMap != null && backingRowMap.isEmpty()) {
         backingMap.remove(rowKey);
@@ -383,7 +383,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @Override
     @CheckForNull
-    public V remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public V remove(@Mutable Row this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       updateBackingRowMapField();
       if (backingRowMap == null) {
         return null;
@@ -394,7 +394,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable Row this) {
       updateBackingRowMapField();
       if (backingRowMap != null) {
         backingRowMap.clear();

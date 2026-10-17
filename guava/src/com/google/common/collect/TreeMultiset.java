@@ -671,7 +671,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       }
     }
 
-    private AvlNode<E> addRightChild(@ParametricNullness E e, int count) {
+    private AvlNode<E> addRightChild(@Mutable AvlNode<E> this, @ParametricNullness E e, int count) {
       right = new AvlNode<E>(e, count);
       successor(this, right, succ());
       height = Math.max(2, height);
@@ -680,7 +680,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return this;
     }
 
-    private AvlNode<E> addLeftChild(@ParametricNullness E e, int count) {
+    private AvlNode<E> addLeftChild(@Mutable AvlNode<E> this, @ParametricNullness E e, int count) {
       left = new AvlNode<E>(e, count);
       successor(pred(), left, this);
       height = Math.max(2, height);
@@ -689,7 +689,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return this;
     }
 
-    AvlNode<E> add(
+    AvlNode<E> add(@Mutable AvlNode<E> this, 
         @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       /*
        * It speeds things up considerably to unconditionally add count to totalCount here,
@@ -736,7 +736,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    @ReceiverDependentMutable AvlNode<E> remove(
+    @ReceiverDependentMutable AvlNode<E> remove(@Mutable AvlNode<E> this, 
         @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
@@ -789,7 +789,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    @ReceiverDependentMutable AvlNode<E> setCount(
+    @ReceiverDependentMutable AvlNode<E> setCount(@Mutable AvlNode<E> this, 
         @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
@@ -839,7 +839,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    @ReceiverDependentMutable AvlNode<E> setCount(
+    @ReceiverDependentMutable AvlNode<E> setCount(@Mutable AvlNode<E> this, 
         @Readonly Comparator<? super E> comparator,
         @ParametricNullness E e,
         int expectedCount,
@@ -903,7 +903,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    private AvlNode<E> deleteMe() {
+    private AvlNode<E> deleteMe(@Mutable AvlNode<E> this) {
       int oldElemCount = this.elemCount;
       this.elemCount = 0;
       successor(pred(), succ());
@@ -931,7 +931,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the minimum node from this subtree to be reused elsewhere
     @CheckForNull
-    private @ReceiverDependentMutable AvlNode<E> removeMin(AvlNode<E> node) {
+    private @ReceiverDependentMutable AvlNode<E> removeMin(@Mutable AvlNode<E> this, AvlNode<E> node) {
       if (left == null) {
         return right;
       } else {
@@ -944,7 +944,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the maximum node from this subtree to be reused elsewhere
     @CheckForNull
-    private @ReceiverDependentMutable AvlNode<E> removeMax(AvlNode<E> node) {
+    private @ReceiverDependentMutable AvlNode<E> removeMax(@Mutable AvlNode<E> this, AvlNode<E> node) {
       if (right == null) {
         return left;
       } else {
@@ -970,7 +970,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       recomputeHeight();
     }
 
-    private AvlNode<E> rebalance() {
+    private AvlNode<E> rebalance(@Mutable AvlNode<E> this) {
       switch (balanceFactor()) {
         case -2:
           // requireNonNull is safe because right must exist in order to get a negative factor.
@@ -996,7 +996,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return height(left) - height(right);
     }
 
-    private AvlNode<E> rotateLeft() {
+    private AvlNode<E> rotateLeft(@Mutable AvlNode<E> this) {
       checkState(right != null);
       AvlNode<E> newTop = right;
       this.right = newTop.left;
@@ -1008,7 +1008,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return newTop;
     }
 
-    private AvlNode<E> rotateRight() {
+    private AvlNode<E> rotateRight(@Mutable AvlNode<E> this) {
       checkState(left != null);
       AvlNode<E> newTop = left;
       this.left = newTop.right;

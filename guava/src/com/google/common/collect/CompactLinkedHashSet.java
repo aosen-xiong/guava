@@ -32,6 +32,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * CompactLinkedHashSet is an implementation of a Set, which a predictable iteration order that
@@ -140,14 +141,14 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  void init(int expectedSize) {
+  void init(@Mutable CompactLinkedHashSet<E> this, int expectedSize) {
     super.init(expectedSize);
     this.firstEntry = ENDPOINT;
     this.lastEntry = ENDPOINT;
   }
 
   @Override
-  int allocArrays() {
+  int allocArrays(@Mutable CompactLinkedHashSet<E> this) {
     int expectedSize = super.allocArrays();
     this.predecessor = new int[expectedSize];
     this.successor = new int[expectedSize];
@@ -156,7 +157,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
 
   @Override
   @CanIgnoreReturnValue
-  Set<E> convertToHashFloodingResistantImplementation() {
+  Set<E> convertToHashFloodingResistantImplementation(@Mutable CompactLinkedHashSet<E> this) {
     Set<E> result = super.convertToHashFloodingResistantImplementation();
     this.predecessor = null;
     this.successor = null;
@@ -186,7 +187,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
     requirePredecessors()[entry] = pred + 1;
   }
 
-  private void setSucceeds(int pred, int succ) {
+  private void setSucceeds(@Mutable CompactLinkedHashSet<E> this, int pred, int succ) {
     if (pred == ENDPOINT) {
       firstEntry = succ;
     } else {
@@ -222,7 +223,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactLinkedHashSet<E> this, int newCapacity) {
     super.resizeEntries(newCapacity);
     predecessor = Arrays.copyOf(requirePredecessors(), newCapacity);
     successor = Arrays.copyOf(requireSuccessors(), newCapacity);
@@ -255,7 +256,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactLinkedHashSet<E> this) {
     if (needsAllocArrays()) {
       return;
     }
