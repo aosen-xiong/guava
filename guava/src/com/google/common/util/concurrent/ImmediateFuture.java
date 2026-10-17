@@ -24,12 +24,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** Implementation of {@link Futures#immediateFuture}. */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 // TODO(cpovirk): Make this final (but that may break Mockito spy calls).
-class ImmediateFuture<V extends @Nullable Object> implements ListenableFuture<V> {
+class ImmediateFuture<V extends @Nullable @Readonly Object> implements ListenableFuture<V> {
   static final ListenableFuture<?> NULL = new ImmediateFuture<@Nullable Object>(null);
 
   private static final LazyLogger log = new LazyLogger(ImmediateFuture.class);
@@ -96,13 +97,13 @@ class ImmediateFuture<V extends @Nullable Object> implements ListenableFuture<V>
     return super.toString() + "[status=SUCCESS, result=[" + value + "]]";
   }
 
-  static final class ImmediateFailedFuture<V extends @Nullable Object> extends TrustedFuture<V> {
+  static final class ImmediateFailedFuture<V extends @Nullable @Readonly Object> extends TrustedFuture<V> {
     ImmediateFailedFuture(Throwable thrown) {
       setException(thrown);
     }
   }
 
-  static final class ImmediateCancelledFuture<V extends @Nullable Object> extends TrustedFuture<V> {
+  static final class ImmediateCancelledFuture<V extends @Nullable @Readonly Object> extends TrustedFuture<V> {
     @CheckForNull
     static final ImmediateCancelledFuture<Object> INSTANCE =
         AbstractFuture.GENERATE_CANCELLATION_CAUSES ? null : new ImmediateCancelledFuture<>();

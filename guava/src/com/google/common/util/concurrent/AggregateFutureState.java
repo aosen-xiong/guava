@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.logging.Level;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A helper which does some thread-safe operations for aggregate futures, which must be implemented
@@ -40,7 +41,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible(emulated = true)
 @ReflectionSupport(value = ReflectionSupport.Level.FULL)
 @ElementTypesAreNonnullByDefault
-abstract class AggregateFutureState<OutputT extends @Nullable Object>
+abstract class AggregateFutureState<OutputT extends @Nullable @Readonly Object>
     extends AbstractFuture.TrustedFuture<OutputT> {
   // Lazily initialized the first time we see an exception; not released until all the input futures
   // have completed and we have processed them all.

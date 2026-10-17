@@ -31,15 +31,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** Implementations of {@code Futures.catching*}. */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @SuppressWarnings("nullness") // TODO(b/147136275): Remove once our checker understands & and |.
 abstract class AbstractCatchingFuture<
-        V extends @Nullable Object, X extends Throwable, F, T extends @Nullable Object>
+        V extends @Nullable @Readonly Object, X extends Throwable, F, T extends @Nullable @Readonly Object>
     extends FluentFuture.TrustedFuture<V> implements Runnable {
-  static <V extends @Nullable Object, X extends Throwable> ListenableFuture<V> create(
+  static <V extends @Nullable @Readonly Object, X extends Throwable> ListenableFuture<V> create(
       ListenableFuture<? extends V> input,
       Class<X> exceptionType,
       Function<? super X, ? extends V> fallback,
@@ -49,7 +50,7 @@ abstract class AbstractCatchingFuture<
     return future;
   }
 
-  static <X extends Throwable, V extends @Nullable Object> ListenableFuture<V> create(
+  static <X extends Throwable, V extends @Nullable @Readonly Object> ListenableFuture<V> create(
       ListenableFuture<? extends V> input,
       Class<X> exceptionType,
       AsyncFunction<? super X, ? extends V> fallback,
@@ -190,7 +191,7 @@ abstract class AbstractCatchingFuture<
    * An {@link AbstractCatchingFuture} that delegates to an {@link AsyncFunction} and {@link
    * #setFuture(ListenableFuture)}.
    */
-  private static final class AsyncCatchingFuture<V extends @Nullable Object, X extends Throwable>
+  private static final class AsyncCatchingFuture<V extends @Nullable @Readonly Object, X extends Throwable>
       extends AbstractCatchingFuture<
           V, X, AsyncFunction<? super X, ? extends V>, ListenableFuture<? extends V>> {
     AsyncCatchingFuture(
@@ -222,7 +223,7 @@ abstract class AbstractCatchingFuture<
    * An {@link AbstractCatchingFuture} that delegates to a {@link Function} and {@link
    * #set(Object)}.
    */
-  private static final class CatchingFuture<V extends @Nullable Object, X extends Throwable>
+  private static final class CatchingFuture<V extends @Nullable @Readonly Object, X extends Throwable>
       extends AbstractCatchingFuture<V, X, Function<? super X, ? extends V>, V> {
     CatchingFuture(
         ListenableFuture<? extends V> input,

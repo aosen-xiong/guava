@@ -17,6 +17,7 @@ package com.google.common.util.concurrent;
 import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A {@link ListenableFuture} whose result can be set by a {@link #set(Object)}, {@link
@@ -34,12 +35,12 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public final class SettableFuture<V extends @Nullable Object>
+public final class SettableFuture<V extends @Nullable @Readonly Object>
     extends AbstractFuture.TrustedFuture<V> {
   /**
    * Creates a new {@code SettableFuture} that can be completed or cancelled by a later method call.
    */
-  public static <V extends @Nullable Object> SettableFuture<V> create() {
+  public static <V extends @Nullable @Readonly Object> SettableFuture<V> create() {
     return new SettableFuture<>();
   }
 

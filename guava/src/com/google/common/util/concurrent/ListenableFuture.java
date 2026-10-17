@@ -19,6 +19,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A {@link Future} that accepts completion listeners. Each listener has an associated executor, and
@@ -118,7 +119,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @DoNotMock("Use the methods in Futures (like immediateFuture) or SettableFuture")
 @ElementTypesAreNonnullByDefault
-public interface ListenableFuture<V extends @Nullable Object> extends Future<V> {
+public interface ListenableFuture<V extends @Nullable @Readonly Object> extends Future<V> {
   /**
    * Registers a listener to be {@linkplain Executor#execute(Runnable) run} on the given executor.
    * The listener will run when the {@code Future}'s computation is {@linkplain Future#isDone()

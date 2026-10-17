@@ -27,6 +27,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A {@link FutureTask} that also implements the {@link ListenableFuture} interface. Unlike {@code
@@ -44,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @J2ktIncompatible
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-public class ListenableFutureTask<V extends @Nullable Object> extends FutureTask<V>
+public class ListenableFutureTask<V extends @Nullable @Readonly Object> extends FutureTask<V>
     implements ListenableFuture<V> {
   // TODO(cpovirk): explore ways of making ListenableFutureTask final. There are some valid reasons
   // such as BoundedQueueExecutorService to allow extends but it would be nice to make it final to
@@ -60,7 +61,7 @@ public class ListenableFutureTask<V extends @Nullable Object> extends FutureTask
    * @param callable the callable task
    * @since 10.0
    */
-  public static <V extends @Nullable Object> ListenableFutureTask<V> create(Callable<V> callable) {
+  public static <V extends @Nullable @Readonly Object> ListenableFutureTask<V> create(Callable<V> callable) {
     return new ListenableFutureTask<>(callable);
   }
 
@@ -74,7 +75,7 @@ public class ListenableFutureTask<V extends @Nullable Object> extends FutureTask
    *     ListenableFutureTask.create(runnable, null)}
    * @since 10.0
    */
-  public static <V extends @Nullable Object> ListenableFutureTask<V> create(
+  public static <V extends @Nullable @Readonly Object> ListenableFutureTask<V> create(
       Runnable runnable, @ParametricNullness V result) {
     return new ListenableFutureTask<>(runnable, result);
   }

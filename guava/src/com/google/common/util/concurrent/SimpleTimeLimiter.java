@@ -114,7 +114,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
   }
 
   @ParametricNullness
-  private <T extends @Nullable Object> T callWithTimeout(
+  private <T extends @Nullable @Readonly Object> T callWithTimeout(
       Callable<T> callable, long timeoutDuration, TimeUnit timeoutUnit, boolean amInterruptible)
       throws Exception {
     checkNotNull(callable);
@@ -141,7 +141,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
   @CanIgnoreReturnValue
   @Override
   @ParametricNullness
-  public <T extends @Nullable Object> T callWithTimeout(
+  public <T extends @Nullable @Readonly Object> T callWithTimeout(
       Callable<T> callable, long timeoutDuration, TimeUnit timeoutUnit)
       throws TimeoutException, InterruptedException, ExecutionException {
     checkNotNull(callable);
@@ -164,7 +164,7 @@ public final class SimpleTimeLimiter implements TimeLimiter {
   @CanIgnoreReturnValue
   @Override
   @ParametricNullness
-  public <T extends @Nullable Object> T callUninterruptiblyWithTimeout(
+  public <T extends @Nullable @Readonly Object> T callUninterruptiblyWithTimeout(
       Callable<T> callable, long timeoutDuration, TimeUnit timeoutUnit)
       throws TimeoutException, ExecutionException {
     checkNotNull(callable);

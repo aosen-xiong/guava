@@ -23,6 +23,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.RunnableFuture;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Abstract {@link ListeningExecutorService} implementation that creates {@link ListenableFuture}
@@ -47,7 +48,7 @@ public abstract class AbstractListeningExecutorService extends AbstractExecutorS
    */
   @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
-  protected final <T extends @Nullable @UnknownSignedness Object> RunnableFuture<T> newTaskFor(
+  protected final <T extends @Nullable @UnknownSignedness @Readonly Object> RunnableFuture<T> newTaskFor(
       Runnable runnable, @ParametricNullness T value) {
     return TrustedListenableFutureTask.create(runnable, value);
   }
@@ -57,7 +58,7 @@ public abstract class AbstractListeningExecutorService extends AbstractExecutorS
    */
   @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
-  protected final <T extends @Nullable @UnknownSignedness Object> RunnableFuture<T> newTaskFor(Callable<T> callable) {
+  protected final <T extends @Nullable @UnknownSignedness @Readonly Object> RunnableFuture<T> newTaskFor(Callable<T> callable) {
     return TrustedListenableFutureTask.create(callable);
   }
 
@@ -69,14 +70,14 @@ public abstract class AbstractListeningExecutorService extends AbstractExecutorS
 
   @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
-  public <T extends @Nullable @UnknownSignedness Object> ListenableFuture<T> submit(
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> ListenableFuture<T> submit(
       Runnable task, @ParametricNullness T result) {
     return (ListenableFuture<T>) super.submit(task, result);
   }
 
   @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
-  public <T extends @Nullable @UnknownSignedness Object> ListenableFuture<T> submit(Callable<T> task) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> ListenableFuture<T> submit(Callable<T> task) {
     return (ListenableFuture<T>) super.submit(task);
   }
 }

@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An {@link ExecutorService} that returns {@link ListenableFuture} instances. To create an instance
@@ -51,7 +52,7 @@ public interface ListeningExecutorService extends ExecutorService {
    * @throws RejectedExecutionException {@inheritDoc}
    */
   @Override
-  <T extends @Nullable @UnknownSignedness Object> ListenableFuture<T> submit(Callable<T> task);
+  <T extends @Nullable @UnknownSignedness @Readonly Object> ListenableFuture<T> submit(Callable<T> task);
 
   /**
    * @return a {@code ListenableFuture} representing pending completion of the task
@@ -65,7 +66,7 @@ public interface ListeningExecutorService extends ExecutorService {
    * @throws RejectedExecutionException {@inheritDoc}
    */
   @Override
-  <T extends @Nullable @UnknownSignedness Object> ListenableFuture<T> submit(
+  <T extends @Nullable @UnknownSignedness @Readonly Object> ListenableFuture<T> submit(
       Runnable task, @ParametricNullness T result);
 
   /**
@@ -87,7 +88,7 @@ public interface ListeningExecutorService extends ExecutorService {
    * @throws NullPointerException if any task is null
    */
   @Override
-  <T extends @Nullable @UnknownSignedness Object> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
+  <T extends @Nullable @UnknownSignedness @Readonly Object> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
       throws InterruptedException;
 
   /**
@@ -110,7 +111,7 @@ public interface ListeningExecutorService extends ExecutorService {
    * @throws NullPointerException if any task is null
    */
   @Override
-  <T extends @Nullable @UnknownSignedness Object> List<Future<T>> invokeAll(
+  <T extends @Nullable @UnknownSignedness @Readonly Object> List<Future<T>> invokeAll(
       Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException;
 
@@ -120,7 +121,7 @@ public interface ListeningExecutorService extends ExecutorService {
    * @since 32.1.0
    */
   @J2ktIncompatible
-  default <T extends @Nullable Object> List<Future<T>> invokeAll(
+  default <T extends @Nullable @Readonly Object> List<Future<T>> invokeAll(
       Collection<? extends Callable<T>> tasks, Duration timeout) throws InterruptedException {
     return invokeAll(tasks, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);
   }
@@ -131,7 +132,7 @@ public interface ListeningExecutorService extends ExecutorService {
    * @since 32.1.0
    */
   @J2ktIncompatible
-  default <T extends @Nullable Object> T invokeAny(
+  default <T extends @Nullable @Readonly Object> T invokeAny(
       Collection<? extends Callable<T>> tasks, Duration timeout)
       throws InterruptedException, ExecutionException, TimeoutException {
     return invokeAny(tasks, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);
