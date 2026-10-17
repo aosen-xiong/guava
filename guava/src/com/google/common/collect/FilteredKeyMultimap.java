@@ -217,7 +217,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  Collection<V> createValues() {
+  @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable FilteredKeyMultimap<K, V> this) {
     return new @ReceiverDependentMutable FilteredMultimapValues<>(this);
   }
 

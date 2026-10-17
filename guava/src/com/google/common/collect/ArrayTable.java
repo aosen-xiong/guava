@@ -563,7 +563,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return set of table cells consisting of row key / column key / value triplets
    */
   @Override
-  public Set<Cell<R, C, @Nullable V>> cellSet() {
+  public @ReceiverDependentMutable Set<Cell<R, C, @Nullable V>> cellSet(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     return super.cellSet();
   }
 
@@ -814,7 +814,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return collection of values
    */
   @Override
-  public Collection<@Nullable V> values() {
+  public @ReceiverDependentMutable Collection<@Nullable V> values(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     return super.values();
   }
 

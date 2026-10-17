@@ -135,7 +135,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  Collection<V> createValues() {
+  @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable FilteredEntryMultimap<K, V> this) {
     return new @ReceiverDependentMutable FilteredMultimapValues<>(this);
   }
 

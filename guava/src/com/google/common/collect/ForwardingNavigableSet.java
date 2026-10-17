@@ -240,7 +240,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * boolean)} method. If you override {@link #headSet(Object, boolean)}, you may wish to override
    * {@link #headSet(Object)} to forward to this implementation.
    */
-  protected SortedSet<E> standardHeadSet(@ParametricNullness E toElement) {
+  protected @ReceiverDependentMutable SortedSet<E> standardHeadSet(@ReceiverDependentMutable ForwardingNavigableSet<E> this, @ParametricNullness E toElement) {
     return headSet(toElement, false);
   }
 
@@ -254,7 +254,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * boolean)} method. If you override {@link #tailSet(Object, boolean)}, you may wish to override
    * {@link #tailSet(Object)} to forward to this implementation.
    */
-  protected SortedSet<E> standardTailSet(@ParametricNullness E fromElement) {
+  protected @ReceiverDependentMutable SortedSet<E> standardTailSet(@ReceiverDependentMutable ForwardingNavigableSet<E> this, @ParametricNullness E fromElement) {
     return tailSet(fromElement, true);
   }
 }

@@ -157,7 +157,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
    *
    * @since 7.0
    */
-  protected SortedMap<K, V> standardSubMap(K fromKey, K toKey) {
+  protected @ReceiverDependentMutable SortedMap<K, V> standardSubMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, K fromKey, K toKey) {
     checkArgument(unsafeCompare(comparator(), fromKey, toKey) <= 0, "fromKey must be <= toKey");
     return tailMap(fromKey).headMap(toKey);
   }

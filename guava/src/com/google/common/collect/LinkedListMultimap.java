@@ -776,7 +776,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  Multiset<K> createKeys() {
+  @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     return new Multimaps.@ReceiverDependentMutable Keys<K, V>(this);
   }
 
@@ -795,7 +795,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  List<V> createValues() {
+  @ReceiverDependentMutable List<V> createValues(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
     class ValuesImpl extends AbstractSequentialList<V> {
       @Override
@@ -876,7 +876,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  Map<K, Collection<V>> createAsMap() {
+  @ReceiverDependentMutable Map<K, Collection<V>> createAsMap(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     return new Multimaps.@ReceiverDependentMutable AsMap<>(this);
   }
 

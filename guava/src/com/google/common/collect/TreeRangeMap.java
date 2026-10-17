@@ -329,12 +329,12 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   }
 
   @Override
-  public Map<Range<K>, V> asMapOfRanges() {
+  public @ReceiverDependentMutable Map<Range<K>, V> asMapOfRanges(@ReceiverDependentMutable TreeRangeMap<K, V> this) {
     return new @ReceiverDependentMutable AsMapOfRanges(entriesByLowerBound.values());
   }
 
   @Override
-  public Map<Range<K>, V> asDescendingMapOfRanges() {
+  public @ReceiverDependentMutable Map<Range<K>, V> asDescendingMapOfRanges(@ReceiverDependentMutable TreeRangeMap<K, V> this) {
     return new @ReceiverDependentMutable AsMapOfRanges(entriesByLowerBound.descendingMap().values());
   }
 
