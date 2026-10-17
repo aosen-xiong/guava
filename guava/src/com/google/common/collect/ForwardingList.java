@@ -129,7 +129,7 @@ public abstract class ForwardingList<E extends @Nullable @Readonly Object> exten
 
   @SideEffectFree
   @Override
-  public @PolyMutable List<E> subList(@PolyMutable ForwardingList<E> this, int fromIndex, int toIndex) {
+  public @ReceiverDependentMutable List<E> subList(@ReceiverDependentMutable ForwardingList<E> this, int fromIndex, int toIndex) {
     return delegate().subList(fromIndex, toIndex);
   }
 

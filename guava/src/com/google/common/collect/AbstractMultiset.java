@@ -146,7 +146,7 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<E> elementSet(@PolyMutable AbstractMultiset<E> this) {
+  public @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable AbstractMultiset<E> this) {
     Set<E> result = elementSet;
     if (result == null) {
       elementSet = result = createElementSet();
@@ -183,7 +183,7 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<E>> entrySet(@PolyMutable AbstractMultiset<E> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable AbstractMultiset<E> this) {
     Set<@PolyMutable Entry<E>> result = entrySet;
     if (result == null) {
       entrySet = result = createEntrySet();

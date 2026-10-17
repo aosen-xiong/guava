@@ -704,7 +704,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   @LazyInit @CheckForNull private transient @Assignable Set<K> keySetView;
 
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable CompactHashMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (keySetView == null) ? keySetView = createKeySet() : keySetView;
   }
 
@@ -814,7 +814,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySetView;
 
   @Override
-  public @PolyMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable CompactHashMap<K, V> this) {
+  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (entrySetView == null) ? entrySetView = createEntrySet() : entrySetView;
   }
 
@@ -997,7 +997,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   @LazyInit @CheckForNull private transient @Assignable Collection<V> valuesView;
 
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable CompactHashMap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (valuesView == null) ? valuesView = createValues() : valuesView;
   }
 

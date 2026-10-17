@@ -72,7 +72,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
   protected ForwardingNavigableMap() {}
 
   @Override
-  protected abstract @PolyMutable NavigableMap<K, V> delegate(@PolyMutable ForwardingNavigableMap<K, V> this);
+  protected abstract @ReceiverDependentMutable NavigableMap<K, V> delegate(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this);
 
   @Override
   @CheckForNull
@@ -294,7 +294,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
   }
 
   @Override
-  public @PolyMutable NavigableMap<K, V> descendingMap(@PolyMutable ForwardingNavigableMap<K, V> this) {
+  public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this) {
     return delegate().descendingMap();
   }
 
@@ -360,7 +360,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
   }
 
   @Override
-  public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable ForwardingNavigableMap<K, V> this) {
+  public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this) {
     return delegate().navigableKeySet();
   }
 
@@ -380,7 +380,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
   }
 
   @Override
-  public @PolyMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@PolyMutable ForwardingNavigableMap<K, V> this) {
+  public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this) {
     return delegate().descendingKeySet();
   }
 
@@ -408,8 +408,8 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
   }
 
   @Override
-  public @PolyMutable NavigableMap<K, V> subMap(
-          @PolyMutable ForwardingNavigableMap<K, V> this,
+  public @ReceiverDependentMutable NavigableMap<K, V> subMap(
+          @ReceiverDependentMutable ForwardingNavigableMap<K, V> this,
       @ParametricNullness K fromKey,
       boolean fromInclusive,
       @ParametricNullness K toKey,
@@ -418,12 +418,12 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
   }
 
   @Override
-  public @PolyMutable NavigableMap<K, V> headMap(@PolyMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
+  public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
     return delegate().headMap(toKey, inclusive);
   }
 
   @Override
-  public @PolyMutable NavigableMap<K, V> tailMap(@PolyMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
+  public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
     return delegate().tailMap(fromKey, inclusive);
   }
 

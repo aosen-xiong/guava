@@ -237,12 +237,12 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Set<K> createKeySet(@PolyMutable CustomMultimap<K, V> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable CustomMultimap<K, V> this) {
       return createMaybeNavigableKeySet();
     }
 
     @Override
-    @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable CustomMultimap<K, V> this) {
+    @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable CustomMultimap<K, V> this) {
       return createMaybeNavigableAsMap();
     }
 
@@ -358,12 +358,12 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Set<K> createKeySet(@PolyMutable CustomListMultimap<K, V> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable CustomListMultimap<K, V> this) {
       return createMaybeNavigableKeySet();
     }
 
     @Override
-    @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable CustomListMultimap<K, V> this) {
+    @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable CustomListMultimap<K, V> this) {
       return createMaybeNavigableAsMap();
     }
 
@@ -444,12 +444,12 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Set<K> createKeySet(@PolyMutable CustomSetMultimap<K, V> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable CustomSetMultimap<K, V> this) {
       return createMaybeNavigableKeySet();
     }
 
     @Override
-    @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable CustomSetMultimap<K, V> this) {
+    @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable CustomSetMultimap<K, V> this) {
       return createMaybeNavigableAsMap();
     }
 
@@ -556,12 +556,12 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Set<K> createKeySet(@PolyMutable CustomSortedSetMultimap<K, V> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable CustomSortedSetMultimap<K, V> this) {
       return createMaybeNavigableKeySet();
     }
 
     @Override
-    @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable CustomSortedSetMultimap<K, V> this) {
+    @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable CustomSortedSetMultimap<K, V> this) {
       return createMaybeNavigableAsMap();
     }
 
@@ -1186,7 +1186,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @PolyMutable Set<V> get(@PolyMutable MapMultimap<K, V> this, @ParametricNullness final K key) {
+    public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable MapMultimap<K, V> this, @ParametricNullness final K key) {
       return new Sets.@PolyMutable ImprovedAbstractSet<V>() {
         @Override
         public Iterator<V> iterator() {
@@ -1271,29 +1271,29 @@ public final class Multimaps {
 
     @SideEffectFree
     @Override
-    @PolyMutable Set<K> createKeySet(@PolyMutable MapMultimap<K, V> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return map.keySet();
     }
 
     @SideEffectFree
     @Override
-    @PolyMutable Collection<V> createValues(@PolyMutable MapMultimap<K, V> this) {
+    @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return map.values();
     }
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<@PolyMutable Entry<K, V>> entries(@PolyMutable MapMultimap<K, V> this) {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return map.entrySet();
     }
 
     @Override
-    @PolyMutable Collection<@PolyMutable Entry<K, V>> createEntries(@PolyMutable MapMultimap<K, V> this) {
+    @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable MapMultimap<K, V> this) {
       throw new AssertionError("unreachable");
     }
 
     @Override
-    @PolyMutable Multiset<K> createKeys(@PolyMutable MapMultimap<K, V> this) {
+    @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return new Multimaps.Keys<K, V>(this);
     }
 
@@ -1303,7 +1303,7 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable MapMultimap<K, V> this) {
+    @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return new AsMap<>(this);
     }
 
@@ -1567,7 +1567,7 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Collection<@PolyMutable Entry<K, V2>> createEntries(@PolyMutable TransformedEntriesMultimap<K, V1, V2> this) {
+    @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V2>> createEntries(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return new Entries();
     }
 
@@ -1578,7 +1578,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @PolyMutable Collection<V2> get(@PolyMutable TransformedEntriesMultimap<K, V1, V2> this, @ParametricNullness final K key) {
+    public @ReceiverDependentMutable Collection<V2> get(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this, @ParametricNullness final K key) {
       return transform(key, fromMultimap.get(key));
     }
 
@@ -1588,12 +1588,12 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Set<K> createKeySet(@PolyMutable TransformedEntriesMultimap<K, V1, V2> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return fromMultimap.keySet();
     }
 
     @Override
-    @PolyMutable Multiset<K> createKeys(@PolyMutable TransformedEntriesMultimap<K, V1, V2> this) {
+    @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return fromMultimap.keys();
     }
 
@@ -1635,7 +1635,7 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Collection<V2> createValues(@PolyMutable TransformedEntriesMultimap<K, V1, V2> this) {
+    @ReceiverDependentMutable Collection<V2> createValues(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return Collections2.transform(
           fromMultimap.entries(), Maps.<K, V1, V2>asEntryToValueFunction(transformer));
     }
@@ -1657,7 +1657,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @PolyMutable List<V2> get(@PolyMutable TransformedEntriesListMultimap<K, V1, V2> this, @ParametricNullness K key) {
+    public @ReceiverDependentMutable List<V2> get(@ReceiverDependentMutable TransformedEntriesListMultimap<K, V1, V2> this, @ParametricNullness K key) {
       return transform(key, fromMultimap.get(key));
     }
 
@@ -1861,7 +1861,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @PolyMutable Set<K> elementSet(@PolyMutable Keys<K, V> this) {
+    public @ReceiverDependentMutable Set<K> elementSet(@ReceiverDependentMutable Keys<K, V> this) {
       return multimap.keySet();
     }
 
@@ -1970,7 +1970,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AsMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AsMap<K, V> this) {
       return multimap.keySet();
     }
 

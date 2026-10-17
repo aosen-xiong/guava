@@ -353,7 +353,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    * <i>adding</i> to the returned set is not possible.
    */
   @Override
-  public @PolyMutable Set<K> keySet(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<K> keySet(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.keySet();
   }
 
@@ -366,7 +366,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.values();
   }
 

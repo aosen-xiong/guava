@@ -929,7 +929,7 @@ public final class Lists {
     }
 
     @Override
-    public @PolyMutable List<T> subList(@PolyMutable ReverseList<T> this, int fromIndex, int toIndex) {
+    public @ReceiverDependentMutable List<T> subList(@ReceiverDependentMutable ReverseList<T> this, int fromIndex, int toIndex) {
       checkPositionIndexes(fromIndex, toIndex, size());
       return reverse(forwardList.subList(reversePosition(toIndex), reversePosition(fromIndex)));
     }

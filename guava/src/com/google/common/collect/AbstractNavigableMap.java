@@ -148,37 +148,37 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
   abstract Iterator<@PolyMutable Entry<K, V>> descendingEntryIterator(@PolyMutable AbstractNavigableMap<K,V> this);
 
   @Override
-  public @PolyMutable SortedMap<K, V> subMap(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
     return subMap(fromKey, true, toKey, false);
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> headMap(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this, @ParametricNullness K toKey) {
     return headMap(toKey, false);
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey) {
     return tailMap(fromKey, true);
   }
 
   @Override
-  public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable AbstractNavigableMap<K,V> this) {
+  public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
     return new Maps.NavigableKeySet<>(this);
   }
 
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AbstractNavigableMap<K,V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
     return navigableKeySet();
   }
 
   @Override
-  public @PolyMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@PolyMutable AbstractNavigableMap<K,V> this) {
+  public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
     return descendingMap().navigableKeySet();
   }
 
   @Override
-  public @PolyMutable NavigableMap<K, V> descendingMap(@PolyMutable AbstractNavigableMap<K,V> this) {
+  public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
     return new @PolyMutable DescendingMap();
   }
 

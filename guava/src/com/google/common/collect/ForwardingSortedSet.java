@@ -101,13 +101,13 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
 
   @SideEffectFree
   @Override
-  public @PolyMutable SortedSet<E> subSet(@PolyMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
+  public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
     return delegate().subSet(fromElement, toElement);
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable SortedSet<E> tailSet(@PolyMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement) {
+  public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement) {
     return delegate().tailSet(fromElement);
   }
 

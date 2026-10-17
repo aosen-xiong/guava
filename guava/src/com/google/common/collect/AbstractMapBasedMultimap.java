@@ -300,7 +300,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    * <p>The returned collection is not serializable.
    */
   @Override
-  public @PolyMutable Collection<V> get(@PolyMutable AbstractMapBasedMultimap<K, V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable Collection<V> get(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this, @ParametricNullness K key) {
     Collection<V> collection = map.get(key);
     if (collection == null) {
       collection = createCollection(key);
@@ -950,7 +950,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   @Override
-  @PolyMutable Set<K> createKeySet(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return new @PolyMutable KeySet(map);
   }
 
@@ -1250,12 +1250,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    * by the values of a second key, and so on.
    */
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return super.values();
   }
 
   @Override
-  @PolyMutable Collection<V> createValues(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return new Values();
   }
 
@@ -1285,7 +1285,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    */
 
   @Override
-  @PolyMutable Multiset<K> createKeys(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return new Multimaps.Keys<K, V>(this);
   }
 
@@ -1299,12 +1299,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    * time the entry is returned by a method call to the collection or its iterator.
    */
   @Override
-  public @PolyMutable Collection<@PolyMutable Entry<K, V>> entries(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return super.entries();
   }
 
   @Override
-  @PolyMutable Collection<@PolyMutable Entry<K, V>> createEntries(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     if (this instanceof SetMultimap) {
       return new EntrySet();
     } else {
@@ -1352,7 +1352,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   @Override
-  @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return new AsMap(map);
   }
 
@@ -1404,7 +1404,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AsMap this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AsMap this) {
       return AbstractMapBasedMultimap.this.keySet();
     }
 
@@ -1552,18 +1552,18 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public @PolyMutable SortedMap<K, @PolyMutable Collection<V>> headMap(@PolyMutable SortedAsMap this, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> headMap(@ReceiverDependentMutable SortedAsMap this, @ParametricNullness K toKey) {
       return new SortedAsMap(sortedMap().headMap(toKey));
     }
 
     @Override
-    public @PolyMutable SortedMap<K, @PolyMutable Collection<V>> subMap(
+    public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> subMap(
         @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return new @PolyMutable SortedAsMap(sortedMap().subMap(fromKey, toKey));
     }
 
     @Override
-    public @PolyMutable SortedMap<K, @PolyMutable Collection<V>> tailMap(@ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> tailMap(@ParametricNullness K fromKey) {
       return new @PolyMutable SortedAsMap(sortedMap().tailMap(fromKey));
     }
 
@@ -1572,7 +1572,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     // returns a SortedSet, even though returning a Set would be sufficient to
     // satisfy the SortedMap.keySet() interface
     @Override
-    public @PolyMutable SortedSet<@KeyFor({"this"}) K> keySet(@PolyMutable SortedAsMap this) {
+    public @ReceiverDependentMutable SortedSet<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable SortedAsMap this) {
       SortedSet<K> result = sortedKeySet;
       return (result == null) ? sortedKeySet = createKeySet() : result;
     }

@@ -499,7 +499,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable HashBiMap<K,V> this) {
     return new @PolyMutable KeySet();
   }
 
@@ -535,7 +535,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public @PolyMutable Set<V> values(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable HashBiMap<K,V> this) {
     return inverse().keySet();
   }
 
@@ -615,7 +615,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   @LazyInit @RetainedWith @CheckForNull private transient @Assignable BiMap<V, K> inverse;
 
   @Override
-  public @PolyMutable BiMap<V, K> inverse(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable HashBiMap<K,V> this) {
     BiMap<V, K> result = inverse;
     return (result == null) ? inverse = new Inverse() : result;
   }
@@ -676,12 +676,12 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public @PolyMutable BiMap<K, V> inverse(@PolyMutable Inverse this) {
+    public @ReceiverDependentMutable BiMap<K, V> inverse(@ReceiverDependentMutable Inverse this) {
       return forward();
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) V> keySet(@PolyMutable Inverse this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) V> keySet(@ReceiverDependentMutable Inverse this) {
       return new @PolyMutable InverseKeySet();
     }
 

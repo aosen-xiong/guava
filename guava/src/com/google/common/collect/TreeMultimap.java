@@ -137,7 +137,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable TreeMultimap<K, V> this) {
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable TreeMultimap<K, V> this) {
     return createMaybeNavigableAsMap();
   }
 
@@ -194,7 +194,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    */
   @SideEffectFree
   @Override
-  public @PolyMutable NavigableSet<K> keySet(@PolyMutable TreeMultimap<K, V> this) {
+  public @ReceiverDependentMutable NavigableSet<K> keySet(@ReceiverDependentMutable TreeMultimap<K, V> this) {
     return (NavigableSet<K>) super.keySet();
   }
 

@@ -153,7 +153,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable AbstractSortedSetMultimap<K,V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable AbstractSortedSetMultimap<K,V> this) {
     return super.values();
   }
 

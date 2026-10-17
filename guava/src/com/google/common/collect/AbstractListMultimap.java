@@ -84,7 +84,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
    * Multimap} interface.
    */
   @Override
-  public @PolyMutable List<V> get(@PolyMutable AbstractListMultimap<K,V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable AbstractListMultimap<K,V> this, @ParametricNullness K key) {
     return (@PolyMutable List<V>) super.get(key);
   }
 
@@ -134,7 +134,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
    * values.
    */
   @Override
-  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractListMultimap<K,V> this) {
+  public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractListMultimap<K,V> this) {
     return super.asMap();
   }
 

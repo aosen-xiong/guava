@@ -203,7 +203,7 @@ public boolean equals(@Readonly ArrayListMultimap<K, V> this, @Nullable @Readonl
 public boolean isEmpty(@Readonly ArrayListMultimap<K, V> this) { return super.isEmpty(); }
 
 @Override
-public @PolyMutable List<V> get(@PolyMutable ArrayListMultimap<K, V> this, @Nullable K arg0) { return super.get(arg0); }
+public @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable ArrayListMultimap<K, V> this, @Nullable K arg0) { return super.get(arg0); }
 
 @Override
 public boolean remove(@Mutable ArrayListMultimap<K, V> this, @Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.remove(arg0, arg1); }

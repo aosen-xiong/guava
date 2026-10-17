@@ -354,7 +354,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable SortedSet<E> subSet(@PolyMutable SynchronizedSortedSet<E> this, E fromElement, E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable SynchronizedSortedSet<E> this, E fromElement, E toElement) {
       synchronized (mutex) {
         return sortedSet(delegate().subSet(fromElement, toElement), mutex);
       }
@@ -362,7 +362,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable SortedSet<E> headSet(@PolyMutable SynchronizedSortedSet<E> this, E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable SynchronizedSortedSet<E> this, E toElement) {
       synchronized (mutex) {
         return sortedSet(delegate().headSet(toElement), mutex);
       }
@@ -370,7 +370,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @PolyMutable SortedSet<E> tailSet(@PolyMutable SynchronizedSortedSet<E> this, E fromElement) {
+    public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable SynchronizedSortedSet<E> this, E fromElement) {
       synchronized (mutex) {
         return sortedSet(delegate().tailSet(fromElement), mutex);
       }
@@ -1395,14 +1395,14 @@ final class Synchronized {
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> subMap(@PolyMutable SynchronizedSortedMap<K, V> this, K fromKey, K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable SynchronizedSortedMap<K, V> this, K fromKey, K toKey) {
       synchronized (mutex) {
         return sortedMap(delegate().subMap(fromKey, toKey), mutex);
       }
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable SynchronizedSortedMap<K, V> this, K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable SynchronizedSortedMap<K, V> this, K fromKey) {
       synchronized (mutex) {
         return sortedMap(delegate().tailMap(fromKey), mutex);
       }

@@ -1011,22 +1011,22 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable SortedAsMapView<K, V> this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable SortedAsMapView<K, V> this) {
       return removeOnlySortedSet(backingSet());
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> subMap(@PolyMutable SortedAsMapView<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable SortedAsMapView<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return asMap(backingSet().subSet(fromKey, toKey), function);
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> headMap(@PolyMutable SortedAsMapView<K, V> this, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable SortedAsMapView<K, V> this, @ParametricNullness K toKey) {
       return asMap(backingSet().headSet(toKey), function);
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable SortedAsMapView<K, V> this, @ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable SortedAsMapView<K, V> this, @ParametricNullness K fromKey) {
       return asMap(backingSet().tailSet(fromKey), function);
     }
 
@@ -1062,8 +1062,8 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> subMap(
-            @PolyMutable NavigableAsMapView<K, V> this,
+    public @ReceiverDependentMutable NavigableMap<K, V> subMap(
+            @ReceiverDependentMutable NavigableAsMapView<K, V> this,
         @ParametricNullness K fromKey,
         boolean fromInclusive,
         @ParametricNullness K toKey,
@@ -1072,12 +1072,12 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> headMap(@PolyMutable NavigableAsMapView<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ReceiverDependentMutable NavigableAsMapView<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
       return asMap(set.headSet(toKey, inclusive), function);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> tailMap(@PolyMutable NavigableAsMapView<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ReceiverDependentMutable NavigableAsMapView<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
       return asMap(set.tailSet(fromKey, inclusive), function);
     }
 
@@ -1131,7 +1131,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable NavigableAsMapView<K, V> this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable NavigableAsMapView<K, V> this) {
       return removeOnlyNavigableSet(set);
     }
 
@@ -1141,7 +1141,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> descendingMap(@PolyMutable NavigableAsMapView<K, V> this) {
+    public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable NavigableAsMapView<K, V> this) {
       return asMap(set.descendingSet(), function);
     }
   }
@@ -2281,7 +2281,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable TransformedEntriesMap<K, V1, V2> this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable TransformedEntriesMap<K, V1, V2> this) {
       return fromMap.keySet();
     }
 
@@ -2305,7 +2305,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable Collection<V2> values(@PolyMutable TransformedEntriesMap<K, V1, V2> this) {
+    public @ReceiverDependentMutable Collection<V2> values(@ReceiverDependentMutable TransformedEntriesMap<K, V1, V2> this) {
       return new @PolyMutable Values<>(this);
     }
   }
@@ -2337,7 +2337,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V2> headMap(@PolyMutable TransformedEntriesSortedMap<K, V1, V2> this, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V2> headMap(@ReceiverDependentMutable TransformedEntriesSortedMap<K, V1, V2> this, @ParametricNullness K toKey) {
       return transformEntries(fromMap().headMap(toKey), transformer);
     }
 
@@ -2348,12 +2348,12 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V2> subMap(@PolyMutable TransformedEntriesSortedMap<K, V1, V2> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V2> subMap(@ReceiverDependentMutable TransformedEntriesSortedMap<K, V1, V2> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return transformEntries(fromMap().subMap(fromKey, toKey), transformer);
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V2> tailMap(@PolyMutable TransformedEntriesSortedMap<K, V1, V2> this, @ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V2> tailMap(@ReceiverDependentMutable TransformedEntriesSortedMap<K, V1, V2> this, @ParametricNullness K fromKey) {
       return transformEntries(fromMap().tailMap(fromKey), transformer);
     }
   }
@@ -2382,12 +2382,12 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
       return fromMap().descendingKeySet();
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V2> descendingMap(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @ReceiverDependentMutable NavigableMap<K, V2> descendingMap(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
       return transformEntries(fromMap().descendingMap(), transformer);
     }
 
@@ -2410,12 +2410,12 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V2> headMap(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable NavigableMap<K, V2> headMap(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K toKey) {
       return headMap(toKey, false);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V2> headMap(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V2> headMap(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K toKey, boolean inclusive) {
       return transformEntries(fromMap().headMap(toKey, inclusive), transformer);
     }
 
@@ -2450,7 +2450,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
       return fromMap().navigableKeySet();
     }
 
@@ -2467,8 +2467,8 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V2> subMap(
-            @PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this,
+    public @ReceiverDependentMutable NavigableMap<K, V2> subMap(
+            @ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this,
         @ParametricNullness K fromKey,
         boolean fromInclusive,
         @ParametricNullness K toKey,
@@ -2478,17 +2478,17 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V2> subMap(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable NavigableMap<K, V2> subMap(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return subMap(fromKey, true, toKey, false);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V2> tailMap(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable NavigableMap<K, V2> tailMap(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K fromKey) {
       return tailMap(fromKey, true);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V2> tailMap(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V2> tailMap(@ReceiverDependentMutable TransformedEntriesNavigableMap<K, V1, V2> this, @ParametricNullness K fromKey, boolean inclusive) {
       return transformEntries(fromMap().tailMap(fromKey, inclusive), transformer);
     }
 
@@ -3262,7 +3262,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable SortedSet<@KeyFor({"this"}) K> keySet(@PolyMutable FilteredEntrySortedMap<K, V> this) {
+    public @ReceiverDependentMutable SortedSet<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this) {
       return (@PolyMutable SortedSet<K>) super.keySet();
     }
 
@@ -3281,19 +3281,19 @@ public final class Maps {
       }
 
       @Override
-      public @PolyMutable SortedSet<K> subSet(
-              @PolyMutable SortedKeySet this,
+      public @ReceiverDependentMutable SortedSet<K> subSet(
+              @ReceiverDependentMutable SortedKeySet this,
           @ParametricNullness K fromElement, @ParametricNullness K toElement) {
         return (@PolyMutable SortedSet<K>) subMap(fromElement, toElement).keySet();
       }
 
       @Override
-      public @PolyMutable SortedSet<K> headSet(@PolyMutable SortedKeySet this, @ParametricNullness K toElement) {
+      public @ReceiverDependentMutable SortedSet<K> headSet(@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K toElement) {
         return (@PolyMutable SortedSet<K>) headMap(toElement).keySet();
       }
 
       @Override
-      public @PolyMutable SortedSet<K> tailSet(@PolyMutable SortedKeySet this, @ParametricNullness K fromElement) {
+      public @ReceiverDependentMutable SortedSet<K> tailSet(@ReceiverDependentMutable SortedKeySet this, @ParametricNullness K fromElement) {
         return (@PolyMutable SortedSet<K>) tailMap(fromElement).keySet();
       }
 
@@ -3339,17 +3339,17 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> headMap(@PolyMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K toKey) {
       return new @PolyMutable FilteredEntrySortedMap<>(sortedMap().headMap(toKey), predicate);
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> subMap(@PolyMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return new @PolyMutable FilteredEntrySortedMap<>(sortedMap().subMap(fromKey, toKey), predicate);
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this, @ParametricNullness K fromKey) {
       return new @PolyMutable FilteredEntrySortedMap<>(sortedMap().tailMap(fromKey), predicate);
     }
   }
@@ -3383,7 +3383,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable FilteredEntryNavigableMap<K, V> this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return new Maps.NavigableKeySet<K, V>(this) {
         @Override
         public boolean removeAll(@Readonly Collection<?> collection) {
@@ -3398,7 +3398,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable FilteredEntryNavigableMap<K, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return new @PolyMutable FilteredMapValues<>(this, unfiltered, entryPredicate);
     }
 
@@ -3473,13 +3473,13 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> descendingMap(@PolyMutable FilteredEntryNavigableMap<K, V> this) {
+    public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return filterEntries(unfiltered.descendingMap(), entryPredicate);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> subMap(
-            @PolyMutable FilteredEntryNavigableMap<K, V> this,
+    public @ReceiverDependentMutable NavigableMap<K, V> subMap(
+            @ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this,
         @ParametricNullness K fromKey,
         boolean fromInclusive,
         @ParametricNullness K toKey,
@@ -3489,12 +3489,12 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> headMap(@PolyMutable FilteredEntryNavigableMap<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
       return filterEntries(unfiltered.headMap(toKey, inclusive), entryPredicate);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> tailMap(@PolyMutable FilteredEntryNavigableMap<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
       return filterEntries(unfiltered.tailMap(fromKey, inclusive), entryPredicate);
     }
   }
@@ -3549,12 +3549,12 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable BiMap<V, K> inverse(@PolyMutable FilteredEntryBiMap<K, V> this) {
+    public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable FilteredEntryBiMap<K, V> this) {
       return inverse;
     }
 
     @Override
-    public @PolyMutable Set<V> values(@PolyMutable FilteredEntryBiMap<K, V> this) {
+    public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable FilteredEntryBiMap<K, V> this) {
       return inverse.keySet();
     }
   }
@@ -3888,7 +3888,7 @@ public final class Maps {
     @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
     @Override
-    public @PolyMutable Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable ViewCachingAbstractMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this) {
       Set<Entry<K, V>> result = entrySet;
       return (result == null) ? entrySet = createEntrySet() : result;
     }
@@ -3896,7 +3896,7 @@ public final class Maps {
     @LazyInit @CheckForNull private transient @Assignable Set<K> keySet;
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable ViewCachingAbstractMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this) {
       Set<K> result = keySet;
       return (result == null) ? keySet = createKeySet() : result;
     }
@@ -3908,7 +3908,7 @@ public final class Maps {
     @LazyInit @CheckForNull private transient @Assignable Collection<V> values;
 
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable ViewCachingAbstractMap<K, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this) {
       Collection<V> result = values;
       return (result == null) ? values = createValues() : result;
     }
@@ -4174,17 +4174,17 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable SortedSet<K> subSet(@PolyMutable SortedKeySet<K, V> this, @ParametricNullness K fromElement, @ParametricNullness K toElement) {
+    public @ReceiverDependentMutable SortedSet<K> subSet(@ReceiverDependentMutable SortedKeySet<K, V> this, @ParametricNullness K fromElement, @ParametricNullness K toElement) {
       return new @PolyMutable SortedKeySet<>(map().subMap(fromElement, toElement));
     }
 
     @Override
-    public @PolyMutable SortedSet<K> headSet(@PolyMutable SortedKeySet<K, V> this, @ParametricNullness K toElement) {
+    public @ReceiverDependentMutable SortedSet<K> headSet(@ReceiverDependentMutable SortedKeySet<K, V> this, @ParametricNullness K toElement) {
       return new @PolyMutable SortedKeySet<>(map().headMap(toElement));
     }
 
     @Override
-    public @PolyMutable SortedSet<K> tailSet(@PolyMutable SortedKeySet<K, V> this, @ParametricNullness K fromElement) {
+    public @ReceiverDependentMutable SortedSet<K> tailSet(@ReceiverDependentMutable SortedKeySet<K, V> this, @ParametricNullness K fromElement) {
       return new @PolyMutable SortedKeySet<>(map().tailMap(fromElement));
     }
 
@@ -4251,7 +4251,7 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableSet<K> descendingSet(@PolyMutable NavigableKeySet<K, V> this) {
+    public @ReceiverDependentMutable NavigableSet<K> descendingSet(@ReceiverDependentMutable NavigableKeySet<K, V> this) {
       return map().descendingKeySet();
     }
 
@@ -4261,8 +4261,8 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableSet<K> subSet(
-            @PolyMutable NavigableKeySet<K, V> this,
+    public @ReceiverDependentMutable NavigableSet<K> subSet(
+            @ReceiverDependentMutable NavigableKeySet<K, V> this,
         @ParametricNullness K fromElement,
         boolean fromInclusive,
         @ParametricNullness K toElement,
@@ -4271,27 +4271,27 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable SortedSet<K> subSet(@PolyMutable NavigableKeySet<K, V> this, @ParametricNullness K fromElement, @ParametricNullness K toElement) {
+    public @ReceiverDependentMutable SortedSet<K> subSet(@ReceiverDependentMutable NavigableKeySet<K, V> this, @ParametricNullness K fromElement, @ParametricNullness K toElement) {
       return subSet(fromElement, true, toElement, false);
     }
 
     @Override
-    public @PolyMutable NavigableSet<K> headSet(@PolyMutable NavigableKeySet<K, V> this, @ParametricNullness K toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<K> headSet(@ReceiverDependentMutable NavigableKeySet<K, V> this, @ParametricNullness K toElement, boolean inclusive) {
       return map().headMap(toElement, inclusive).navigableKeySet();
     }
 
     @Override
-    public @PolyMutable SortedSet<K> headSet(@PolyMutable NavigableKeySet<K, V> this, @ParametricNullness K toElement) {
+    public @ReceiverDependentMutable SortedSet<K> headSet(@ReceiverDependentMutable NavigableKeySet<K, V> this, @ParametricNullness K toElement) {
       return headSet(toElement, false);
     }
 
     @Override
-    public @PolyMutable NavigableSet<K> tailSet(@PolyMutable NavigableKeySet<K, V> this, @ParametricNullness K fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<K> tailSet(@ReceiverDependentMutable NavigableKeySet<K, V> this, @ParametricNullness K fromElement, boolean inclusive) {
       return map().tailMap(fromElement, inclusive).navigableKeySet();
     }
 
     @Override
-    public @PolyMutable SortedSet<K> tailSet(@PolyMutable NavigableKeySet<K, V> this, @ParametricNullness K fromElement) {
+    public @ReceiverDependentMutable SortedSet<K> tailSet(@ReceiverDependentMutable NavigableKeySet<K, V> this, @ParametricNullness K fromElement) {
       return tailSet(fromElement, true);
     }
   }
@@ -4471,7 +4471,7 @@ public final class Maps {
     abstract @PolyMutable NavigableMap<K, V> forward(@PolyMutable DescendingMap<K, V> this);
 
     @Override
-    protected final @PolyMutable Map<K, V> delegate(@PolyMutable DescendingMap<K, V> this) {
+    protected final @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable DescendingMap<K, V> this) {
       return forward();
     }
 
@@ -4581,14 +4581,14 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> descendingMap(@PolyMutable DescendingMap<K, V> this) {
+    public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable DescendingMap<K, V> this) {
       return forward();
     }
 
     @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
     @Override
-    public @PolyMutable Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable DescendingMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
       Set<@PolyMutable Entry<K, V>> result = entrySet;
       return (result == null) ? entrySet = createEntrySet() : result;
     }
@@ -4612,26 +4612,26 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable DescendingMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
       return navigableKeySet();
     }
 
     @LazyInit @CheckForNull private transient @Assignable NavigableSet<K> navigableKeySet;
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable DescendingMap<K, V> this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
       NavigableSet<K> result = navigableKeySet;
       return (result == null) ? navigableKeySet = new NavigableKeySet<>(this) : result;
     }
 
     @Override
-    public @PolyMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@PolyMutable DescendingMap<K, V> this) {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
       return forward().navigableKeySet();
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> subMap(
-            @PolyMutable DescendingMap<K, V> this,
+    public @ReceiverDependentMutable NavigableMap<K, V> subMap(
+            @ReceiverDependentMutable DescendingMap<K, V> this,
         @ParametricNullness K fromKey,
         boolean fromInclusive,
         @ParametricNullness K toKey,
@@ -4640,32 +4640,32 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> subMap(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable DescendingMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return subMap(fromKey, true, toKey, false);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> headMap(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ReceiverDependentMutable DescendingMap<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
       return forward().tailMap(toKey, inclusive).descendingMap();
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> headMap(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable DescendingMap<K, V> this, @ParametricNullness K toKey) {
       return headMap(toKey, false);
     }
 
     @Override
-    public @PolyMutable NavigableMap<K, V> tailMap(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ReceiverDependentMutable DescendingMap<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
       return forward().headMap(fromKey, inclusive).descendingMap();
     }
 
     @Override
-    public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable DescendingMap<K, V> this, @ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable DescendingMap<K, V> this, @ParametricNullness K fromKey) {
       return tailMap(fromKey, true);
     }
 
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable DescendingMap<K, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable DescendingMap<K, V> this) {
       return new @PolyMutable Values<>(this);
     }
 

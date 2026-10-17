@@ -241,12 +241,12 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<C, V> column(@PolyMutable TransposeTable<C, R, V> this, @ParametricNullness R columnKey) {
+    public @ReceiverDependentMutable Map<C, V> column(@ReceiverDependentMutable TransposeTable<C, R, V> this, @ParametricNullness R columnKey) {
       return original.row(columnKey);
     }
 
     @Override
-    public @PolyMutable Set<R> columnKeySet(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Set<R> columnKeySet(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.rowKeySet();
     }
 
@@ -303,12 +303,12 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<R, V> row(@PolyMutable TransposeTable<C, R, V> this, @ParametricNullness C rowKey) {
+    public @ReceiverDependentMutable Map<R, V> row(@ReceiverDependentMutable TransposeTable<C, R, V> this, @ParametricNullness C rowKey) {
       return original.column(rowKey);
     }
 
     @Override
-    public @PolyMutable Set<C> rowKeySet(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Set<C> rowKeySet(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.columnKeySet();
     }
 
@@ -323,7 +323,7 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.values();
     }
 
@@ -486,12 +486,12 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<C, V2> row(@PolyMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness R rowKey) {
+    public @ReceiverDependentMutable Map<C, V2> row(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness R rowKey) {
       return Maps.transformValues(fromTable.row(rowKey), function);
     }
 
     @Override
-    public @PolyMutable Map<R, V2> column(@PolyMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness C columnKey) {
+    public @ReceiverDependentMutable Map<R, V2> column(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness C columnKey) {
       return Maps.transformValues(fromTable.column(columnKey), function);
     }
 
@@ -516,17 +516,17 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Set<R> rowKeySet(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    public @ReceiverDependentMutable Set<R> rowKeySet(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return fromTable.rowKeySet();
     }
 
     @Override
-    public @PolyMutable Set<C> columnKeySet(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    public @ReceiverDependentMutable Set<C> columnKeySet(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return fromTable.columnKeySet();
     }
 
     @Override
-    @PolyMutable Collection<V2> createValues(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    @ReceiverDependentMutable Collection<V2> createValues(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return Collections2.transform(fromTable.values(), function);
     }
 

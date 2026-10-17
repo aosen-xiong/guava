@@ -90,13 +90,13 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   @LazyInit @CheckForNull private transient @Assignable Set<Range<C>> asDescendingSetOfRanges;
 
   @Override
-  public @PolyMutable Set<Range<C>> asRanges(@PolyMutable TreeRangeSet<C> this) {
+  public @ReceiverDependentMutable Set<Range<C>> asRanges(@ReceiverDependentMutable TreeRangeSet<C> this) {
     Set<Range<C>> result = asRanges;
     return (result == null) ? asRanges = new AsRanges(rangesByLowerBound.values()) : result;
   }
 
   @Override
-  public @PolyMutable Set<Range<C>> asDescendingSetOfRanges(@PolyMutable TreeRangeSet<C> this) {
+  public @ReceiverDependentMutable Set<Range<C>> asDescendingSetOfRanges(@ReceiverDependentMutable TreeRangeSet<C> this) {
     Set<Range<C>> result = asDescendingSetOfRanges;
     return (result == null)
         ? asDescendingSetOfRanges = new AsRanges(rangesByLowerBound.descendingMap().values())

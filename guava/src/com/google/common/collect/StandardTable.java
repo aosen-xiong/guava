@@ -244,7 +244,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * time the cell is returned by a method call to the set or its iterator.
    */
   @Override
-  public @PolyMutable Set<Cell<R, C, V>> cellSet(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return super.cellSet();
   }
 
@@ -686,7 +686,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   }
 
   @Override
-  public @PolyMutable Set<R> rowKeySet(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Set<R> rowKeySet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return rowMap().keySet();
   }
 
@@ -819,7 +819,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * row, and so on.
    */
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return super.values();
   }
 

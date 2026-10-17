@@ -69,7 +69,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   protected ForwardingSortedMap() {}
 
   @Override
-  protected abstract @PolyMutable SortedMap<K, V> delegate(@PolyMutable ForwardingSortedMap<K, V> this);
+  protected abstract @ReceiverDependentMutable SortedMap<K, V> delegate(@ReceiverDependentMutable ForwardingSortedMap<K, V> this);
 
   @SideEffectFree
   @Override
@@ -85,7 +85,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> headMap(@PolyMutable ForwardingSortedMap<K, V> this, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, @ParametricNullness K toKey) {
     return delegate().headMap(toKey);
   }
 
@@ -96,12 +96,12 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> subMap(@PolyMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
     return delegate().subMap(fromKey, toKey);
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey) {
     return delegate().tailMap(fromKey);
   }
 

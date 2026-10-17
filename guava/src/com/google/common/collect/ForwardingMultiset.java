@@ -88,13 +88,13 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<E> elementSet(@PolyMutable ForwardingMultiset<E> this) {
+  public @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable ForwardingMultiset<E> this) {
     return delegate().elementSet();
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<E>> entrySet(@PolyMutable ForwardingMultiset<E> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable ForwardingMultiset<E> this) {
     return delegate().entrySet();
   }
 

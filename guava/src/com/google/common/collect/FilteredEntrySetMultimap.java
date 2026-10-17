@@ -71,7 +71,7 @@ final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V ex
   }
 
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<K, V>> entries(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this) {
     return (@PolyMutable Set<@PolyMutable Entry<K, V>>) super.entries();
   }
 }

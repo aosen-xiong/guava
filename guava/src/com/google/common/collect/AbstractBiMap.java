@@ -92,7 +92,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  protected @PolyMutable Map<K, V> delegate(@PolyMutable AbstractBiMap<K,V> this) {
+  protected @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable AbstractBiMap<K,V> this) {
     return delegate;
   }
 
@@ -248,7 +248,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   // Views
 
   @Override
-  public @PolyMutable BiMap<V, K> inverse(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     return inverse;
   }
 
@@ -256,7 +256,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<K> result = keySet;
     return (result == null) ? keySet = new KeySet() : result;
   }
@@ -303,7 +303,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<V> values(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     /*
      * We can almost reuse the inverse's keySet, except we have to fix the
      * iteration order so that it is consistent with the forward map.
@@ -350,7 +350,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<Entry<K, V>> result = entrySet;
     return (result == null) ? entrySet = new EntrySet() : result;
   }

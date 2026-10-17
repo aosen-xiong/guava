@@ -1190,18 +1190,18 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable SortedSet<E> subSet(@PolyMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
       return new @PolyMutable FilteredSortedSet<E>(
           ((@PolyMutable SortedSet<E>) unfiltered).subSet(fromElement, toElement), predicate);
     }
 
     @Override
-    public @PolyMutable SortedSet<E> headSet(@PolyMutable FilteredSortedSet<E> this, @ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E toElement) {
       return new @PolyMutable FilteredSortedSet<E>(((@PolyMutable SortedSet<E>) unfiltered).headSet(toElement), predicate);
     }
 
     @Override
-    public @PolyMutable SortedSet<E> tailSet(@PolyMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement) {
+    public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement) {
       return new @PolyMutable FilteredSortedSet<E>(((@PolyMutable SortedSet<E>) unfiltered).tailSet(fromElement), predicate);
     }
 
@@ -1274,7 +1274,7 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> descendingSet(@PolyMutable FilteredNavigableSet<E> this) {
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
       return Sets.filter(unfiltered().descendingSet(), predicate);
     }
 
@@ -1290,8 +1290,8 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> subSet(
-            @PolyMutable FilteredNavigableSet<E> this,
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
+            @ReceiverDependentMutable FilteredNavigableSet<E> this,
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
@@ -1301,12 +1301,12 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> headSet(@PolyMutable FilteredNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> headSet(@ReceiverDependentMutable FilteredNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
       return filter(unfiltered().headSet(toElement, inclusive), predicate);
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> tailSet(@PolyMutable FilteredNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(@ReceiverDependentMutable FilteredNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
       return filter(unfiltered().tailSet(fromElement, inclusive), predicate);
     }
   }
@@ -2120,7 +2120,7 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable SortedSet<E> subSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
       return standardSubSet(fromElement, toElement);
     }
 
@@ -2140,7 +2140,7 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable SortedSet<E> tailSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E fromElement) {
+    public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E fromElement) {
       return standardTailSet(fromElement);
     }
 

@@ -157,7 +157,7 @@ public final class Multisets {
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<E> elementSet(@PolyMutable UnmodifiableMultiset<E> this) {
+    public @Immutable Set<E> elementSet(@Immutable UnmodifiableMultiset<E> this) {
       Set<E> es = elementSet;
       return (es == null) ? elementSet = createElementSet() : es;
     }
@@ -167,7 +167,7 @@ public final class Multisets {
     @SideEffectFree
     @SuppressWarnings("unchecked")
     @Override
-    public @PolyMutable Set<Multiset.Entry<E>> entrySet(@PolyMutable UnmodifiableMultiset<E> this) {
+    public @Immutable Set<Multiset.Entry<E>> entrySet(@Immutable UnmodifiableMultiset<E> this) {
       Set<Multiset.Entry<E>> es = entrySet;
       return (es == null)
           // Safe because the returned set is made unmodifiable and Entry

@@ -59,12 +59,12 @@ abstract class AbstractSortedKeySortedSetMultimap<
   }
 
   @Override
-  public @PolyMutable SortedSet<K> keySet(@PolyMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
+  public @ReceiverDependentMutable SortedSet<K> keySet(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
     return (@PolyMutable SortedSet<K>) super.keySet();
   }
 
   @Override
-  @PolyMutable Set<K> createKeySet(@PolyMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
     return createMaybeNavigableKeySet();
   }
 }

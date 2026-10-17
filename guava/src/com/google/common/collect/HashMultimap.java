@@ -170,7 +170,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
 public boolean equals(@Readonly HashMultimap<K,V> this, @Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
-public @PolyMutable Set<V> get(@PolyMutable HashMultimap<K,V> this, @Nullable K arg0) { return super.get(arg0); }
+public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable HashMultimap<K,V> this, @Nullable K arg0) { return super.get(arg0); }
 
 @Override
 public @Readonly Set<V> removeAll(@Mutable HashMultimap<K,V> this, @Nullable @Readonly Object arg0) { return super.removeAll(arg0); }
