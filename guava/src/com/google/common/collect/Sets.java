@@ -1066,20 +1066,21 @@ public final class Sets {
    * you to migrate to streams.
    */
   // TODO(kevinb): how to omit that last sentence when building GWT javadoc?
-  public static <E extends @Nullable @Readonly Object> Set<E> filter(
-          @Readonly Set<E> unfiltered, @Readonly Predicate<? super E> predicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <E extends @Nullable @Readonly Object> @PolyMutable Set<E> filter(
+          @PolyMutable Set<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof SortedSet) {
-      return filter((SortedSet<E>) unfiltered, predicate);
+      return filter((@PolyMutable SortedSet<E>) unfiltered, predicate);
     }
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
+      @PolyMutable FilteredSet<E> filtered = (@PolyMutable FilteredSet<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new FilteredSet<E>((Set<E>) filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredSet<E>((@PolyMutable Set<E>) filtered.unfiltered, combinedPredicate);
     }
 
-    return new FilteredSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
+    return new @PolyMutable FilteredSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
   }
 
   /**
@@ -1106,14 +1107,15 @@ public final class Sets {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <E extends @Nullable @Readonly Object> @PolyMutable SortedSet<E> filter(
       @PolyMutable SortedSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
+      @PolyMutable FilteredSet<E> filtered = (@PolyMutable FilteredSet<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new @PolyMutable FilteredSortedSet<E>((SortedSet<E>) filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredSortedSet<E>((@PolyMutable SortedSet<E>) filtered.unfiltered, combinedPredicate);
     }
 
     return new @PolyMutable FilteredSortedSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
@@ -1143,18 +1145,19 @@ public final class Sets {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableSet
-  public static <E extends @Nullable Object> NavigableSet<E> filter(
-      NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
+  public static <E extends @Nullable Object> @PolyMutable NavigableSet<E> filter(
+      @PolyMutable NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
+      @PolyMutable FilteredSet<E> filtered = (@PolyMutable FilteredSet<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new FilteredNavigableSet<E>((NavigableSet<E>) filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredNavigableSet<E>((@PolyMutable NavigableSet<E>) filtered.unfiltered, combinedPredicate);
     }
 
-    return new FilteredNavigableSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
+    return new @PolyMutable FilteredNavigableSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
   }
 
   @ReceiverDependentMutable

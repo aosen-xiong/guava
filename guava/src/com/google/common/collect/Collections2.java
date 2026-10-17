@@ -99,12 +99,13 @@ public final class Collections2 {
    */
   // TODO(kevinb): how can we omit that Iterables link when building gwt
   // javadoc?
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <E extends @Nullable @Readonly Object> @PolyMutable Collection<E> filter(
-      @PolyMutable Collection<E> unfiltered, Predicate<? super E> predicate) {
+      @PolyMutable Collection<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredCollection) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      return ((FilteredCollection<E>) unfiltered).createCombined(predicate);
+      return ((@PolyMutable FilteredCollection<E>) unfiltered).createCombined(predicate);
     }
 
     return new @PolyMutable FilteredCollection<E>(checkNotNull(unfiltered), checkNotNull(predicate));

@@ -2540,13 +2540,14 @@ public final class Maps {
    * {@link Predicate#apply}. Do not provide a predicate such as {@code
    * Predicates.instanceOf(ArrayList.class)}, which is inconsistent with equals.
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterKeys(
-      Map<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> filterKeys(
+      @PolyMutable Map<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     checkNotNull(keyPredicate);
     @Readonly Predicate<@Readonly Entry<K, ?>> entryPredicate = keyPredicateOnEntries(keyPredicate);
     return (unfiltered instanceof AbstractFilteredMap)
-        ? filterFiltered((AbstractFilteredMap<K, V>) unfiltered, entryPredicate)
-        : new FilteredKeyMap<K, V>(checkNotNull(unfiltered), keyPredicate, entryPredicate);
+        ? filterFiltered((@PolyMutable AbstractFilteredMap<K, V>) unfiltered, entryPredicate)
+        : new @PolyMutable FilteredKeyMap<K, V>(checkNotNull(unfiltered), keyPredicate, entryPredicate);
   }
 
   /**
@@ -2575,8 +2576,9 @@ public final class Maps {
    *
    * @since 11.0
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> SortedMap<K, V> filterKeys(
-      SortedMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable SortedMap<K, V> filterKeys(
+      @PolyMutable SortedMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     // TODO(lowasser): Return a subclass of Maps.FilteredKeyMap for slightly better
     // performance.
     return filterEntries(unfiltered, Maps.<K>keyPredicateOnEntries(keyPredicate));
@@ -2608,10 +2610,11 @@ public final class Maps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      NavigableMap<K, V> filterKeys(
-          NavigableMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
+      @PolyMutable NavigableMap<K, V> filterKeys(
+          @PolyMutable NavigableMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     // TODO(lowasser): Return a subclass of Maps.FilteredKeyMap for slightly better
     // performance.
     return filterEntries(unfiltered, Maps.<K>keyPredicateOnEntries(keyPredicate));
@@ -2641,8 +2644,9 @@ public final class Maps {
    *
    * @since 14.0
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> BiMap<K, V> filterKeys(
-      BiMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable BiMap<K, V> filterKeys(
+      @PolyMutable BiMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     checkNotNull(keyPredicate);
     return filterEntries(unfiltered, Maps.<K>keyPredicateOnEntries(keyPredicate));
   }
@@ -2670,8 +2674,9 @@ public final class Maps {
    * at {@link Predicate#apply}. Do not provide a predicate such as {@code
    * Predicates.instanceOf(ArrayList.class)}, which is inconsistent with equals.
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterValues(
-      Map<K, V> unfiltered, final Predicate<? super V> valuePredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> filterValues(
+      @PolyMutable Map<K, V> unfiltered, final @Readonly Predicate<? super V> valuePredicate) {
     return filterEntries(unfiltered, Maps.<V>valuePredicateOnEntries(valuePredicate));
   }
 
@@ -2701,9 +2706,10 @@ public final class Maps {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SortedMap<K, V> filterValues(
-          SortedMap<K, V> unfiltered, final Predicate<? super V> valuePredicate) {
+      @PolyMutable SortedMap<K, V> filterValues(
+          @PolyMutable SortedMap<K, V> unfiltered, final @Readonly Predicate<? super V> valuePredicate) {
     return filterEntries(unfiltered, Maps.<V>valuePredicateOnEntries(valuePredicate));
   }
 
@@ -2733,10 +2739,11 @@ public final class Maps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      NavigableMap<K, V> filterValues(
-          NavigableMap<K, V> unfiltered, final Predicate<? super V> valuePredicate) {
+      @PolyMutable NavigableMap<K, V> filterValues(
+          @PolyMutable NavigableMap<K, V> unfiltered, final @Readonly Predicate<? super V> valuePredicate) {
     return filterEntries(unfiltered, Maps.<V>valuePredicateOnEntries(valuePredicate));
   }
 
@@ -2767,8 +2774,9 @@ public final class Maps {
    *
    * @since 14.0
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> BiMap<K, V> filterValues(
-      BiMap<K, V> unfiltered, final Predicate<? super V> valuePredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable BiMap<K, V> filterValues(
+      @PolyMutable BiMap<K, V> unfiltered, final @Readonly Predicate<? super V> valuePredicate) {
     return filterEntries(unfiltered, Maps.<V>valuePredicateOnEntries(valuePredicate));
   }
 
@@ -2796,12 +2804,13 @@ public final class Maps {
    * <p><b>Warning:</b> {@code entryPredicate} must be <i>consistent with equals</i>, as documented
    * at {@link Predicate#apply}.
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterEntries(
-      Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> filterEntries(
+      @PolyMutable Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     return (unfiltered instanceof AbstractFilteredMap)
-        ? filterFiltered((AbstractFilteredMap<K, V>) unfiltered, entryPredicate)
-        : new FilteredEntryMap<K, V>(checkNotNull(unfiltered), entryPredicate);
+        ? filterFiltered((@PolyMutable AbstractFilteredMap<K, V>) unfiltered, entryPredicate)
+        : new @PolyMutable FilteredEntryMap<K, V>(checkNotNull(unfiltered), entryPredicate);
   }
 
   /**
@@ -2830,13 +2839,14 @@ public final class Maps {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SortedMap<K, V> filterEntries(
-          SortedMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable SortedMap<K, V> filterEntries(
+          @PolyMutable SortedMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     return (unfiltered instanceof FilteredEntrySortedMap)
-        ? filterFiltered((FilteredEntrySortedMap<K, V>) unfiltered, entryPredicate)
-        : new FilteredEntrySortedMap<K, V>(checkNotNull(unfiltered), entryPredicate);
+        ? filterFiltered((@PolyMutable FilteredEntrySortedMap<K, V>) unfiltered, entryPredicate)
+        : new @PolyMutable FilteredEntrySortedMap<K, V>(checkNotNull(unfiltered), entryPredicate);
   }
 
   /**
@@ -2865,14 +2875,15 @@ public final class Maps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      NavigableMap<K, V> filterEntries(
-          NavigableMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable NavigableMap<K, V> filterEntries(
+          @PolyMutable NavigableMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     return (unfiltered instanceof FilteredEntryNavigableMap)
-        ? filterFiltered((FilteredEntryNavigableMap<K, V>) unfiltered, entryPredicate)
-        : new FilteredEntryNavigableMap<K, V>(checkNotNull(unfiltered), entryPredicate);
+        ? filterFiltered((@PolyMutable FilteredEntryNavigableMap<K, V>) unfiltered, entryPredicate)
+        : new @PolyMutable FilteredEntryNavigableMap<K, V>(checkNotNull(unfiltered), entryPredicate);
   }
 
   /**
@@ -2902,22 +2913,24 @@ public final class Maps {
    *
    * @since 14.0
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> BiMap<K, V> filterEntries(
-      BiMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable BiMap<K, V> filterEntries(
+      @PolyMutable BiMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(unfiltered);
     checkNotNull(entryPredicate);
     return (unfiltered instanceof FilteredEntryBiMap)
-        ? filterFiltered((FilteredEntryBiMap<K, V>) unfiltered, entryPredicate)
-        : new FilteredEntryBiMap<K, V>(unfiltered, entryPredicate);
+        ? filterFiltered((@PolyMutable FilteredEntryBiMap<K, V>) unfiltered, entryPredicate)
+        : new @PolyMutable FilteredEntryBiMap<K, V>(unfiltered, entryPredicate);
   }
 
   /**
    * Support {@code clear()}, {@code removeAll()}, and {@code retainAll()} when filtering a filtered
    * map.
    */
-  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @Readonly Map<K, V> filterFiltered(
-      AbstractFilteredMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
-    return new FilteredEntryMap<>(
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> filterFiltered(
+      @PolyMutable AbstractFilteredMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+    return new @PolyMutable FilteredEntryMap<>(
         map.unfiltered, Predicates.<Entry<K, V>>and(map.predicate, entryPredicate));
   }
 
@@ -2925,35 +2938,38 @@ public final class Maps {
    * Support {@code clear()}, {@code removeAll()}, and {@code retainAll()} when filtering a filtered
    * sorted map.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SortedMap<K, V> filterFiltered(
-          FilteredEntrySortedMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable SortedMap<K, V> filterFiltered(
+          @PolyMutable FilteredEntrySortedMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     @Readonly Predicate<Entry<K, V>> predicate = Predicates.<Entry<K, V>>and(map.predicate, entryPredicate);
-    return new FilteredEntrySortedMap<>(map.sortedMap(), predicate);
+    return new @PolyMutable FilteredEntrySortedMap<>(map.sortedMap(), predicate);
   }
 
   /**
    * Support {@code clear()}, {@code removeAll()}, and {@code retainAll()} when filtering a filtered
    * navigable map.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      NavigableMap<K, V> filterFiltered(
-          FilteredEntryNavigableMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable NavigableMap<K, V> filterFiltered(
+          @PolyMutable FilteredEntryNavigableMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate =
         Predicates.<Entry<K, V>>and(map.entryPredicate, entryPredicate);
-    return new FilteredEntryNavigableMap<>(map.unfiltered, predicate);
+    return new @PolyMutable FilteredEntryNavigableMap<>(map.unfiltered, predicate);
   }
 
   /**
    * Support {@code clear()}, {@code removeAll()}, and {@code retainAll()} when filtering a filtered
    * map.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
-      BiMap<K, V> filterFiltered(
-          FilteredEntryBiMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable BiMap<K, V> filterFiltered(
+          @PolyMutable FilteredEntryBiMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate = Predicates.<Entry<K, V>>and(map.predicate, entryPredicate);
-    return new FilteredEntryBiMap<>(map.unfiltered(), predicate);
+    return new @PolyMutable FilteredEntryBiMap<>(map.unfiltered(), predicate);
   }
 
   @ReceiverDependentMutable

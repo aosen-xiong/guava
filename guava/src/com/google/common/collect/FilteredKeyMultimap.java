@@ -104,7 +104,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  Set<K> createKeySet() {
+  @ReceiverDependentMutable Set<K> createKeySet() {
     return Sets.filter(unfiltered.keySet(), keyPredicate);
   }
 
@@ -222,12 +222,12 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  Map<K, Collection<V>> createAsMap() {
+  @ReceiverDependentMutable Map<K, Collection<V>> createAsMap() {
     return Maps.filterKeys(unfiltered.asMap(), keyPredicate);
   }
 
   @Override
-  Multiset<K> createKeys() {
+  @ReceiverDependentMutable Multiset<K> createKeys() {
     return Multisets.filter(unfiltered.keys(), keyPredicate);
   }
 }

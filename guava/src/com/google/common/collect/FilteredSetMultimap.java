@@ -36,5 +36,5 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 interface FilteredSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends FilteredMultimap<K, V>, SetMultimap<K, V> {
   @Override
-  @PolyMutable SetMultimap<K, V> unfiltered(@PolyMutable FilteredSetMultimap<K, V> this);
+  @ReceiverDependentMutable SetMultimap<K, V> unfiltered(@ReceiverDependentMutable FilteredSetMultimap<K, V> this);
 }

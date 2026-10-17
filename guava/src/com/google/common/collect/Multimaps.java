@@ -2021,21 +2021,22 @@ public final class Multimaps {
    *
    * @since 11.0
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Multimap<K, V> filterKeys(
-      Multimap<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Multimap<K, V> filterKeys(
+      @PolyMutable Multimap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof SetMultimap) {
-      return filterKeys((SetMultimap<K, V>) unfiltered, keyPredicate);
+      return filterKeys((@PolyMutable SetMultimap<K, V>) unfiltered, keyPredicate);
     } else if (unfiltered instanceof ListMultimap) {
-      return filterKeys((ListMultimap<K, V>) unfiltered, keyPredicate);
+      return filterKeys((@PolyMutable ListMultimap<K, V>) unfiltered, keyPredicate);
     } else if (unfiltered instanceof FilteredKeyMultimap) {
-      FilteredKeyMultimap<K, V> prev = (FilteredKeyMultimap<K, V>) unfiltered;
-      return new FilteredKeyMultimap<>(
+      @PolyMutable FilteredKeyMultimap<K, V> prev = (@PolyMutable FilteredKeyMultimap<K, V>) unfiltered;
+      return new @PolyMutable FilteredKeyMultimap<>(
           prev.unfiltered, Predicates.<K>and(prev.keyPredicate, keyPredicate));
     } else if (unfiltered instanceof FilteredMultimap) {
-      FilteredMultimap<K, V> prev = (FilteredMultimap<K, V>) unfiltered;
+      @PolyMutable FilteredMultimap<K, V> prev = (@PolyMutable FilteredMultimap<K, V>) unfiltered;
       return filterFiltered(prev, Maps.<K>keyPredicateOnEntries(keyPredicate));
     } else {
-      return new FilteredKeyMultimap<>(unfiltered, keyPredicate);
+      return new @PolyMutable FilteredKeyMultimap<>(unfiltered, keyPredicate);
     }
   }
 
@@ -2066,18 +2067,19 @@ public final class Multimaps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SetMultimap<K, V> filterKeys(
-          SetMultimap<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+      @PolyMutable SetMultimap<K, V> filterKeys(
+          @PolyMutable SetMultimap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof FilteredKeySetMultimap) {
-      FilteredKeySetMultimap<K, V> prev = (FilteredKeySetMultimap<K, V>) unfiltered;
-      return new FilteredKeySetMultimap<>(
+      @PolyMutable FilteredKeySetMultimap<K, V> prev = (@PolyMutable FilteredKeySetMultimap<K, V>) unfiltered;
+      return new @PolyMutable FilteredKeySetMultimap<>(
           prev.unfiltered(), Predicates.<K>and(prev.keyPredicate, keyPredicate));
     } else if (unfiltered instanceof FilteredSetMultimap) {
-      FilteredSetMultimap<K, V> prev = (FilteredSetMultimap<K, V>) unfiltered;
+      @PolyMutable FilteredSetMultimap<K, V> prev = (@PolyMutable FilteredSetMultimap<K, V>) unfiltered;
       return filterFiltered(prev, Maps.<K>keyPredicateOnEntries(keyPredicate));
     } else {
-      return new FilteredKeySetMultimap<>(unfiltered, keyPredicate);
+      return new @PolyMutable FilteredKeySetMultimap<>(unfiltered, keyPredicate);
     }
   }
 
@@ -2108,15 +2110,16 @@ public final class Multimaps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      ListMultimap<K, V> filterKeys(
-          ListMultimap<K, V> unfiltered, final Predicate<? super K> keyPredicate) {
+      @PolyMutable ListMultimap<K, V> filterKeys(
+          @PolyMutable ListMultimap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof FilteredKeyListMultimap) {
-      FilteredKeyListMultimap<K, V> prev = (FilteredKeyListMultimap<K, V>) unfiltered;
-      return new FilteredKeyListMultimap<>(
+      @PolyMutable FilteredKeyListMultimap<K, V> prev = (@PolyMutable FilteredKeyListMultimap<K, V>) unfiltered;
+      return new @PolyMutable FilteredKeyListMultimap<>(
           prev.unfiltered(), Predicates.<K>and(prev.keyPredicate, keyPredicate));
     } else {
-      return new FilteredKeyListMultimap<>(unfiltered, keyPredicate);
+      return new @PolyMutable FilteredKeyListMultimap<>(unfiltered, keyPredicate);
     }
   }
 
@@ -2147,9 +2150,10 @@ public final class Multimaps {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Multimap<K, V> filterValues(
-          Multimap<K, V> unfiltered, final Predicate<? super V> valuePredicate) {
+      @PolyMutable Multimap<K, V> filterValues(
+          @PolyMutable Multimap<K, V> unfiltered, final @Readonly Predicate<? super V> valuePredicate) {
     return filterEntries(unfiltered, Maps.<V>valuePredicateOnEntries(valuePredicate));
   }
 
@@ -2180,9 +2184,10 @@ public final class Multimaps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SetMultimap<K, V> filterValues(
-          SetMultimap<K, V> unfiltered, final Predicate<? super V> valuePredicate) {
+      @PolyMutable SetMultimap<K, V> filterValues(
+          @PolyMutable SetMultimap<K, V> unfiltered, final @Readonly Predicate<? super V> valuePredicate) {
     return filterEntries(unfiltered, Maps.<V>valuePredicateOnEntries(valuePredicate));
   }
 
@@ -2211,16 +2216,17 @@ public final class Multimaps {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Multimap<K, V> filterEntries(
-          Multimap<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable Multimap<K, V> filterEntries(
+          @PolyMutable Multimap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     if (unfiltered instanceof SetMultimap) {
-      return filterEntries((SetMultimap<K, V>) unfiltered, entryPredicate);
+      return filterEntries((@PolyMutable SetMultimap<K, V>) unfiltered, entryPredicate);
     }
     return (unfiltered instanceof FilteredMultimap)
-        ? filterFiltered((FilteredMultimap<K, V>) unfiltered, entryPredicate)
-        : new FilteredEntryMultimap<K, V>(checkNotNull(unfiltered), entryPredicate);
+        ? filterFiltered((@PolyMutable FilteredMultimap<K, V>) unfiltered, entryPredicate)
+        : new @PolyMutable FilteredEntryMultimap<K, V>(checkNotNull(unfiltered), entryPredicate);
   }
 
   /**
@@ -2248,13 +2254,14 @@ public final class Multimaps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SetMultimap<K, V> filterEntries(
-          SetMultimap<K, V> unfiltered, Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable SetMultimap<K, V> filterEntries(
+          @PolyMutable SetMultimap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
     return (unfiltered instanceof FilteredSetMultimap)
-        ? filterFiltered((FilteredSetMultimap<K, V>) unfiltered, entryPredicate)
-        : new FilteredEntrySetMultimap<K, V>(checkNotNull(unfiltered), entryPredicate);
+        ? filterFiltered((@PolyMutable FilteredSetMultimap<K, V>) unfiltered, entryPredicate)
+        : new @PolyMutable FilteredEntrySetMultimap<K, V>(checkNotNull(unfiltered), entryPredicate);
   }
 
   /**
@@ -2263,12 +2270,13 @@ public final class Multimaps {
    * lead to a multimap whose removal operations would fail. This method combines the predicates to
    * avoid that problem.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Multimap<K, V> filterFiltered(
-          FilteredMultimap<K, V> multimap, Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable Multimap<K, V> filterFiltered(
+          @PolyMutable FilteredMultimap<K, V> multimap, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate =
         Predicates.<Entry<K, V>>and(multimap.entryPredicate(), entryPredicate);
-    return new FilteredEntryMultimap<>(multimap.unfiltered(), predicate);
+    return new @PolyMutable FilteredEntryMultimap<>(multimap.unfiltered(), predicate);
   }
 
   /**
@@ -2277,12 +2285,13 @@ public final class Multimaps {
    * lead to a multimap whose removal operations would fail. This method combines the predicates to
    * avoid that problem.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SetMultimap<K, V> filterFiltered(
-          FilteredSetMultimap<K, V> multimap, Predicate<? super Entry<K, V>> entryPredicate) {
+      @PolyMutable SetMultimap<K, V> filterFiltered(
+          @PolyMutable FilteredSetMultimap<K, V> multimap, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate =
         Predicates.<Entry<K, V>>and(multimap.entryPredicate(), entryPredicate);
-    return new FilteredEntrySetMultimap<>(multimap.unfiltered(), predicate);
+    return new @PolyMutable FilteredEntrySetMultimap<>(multimap.unfiltered(), predicate);
   }
 
   static boolean equalsImpl(@Readonly Multimap<?, ?> multimap, @CheckForNull @UnknownSignedness @Readonly Object object) {

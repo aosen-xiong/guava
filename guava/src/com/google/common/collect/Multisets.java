@@ -327,16 +327,17 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> filter(
-      Multiset<E> unfiltered, Predicate<? super E> predicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <E extends @Nullable Object> @PolyMutable Multiset<E> filter(
+      @PolyMutable Multiset<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredMultiset) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredMultiset<E> filtered = (FilteredMultiset<E>) unfiltered;
+      @PolyMutable FilteredMultiset<E> filtered = (@PolyMutable FilteredMultiset<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new FilteredMultiset<E>(filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredMultiset<E>(filtered.unfiltered, combinedPredicate);
     }
-    return new FilteredMultiset<E>(unfiltered, predicate);
+    return new @PolyMutable FilteredMultiset<E>(unfiltered, predicate);
   }
 
   @ReceiverDependentMutable
@@ -355,7 +356,7 @@ public final class Multisets {
     }
 
     @Override
-    Set<E> createElementSet() {
+    @ReceiverDependentMutable Set<E> createElementSet() {
       return Sets.filter(unfiltered.elementSet(), predicate);
     }
 
@@ -365,7 +366,7 @@ public final class Multisets {
     }
 
     @Override
-    Set<Entry<E>> createEntrySet() {
+    @ReceiverDependentMutable Set<Entry<E>> createEntrySet() {
       return Sets.filter(
           unfiltered.entrySet(),
           new Predicate<Entry<E>>() {
