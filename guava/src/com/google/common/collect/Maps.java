@@ -3637,7 +3637,7 @@ public final class Maps {
     }
 
     UnmodifiableNavigableMap(
-            @Readonly NavigableMap<K, ? extends V> delegate, UnmodifiableNavigableMap<K, V> descendingMap) {
+            @ReceiverDependentMutable NavigableMap<K, ? extends V> delegate, @ReceiverDependentMutable UnmodifiableNavigableMap<K, V> descendingMap) {
       this.delegate = delegate;
       this.descendingMap = descendingMap;
     }
@@ -3787,7 +3787,7 @@ public final class Maps {
     @LazyInit @CheckForNull private transient @Assignable UnmodifiableNavigableMap<K, V> descendingMap;
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<K, V> descendingMap() {
+    public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this) {
       UnmodifiableNavigableMap<K, V> result = descendingMap;
       return (result == null)
           ? descendingMap = new @ReceiverDependentMutable UnmodifiableNavigableMap<>(delegate.descendingMap(), this)
@@ -3795,27 +3795,27 @@ public final class Maps {
     }
 
     @Override
-    public @Readonly Set<@KeyFor({"this"}) K> keySet() {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this) {
       return navigableKeySet();
     }
 
     @Override
-    public @Readonly NavigableSet<@KeyFor({"this"}) K> navigableKeySet() {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this) {
       return Sets.unmodifiableNavigableSet(delegate.navigableKeySet());
     }
 
     @Override
-    public @Readonly NavigableSet<@KeyFor({"this"}) K> descendingKeySet() {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this) {
       return Sets.unmodifiableNavigableSet(delegate.descendingKeySet());
     }
 
     @Override
-    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ParametricNullness K fromKey, @ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
       return subMap(fromKey, true, toKey, false);
     }
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<K, V> subMap(
+    public @ReceiverDependentMutable NavigableMap<K, V> subMap(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this,
         @ParametricNullness K fromKey,
         boolean fromInclusive,
         @ParametricNullness K toKey,
@@ -3825,22 +3825,22 @@ public final class Maps {
     }
 
     @Override
-    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ParametricNullness K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this, @ParametricNullness K toKey) {
       return headMap(toKey, false);
     }
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ParametricNullness K toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this, @ParametricNullness K toKey, boolean inclusive) {
       return Maps.unmodifiableNavigableMap(delegate.headMap(toKey, inclusive));
     }
 
     @Override
-    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ParametricNullness K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this, @ParametricNullness K fromKey) {
       return tailMap(fromKey, true);
     }
 
     @Override
-    public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ParametricNullness K fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ReceiverDependentMutable UnmodifiableNavigableMap<K, V> this, @ParametricNullness K fromKey, boolean inclusive) {
       return Maps.unmodifiableNavigableMap(delegate.tailMap(fromKey, inclusive));
     }
   }
