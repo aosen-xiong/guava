@@ -32,6 +32,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Useful suppliers.
@@ -408,12 +409,13 @@ public final class Suppliers {
    *
    * @since 8.0
    */
-  public static <T extends @Nullable @Readonly Object> Function<Supplier<T>, T> supplierFunction() {
+  public static <T extends @Nullable @Readonly Object> @Immutable Function<Supplier<T>, T> supplierFunction() {
     @SuppressWarnings("unchecked") // implementation is "fully variant"
     SupplierFunction<T> sf = (SupplierFunction<T>) SupplierFunctionImpl.INSTANCE;
     return sf;
   }
 
+  @Immutable
   private interface SupplierFunction<T extends @Nullable @Readonly Object> extends Function<Supplier<T>, T> {}
 
   private enum SupplierFunctionImpl implements SupplierFunction<@Nullable Object> {

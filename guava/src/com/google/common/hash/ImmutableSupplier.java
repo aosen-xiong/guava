@@ -24,4 +24,5 @@ import com.google.errorprone.annotations.Immutable;
 // TODO(cpovirk): Should we just use ChecksumType directly instead of defining this type?
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 interface ImmutableSupplier<T> extends Supplier<T> {}

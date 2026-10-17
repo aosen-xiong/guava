@@ -35,6 +35,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class RemovalNotification<K extends @Immutable Object, V>
     extends SimpleImmutableEntry<@Nullable K, @Nullable V> {
   private final RemovalCause cause;

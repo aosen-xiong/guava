@@ -99,6 +99,7 @@ public interface MapDifference<K extends @Nullable @Immutable Object, V extends 
    * @since 2.0
    */
   @DoNotMock("Use Maps.difference")
+  @Immutable
   interface ValueDifference<V extends @Nullable @Readonly Object> {
     /** Returns the value from the left map (possibly null). */
     @ParametricNullness
