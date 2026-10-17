@@ -2012,7 +2012,7 @@ final class Synchronized {
     }
 
     @Override
-    Queue<E> delegate() {
+    @ReceiverDependentMutable Queue<E> delegate() {
       return (@ReceiverDependentMutable Queue<E>) super.delegate();
     }
 
@@ -2024,7 +2024,7 @@ final class Synchronized {
     }
 
     @Override
-    public boolean offer(E e) {
+    public boolean offer(@Mutable SynchronizedQueue<E> this, E e) {
       synchronized (mutex) {
         return delegate().offer(e);
       }
@@ -2040,14 +2040,14 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public E poll() {
+    public E poll(@Mutable SynchronizedQueue<E> this) {
       synchronized (mutex) {
         return delegate().poll();
       }
     }
 
     @Override
-    public E remove() {
+    public E remove(@Mutable SynchronizedQueue<E> this) {
       synchronized (mutex) {
         return delegate().remove();
       }
@@ -2070,47 +2070,47 @@ final class Synchronized {
     }
 
     @Override
-    Deque<E> delegate() {
+    @ReceiverDependentMutable Deque<E> delegate() {
       return (@ReceiverDependentMutable Deque<E>) super.delegate();
     }
 
     @Override
-    public void addFirst(E e) {
+    public void addFirst(@Mutable SynchronizedDeque<E> this, E e) {
       synchronized (mutex) {
         delegate().addFirst(e);
       }
     }
 
     @Override
-    public void addLast(E e) {
+    public void addLast(@Mutable SynchronizedDeque<E> this, E e) {
       synchronized (mutex) {
         delegate().addLast(e);
       }
     }
 
     @Override
-    public boolean offerFirst(E e) {
+    public boolean offerFirst(@Mutable SynchronizedDeque<E> this, E e) {
       synchronized (mutex) {
         return delegate().offerFirst(e);
       }
     }
 
     @Override
-    public boolean offerLast(E e) {
+    public boolean offerLast(@Mutable SynchronizedDeque<E> this, E e) {
       synchronized (mutex) {
         return delegate().offerLast(e);
       }
     }
 
     @Override
-    public E removeFirst() {
+    public E removeFirst(@Mutable SynchronizedDeque<E> this) {
       synchronized (mutex) {
         return delegate().removeFirst();
       }
     }
 
     @Override
-    public E removeLast() {
+    public E removeLast(@Mutable SynchronizedDeque<E> this) {
       synchronized (mutex) {
         return delegate().removeLast();
       }
@@ -2118,7 +2118,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public E pollFirst() {
+    public E pollFirst(@Mutable SynchronizedDeque<E> this) {
       synchronized (mutex) {
         return delegate().pollFirst();
       }
@@ -2126,7 +2126,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public E pollLast() {
+    public E pollLast(@Mutable SynchronizedDeque<E> this) {
       synchronized (mutex) {
         return delegate().pollLast();
       }
@@ -2163,28 +2163,28 @@ final class Synchronized {
     }
 
     @Override
-    public boolean removeFirstOccurrence(@CheckForNull @Readonly Object o) {
+    public boolean removeFirstOccurrence(@Mutable SynchronizedDeque<E> this, @CheckForNull @Readonly Object o) {
       synchronized (mutex) {
         return delegate().removeFirstOccurrence(o);
       }
     }
 
     @Override
-    public boolean removeLastOccurrence(@CheckForNull @Readonly Object o) {
+    public boolean removeLastOccurrence(@Mutable SynchronizedDeque<E> this, @CheckForNull @Readonly Object o) {
       synchronized (mutex) {
         return delegate().removeLastOccurrence(o);
       }
     }
 
     @Override
-    public void push(E e) {
+    public void push(@Mutable SynchronizedDeque<E> this, E e) {
       synchronized (mutex) {
         delegate().push(e);
       }
     }
 
     @Override
-    public E pop() {
+    public E pop(@Mutable SynchronizedDeque<E> this) {
       synchronized (mutex) {
         return delegate().pop();
       }
