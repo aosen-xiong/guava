@@ -313,7 +313,7 @@ public final class Iterables {
    * @param iterable the iterable to copy
    * @return a newly-allocated array into which all the elements of the iterable have been copied
    */
-  static @Nullable Object[] toArray(@Readonly Iterable<?> iterable) {
+  static @Nullable @Readonly Object[] toArray(@Readonly Iterable<?> iterable) {
     return castOrCopyToCollection(iterable).toArray();
   }
 

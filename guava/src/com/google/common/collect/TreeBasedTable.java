@@ -144,7 +144,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    * @deprecated Use {@code table.rowKeySet().comparator()} instead.
    */
   @Deprecated
-  public Comparator<? super R> rowComparator() {
+  public @Readonly Comparator<? super R> rowComparator() {
     /*
      * requireNonNull is safe because the factories require non-null Comparators, which they pass on
      * to the backing collections.

@@ -409,7 +409,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    Iterator<Entry<C, V>> entryIterator() {
+    @Readonly Iterator<Entry<C, V>> entryIterator() {
       updateBackingRowMapField();
       if (backingRowMap == null) {
         return Iterators.emptyModifiableIterator();

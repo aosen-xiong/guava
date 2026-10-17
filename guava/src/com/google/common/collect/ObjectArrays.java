@@ -222,7 +222,7 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
+  static @PolySigned @Readonly Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
     for (int i = 0; i < length; i++) {
       checkElementNotNull(array[i], i);
     }
@@ -232,7 +232,7 @@ public final class ObjectArrays {
   // We do this instead of Preconditions.checkNotNull to save boxing and array
   // creation cost.
   @CanIgnoreReturnValue
-  static @PolySigned Object checkElementNotNull(@PolySigned @Readonly Object element, int index) {
+  static @PolySigned @Readonly Object checkElementNotNull(@PolySigned @Readonly Object element, int index) {
     if (element == null) {
       throw new NullPointerException("at index " + index);
     }

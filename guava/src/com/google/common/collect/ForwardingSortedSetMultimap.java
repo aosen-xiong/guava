@@ -57,12 +57,12 @@ public abstract class ForwardingSortedSetMultimap<
   }
 
   @Override
-  public SortedSet<V> removeAll(@Mutable ForwardingSortedSetMultimap<K,V> this, @CheckForNull @Mutable Object key) {
+  public @Readonly SortedSet<V> removeAll(@Mutable ForwardingSortedSetMultimap<K,V> this, @CheckForNull @Mutable Object key) {
     return delegate().removeAll(key);
   }
 
   @Override
-  public SortedSet<V> replaceValues(@Mutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly SortedSet<V> replaceValues(@Mutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 

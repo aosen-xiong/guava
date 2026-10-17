@@ -269,7 +269,7 @@ final class Synchronized {
 
     @Override
     @SuppressWarnings("nullness:return")
-    public @PolyNull @PolySigned Object[] toArray() {
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       synchronized (mutex) {
         return delegate().toArray();
       }
@@ -346,7 +346,7 @@ final class Synchronized {
     @SideEffectFree
     @Override
     @CheckForNull
-    public Comparator<? super E> comparator() {
+    public @Readonly Comparator<? super E> comparator() {
       synchronized (mutex) {
         return delegate().comparator();
       }
@@ -727,7 +727,7 @@ final class Synchronized {
     }
 
     @Override
-    public Collection<V> replaceValues(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+    public @Readonly Collection<V> replaceValues(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -741,7 +741,7 @@ final class Synchronized {
     }
 
     @Override
-    public Collection<V> removeAll(@Mutable SynchronizedMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    public @Readonly Collection<V> removeAll(@Mutable SynchronizedMultimap<K, V> this, @CheckForNull @Readonly Object key) {
       synchronized (mutex) {
         return delegate().removeAll(key); // copy not synchronized
       }
@@ -865,14 +865,14 @@ final class Synchronized {
     }
 
     @Override
-    public List<V> removeAll(@Mutable SynchronizedListMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    public @Readonly List<V> removeAll(@Mutable SynchronizedListMultimap<K, V> this, @CheckForNull @Readonly Object key) {
       synchronized (mutex) {
         return delegate().removeAll(key); // copy not synchronized
       }
     }
 
     @Override
-    public List<V> replaceValues(@Mutable SynchronizedListMultimap<K, V> this,  K key, Iterable<? extends V> values) {
+    public @Readonly List<V> replaceValues(@Mutable SynchronizedListMultimap<K, V> this,  K key, Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -911,14 +911,14 @@ final class Synchronized {
     }
 
     @Override
-    public Set<V> removeAll(@Mutable SynchronizedSetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    public @Readonly Set<V> removeAll(@Mutable SynchronizedSetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
       synchronized (mutex) {
         return delegate().removeAll(key); // copy not synchronized
       }
     }
 
     @Override
-    public Set<V> replaceValues(@Mutable SynchronizedSetMultimap<K, V> this, K key, Iterable<? extends V> values) {
+    public @Readonly Set<V> replaceValues(@Mutable SynchronizedSetMultimap<K, V> this, K key, Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -968,14 +968,14 @@ final class Synchronized {
     }
 
     @Override
-    public SortedSet<V> removeAll(@Mutable SynchronizedSortedSetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    public @Readonly SortedSet<V> removeAll(@Mutable SynchronizedSortedSetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
       synchronized (mutex) {
         return delegate().removeAll(key); // copy not synchronized
       }
     }
 
     @Override
-    public SortedSet<V> replaceValues(@Mutable SynchronizedSortedSetMultimap<K, V> this, K key, Iterable<? extends V> values) {
+    public @Readonly SortedSet<V> replaceValues(@Mutable SynchronizedSortedSetMultimap<K, V> this, K key, Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -1376,7 +1376,7 @@ final class Synchronized {
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator() {
+    public @Readonly Comparator<? super K> comparator() {
       synchronized (mutex) {
         return delegate().comparator();
       }

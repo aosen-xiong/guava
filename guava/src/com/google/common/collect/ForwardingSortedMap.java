@@ -74,7 +74,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   @SideEffectFree
   @Override
   @CheckForNull
-  public Comparator<? super K> comparator(@Readonly ForwardingSortedMap<K, V> this) {
+  public @Readonly Comparator<? super K> comparator(@Readonly ForwardingSortedMap<K, V> this) {
     return delegate().comparator();
   }
 
@@ -122,7 +122,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   // unsafe, but worst case is a CCE or NPE is thrown, which callers will be expecting
   @SuppressWarnings({"unchecked", "nullness"})
   static int unsafeCompare(
-      @CheckForNull Comparator<?> comparator, @CheckForNull @Readonly Object o1, @CheckForNull @Readonly Object o2) {
+      @CheckForNull @Readonly Comparator<?> comparator, @CheckForNull @Readonly Object o1, @CheckForNull @Readonly Object o2) {
     if (comparator == null) {
       return ((Comparable<@Nullable @Readonly Object>) o1).compareTo(o2);
     } else {

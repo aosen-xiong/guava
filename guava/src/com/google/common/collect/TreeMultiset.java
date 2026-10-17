@@ -408,7 +408,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   /** Returns the first node in the tree that is in range. */
   @CheckForNull
-  private AvlNode<E> firstNode() {
+  private @Readonly AvlNode<E> firstNode() {
     AvlNode<E> root = rootReference.get();
     if (root == null) {
       return null;
@@ -432,7 +432,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @CheckForNull
-  private AvlNode<E> lastNode() {
+  private @Readonly AvlNode<E> lastNode() {
     AvlNode<E> root = rootReference.get();
     if (root == null) {
       return null;

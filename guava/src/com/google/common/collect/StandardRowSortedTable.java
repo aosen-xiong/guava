@@ -30,6 +30,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Implementation of {@code Table} whose iteration ordering across row keys is sorted by their
@@ -109,7 +110,7 @@ class StandardRowSortedTable<R extends @Immutable Object, C extends @Immutable O
 
     @Override
     @CheckForNull
-    public Comparator<? super R> comparator() {
+    public @Readonly Comparator<? super R> comparator() {
       return sortedBackingMap().comparator();
     }
 

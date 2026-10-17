@@ -387,7 +387,7 @@ final class Types {
 
     @Override
     @CheckForNull
-    public Object invoke(Object proxy, Method method, @CheckForNull @Nullable Object[] args)
+    public @Readonly Object invoke(Object proxy, Method method, @CheckForNull @Nullable Object[] args)
         throws Throwable {
       String methodName = method.getName();
       Method typeVariableMethod = typeVariableMethods.get(methodName);

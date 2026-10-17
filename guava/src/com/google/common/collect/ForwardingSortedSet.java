@@ -75,7 +75,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
   @SideEffectFree
   @Override
   @CheckForNull
-  public Comparator<? super E> comparator(@Readonly ForwardingSortedSet<E> this) {
+  public @Readonly Comparator<? super E> comparator(@Readonly ForwardingSortedSet<E> this) {
     return delegate().comparator();
   }
 

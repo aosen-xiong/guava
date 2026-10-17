@@ -550,7 +550,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return (oldValue == NOT_FOUND) ? null : (V) oldValue;
   }
 
-  private @Nullable Object removeHelper(@Mutable CompactHashMap<K, V> this, @CheckForNull @Readonly Object key) {
+  private @Nullable @Readonly Object removeHelper(@Mutable CompactHashMap<K, V> this, @CheckForNull @Readonly Object key) {
     if (needsAllocArrays()) {
       return NOT_FOUND;
     }
@@ -719,7 +719,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public @Nullable Object[] toArray() {
+    public @Nullable @Readonly Object[] toArray() {
       if (needsAllocArrays()) {
         return new Object[0];
       }
@@ -1041,7 +1041,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       if (needsAllocArrays()) {
         return new Object[0];
       }

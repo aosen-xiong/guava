@@ -1185,7 +1185,7 @@ public final class Sets {
 
     @Override
     @CheckForNull
-    public Comparator<? super E> comparator(@Readonly FilteredSortedSet<E> this) {
+    public @Readonly Comparator<? super E> comparator(@Readonly FilteredSortedSet<E> this) {
       return ((SortedSet<E>) unfiltered).comparator();
     }
 

@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Standard implementation of {@link Network} that supports the options supplied by {@link
@@ -97,12 +98,12 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
   }
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return nodeConnections.unmodifiableKeySet();
   }
 
   @Override
-  public Set<E> edges() {
+  public @Readonly Set<E> edges() {
     return edgeToReferenceNode.unmodifiableKeySet();
   }
 

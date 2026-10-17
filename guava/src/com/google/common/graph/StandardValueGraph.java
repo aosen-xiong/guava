@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Standard implementation of {@link ValueGraph} that supports the options supplied by {@link
@@ -84,7 +85,7 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
   }
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return nodeConnections.unmodifiableKeySet();
   }
 

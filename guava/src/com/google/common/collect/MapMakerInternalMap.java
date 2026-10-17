@@ -2832,7 +2832,7 @@ class MapMakerInternalMap<
 
     @CFComment("qualifers depend on V, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       return toArrayList(this).toArray();
     }
 

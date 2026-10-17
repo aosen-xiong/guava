@@ -657,7 +657,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     @CheckForNull
-    public Comparator<? super V> comparator() {
+    public @Readonly Comparator<? super V> comparator() {
       return getSortedSetDelegate().comparator();
     }
 
@@ -1056,7 +1056,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator() {
+    public @Readonly Comparator<? super K> comparator() {
       return sortedMap().comparator();
     }
 
@@ -1536,7 +1536,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator(@Readonly SortedAsMap this) {
+    public @Readonly Comparator<? super K> comparator(@Readonly SortedAsMap this) {
       return sortedMap().comparator();
     }
 

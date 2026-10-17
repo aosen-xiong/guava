@@ -373,7 +373,7 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
 
     @Override
     @CheckForNull
-    final Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
+    final @Readonly Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       return method.invoke(receiver, args);
     }

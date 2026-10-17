@@ -119,7 +119,7 @@ final class SubscriberRegistry {
   }
 
   @VisibleForTesting
-  Set<Subscriber> getSubscribersForTesting(Class<?> eventType) {
+  @Readonly Set<Subscriber> getSubscribersForTesting(Class<?> eventType) {
     return MoreObjects.firstNonNull(subscribers.get(eventType), ImmutableSet.<Subscriber>of());
   }
 

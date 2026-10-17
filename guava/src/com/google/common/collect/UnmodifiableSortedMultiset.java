@@ -52,7 +52,7 @@ final class UnmodifiableSortedMultiset<E extends @Nullable @Readonly Object> ext
   }
 
   @Override
-  public Comparator<? super E> comparator(UnmodifiableSortedMultiset<E> this) {
+  public @Readonly Comparator<? super E> comparator(UnmodifiableSortedMultiset<E> this) {
     return delegate().comparator();
   }
 

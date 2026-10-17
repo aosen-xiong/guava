@@ -434,7 +434,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Readonly Entry<Cut<C>, Range<C>> computeNext() {
           if (!backingItr.hasNext()) {
             return endOfData();
           }
@@ -880,7 +880,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   }
 
   @Override
-  public RangeSet<C> subRangeSet(Range<C> view) {
+  public @Readonly RangeSet<C> subRangeSet(Range<C> view) {
     return view.equals(Range.<C>all()) ? this : new SubRangeSet(view);
   }
 

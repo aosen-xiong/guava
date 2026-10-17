@@ -54,13 +54,13 @@ public abstract class ForwardingListMultimap<K extends @Nullable @Immutable Obje
 
   @CanIgnoreReturnValue
   @Override
-  public List<V> removeAll(@CheckForNull @Readonly Object key) {
+  public @Readonly List<V> removeAll(@CheckForNull @Readonly Object key) {
     return delegate().removeAll(key);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public List<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly List<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 }

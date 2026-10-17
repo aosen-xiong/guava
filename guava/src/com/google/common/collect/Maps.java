@@ -1006,7 +1006,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator(@Readonly SortedAsMapView<K, V> this) {
+    public @Readonly Comparator<? super K> comparator(@Readonly SortedAsMapView<K, V> this) {
       return backingSet().comparator();
     }
 
@@ -1083,7 +1083,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator(@Readonly NavigableAsMapView<K, V> this) {
+    public @Readonly Comparator<? super K> comparator(@Readonly NavigableAsMapView<K, V> this) {
       return set.comparator();
     }
 
@@ -1529,7 +1529,7 @@ public final class Maps {
       }
 
       @Override
-      public Entry<K, V> next() {
+      public @Readonly Entry<K, V> next() {
         return unmodifiableEntry(entryIterator.next());
       }
     };
@@ -1550,7 +1550,7 @@ public final class Maps {
     }
 
     @Override
-    public Iterator<@Readonly Entry<K, V>> iterator() {
+    public @Readonly Iterator<@Readonly Entry<K, V>> iterator() {
       return unmodifiableEntryIterator(entries.iterator());
     }
 
@@ -2326,7 +2326,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator(@Readonly TransformedEntriesSortedMap<K, V1, V2> this) {
+    public @Readonly Comparator<? super K> comparator(@Readonly TransformedEntriesSortedMap<K, V1, V2> this) {
       return fromMap().comparator();
     }
 
@@ -2911,7 +2911,7 @@ public final class Maps {
    * Support {@code clear()}, {@code removeAll()}, and {@code retainAll()} when filtering a filtered
    * map.
    */
-  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Map<K, V> filterFiltered(
+  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @Readonly Map<K, V> filterFiltered(
       AbstractFilteredMap<K, V> map, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     return new FilteredEntryMap<>(
         map.unfiltered, Predicates.<Entry<K, V>>and(map.predicate, entryPredicate));
@@ -3276,7 +3276,7 @@ public final class Maps {
     class SortedKeySet extends KeySet implements SortedSet<K> {
       @Override
       @CheckForNull
-      public Comparator<? super K> comparator() {
+      public @Readonly Comparator<? super K> comparator() {
         return sortedMap().comparator();
       }
 
@@ -3312,7 +3312,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator() {
+    public @Readonly Comparator<? super K> comparator() {
       return sortedMap().comparator();
     }
 
@@ -3378,7 +3378,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator() {
+    public @Readonly Comparator<? super K> comparator() {
       return unfiltered.comparator();
     }
 
@@ -4169,7 +4169,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Comparator<? super K> comparator() {
+    public @Readonly Comparator<? super K> comparator() {
       return map().comparator();
     }
 
@@ -4479,7 +4479,7 @@ public final class Maps {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Comparator<? super K> comparator() {
+    public @Readonly Comparator<? super K> comparator() {
       Comparator<? super K> result = comparator;
       if (result == null) {
         Comparator<? super K> forwardCmp = forward().comparator();
