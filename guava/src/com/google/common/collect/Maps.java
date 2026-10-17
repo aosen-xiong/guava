@@ -1721,7 +1721,7 @@ public final class Maps {
   /**
    * @see Maps#unmodifiableBiMap(BiMap)
    */
-  private static class UnmodifiableBiMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  private static class UnmodifiableBiMap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends ForwardingMap<K, V> implements BiMap<K, V>, Serializable {
     final Map<K, V> unmodifiableMap;
     final BiMap<? extends K, ? extends V> delegate;

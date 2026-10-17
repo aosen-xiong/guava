@@ -135,7 +135,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    * @throws IllegalArgumentException if {@code countMap} is not empty
    * @since 20.0
    */
-  public static <E> ConcurrentHashMultiset<E> create(ConcurrentMap<E, AtomicInteger> countMap) {
+  public static <E extends @Immutable Object> ConcurrentHashMultiset<E> create(ConcurrentMap<E, AtomicInteger> countMap) {
     return new ConcurrentHashMultiset<>(countMap);
   }
 

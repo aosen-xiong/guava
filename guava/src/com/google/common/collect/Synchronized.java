@@ -1429,7 +1429,7 @@ final class Synchronized {
   }
 
   @ReceiverDependentMutable
-  static final class SynchronizedBiMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  static final class SynchronizedBiMap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends SynchronizedMap<K, V> implements BiMap<K, V>, Serializable {
     @CheckForNull private transient Set<V> valueSet;
     @RetainedWith @CheckForNull private transient BiMap<V, K> inverse;

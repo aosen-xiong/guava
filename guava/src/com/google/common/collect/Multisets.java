@@ -129,7 +129,7 @@ public final class Multisets {
    * @since 10.0
    */
   @Deprecated
-  public static <E> @Immutable Multiset<E> unmodifiableMultiset(ImmutableMultiset<E> multiset) {
+  public static <E extends @Immutable Object> @Immutable Multiset<E> unmodifiableMultiset(ImmutableMultiset<E> multiset) {
     return checkNotNull(multiset);
   }
 

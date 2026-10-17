@@ -106,7 +106,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    */
 
   /** Creates an empty {@code CompactHashMap} instance. */
-  public static <K extends @Nullable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
   CompactHashMap<K, V> create() {
     return new CompactHashMap<>();
   }
@@ -120,7 +120,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    *     elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <K extends @Nullable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
   CompactHashMap<K, V> createWithExpectedSize(int expectedSize) {
     return new CompactHashMap<>(expectedSize);
   }
