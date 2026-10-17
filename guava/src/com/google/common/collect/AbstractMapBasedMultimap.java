@@ -1287,7 +1287,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @Override
   @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
-    return new Multimaps.Keys<K, V>(this);
+    return new Multimaps.@ReceiverDependentMutable Keys<K, V>(this);
   }
 
   /**
@@ -1354,7 +1354,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @Override
   @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
-    return new AsMap(map);
+    return new @ReceiverDependentMutable AsMap(map);
   }
 
   final Map<K, @PolyMutable Collection<V>> createMaybeNavigableAsMap(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
@@ -1554,7 +1554,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> headMap(@ReceiverDependentMutable SortedAsMap this, @ParametricNullness K toKey) {
-      return new SortedAsMap(sortedMap().headMap(toKey));
+      return new @ReceiverDependentMutable SortedAsMap(sortedMap().headMap(toKey));
     }
 
     @Override

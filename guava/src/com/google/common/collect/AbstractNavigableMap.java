@@ -164,7 +164,7 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
-    return new Maps.NavigableKeySet<>(this);
+    return new Maps.@ReceiverDependentMutable NavigableKeySet<>(this);
   }
 
   @Override

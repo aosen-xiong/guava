@@ -1294,7 +1294,7 @@ public final class Multimaps {
 
     @Override
     @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable MapMultimap<K, V> this) {
-      return new Multimaps.Keys<K, V>(this);
+      return new Multimaps.@ReceiverDependentMutable Keys<K, V>(this);
     }
 
     @Override
@@ -1304,7 +1304,7 @@ public final class Multimaps {
 
     @Override
     @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable MapMultimap<K, V> this) {
-      return new AsMap<>(this);
+      return new @ReceiverDependentMutable AsMap<>(this);
     }
 
     @Pure

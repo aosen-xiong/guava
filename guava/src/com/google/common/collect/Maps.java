@@ -3373,7 +3373,7 @@ public final class Maps {
             @ReceiverDependentMutable NavigableMap<K, V> unfiltered, @Readonly Predicate<? super @ReceiverDependentMutable Entry<K, V>> entryPredicate) {
       this.unfiltered = checkNotNull(unfiltered);
       this.entryPredicate = entryPredicate;
-      this.filteredDelegate = new FilteredEntryMap<>(unfiltered, entryPredicate);
+      this.filteredDelegate = new @ReceiverDependentMutable FilteredEntryMap<>(unfiltered, entryPredicate);
     }
 
     @Override
@@ -4621,7 +4621,7 @@ public final class Maps {
     @Override
     public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
       NavigableSet<K> result = navigableKeySet;
-      return (result == null) ? navigableKeySet = new NavigableKeySet<>(this) : result;
+      return (result == null) ? navigableKeySet = new @ReceiverDependentMutable NavigableKeySet<>(this) : result;
     }
 
     @Override

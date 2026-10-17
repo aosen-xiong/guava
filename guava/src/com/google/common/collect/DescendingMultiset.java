@@ -64,7 +64,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   public @ReceiverDependentMutable NavigableSet<E> elementSet() {
     NavigableSet<E> result = elementSet;
     if (result == null) {
-      return elementSet = new SortedMultisets.NavigableElementSet<>(this);
+      return elementSet = new SortedMultisets.@ReceiverDependentMutable NavigableElementSet<>(this);
     }
     return result;
   }

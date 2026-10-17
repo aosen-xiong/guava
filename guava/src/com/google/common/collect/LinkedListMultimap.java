@@ -777,7 +777,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @Override
   Multiset<K> createKeys() {
-    return new Multimaps.Keys<K, V>(this);
+    return new Multimaps.@ReceiverDependentMutable Keys<K, V>(this);
   }
 
   /**
@@ -877,7 +877,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @Override
   Map<K, Collection<V>> createAsMap() {
-    return new Multimaps.AsMap<>(this);
+    return new Multimaps.@ReceiverDependentMutable AsMap<>(this);
   }
 
   /**

@@ -92,14 +92,14 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   @Override
   public @ReceiverDependentMutable Set<Range<C>> asRanges(@ReceiverDependentMutable TreeRangeSet<C> this) {
     Set<Range<C>> result = asRanges;
-    return (result == null) ? asRanges = new AsRanges(rangesByLowerBound.values()) : result;
+    return (result == null) ? asRanges = new @ReceiverDependentMutable AsRanges(rangesByLowerBound.values()) : result;
   }
 
   @Override
   public @ReceiverDependentMutable Set<Range<C>> asDescendingSetOfRanges(@ReceiverDependentMutable TreeRangeSet<C> this) {
     Set<Range<C>> result = asDescendingSetOfRanges;
     return (result == null)
-        ? asDescendingSetOfRanges = new AsRanges(rangesByLowerBound.descendingMap().values())
+        ? asDescendingSetOfRanges = new @ReceiverDependentMutable AsRanges(rangesByLowerBound.descendingMap().values())
         : result;
   }
 
@@ -317,7 +317,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
 
     private NavigableMap<Cut<C>, Range<C>> subMap(Range<Cut<C>> window) {
       if (window.isConnected(upperBoundWindow)) {
-        return new RangesByUpperBound<>(rangesByLowerBound, window.intersection(upperBoundWindow));
+        return new @ReceiverDependentMutable RangesByUpperBound<>(rangesByLowerBound, window.intersection(upperBoundWindow));
       } else {
         return ImmutableSortedMap.of();
       }
@@ -491,7 +491,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
         return ImmutableSortedMap.of();
       } else {
         subWindow = subWindow.intersection(complementLowerBoundWindow);
-        return new ComplementRangesByLowerBound<>(positiveRangesByLowerBound, subWindow);
+        return new @ReceiverDependentMutable ComplementRangesByLowerBound<>(positiveRangesByLowerBound, subWindow);
       }
     }
 
@@ -727,7 +727,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       if (!window.isConnected(lowerBoundWindow)) {
         return ImmutableSortedMap.of();
       } else {
-        return new SubRangeSetRangesByLowerBound<>(
+        return new @ReceiverDependentMutable SubRangeSetRangesByLowerBound<>(
             lowerBoundWindow.intersection(window), restriction, rangesByLowerBound);
       }
     }
