@@ -182,7 +182,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
       extends ImmutableEntry<K, V> implements ValueSetLink<K, V> {
     final int smearedValueHash;
 
-    @CheckForNull ValueEntry<K, V> nextInValueBucket;
+    @CheckForNull @Assignable ValueEntry<K, V> nextInValueBucket;
     /*
      * The *InValueSet and *InMultimap fields below are null after construction, but we almost
      * always call succeedsIn*() to initialize them immediately thereafter.
@@ -208,11 +208,11 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
      * frameworks like Android that define post-construct hooks like Activity.onCreate, etc.
      */
 
-    @CheckForNull private ValueSetLink<K, V> predecessorInValueSet;
-    @CheckForNull private ValueSetLink<K, V> successorInValueSet;
+    @CheckForNull private @Assignable ValueSetLink<K, V> predecessorInValueSet;
+    @CheckForNull private @Assignable ValueSetLink<K, V> successorInValueSet;
 
-    @CheckForNull private ValueEntry<K, V> predecessorInMultimap;
-    @CheckForNull private ValueEntry<K, V> successorInMultimap;
+    @CheckForNull private @Assignable ValueEntry<K, V> predecessorInMultimap;
+    @CheckForNull private @Assignable ValueEntry<K, V> successorInMultimap;
 
     ValueEntry(
         @ParametricNullness K key,

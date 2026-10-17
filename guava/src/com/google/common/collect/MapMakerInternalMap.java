@@ -2582,7 +2582,7 @@ class MapMakerInternalMap<
   @ReceiverDependentMutable
   abstract class HashIterator<T> implements Iterator<T> {
 
-    int nextSegmentIndex;
+    @Assignable int nextSegmentIndex;
     @Assignable int nextTableIndex;
     @CheckForNull @Assignable Segment<K, V, E, S> currentSegment;
     @CheckForNull @Assignable AtomicReferenceArray<E> currentTable;

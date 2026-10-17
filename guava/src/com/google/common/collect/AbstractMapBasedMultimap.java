@@ -1569,7 +1569,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       return new @ReceiverDependentMutable SortedAsMap(sortedMap().tailMap(fromKey));
     }
 
-    @CheckForNull SortedSet<K> sortedKeySet;
+    @CheckForNull @Assignable SortedSet<K> sortedKeySet;
 
     // returns a SortedSet, even though returning a Set would be sufficient to
     // satisfy the SortedMap.keySet() interface

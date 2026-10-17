@@ -116,11 +116,11 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     // Using @Weak is necessary to avoid retain-cycles between BiEntry instances on iOS,
     // which would cause memory leaks when non-empty HashBiMap with cyclic BiEntry
     // instances is deallocated.
-    @CheckForNull BiEntry<K, V> nextInKToVBucket;
-    @Weak @CheckForNull BiEntry<K, V> nextInVToKBucket;
+    @CheckForNull @Assignable BiEntry<K, V> nextInKToVBucket;
+    @Weak @CheckForNull @Assignable BiEntry<K, V> nextInVToKBucket;
 
-    @Weak @CheckForNull BiEntry<K, V> nextInKeyInsertionOrder;
-    @Weak @CheckForNull BiEntry<K, V> prevInKeyInsertionOrder;
+    @Weak @CheckForNull @Assignable BiEntry<K, V> nextInKeyInsertionOrder;
+    @Weak @CheckForNull @Assignable BiEntry<K, V> prevInKeyInsertionOrder;
 
     BiEntry(@ParametricNullness K key, int keyHash, @ParametricNullness V value, int valueHash) {
       super(key, value);

@@ -1584,7 +1584,7 @@ public final class Sets {
     public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable SubSet<E> this) {
       return new @ReceiverDependentMutable UnmodifiableIterator<E>() {
         final ImmutableList<E> elements = inputSet.keySet().asList();
-        int remainingSetBits = mask;
+        @Assignable int remainingSetBits = mask;
 
         @Override
         public boolean hasNext() {
