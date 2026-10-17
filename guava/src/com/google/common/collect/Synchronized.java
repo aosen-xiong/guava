@@ -54,6 +54,7 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
@@ -1036,9 +1037,9 @@ final class Synchronized {
     }
 
     @Override
-    public Iterator<Map.Entry<K, Collection<V>>> iterator(@Readonly SynchronizedAsMapEntries<K, V> this) {
+    public @ReceiverDependentMutable Iterator<Map.Entry<K, Collection<V>>> iterator(@ReceiverDependentMutable SynchronizedAsMapEntries<K, V> this) {
       // Must be manually synchronized.
-      return new TransformedIterator<Map.Entry<K, Collection<V>>, Map.Entry<K, Collection<V>>>(
+      return new @ReceiverDependentMutable TransformedIterator<Map.Entry<K, Collection<V>>, Map.Entry<K, Collection<V>>>(
           super.iterator()) {
         @Override
         Map.Entry<K, Collection<V>> transform(final Map.Entry<K, Collection<V>> entry) {
@@ -1403,7 +1404,7 @@ final class Synchronized {
     }
 
     @Override
-    public SortedMap<K, V> headMap(@Readonly SynchronizedSortedMap<K, V> this, K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable SynchronizedSortedMap<K, V> this, K toKey) {
       synchronized (mutex) {
         return sortedMap(delegate().headMap(toKey), mutex);
       }
@@ -1550,9 +1551,9 @@ final class Synchronized {
     }
 
     @Override
-    public Iterator<Collection<V>> iterator(@Readonly SynchronizedAsMapValues<V> this) {
+    public @ReceiverDependentMutable Iterator<Collection<V>> iterator(@ReceiverDependentMutable SynchronizedAsMapValues<V> this) {
       // Must be manually synchronized.
-      return new TransformedIterator<Collection<V>, Collection<V>>(super.iterator()) {
+      return new @ReceiverDependentMutable TransformedIterator<Collection<V>, Collection<V>>(super.iterator()) {
         @Override
         Collection<V> transform(Collection<V> from) {
           return typePreservingCollection(from, mutex);
@@ -1753,7 +1754,7 @@ final class Synchronized {
     }
 
     @Override
-    NavigableMap<K, V> delegate() {
+    @ReceiverDependentMutable NavigableMap<K, V> delegate(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this) {
       return (@ReceiverDependentMutable NavigableMap<K, V>) super.delegate();
     }
 
@@ -1773,10 +1774,10 @@ final class Synchronized {
       }
     }
 
-    @CheckForNull transient NavigableSet<K> descendingKeySet;
+    @CheckForNull transient @Assignable NavigableSet<K> descendingKeySet;
 
     @Override
-    public NavigableSet<@KeyFor({"this"}) K> descendingKeySet() {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this) {
       synchronized (mutex) {
         if (descendingKeySet == null) {
           return descendingKeySet = Synchronized.navigableSet(delegate().descendingKeySet(), mutex);
@@ -1785,7 +1786,7 @@ final class Synchronized {
       }
     }
 
-    @CheckForNull transient NavigableMap<K, V> descendingMap;
+    @CheckForNull transient @Assignable NavigableMap<K, V> descendingMap;
 
     @Override
     public @ReceiverDependentMutable NavigableMap<K, V> descendingMap() {
@@ -1822,14 +1823,14 @@ final class Synchronized {
     }
 
     @Override
-    public NavigableMap<K, V> headMap(K toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> headMap(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this, K toKey, boolean inclusive) {
       synchronized (mutex) {
         return navigableMap(delegate().headMap(toKey, inclusive), mutex);
       }
     }
 
     @Override
-    public SortedMap<K, V> headMap(K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this, K toKey) {
       return headMap(toKey, false);
     }
 
@@ -1874,14 +1875,14 @@ final class Synchronized {
     }
 
     @Override
-    public Set<@KeyFor({"this"}) K> keySet() {
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this) {
       return navigableKeySet();
     }
 
-    @CheckForNull transient NavigableSet<K> navigableKeySet;
+    @CheckForNull transient @Assignable NavigableSet<K> navigableKeySet;
 
     @Override
-    public NavigableSet<@KeyFor({"this"}) K> navigableKeySet() {
+    public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this) {
       synchronized (mutex) {
         if (navigableKeySet == null) {
           return navigableKeySet = Synchronized.navigableSet(delegate().navigableKeySet(), mutex);
@@ -1907,27 +1908,27 @@ final class Synchronized {
     }
 
     @Override
-    public NavigableMap<K, V> subMap(
-        K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> subMap(
+        @ReceiverDependentMutable SynchronizedNavigableMap<K, V> this, K fromKey, boolean fromInclusive, K toKey, boolean toInclusive) {
       synchronized (mutex) {
         return navigableMap(delegate().subMap(fromKey, fromInclusive, toKey, toInclusive), mutex);
       }
     }
 
     @Override
-    public SortedMap<K, V> subMap(K fromKey, K toKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this, K fromKey, K toKey) {
       return subMap(fromKey, true, toKey, false);
     }
 
     @Override
-    public NavigableMap<K, V> tailMap(K fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<K, V> tailMap(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this, K fromKey, boolean inclusive) {
       synchronized (mutex) {
         return navigableMap(delegate().tailMap(fromKey, inclusive), mutex);
       }
     }
 
     @Override
-    public SortedMap<K, V> tailMap(K fromKey) {
+    public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable SynchronizedNavigableMap<K, V> this, K fromKey) {
       return tailMap(fromKey, true);
     }
 
@@ -1936,13 +1937,14 @@ final class Synchronized {
 
   @GwtIncompatible // works but is needed only for NavigableMap
   @CheckForNull
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the entry and its synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Map.Entry<K, V> nullableSynchronizedEntry(
-          @CheckForNull Map.Entry<K, V> entry, @CheckForNull @Readonly Object mutex) {
+      Map.@PolyMutable Entry<K, V> nullableSynchronizedEntry(
+          @CheckForNull Map.@PolyMutable Entry<K, V> entry, @CheckForNull @Readonly Object mutex) {
     if (entry == null) {
       return null;
     }
-    return new SynchronizedEntry<>(entry, mutex);
+    return new @PolyMutable SynchronizedEntry<>(entry, mutex);
   }
 
   @GwtIncompatible // works but is needed only for NavigableMap
@@ -1956,8 +1958,8 @@ final class Synchronized {
 
     @SuppressWarnings("unchecked") // guaranteed by the constructor
     @Override
-    Map.Entry<K, V> delegate() {
-      return (Map.Entry<K, V>) super.delegate();
+    Map.@ReceiverDependentMutable Entry<K, V> delegate(@ReceiverDependentMutable SynchronizedEntry<K, V> this) {
+      return (Map.@ReceiverDependentMutable Entry<K, V>) super.delegate();
     }
 
     @Override
