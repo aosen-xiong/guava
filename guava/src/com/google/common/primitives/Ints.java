@@ -657,7 +657,7 @@ public final class Ints extends IntsMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static @Immutable List<Integer> asList(int... backingArray) {
+  public static List<Integer> asList(int... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

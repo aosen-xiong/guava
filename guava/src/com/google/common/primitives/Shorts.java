@@ -628,7 +628,7 @@ public final class Shorts extends ShortsMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static @Immutable List<Short> asList(short... backingArray) {
+  public static List<Short> asList(short... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

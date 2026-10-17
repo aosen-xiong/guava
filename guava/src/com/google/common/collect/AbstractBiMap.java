@@ -329,7 +329,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
     @CFComment("signedness: is same as signedness of V, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned @Immutable Object[] toArray(ValueSet this) {
+    public @PolyNull @PolySigned Object[] toArray(ValueSet this) {
       return standardToArray();
     }
 

@@ -625,7 +625,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return the corresponding map from row keys to values
    */
   @Override
-  public @Immutable Map<R, @Nullable V> column(C columnKey) {
+  public Map<R, @Nullable V> column(C columnKey) {
     checkNotNull(columnKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     if (columnIndex == null) {
@@ -720,7 +720,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return the corresponding map from column keys to values
    */
   @Override
-  public @Immutable Map<C, @Nullable V> row(R rowKey) {
+  public Map<C, @Nullable V> row(R rowKey) {
     checkNotNull(rowKey);
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     if (rowIndex == null) {

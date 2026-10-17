@@ -740,7 +740,7 @@ public final class Longs {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static @Immutable List<Long> asList(long... backingArray) {
+  public static List<Long> asList(long... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

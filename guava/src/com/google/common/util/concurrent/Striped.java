@@ -140,7 +140,7 @@ public abstract class Striped<L> {
    * @return the stripes corresponding to the objects (one per each object, derived by delegating to
    *     {@link #get(Object)}; may contain duplicates), in an increasing index order.
    */
-  public @Immutable Iterable<L> bulkGet(Iterable<? extends Object> keys) {
+  public Iterable<L> bulkGet(Iterable<? extends Object> keys) {
     // Initially using the list to store the keys, then reusing it to store the respective L's
     List<Object> result = newArrayList(keys);
     if (result.isEmpty()) {

@@ -392,7 +392,7 @@ public final class Booleans {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static @Immutable List<Boolean> asList(boolean... backingArray) {
+  public static List<Boolean> asList(boolean... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

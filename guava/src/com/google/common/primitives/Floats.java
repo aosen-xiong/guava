@@ -580,7 +580,7 @@ public final class Floats extends FloatsMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static @Immutable List<Float> asList(float... backingArray) {
+  public static List<Float> asList(float... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

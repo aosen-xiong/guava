@@ -262,7 +262,7 @@ public final class Bytes {
    * @return a list view of the array
    */
   @SuppressWarnings({"signedness:argument", "signedness:return"}) // non-generic container class
-  public static @Immutable List<@PolySigned Byte> asList(@PolySigned byte... backingArray) {
+  public static List<@PolySigned Byte> asList(@PolySigned byte... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

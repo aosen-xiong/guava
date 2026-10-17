@@ -588,7 +588,7 @@ public final class Doubles extends DoublesMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  public static @Immutable List<Double> asList(double... backingArray) {
+  public static List<Double> asList(double... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
     }

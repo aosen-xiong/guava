@@ -471,7 +471,7 @@ public final class Multisets {
         return new @Mutable AbstractIterator<Entry<E>>() {
           @Override
           @CheckForNull
-          protected @Immutable Entry<E> computeNext() {
+          protected Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -605,7 +605,7 @@ public final class Multisets {
         return new @Mutable AbstractIterator<Entry<E>>() {
           @Override
           @CheckForNull
-          protected @Immutable Entry<E> computeNext() {
+          protected Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();

@@ -222,7 +222,7 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned @Readonly Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
+  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
     for (int i = 0; i < length; i++) {
       checkElementNotNull(array[i], i);
     }

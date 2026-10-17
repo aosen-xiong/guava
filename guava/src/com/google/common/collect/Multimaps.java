@@ -1039,7 +1039,7 @@ public final class Multimaps {
    * @since 10.0
    */
   @Deprecated
-  public static <K extends @Immutable Object, V> @Immutable ListMultimap<K, V> unmodifiableListMultimap(
+  public static <K extends @Immutable Object, V> ListMultimap<K, V> unmodifiableListMultimap(
       ImmutableListMultimap<K, @Immutable V> delegate) {
     return checkNotNull(delegate);
   }
