@@ -957,6 +957,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   private static final @Mutable class JdkBackedSetBuilderImpl<E> extends SetBuilderImpl<E> {
     private final Set<@Readonly Object> delegate;
 
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // this HashSet hashes the same elements ImmutableSet's own hash table hashes; ImmutableSet does not require @Immutable elements
     JdkBackedSetBuilderImpl(SetBuilderImpl<E> toCopy) {
       super(toCopy); // initializes dedupedElements and distinct
       delegate = Sets.newHashSetWithExpectedSize(distinct);
