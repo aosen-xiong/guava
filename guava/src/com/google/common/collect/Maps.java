@@ -3172,13 +3172,13 @@ public final class Maps {
     @CFComment("PICO: outer receiver dependency")
     private class EntrySet extends ForwardingSet<@Readonly Entry<K, V>> {
       @Override
-      protected Set<@Readonly Entry<K, V>> delegate() {
+      protected @ReceiverDependentMutable Set<@Readonly Entry<K, V>> delegate(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
         return filteredEntrySet;
       }
 
       @Override
-      public Iterator<@Readonly Entry<K, V>> iterator() {
-        return new TransformedIterator<Entry<K, V>, Entry<K, V>>(filteredEntrySet.iterator()) {
+      public @ReceiverDependentMutable Iterator<@Readonly Entry<K, V>> iterator(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
+        return new @ReceiverDependentMutable TransformedIterator<Entry<K, V>, Entry<K, V>>(filteredEntrySet.iterator()) {
           @Override
           Entry<K, V> transform(final Entry<K, V> entry) {
             return new @Mutable ForwardingMapEntry<K, V>() {

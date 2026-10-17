@@ -580,7 +580,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   @ReceiverDependentMutable
   private class EntrySet extends AbstractMultiset<E>.EntrySet {
     @Override
-    ConcurrentHashMultiset<E> multiset() {
+    @ReceiverDependentMutable ConcurrentHashMultiset<E> multiset(@ReceiverDependentMutable ConcurrentHashMultiset<E>.@ReceiverDependentMutable EntrySet this) {
       return ConcurrentHashMultiset.this;
     }
 
