@@ -537,7 +537,7 @@ public final class Collections2 {
 
   @ReceiverDependentMutable
   private static final class OrderedPermutationIterator<E> extends AbstractIterator<List<E>> {
-    @CheckForNull @Assignable List<E> nextPermutation;
+    @CheckForNull @Assignable @Mutable List<E> nextPermutation;
     final @Mutable Comparator<? super E> comparator;
 
     OrderedPermutationIterator(@Readonly List<E> list, Comparator<? super E> comparator) {
@@ -665,7 +665,7 @@ public final class Collections2 {
 
   @ReceiverDependentMutable
   private static class PermutationIterator<E> extends AbstractIterator<List<E>> {
-    final List<E> list;
+    final @Mutable List<E> list;
     final int[] c;
     final int[] o;
     @Assignable int j;
