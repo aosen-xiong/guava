@@ -71,8 +71,8 @@ abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V exte
   }
 
   @Override
-  Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
-    return new WrappedSet(key, (Set<V>) collection);
+  @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
+    return new @ReceiverDependentMutable WrappedSet(key, (@ReceiverDependentMutable Set<V>) collection);
   }
 
   // Following Javadoc copied from SetMultimap.

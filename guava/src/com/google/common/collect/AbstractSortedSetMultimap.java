@@ -74,11 +74,11 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
   }
 
   @Override
-  Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
+  @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
     if (collection instanceof NavigableSet) {
-      return new WrappedNavigableSet(key, (NavigableSet<V>) collection, null);
+      return new @ReceiverDependentMutable WrappedNavigableSet(key, (@ReceiverDependentMutable NavigableSet<V>) collection, null);
     } else {
-      return new WrappedSortedSet(key, (SortedSet<V>) collection, null);
+      return new @ReceiverDependentMutable WrappedSortedSet(key, (@ReceiverDependentMutable SortedSet<V>) collection, null);
     }
   }
 

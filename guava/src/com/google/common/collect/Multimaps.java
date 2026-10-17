@@ -268,17 +268,17 @@ public final class Multimaps {
     }
 
     @Override
-    Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
+    @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
       if (collection instanceof List) {
-        return wrapList(key, (List<V>) collection, null);
+        return wrapList(key, (@ReceiverDependentMutable List<V>) collection, null);
       } else if (collection instanceof NavigableSet) {
-        return new WrappedNavigableSet(key, (NavigableSet<V>) collection, null);
+        return new @ReceiverDependentMutable WrappedNavigableSet(key, (@ReceiverDependentMutable NavigableSet<V>) collection, null);
       } else if (collection instanceof SortedSet) {
-        return new WrappedSortedSet(key, (SortedSet<V>) collection, null);
+        return new @ReceiverDependentMutable WrappedSortedSet(key, (@ReceiverDependentMutable SortedSet<V>) collection, null);
       } else if (collection instanceof Set) {
-        return new WrappedSet(key, (Set<V>) collection);
+        return new @ReceiverDependentMutable WrappedSet(key, (@ReceiverDependentMutable Set<V>) collection);
       } else {
-        return new WrappedCollection(key, collection, null);
+        return new @ReceiverDependentMutable WrappedCollection(key, collection, null);
       }
     }
 
@@ -471,13 +471,13 @@ public final class Multimaps {
     }
 
     @Override
-    @PolyMutable Collection<V> wrapCollection(@ParametricNullness K key, @PolyMutable Collection<V> collection) {
+    @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
       if (collection instanceof NavigableSet) {
-        return new @PolyMutable WrappedNavigableSet(key, (NavigableSet<V>) collection, null);
+        return new @ReceiverDependentMutable WrappedNavigableSet(key, (@ReceiverDependentMutable NavigableSet<V>) collection, null);
       } else if (collection instanceof SortedSet) {
-        return new @PolyMutable WrappedSortedSet(key, (SortedSet<V>) collection, null);
+        return new @ReceiverDependentMutable WrappedSortedSet(key, (@ReceiverDependentMutable SortedSet<V>) collection, null);
       } else {
-        return new @PolyMutable WrappedSet(key, (Set<V>) collection);
+        return new @ReceiverDependentMutable WrappedSet(key, (@ReceiverDependentMutable Set<V>) collection);
       }
     }
 

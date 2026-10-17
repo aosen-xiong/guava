@@ -317,11 +317,11 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     return new @ReceiverDependentMutable WrappedCollection(key, collection, null);
   }
 
-  final @PolyMutable List<V> wrapList(
-      @ParametricNullness K key, @PolyMutable List<V> list, @CheckForNull WrappedCollection ancestor) {
+  final @ReceiverDependentMutable List<V> wrapList(
+      @ParametricNullness K key, @ReceiverDependentMutable List<V> list, @CheckForNull WrappedCollection ancestor) {
     return (list instanceof RandomAccess)
-        ? new @PolyMutable RandomAccessWrappedList(key, list, ancestor)
-        : new @PolyMutable WrappedList(key, list, ancestor);
+        ? new @ReceiverDependentMutable RandomAccessWrappedList(key, list, ancestor)
+        : new @ReceiverDependentMutable WrappedList(key, list, ancestor);
   }
 
   /**

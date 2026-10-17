@@ -70,8 +70,8 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
   }
 
   @Override
-  Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
-    return wrapList(key, (List<V>) collection, null);
+  @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
+    return wrapList(key, (@ReceiverDependentMutable List<V>) collection, null);
   }
 
   // Following Javadoc copied from ListMultimap.
