@@ -130,7 +130,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     return result;
   }
 
-  TreeBasedTable(Comparator<? super R> rowComparator, Comparator<? super C> columnComparator) {
+  TreeBasedTable(@ReceiverDependentMutable Comparator<? super R> rowComparator, Comparator<? super C> columnComparator) {
     super(new TreeMap<R, Map<C, V>>(rowComparator), new Factory<C, V>(columnComparator));
     this.columnComparator = columnComparator;
   }

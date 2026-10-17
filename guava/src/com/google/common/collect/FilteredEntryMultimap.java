@@ -56,7 +56,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   final Multimap<K, V> unfiltered;
   final Predicate<? super Entry<K, V>> predicate;
 
-  FilteredEntryMultimap(Multimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+  FilteredEntryMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
     this.unfiltered = checkNotNull(unfiltered);
     this.predicate = checkNotNull(predicate);
   }

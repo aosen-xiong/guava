@@ -50,7 +50,7 @@ final class SortedMultisets {
       implements SortedSet<E> {
     @Weak private final SortedMultiset<E> multiset;
 
-    ElementSet(SortedMultiset<E> multiset) {
+    ElementSet(@ReceiverDependentMutable SortedMultiset<E> multiset) {
       this.multiset = multiset;
     }
 

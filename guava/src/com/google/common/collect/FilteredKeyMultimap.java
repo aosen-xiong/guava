@@ -51,7 +51,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   final Multimap<K, V> unfiltered;
   final Predicate<? super K> keyPredicate;
 
-  FilteredKeyMultimap(Multimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
+  FilteredKeyMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
     this.unfiltered = checkNotNull(unfiltered);
     this.keyPredicate = checkNotNull(keyPredicate);
   }

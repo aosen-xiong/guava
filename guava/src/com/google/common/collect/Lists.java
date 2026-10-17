@@ -823,7 +823,7 @@ public final class Lists {
   private static final class CharSequenceAsList extends AbstractList<Character> {
     private final CharSequence sequence;
 
-    CharSequenceAsList(CharSequence sequence) {
+    CharSequenceAsList(@ReceiverDependentMutable CharSequence sequence) {
       this.sequence = sequence;
     }
 

@@ -800,7 +800,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       implements Serializable {
     private final HashBiMap<K, V> bimap;
 
-    InverseSerializedForm(HashBiMap<K, V> bimap) {
+    InverseSerializedForm(@ReceiverDependentMutable HashBiMap<K, V> bimap) {
       this.bimap = bimap;
     }
 
