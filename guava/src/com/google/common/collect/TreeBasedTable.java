@@ -76,12 +76,12 @@ import org.checkerframework.checker.mutability.qual.Assignable;
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
 public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Object, V> extends StandardRowSortedTable<R, C, V> {
-  private final Comparator<? super C> columnComparator;
+  private final @Readonly Comparator<? super C> columnComparator;
 
   private static class Factory<C extends @Immutable Object, V> implements Supplier<TreeMap<C, V>>, Serializable {
-    final Comparator<? super C> comparator;
+    final @Readonly Comparator<? super C> comparator;
 
-    Factory(Comparator<? super C> comparator) {
+    Factory(@Readonly Comparator<? super C> comparator) {
       this.comparator = comparator;
     }
 
@@ -130,7 +130,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     return result;
   }
 
-  TreeBasedTable(@ReceiverDependentMutable Comparator<? super R> rowComparator, Comparator<? super C> columnComparator) {
+  TreeBasedTable(Comparator<? super R> rowComparator, @Readonly Comparator<? super C> columnComparator) {
     super(new TreeMap<R, Map<C, V>>(rowComparator), new Factory<C, V>(columnComparator));
     this.columnComparator = columnComparator;
   }
