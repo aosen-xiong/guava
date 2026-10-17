@@ -203,8 +203,8 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   @Override
-  public Iterator<E> iterator() {
-    return new MapBasedMultisetIterator();
+  public @ReceiverDependentMutable Iterator<E> iterator() {
+    return new @ReceiverDependentMutable MapBasedMultisetIterator();
   }
 
   /*

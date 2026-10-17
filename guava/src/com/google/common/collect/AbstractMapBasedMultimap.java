@@ -764,8 +764,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public Iterator<V> descendingIterator() {
-      return new WrappedIterator(getSortedSetDelegate().descendingIterator());
+    public @ReceiverDependentMutable Iterator<V> descendingIterator() {
+      return new @ReceiverDependentMutable WrappedIterator(getSortedSetDelegate().descendingIterator());
     }
 
     @Override
@@ -1067,8 +1067,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public SortedSet<K> headSet(@ParametricNullness K toElement) {
-      return new SortedKeySet(sortedMap().headMap(toElement));
+    public @ReceiverDependentMutable SortedSet<K> headSet(@ParametricNullness K toElement) {
+      return new @ReceiverDependentMutable SortedKeySet(sortedMap().headMap(toElement));
     }
 
     @Override
@@ -1078,13 +1078,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public SortedSet<K> subSet(@ParametricNullness K fromElement, @ParametricNullness K toElement) {
-      return new SortedKeySet(sortedMap().subMap(fromElement, toElement));
+    public @ReceiverDependentMutable SortedSet<K> subSet(@ParametricNullness K fromElement, @ParametricNullness K toElement) {
+      return new @ReceiverDependentMutable SortedKeySet(sortedMap().subMap(fromElement, toElement));
     }
 
     @Override
-    public SortedSet<K> tailSet(@ParametricNullness K fromElement) {
-      return new SortedKeySet(sortedMap().tailMap(fromElement));
+    public @ReceiverDependentMutable SortedSet<K> tailSet(@ParametricNullness K fromElement) {
+      return new @ReceiverDependentMutable SortedKeySet(sortedMap().tailMap(fromElement));
     }
   }
 

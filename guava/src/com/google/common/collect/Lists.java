@@ -588,8 +588,8 @@ public final class Lists {
     }
 
     @Override
-    public ListIterator<T> listIterator(final int index) {
-      return new TransformedListIterator<F, T>(fromList.listIterator(index)) {
+    public @ReceiverDependentMutable ListIterator<T> listIterator(final int index) {
+      return new @ReceiverDependentMutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
         @Override
         @ParametricNullness
         T transform(@ParametricNullness F from) {
@@ -647,8 +647,8 @@ public final class Lists {
     }
 
     @Override
-    public ListIterator<T> listIterator(@Readonly TransformingRandomAccessList<F, T> this, int index) {
-      return new TransformedListIterator<F, T>(fromList.listIterator(index)) {
+    public @ReceiverDependentMutable ListIterator<T> listIterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this, int index) {
+      return new @ReceiverDependentMutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
         @Override
         T transform(F from) {
           return function.apply(from);

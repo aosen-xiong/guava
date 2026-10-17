@@ -1578,8 +1578,8 @@ public final class Sets {
     }
 
     @Override
-    public Iterator<E> iterator(@Readonly SubSet<E> this) {
-      return new @Mutable UnmodifiableIterator<E>() {
+    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable SubSet<E> this) {
+      return new @ReceiverDependentMutable UnmodifiableIterator<E>() {
         final ImmutableList<E> elements = inputSet.keySet().asList();
         int remainingSetBits = mask;
 
@@ -1633,8 +1633,8 @@ public final class Sets {
     }
 
     @Override
-    public Iterator<Set<E>> iterator(@Readonly PowerSet<E> this) {
-      return new @Mutable AbstractIndexedListIterator<Set<E>>(size()) {
+    public @ReceiverDependentMutable Iterator<Set<E>> iterator(@ReceiverDependentMutable PowerSet<E> this) {
+      return new @ReceiverDependentMutable AbstractIndexedListIterator<Set<E>>(size()) {
         @Override
         protected Set<E> get(final int setBits) {
           return new SubSet<E>(inputSet, setBits);

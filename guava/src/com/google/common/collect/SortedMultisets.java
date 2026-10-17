@@ -131,8 +131,8 @@ final class SortedMultisets {
     }
 
     @Override
-    public NavigableSet<E> descendingSet() {
-      return new NavigableElementSet<>(multiset().descendingMultiset());
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet() {
+      return new @ReceiverDependentMutable NavigableElementSet<>(multiset().descendingMultiset());
     }
 
     @Override
@@ -153,12 +153,12 @@ final class SortedMultisets {
     }
 
     @Override
-    public NavigableSet<E> subSet(
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
         boolean toInclusive) {
-      return new NavigableElementSet<>(
+      return new @ReceiverDependentMutable NavigableElementSet<>(
           multiset()
               .subMultiset(
                   fromElement, BoundType.forBoolean(fromInclusive),
@@ -166,14 +166,14 @@ final class SortedMultisets {
     }
 
     @Override
-    public NavigableSet<E> headSet(@ParametricNullness E toElement, boolean inclusive) {
-      return new NavigableElementSet<>(
+    public @ReceiverDependentMutable NavigableSet<E> headSet(@ParametricNullness E toElement, boolean inclusive) {
+      return new @ReceiverDependentMutable NavigableElementSet<>(
           multiset().headMultiset(toElement, BoundType.forBoolean(inclusive)));
     }
 
     @Override
-    public NavigableSet<E> tailSet(@ParametricNullness E fromElement, boolean inclusive) {
-      return new NavigableElementSet<>(
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(@ParametricNullness E fromElement, boolean inclusive) {
+      return new @ReceiverDependentMutable NavigableElementSet<>(
           multiset().tailMultiset(fromElement, BoundType.forBoolean(inclusive)));
     }
   }

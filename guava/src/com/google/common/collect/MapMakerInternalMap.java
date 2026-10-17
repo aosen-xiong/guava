@@ -2767,8 +2767,8 @@ class MapMakerInternalMap<
   final class KeySet extends SafeToArraySet<K> {
 
     @Override
-    public Iterator<K> iterator() {
-      return new KeyIterator();
+    public @ReceiverDependentMutable Iterator<K> iterator() {
+      return new @ReceiverDependentMutable KeyIterator();
     }
 
     @Override
@@ -2802,8 +2802,8 @@ class MapMakerInternalMap<
   final class Values extends AbstractCollection<V> {
 
     @Override
-    public Iterator<V> iterator() {
-      return new ValueIterator();
+    public @ReceiverDependentMutable Iterator<V> iterator() {
+      return new @ReceiverDependentMutable ValueIterator();
     }
 
     @Override
