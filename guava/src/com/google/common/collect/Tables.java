@@ -431,9 +431,9 @@ public final class Tables {
           V2 extends @Nullable @Readonly Object>
       extends AbstractTable<R, C, V2> {
     final Table<R, C, V1> fromTable;
-    final Function<? super V1, V2> function;
+    final @Readonly Function<? super V1, V2> function;
 
-    TransformedTable(@ReceiverDependentMutable Table<R, C, V1> fromTable, Function<? super V1, V2> function) {
+    TransformedTable(@ReceiverDependentMutable Table<R, C, V1> fromTable, @Readonly Function<? super V1, V2> function) {
       this.fromTable = checkNotNull(fromTable);
       this.function = checkNotNull(function);
     }

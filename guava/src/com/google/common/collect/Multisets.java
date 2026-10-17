@@ -343,9 +343,9 @@ public final class Multisets {
   @ReceiverDependentMutable
   private static final class FilteredMultiset<E extends @Nullable @Readonly Object> extends ViewMultiset<E> {
     final Multiset<E> unfiltered;
-    final Predicate<? super E> predicate;
+    final @Readonly Predicate<? super E> predicate;
 
-    FilteredMultiset(@ReceiverDependentMutable Multiset<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredMultiset(@ReceiverDependentMutable Multiset<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       this.unfiltered = checkNotNull(unfiltered);
       this.predicate = checkNotNull(predicate);
     }

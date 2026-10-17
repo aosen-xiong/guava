@@ -1057,7 +1057,7 @@ public final class Maps {
      */
 
     private final NavigableSet<K> set;
-    private final Function<? super K, V> function;
+    private final @Readonly Function<? super K, V> function;
 
     NavigableAsMapView(@ReceiverDependentMutable NavigableSet<K> ks, @Readonly Function<? super K, V> vFunction) {
       this.set = checkNotNull(ks);
@@ -2986,7 +2986,7 @@ public final class Maps {
           K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ViewCachingAbstractMap<K, V> {
     final Map<K, V> unfiltered;
-    final Predicate<? super Entry<K, V>> predicate;
+    final @Readonly Predicate<? super Entry<K, V>> predicate;
 
     AbstractFilteredMap(@ReceiverDependentMutable Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
       this.unfiltered = unfiltered;
@@ -3052,7 +3052,7 @@ public final class Maps {
           K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends Maps.Values<K, V> {
       final Map<K, V> unfiltered;
-      final Predicate<? super Entry<K, V>> predicate;
+      final @Readonly Predicate<? super Entry<K, V>> predicate;
 
       FilteredMapValues(
               @ReceiverDependentMutable Map<K, V> filteredMap, Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
@@ -4505,7 +4505,7 @@ public final class Maps {
       return forward();
     }
 
-    @LazyInit @CheckForNull private transient @Assignable Comparator<? super K> comparator;
+    @LazyInit @CheckForNull private transient @Assignable @Readonly Comparator<? super K> comparator;
 
     @SuppressWarnings("unchecked")
     @Override

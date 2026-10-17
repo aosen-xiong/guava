@@ -54,9 +54,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractMultimap<K, V> implements FilteredMultimap<K, V> {
   final Multimap<K, V> unfiltered;
-  final Predicate<? super Entry<K, V>> predicate;
+  final @Readonly Predicate<? super Entry<K, V>> predicate;
 
-  FilteredEntryMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+  FilteredEntryMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
     this.unfiltered = checkNotNull(unfiltered);
     this.predicate = checkNotNull(predicate);
   }

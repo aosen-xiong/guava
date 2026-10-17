@@ -561,9 +561,9 @@ public final class Lists {
           F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
       extends AbstractSequentialList<T> implements Serializable {
     final List<F> fromList;
-    final Function<? super F, ? extends T> function;
+    final @Readonly Function<? super F, ? extends T> function;
 
-    TransformingSequentialList(@ReceiverDependentMutable List<F> fromList, Function<? super F, ? extends T> function) {
+    TransformingSequentialList(@ReceiverDependentMutable List<F> fromList, @Readonly Function<? super F, ? extends T> function) {
       this.fromList = checkNotNull(fromList);
       this.function = checkNotNull(function);
     }
@@ -620,9 +620,9 @@ public final class Lists {
           F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
       extends AbstractList<T> implements RandomAccess, Serializable {
     final List<F> fromList;
-    final Function<? super F, ? extends T> function;
+    final @Readonly Function<? super F, ? extends T> function;
 
-    TransformingRandomAccessList(@ReceiverDependentMutable List<F> fromList, Function<? super F, ? extends T> function) {
+    TransformingRandomAccessList(@ReceiverDependentMutable List<F> fromList, @Readonly Function<? super F, ? extends T> function) {
       this.fromList = checkNotNull(fromList);
       this.function = checkNotNull(function);
     }
