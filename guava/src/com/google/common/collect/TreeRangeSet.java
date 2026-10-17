@@ -142,7 +142,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   }
 
   @Override
-  public boolean intersects(Range<C> range) {
+  public boolean intersects(@Readonly TreeRangeSet<C> this, Range<C> range) {
     checkNotNull(range);
     Entry<@Immutable Cut<C>, Range<C>> ceilingEntry = rangesByLowerBound.ceilingEntry(range.lowerBound);
     if (ceilingEntry != null
@@ -157,7 +157,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   }
 
   @Override
-  public boolean encloses(Range<C> range) {
+  public boolean encloses(@Readonly TreeRangeSet<C> this, Range<C> range) {
     checkNotNull(range);
     Entry<@Immutable Cut<C>, Range<C>> floorEntry = rangesByLowerBound.floorEntry(range.lowerBound);
     return floorEntry != null && floorEntry.getValue().encloses(range);
@@ -896,7 +896,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public boolean encloses(Range<C> range) {
+    public boolean encloses(@Readonly SubRangeSet this, Range<C> range) {
       if (!restriction.isEmpty() && restriction.encloses(range)) {
         Range<C> enclosing = TreeRangeSet.this.rangeEnclosing(range);
         return enclosing != null && !enclosing.intersection(restriction).isEmpty();

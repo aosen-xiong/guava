@@ -141,7 +141,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Comparable<?> endpoint() {
+    @Immutable Comparable<?> endpoint() {
       throw new IllegalStateException("range unbounded on this side");
     }
 
@@ -242,7 +242,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Comparable<?> endpoint() {
+    @Immutable Comparable<?> endpoint() {
       throw new IllegalStateException("range unbounded on this side");
     }
 

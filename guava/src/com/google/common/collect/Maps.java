@@ -143,7 +143,7 @@ public final class Maps {
     return new TransformedIterator<@PolyMutable Entry<K, V>, K>(entryIterator) {
       @Override
       @ParametricNullness
-      K transform(Entry<K, V> entry) {
+      K transform(@Readonly Entry<K, V> entry) {
         return entry.getKey();
       }
     };
@@ -154,7 +154,7 @@ public final class Maps {
     return new TransformedIterator<@PolyMutable Entry<K, V>, V>(entryIterator) {
       @Override
       @ParametricNullness
-      V transform(Entry<K, V> entry) {
+      V transform(@Readonly Entry<K, V> entry) {
         return entry.getValue();
       }
     };

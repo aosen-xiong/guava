@@ -165,7 +165,7 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
   private final transient ImmutableList<Range<C>> ranges;
 
   @Override
-  public boolean intersects(Range<C> otherRange) {
+  public boolean intersects(@Readonly ImmutableRangeSet<C> this, Range<C> otherRange) {
     int ceilingIndex =
         SortedLists.binarySearch(
             ranges,
@@ -185,7 +185,7 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
   }
 
   @Override
-  public boolean encloses(Range<C> otherRange) {
+  public boolean encloses(@Readonly ImmutableRangeSet<C> this, Range<C> otherRange) {
     int index =
         SortedLists.binarySearch(
             ranges,

@@ -65,7 +65,7 @@ abstract class AbstractRangeSet<C extends @Immutable Comparable> implements Rang
   }
 
   @Override
-  public boolean enclosesAll(@Mutable AbstractRangeSet<C> this, @Readonly RangeSet<C> other) {
+  public boolean enclosesAll(@Readonly AbstractRangeSet<C> this, @Readonly RangeSet<C> other) {
     return enclosesAll(other.asRanges());
   }
 
@@ -80,12 +80,12 @@ abstract class AbstractRangeSet<C extends @Immutable Comparable> implements Rang
   }
 
   @Override
-  public boolean intersects(@Mutable AbstractRangeSet<C> this, Range<C> otherRange) {
+  public boolean intersects(@Readonly AbstractRangeSet<C> this, Range<C> otherRange) {
     return !subRangeSet(otherRange).isEmpty();
   }
 
   @Override
-  public abstract boolean encloses(@Mutable AbstractRangeSet<C> this, Range<C> otherRange);
+  public abstract boolean encloses(@Readonly AbstractRangeSet<C> this, Range<C> otherRange);
 
   @Override
   public boolean equals(@Readonly AbstractRangeSet<C> this, @CheckForNull @Readonly Object obj) {
