@@ -225,7 +225,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * implementation.
    */
   @Override
-  protected SortedSet<E> standardSubSet(
+  protected @ReceiverDependentMutable SortedSet<E> standardSubSet(
       @ParametricNullness E fromElement, @ParametricNullness E toElement) {
     return subSet(fromElement, true, toElement, false);
   }

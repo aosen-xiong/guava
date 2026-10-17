@@ -4256,7 +4256,7 @@ public final class Maps {
     }
 
     @Override
-    public Iterator<K> descendingIterator(@PolyMutable NavigableKeySet<K, V> this) {
+    public @ReceiverDependentMutable Iterator<K> descendingIterator(@ReceiverDependentMutable NavigableKeySet<K, V> this) {
       return descendingSet().iterator();
     }
 

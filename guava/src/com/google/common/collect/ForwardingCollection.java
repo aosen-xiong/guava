@@ -71,7 +71,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
   protected abstract @ReceiverDependentMutable Collection<E> delegate(@ReceiverDependentMutable ForwardingCollection<E> this);
 
   @Override
-  public Iterator<E> iterator(@Readonly ForwardingCollection<E> this) {
+  public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable ForwardingCollection<E> this) {
     return delegate().iterator();
   }
 

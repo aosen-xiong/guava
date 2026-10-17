@@ -1029,7 +1029,7 @@ public final class Multisets {
     }
 
     @Override
-    public abstract Iterator<E> iterator(@Readonly ElementSet<E> this);
+    public abstract @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable ElementSet<E> this);
 
     @Override
     public boolean remove(@Mutable ElementSet<E> this, @CheckForNull @UnknownSignedness @Readonly Object o) {

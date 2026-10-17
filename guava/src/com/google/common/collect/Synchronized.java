@@ -199,7 +199,7 @@ final class Synchronized {
     }
 
     @Override
-    public Iterator<E> iterator(@Readonly SynchronizedCollection<E> this) {
+    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable SynchronizedCollection<E> this) {
       return delegate().iterator(); // manually synchronized
     }
 

@@ -136,7 +136,7 @@ final class SortedMultisets {
     }
 
     @Override
-    public Iterator<E> descendingIterator() {
+    public @ReceiverDependentMutable Iterator<E> descendingIterator() {
       return descendingSet().iterator();
     }
 

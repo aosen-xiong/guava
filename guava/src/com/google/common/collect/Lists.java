@@ -642,7 +642,7 @@ public final class Lists {
     }
 
     @Override
-    public Iterator<T> iterator(@Readonly TransformingRandomAccessList<F, T> this) {
+    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this) {
       return listIterator();
     }
 
@@ -935,7 +935,7 @@ public final class Lists {
     }
 
     @Override
-    public Iterator<T> iterator(@Readonly ReverseList<T> this) {
+    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable ReverseList<T> this) {
       return listIterator();
     }
 

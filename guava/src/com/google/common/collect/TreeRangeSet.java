@@ -287,7 +287,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   @LazyInit @CheckForNull private transient @Assignable RangeSet<C> complement;
 
   @Override
-  public RangeSet<C> complement(@PolyMutable TreeRangeSet<C> this) {
+  public @ReceiverDependentMutable RangeSet<C> complement(@ReceiverDependentMutable TreeRangeSet<C> this) {
     RangeSet<C> result = complement;
     return (result == null) ? complement = new Complement() : result;
   }

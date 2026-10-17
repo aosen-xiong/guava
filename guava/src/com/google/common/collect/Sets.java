@@ -717,7 +717,7 @@ public final class Sets {
      * @since 20.0 (present with return type {@link Iterator} since 2.0)
      */
     @Override
-    public abstract UnmodifiableIterator<E> iterator();
+    public abstract @ReceiverDependentMutable UnmodifiableIterator<E> iterator();
   }
 
   /**
@@ -2173,7 +2173,7 @@ public final class Sets {
     }
 
     @Override
-    public Iterator<E> iterator(@PolyMutable DescendingSet<E> this) {
+    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward.descendingIterator();
     }
 

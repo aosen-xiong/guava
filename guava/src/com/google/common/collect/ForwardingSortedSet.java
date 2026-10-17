@@ -88,7 +88,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
 
   @SideEffectFree
   @Override
-  public SortedSet<E> headSet(@Readonly ForwardingSortedSet<E> this, @ParametricNullness E toElement) {
+  public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable ForwardingSortedSet<E> this, @ParametricNullness E toElement) {
     return delegate().headSet(toElement);
   }
 
