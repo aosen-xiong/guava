@@ -326,7 +326,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    */
   // TODO(kevinb): copy to Comparators, etc.
   @J2ktIncompatible // MapMaker
-  public static Ordering<@Nullable Object> arbitrary() {
+  public static Ordering<@Nullable @Readonly Object> arbitrary() {
     return ArbitraryOrderingHolder.ARBITRARY_ORDERING;
   }
 

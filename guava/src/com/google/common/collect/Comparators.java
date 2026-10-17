@@ -133,7 +133,7 @@ public final class Comparators {
    * @since 22.0
    */
   public static <T extends @Nullable @Readonly Object> Collector<T, ?, List<T>> least(
-      int k, Comparator<? super T> comparator) {
+      int k, @Readonly Comparator<? super T> comparator) {
     checkNonnegative(k, "k");
     checkNotNull(comparator);
     return Collector.of(
@@ -165,7 +165,7 @@ public final class Comparators {
    * @since 22.0
    */
   public static <T extends @Nullable @Readonly Object> Collector<T, ?, List<T>> greatest(
-      int k, Comparator<? super T> comparator) {
+      int k, @Readonly Comparator<? super T> comparator) {
     return least(k, comparator.reversed());
   }
 

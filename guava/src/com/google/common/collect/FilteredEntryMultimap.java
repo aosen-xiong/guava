@@ -67,7 +67,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public Predicate<? super Entry<K, V>> entryPredicate() {
+  public @Readonly Predicate<? super Entry<K, V>> entryPredicate() {
     return predicate;
   }
 

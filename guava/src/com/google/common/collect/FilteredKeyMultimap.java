@@ -62,7 +62,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public Predicate<? super Entry<K, V>> entryPredicate() {
+  public @Readonly Predicate<? super Entry<K, V>> entryPredicate() {
     return Maps.keyPredicateOnEntries(keyPredicate);
   }
 

@@ -1319,7 +1319,7 @@ public final class Iterators {
    * @since 11.0
    */
   public static <T extends @Nullable @Readonly Object> UnmodifiableIterator<T> mergeSorted(
-      Iterable<? extends Iterator<? extends T>> iterators, Comparator<? super T> comparator) {
+      Iterable<? extends Iterator<? extends T>> iterators, @Readonly Comparator<? super T> comparator) {
     checkNotNull(iterators, "iterators");
     checkNotNull(comparator, "comparator");
 
@@ -1341,7 +1341,7 @@ public final class Iterators {
     final @Mutable Queue<PeekingIterator<T>> queue;
 
     public MergingIterator(
-        Iterable<? extends Iterator<? extends T>> iterators, Comparator<? super T> itemComparator) {
+        Iterable<? extends Iterator<? extends T>> iterators, @Readonly Comparator<? super T> itemComparator) {
       // A comparator that's used by the heap, allowing the heap
       // to be sorted based on the top of each iterator.
       Comparator<PeekingIterator<T>> heapComparator =

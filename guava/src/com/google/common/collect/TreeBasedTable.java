@@ -161,7 +161,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    *     {@code ((SortedMap<C, V>) table.rowMap().values().iterator().next()).comparator();}.
    */
   @Deprecated
-  public Comparator<? super C> columnComparator() {
+  public @Readonly Comparator<? super C> columnComparator() {
     return columnComparator;
   }
 
@@ -205,7 +205,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     }
 
     @Override
-    public Comparator<? super C> comparator() {
+    public @Readonly Comparator<? super C> comparator() {
       return columnComparator();
     }
 

@@ -431,7 +431,7 @@ public final class Maps {
    * @return a new, empty {@code TreeMap}
    */
   public static <C extends @Nullable @Immutable Object, K extends C, V extends @Nullable @Readonly Object>
-      TreeMap<K, V> newTreeMap(@CheckForNull Comparator<C> comparator) {
+      TreeMap<K, V> newTreeMap(@CheckForNull @Readonly Comparator<C> comparator) {
     // Ideally, the extra type parameter "C" shouldn't be necessary. It is a
     // work-around of a compiler type inference quirk that prevents the
     // following code from being compiled:
@@ -791,8 +791,8 @@ public final class Maps {
    * ugly type-casting in one place.
    */
   @SuppressWarnings("unchecked")
-  static <E extends @Nullable @Readonly Object> Comparator<? super E> orNaturalOrder(
-      @CheckForNull Comparator<? super E> comparator) {
+  static <E extends @Nullable @Readonly Object> @Readonly Comparator<? super E> orNaturalOrder(
+      @CheckForNull @Readonly Comparator<? super E> comparator) {
     if (comparator != null) { // can't use ? : because of javac bug 5080917
       return comparator;
     }
