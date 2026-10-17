@@ -257,7 +257,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    */
   // TODO(kevinb): provide replacement
   @GwtCompatible(serializable = true)
-  public static <T> Ordering<T> explicit(T leastValue, T... remainingValuesInOrder) {
+  public static <T extends @Immutable Object> Ordering<T> explicit(T leastValue, T... remainingValuesInOrder) {
     return explicit(Lists.asList(leastValue, remainingValuesInOrder));
   }
 
