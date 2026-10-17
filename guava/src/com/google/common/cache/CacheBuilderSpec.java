@@ -33,6 +33,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.formatter.qual.FormatMethod;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A specification of a {@link CacheBuilder} configuration.
@@ -169,8 +170,8 @@ public final class CacheBuilderSpec {
   }
 
   /** Returns a CacheBuilder configured according to this instance's specification. */
-  CacheBuilder<Object, Object> toCacheBuilder() {
-    CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
+  CacheBuilder<@Immutable Object, Object> toCacheBuilder() {
+    CacheBuilder<@Immutable Object, Object> builder = CacheBuilder.newBuilder();
     if (initialCapacity != null) {
       builder.initialCapacity(initialCapacity);
     }

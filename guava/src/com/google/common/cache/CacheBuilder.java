@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A builder of {@link LoadingCache} and {@link Cache} instances.
@@ -249,18 +250,18 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
         }
       };
 
-  enum NullListener implements RemovalListener<Object, Object> {
+  enum NullListener implements RemovalListener<@Immutable Object, Object> {
     INSTANCE;
 
     @Override
-    public void onRemoval(RemovalNotification<Object, Object> notification) {}
+    public void onRemoval(RemovalNotification<@Immutable Object, Object> notification) {}
   }
 
-  enum OneWeigher implements Weigher<Object, Object> {
+  enum OneWeigher implements Weigher<@Immutable Object, Object> {
     INSTANCE;
 
     @Override
-    public int weigh(Object key, Object value) {
+    public int weigh(@Readonly Object key, Object value) {
       return 1;
     }
   }
@@ -317,7 +318,7 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    * <p>Note that while this return type is {@code CacheBuilder<Object, Object>}, type parameters on
    * the {@link #build} methods allow you to create a cache of any key and value type desired.
    */
-  public static CacheBuilder<Object, Object> newBuilder() {
+  public static CacheBuilder<@Immutable Object, Object> newBuilder() {
     return new CacheBuilder<>();
   }
 
@@ -327,7 +328,7 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    * @since 12.0
    */
   @GwtIncompatible // To be supported
-  public static CacheBuilder<Object, Object> from(CacheBuilderSpec spec) {
+  public static CacheBuilder<@Immutable Object, Object> from(CacheBuilderSpec spec) {
     return spec.toCacheBuilder().lenientParsing();
   }
 
@@ -339,7 +340,7 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    * @since 12.0
    */
   @GwtIncompatible // To be supported
-  public static CacheBuilder<Object, Object> from(String spec) {
+  public static CacheBuilder<@Immutable Object, Object> from(String spec) {
     return from(CacheBuilderSpec.parse(spec));
   }
 

@@ -1049,7 +1049,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public Object getKey() {
+    public @Immutable Object getKey() {
       throw new AssertionError();
     }
 
@@ -1063,8 +1063,8 @@ class MapMakerInternalMap<
    * A singleton {@link WeakValueReference} used to denote an unset value in an entry with weak
    * values.
    */
-  static final WeakValueReference<Object, Object, DummyInternalEntry> UNSET_WEAK_VALUE_REFERENCE =
-      new WeakValueReference<Object, Object, DummyInternalEntry>() {
+  static final WeakValueReference<@Immutable Object, Object, DummyInternalEntry> UNSET_WEAK_VALUE_REFERENCE =
+      new WeakValueReference<@Immutable Object, Object, DummyInternalEntry>() {
         @CheckForNull
         @Override
         public DummyInternalEntry getEntry() {
@@ -1081,7 +1081,7 @@ class MapMakerInternalMap<
         }
 
         @Override
-        public WeakValueReference<Object, Object, DummyInternalEntry> copyFor(
+        public WeakValueReference<@Immutable Object, Object, DummyInternalEntry> copyFor(
             ReferenceQueue<Object> queue, DummyInternalEntry entry) {
           return this;
         }

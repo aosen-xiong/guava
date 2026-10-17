@@ -45,7 +45,7 @@ class EmptyImmutableSetMultimap extends ImmutableSetMultimap<@Immutable Object, 
    * changes).
    */
   @Override
-  public ImmutableMap<Object, Collection<Object>> asMap() {
+  public ImmutableMap<@Immutable Object, Collection<Object>> asMap() {
     return super.asMap();
   }
 
