@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
@@ -40,7 +41,7 @@ abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>>
   @CheckForNull
   N node = null; // null is safe as an initial value because graphs don't allow null nodes
 
-  Iterator<N> successorIterator = ImmutableSet.<N>of().iterator();
+  @Readonly Iterator<N> successorIterator = ImmutableSet.<N>of().iterator();
 
   static <N> EndpointPairIterator<N> of(BaseGraph<N> graph) {
     return graph.isDirected() ? new Directed<N>(graph) : new Undirected<N>(graph);

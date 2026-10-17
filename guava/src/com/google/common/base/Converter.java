@@ -26,7 +26,10 @@ import com.google.j2objc.annotations.RetainedWith;
 import java.io.Serializable;
 import java.util.Iterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A function from {@code A} to {@code B} with an associated <i>reverse</i> function from {@code B}
@@ -275,7 +278,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     return new Iterable<B>() {
       @Override
       public Iterator<B> iterator() {
-        return new Iterator<B>() {
+        return new @Mutable Iterator<B>() {
           private final Iterator<? extends A> fromIterator = fromIterable.iterator();
 
           @Override
@@ -354,7 +357,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof ReverseConverter) {
         ReverseConverter<?, ?> that = (ReverseConverter<?, ?>) object;
         return this.original.equals(that.original);
@@ -382,7 +385,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * <p>The returned converter is serializable if {@code this} converter and {@code secondConverter}
    * are.
    */
-  public final <C> Converter<A, C> andThen(Converter<B, C> secondConverter) {
+  public final <C extends @Immutable Object> Converter<A, C> andThen(Converter<B, C> secondConverter) {
     return doAndThen(secondConverter);
   }
 
@@ -431,7 +434,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof ConverterComposition) {
         ConverterComposition<?, ?, ?> that = (ConverterComposition<?, ?, ?>) object;
         return this.first.equals(that.first) && this.second.equals(that.second);
@@ -492,7 +495,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * interchangeable.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     return super.equals(object);
   }
 
@@ -541,7 +544,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof FunctionBasedConverter) {
         FunctionBasedConverter<?, ?> that = (FunctionBasedConverter<?, ?>) object;
         return this.forwardFunction.equals(that.forwardFunction)
@@ -604,7 +607,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
       return "Converter.identity()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

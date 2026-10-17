@@ -71,8 +71,8 @@ abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V exte
   }
 
   @Override
-  Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
-    return new WrappedSet(key, (Set<V>) collection);
+  @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
+    return new @ReceiverDependentMutable WrappedSet(key, (@ReceiverDependentMutable Set<V>) collection);
   }
 
   // Following Javadoc copied from SetMultimap.
@@ -84,7 +84,7 @@ abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V exte
    * {@link Set}, instead of the {@link Collection} specified in the {@link Multimap} interface.
    */
   @Override
-  public @PolyMutable Set<V> get(@PolyMutable AbstractSetMultimap<K, V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable AbstractSetMultimap<K, V> this, @ParametricNullness K key) {
     return (@PolyMutable Set<V>) super.get(key);
   }
 
@@ -96,7 +96,7 @@ abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V exte
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<K, V>> entries(@PolyMutable AbstractSetMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable AbstractSetMultimap<K, V> this) {
     return (@PolyMutable Set<@PolyMutable Entry<K, V>>) super.entries();
   }
 
@@ -133,7 +133,7 @@ abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V exte
    * values.
    */
   @Override
-  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractSetMultimap<K, V> this) {
+  public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractSetMultimap<K, V> this) {
     return super.asMap();
   }
 

@@ -37,6 +37,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -55,13 +56,13 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   final Multimap<K, V> unfiltered;
   final Predicate<? super Entry<K, V>> predicate;
 
-  FilteredEntryMultimap(Multimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+  FilteredEntryMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
     this.unfiltered = checkNotNull(unfiltered);
     this.predicate = checkNotNull(predicate);
   }
 
   @Override
-  public Multimap<K, V> unfiltered() {
+  public @ReceiverDependentMutable Multimap<K, V> unfiltered() {
     return unfiltered;
   }
 
@@ -107,11 +108,11 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public Collection<V> removeAll(@CheckForNull @Readonly Object key) {
+  public @Readonly Collection<V> removeAll(@Mutable FilteredEntryMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     return MoreObjects.firstNonNull(asMap().remove(key), unmodifiableEmptyCollection());
   }
 
-  Collection<V> unmodifiableEmptyCollection() {
+  @Immutable Collection<V> unmodifiableEmptyCollection() {
     // These return false, rather than throwing a UOE, on remove calls.
     return (unfiltered instanceof SetMultimap)
         ? Collections.<V>emptySet()
@@ -119,7 +120,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable FilteredEntryMultimap<K, V> this) {
     entries().clear();
   }
 
@@ -135,7 +136,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
 
   @Override
   Collection<V> createValues() {
-    return new FilteredMultimapValues<>(this);
+    return new @ReceiverDependentMutable FilteredMultimapValues<>(this);
   }
 
   @Override
@@ -149,11 +150,11 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  Set<K> createKeySet() {
+  @ReceiverDependentMutable Set<K> createKeySet() {
     return asMap().keySet();
   }
 
-  boolean removeEntriesIf(Predicate<? super Entry<K, Collection<V>>> predicate) {
+  boolean removeEntriesIf(@Mutable FilteredEntryMultimap<K, V> this, Predicate<? super Entry<K, Collection<V>>> predicate) {
     Iterator<Entry<K, Collection<V>>> entryIterator = unfiltered.asMap().entrySet().iterator();
     boolean changed = false;
     while (entryIterator.hasNext()) {
@@ -233,17 +234,17 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<K>keyPredicateOnEntries(in(c)));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<K>keyPredicateOnEntries(not(in(c))));
         }
 
         @Override
-        public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+        public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
           return AsMap.this.remove(o) != null;
         }
       }
@@ -261,7 +262,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
 
         @Override
         public Iterator<Entry<K, Collection<V>>> iterator() {
-          return new AbstractIterator<Entry<K, Collection<V>>>() {
+          return new @Mutable AbstractIterator<Entry<K, Collection<V>>>() {
             final Iterator<Entry<K, Collection<V>>> backingIterator =
                 unfiltered.asMap().entrySet().iterator();
 
@@ -283,12 +284,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(in(c));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(not(in(c)));
         }
 
@@ -309,7 +310,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+        public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
           if (o instanceof Collection) {
             Collection<?> c = (Collection<?>) o;
             Iterator<Entry<K, Collection<V>>> entryIterator =
@@ -333,12 +334,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<Collection<V>>valuePredicateOnEntries(in(c)));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<Collection<V>>valuePredicateOnEntries(not(in(c))));
         }
       }
@@ -385,7 +386,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
 
     @Override
     public Set<Multiset.Entry<K>> entrySet() {
-      return new Multisets.EntrySet<K>() {
+      return new Multisets.@Mutable EntrySet<K>() {
 
         @Override
         Multiset<K> multiset() {
@@ -410,12 +411,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(Collection<?> c) {
+        public boolean removeAll(@Readonly Collection<?> c) {
           return removeEntriesIf(in(c));
         }
 
         @Override
-        public boolean retainAll(Collection<?> c) {
+        public boolean retainAll(@Readonly Collection<?> c) {
           return removeEntriesIf(not(in(c)));
         }
       };

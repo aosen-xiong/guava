@@ -27,10 +27,12 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * A skeleton implementation of a descending multiset. Only needs {@code forwardMultiset()} and
@@ -43,49 +45,49 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @ReceiverDependentMutable
 abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends ForwardingMultiset<E>
     implements SortedMultiset<E> {
-  abstract SortedMultiset<E> forwardMultiset();
+  abstract @ReceiverDependentMutable SortedMultiset<E> forwardMultiset();
 
-  @LazyInit @CheckForNull private transient Comparator<? super E> comparator;
+  @LazyInit @CheckForNull private transient @Assignable @Readonly Comparator<? super E> comparator;
 
   @Override
-  public Comparator<? super E> comparator() {
-    Comparator<? super E> result = comparator;
+  public @Readonly Comparator<? super E> comparator() {
+    @Readonly Comparator<? super E> result = comparator;
     if (result == null) {
       return comparator = Ordering.from(forwardMultiset().comparator()).<E>reverse();
     }
     return result;
   }
 
-  @LazyInit @CheckForNull private transient NavigableSet<E> elementSet;
+  @LazyInit @CheckForNull private transient @Assignable NavigableSet<E> elementSet;
 
   @Override
-  public NavigableSet<E> elementSet() {
+  public @ReceiverDependentMutable NavigableSet<E> elementSet() {
     NavigableSet<E> result = elementSet;
     if (result == null) {
-      return elementSet = new SortedMultisets.NavigableElementSet<>(this);
+      return elementSet = new SortedMultisets.@ReceiverDependentMutable NavigableElementSet<>(this);
     }
     return result;
   }
 
   @Override
   @CheckForNull
-  public Entry<E> pollFirstEntry() {
+  public @Readonly Entry<E> pollFirstEntry() {
     return forwardMultiset().pollLastEntry();
   }
 
   @Override
   @CheckForNull
-  public Entry<E> pollLastEntry() {
+  public @Readonly Entry<E> pollLastEntry() {
     return forwardMultiset().pollFirstEntry();
   }
 
   @Override
-  public SortedMultiset<E> headMultiset(@ParametricNullness E toElement, BoundType boundType) {
+  public @ReceiverDependentMutable SortedMultiset<E> headMultiset(@ReceiverDependentMutable DescendingMultiset<E> this, @ParametricNullness E toElement, BoundType boundType) {
     return forwardMultiset().tailMultiset(toElement, boundType).descendingMultiset();
   }
 
   @Override
-  public SortedMultiset<E> subMultiset(
+  public @ReceiverDependentMutable SortedMultiset<E> subMultiset(@ReceiverDependentMutable DescendingMultiset<E> this,
       @ParametricNullness E fromElement,
       BoundType fromBoundType,
       @ParametricNullness E toElement,
@@ -96,38 +98,39 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   }
 
   @Override
-  public SortedMultiset<E> tailMultiset(@ParametricNullness E fromElement, BoundType boundType) {
+  public @ReceiverDependentMutable SortedMultiset<E> tailMultiset(@ReceiverDependentMutable DescendingMultiset<E> this, @ParametricNullness E fromElement, BoundType boundType) {
     return forwardMultiset().headMultiset(fromElement, boundType).descendingMultiset();
   }
 
   @Override
-  protected Multiset<E> delegate() {
+  @SuppressWarnings("mutability:override.return.invalid") // the forward multiset has this view's mutability; receiver-dependent is at least as strict as ForwardingObject's @PolyMutable delegate() for every receiver
+  protected @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable DescendingMultiset<E> this) {
     return forwardMultiset();
   }
 
   @Override
-  public SortedMultiset<E> descendingMultiset() {
+  public @ReceiverDependentMutable SortedMultiset<E> descendingMultiset(@ReceiverDependentMutable DescendingMultiset<E> this) {
     return forwardMultiset();
   }
 
   @Override
   @CheckForNull
-  public Entry<E> firstEntry() {
+  public @Readonly Entry<E> firstEntry() {
     return forwardMultiset().lastEntry();
   }
 
   @Override
   @CheckForNull
-  public Entry<E> lastEntry() {
+  public @Readonly Entry<E> lastEntry() {
     return forwardMultiset().firstEntry();
   }
 
   abstract Iterator<Entry<E>> entryIterator();
 
-  @LazyInit @CheckForNull private transient Set<Entry<E>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<E>> entrySet;
 
   @Override
-  public Set<Entry<E>> entrySet() {
+  public @ReceiverDependentMutable Set<Entry<E>> entrySet() {
     Set<Entry<E>> result = entrySet;
     return (result == null) ? entrySet = createEntrySet() : result;
   }
@@ -159,13 +162,13 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   }
 
   @Override
-  public @PolyNull @PolySigned Object[] toArray(DescendingMultiset<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly DescendingMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
     return standardToArray();
   }
 
   @Override
   @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-  public <T extends @Nullable @UnknownSignedness Object> T[] toArray(@PolyNull T[] array) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] array) {
     return standardToArray(array);
   }
 

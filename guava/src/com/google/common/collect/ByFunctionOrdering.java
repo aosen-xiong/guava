@@ -23,6 +23,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Objects;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
@@ -35,7 +36,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
-final class ByFunctionOrdering<F extends @Nullable Object, T extends @Nullable Object>
+final class ByFunctionOrdering<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
     extends Ordering<F> implements Serializable {
   final Function<F, ? extends T> function;
   final Ordering<T> ordering;
@@ -53,7 +54,7 @@ final class ByFunctionOrdering<F extends @Nullable Object, T extends @Nullable O
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

@@ -47,6 +47,8 @@ import org.checkerframework.checker.index.qual.SubstringIndexFor;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code float} primitives, that are not already found in
@@ -322,7 +324,7 @@ public final class Floats extends FloatsMethodsForWeb {
       return "Floats.stringConverter()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -398,7 +400,7 @@ public final class Floats extends FloatsMethodsForWeb {
    *
    * @since 2.0
    */
-  public static Comparator<float[]> lexicographicalComparator() {
+  public static @Immutable Comparator<float[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -625,13 +627,13 @@ public final class Floats extends FloatsMethodsForWeb {
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Float) && Floats.indexOf(array, (Float) target, start, end) != -1;
     }
 
     @Override
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Float) {
         int i = Floats.indexOf(array, (Float) target, start, end);
@@ -643,7 +645,7 @@ public final class Floats extends FloatsMethodsForWeb {
     }
 
     @Override
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Float) {
         int i = Floats.lastIndexOf(array, (Float) target, start, end);
@@ -675,7 +677,7 @@ public final class Floats extends FloatsMethodsForWeb {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

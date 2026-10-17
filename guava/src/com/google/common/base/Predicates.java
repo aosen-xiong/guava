@@ -120,7 +120,7 @@ public final class Predicates {
    * as a false predicate is found.
    */
   public static <T extends @Nullable @Readonly Object> Predicate<T> and(
-      Predicate<? super T> first, Predicate<? super T> second) {
+      @Readonly Predicate<? super T> first, @Readonly Predicate<? super T> second) {
     return new AndPredicate<>(Predicates.<T>asList(checkNotNull(first), checkNotNull(second)));
   }
 
@@ -217,7 +217,7 @@ public final class Predicates {
    *
    * @param target the collection that may contain the function input
    */
-  public static <T extends @Nullable @Readonly Object> Predicate<T> in(Collection<? extends T> target) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> in(@Readonly Collection<? extends T> target) {
     return new InPredicate<>(target);
   }
 
@@ -228,7 +228,7 @@ public final class Predicates {
    * @return the composition of the provided function and predicate
    */
   public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object> Predicate<A> compose(
-      Predicate<B> predicate, Function<A, ? extends B> function) {
+      @Readonly Predicate<B> predicate, Function<A, ? extends B> function) {
     return new CompositionPredicate<>(predicate, function);
   }
 
@@ -338,7 +338,7 @@ public final class Predicates {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof NotPredicate) {
         NotPredicate<?> that = (NotPredicate<?>) obj;
         return predicate.equals(that.predicate);
@@ -358,9 +358,9 @@ public final class Predicates {
   /** @see Predicates#and(Iterable) */
   private static class AndPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
-    private final List<? extends Predicate<? super T>> components;
+    private final List<? extends @Readonly Predicate<? super T>> components;
 
-    private AndPredicate(List<? extends Predicate<? super T>> components) {
+    private AndPredicate(List<? extends @Readonly Predicate<? super T>> components) {
       this.components = components;
     }
 
@@ -384,7 +384,7 @@ public final class Predicates {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof AndPredicate) {
         AndPredicate<?> that = (AndPredicate<?>) obj;
         return components.equals(that.components);
@@ -404,9 +404,9 @@ public final class Predicates {
   /** @see Predicates#or(Iterable) */
   private static class OrPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
-    private final List<? extends Predicate<? super T>> components;
+    private final List<? extends @Readonly Predicate<? super T>> components;
 
-    private OrPredicate(List<? extends Predicate<? super T>> components) {
+    private OrPredicate(List<? extends @Readonly Predicate<? super T>> components) {
       this.components = components;
     }
 
@@ -430,7 +430,7 @@ public final class Predicates {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof OrPredicate) {
         OrPredicate<?> that = (OrPredicate<?>) obj;
         return components.equals(that.components);
@@ -481,7 +481,7 @@ public final class Predicates {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof IsEqualToPredicate) {
         IsEqualToPredicate that = (IsEqualToPredicate) obj;
         return target.equals(that.target);
@@ -528,7 +528,7 @@ public final class Predicates {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof InstanceOfPredicate) {
         InstanceOfPredicate<?> that = (InstanceOfPredicate<?>) obj;
         return clazz == that.clazz;
@@ -568,7 +568,7 @@ public final class Predicates {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof SubtypeOfPredicate) {
         SubtypeOfPredicate that = (SubtypeOfPredicate) obj;
         return clazz == that.clazz;
@@ -587,9 +587,9 @@ public final class Predicates {
   /** @see Predicates#in(Collection) */
   private static class InPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
-    private final Collection<?> target;
+    private final @Readonly Collection<?> target;
 
-    private InPredicate(Collection<?> target) {
+    private InPredicate(@Readonly Collection<?> target) {
       this.target = checkNotNull(target);
     }
 
@@ -604,7 +604,7 @@ public final class Predicates {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof InPredicate) {
         InPredicate<?> that = (InPredicate<?>) obj;
         return target.equals(that.target);
@@ -630,10 +630,10 @@ public final class Predicates {
   /** @see Predicates#compose(Predicate, Function) */
   private static class CompositionPredicate<A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object>
       implements Predicate<A>, Serializable {
-    final Predicate<B> p;
+    final @Readonly Predicate<B> p;
     final Function<A, ? extends B> f;
 
-    private CompositionPredicate(Predicate<B> p, Function<A, ? extends B> f) {
+    private CompositionPredicate(@Readonly Predicate<B> p, Function<A, ? extends B> f) {
       this.p = checkNotNull(p);
       this.f = checkNotNull(f);
     }
@@ -645,7 +645,7 @@ public final class Predicates {
 
     @Pure
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof CompositionPredicate) {
         CompositionPredicate<?, ?> that = (CompositionPredicate<?, ?>) obj;
         return f.equals(that.f) && p.equals(that.p);
@@ -694,7 +694,7 @@ public final class Predicates {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof ContainsPatternPredicate) {
         ContainsPatternPredicate that = (ContainsPatternPredicate) obj;
 
@@ -737,10 +737,10 @@ public final class Predicates {
     private static final long serialVersionUID = 0;
   }
 
-  private static <T extends @Nullable @Readonly Object> List<Predicate<? super T>> asList(
-      Predicate<? super T> first, Predicate<? super T> second) {
+  private static <T extends @Nullable @Readonly Object> List<@Readonly Predicate<? super T>> asList(
+      @Readonly Predicate<? super T> first, @Readonly Predicate<? super T> second) {
     // TODO(kevinb): understand why we still get a warning despite @SafeVarargs!
-    return Arrays.<Predicate<? super T>>asList(first, second);
+    return Arrays.<@Readonly Predicate<? super T>>asList(first, second);
   }
 
   private static <T> List<T> defensiveCopy(T... array) {

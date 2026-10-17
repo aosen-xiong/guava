@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -102,7 +104,7 @@ public class Joiner {
    * separator between each, to {@code appendable}.
    */
   @CanIgnoreReturnValue
-  public <A extends Appendable> A appendTo(A appendable, Iterable<? extends @Nullable Object> parts)
+  public <A extends Appendable> A appendTo(A appendable, @Readonly Iterable<? extends @Nullable @Readonly Object> parts)
       throws IOException {
     return appendTo(appendable, parts.iterator());
   }
@@ -114,7 +116,7 @@ public class Joiner {
    * @since 11.0
    */
   @CanIgnoreReturnValue
-  public <A extends Appendable> A appendTo(A appendable, Iterator<? extends @Nullable Object> parts)
+  public <A extends Appendable> A appendTo(A appendable, @Readonly Iterator<? extends @Nullable @Readonly Object> parts)
       throws IOException {
     checkNotNull(appendable);
     if (parts.hasNext()) {
@@ -132,10 +134,10 @@ public class Joiner {
    * separator between each, to {@code appendable}.
    */
   @CanIgnoreReturnValue
-  public final <A extends Appendable> A appendTo(A appendable, @Nullable Object[] parts)
+  public final <A extends Appendable> A appendTo(A appendable, @Nullable @Readonly Object @Readonly [] parts)
       throws IOException {
     @SuppressWarnings("nullness") // TODO: b/316358623 - Remove suppression after fixing checker
-    List<?> partsList = Arrays.<@Nullable Object>asList(parts);
+    List<?> partsList = Arrays.<@Nullable @Readonly Object>asList(parts);
     return appendTo(appendable, partsList);
   }
 
@@ -143,9 +145,9 @@ public class Joiner {
   @CanIgnoreReturnValue
   public final <A extends Appendable> A appendTo(
       A appendable,
-      @CheckForNull Object first,
-      @CheckForNull Object second,
-      @Nullable Object... rest)
+      @CheckForNull @Readonly Object first,
+      @CheckForNull @Readonly Object second,
+      @Nullable @Readonly Object... rest)
       throws IOException {
     return appendTo(appendable, iterable(first, second, rest));
   }
@@ -157,7 +159,7 @@ public class Joiner {
    */
   @CanIgnoreReturnValue
   public final StringBuilder appendTo(
-      StringBuilder builder, Iterable<? extends @Nullable Object> parts) {
+      StringBuilder builder, @Readonly Iterable<? extends @Nullable @Readonly Object> parts) {
     return appendTo(builder, parts.iterator());
   }
 
@@ -170,7 +172,7 @@ public class Joiner {
    */
   @CanIgnoreReturnValue
   public final StringBuilder appendTo(
-      StringBuilder builder, Iterator<? extends @Nullable Object> parts) {
+      StringBuilder builder, @Readonly Iterator<? extends @Nullable @Readonly Object> parts) {
     try {
       appendTo((Appendable) builder, parts);
     } catch (IOException impossible) {
@@ -185,9 +187,9 @@ public class Joiner {
    * Iterable)}, except that it does not throw {@link IOException}.
    */
   @CanIgnoreReturnValue
-  public final StringBuilder appendTo(StringBuilder builder, @Nullable Object[] parts) {
+  public final StringBuilder appendTo(StringBuilder builder, @Nullable @Readonly Object @Readonly [] parts) {
     @SuppressWarnings("nullness") // TODO: b/316358623 - Remove suppression after fixing checker
-    List<?> partsList = Arrays.<@Nullable Object>asList(parts);
+    List<?> partsList = Arrays.<@Nullable @Readonly Object>asList(parts);
     return appendTo(builder, partsList);
   }
 
@@ -199,9 +201,9 @@ public class Joiner {
   @CanIgnoreReturnValue
   public final StringBuilder appendTo(
       StringBuilder builder,
-      @CheckForNull Object first,
-      @CheckForNull Object second,
-      @Nullable Object... rest) {
+      @CheckForNull @Readonly Object first,
+      @CheckForNull @Readonly Object second,
+      @Nullable @Readonly Object... rest) {
     return appendTo(builder, iterable(first, second, rest));
   }
 
@@ -209,7 +211,7 @@ public class Joiner {
    * Returns a string containing the string representation of each of {@code parts}, using the
    * previously configured separator between each.
    */
-  public final String join(Iterable<? extends @Nullable Object> parts) {
+  public final String join(@Readonly Iterable<? extends @Nullable @Readonly Object> parts) {
     return join(parts.iterator());
   }
 
@@ -219,7 +221,7 @@ public class Joiner {
    *
    * @since 11.0
    */
-  public final String join(Iterator<? extends @Nullable Object> parts) {
+  public final String join(@Readonly Iterator<? extends @Nullable @Readonly Object> parts) {
     return appendTo(new StringBuilder(), parts).toString();
   }
 
@@ -227,9 +229,9 @@ public class Joiner {
    * Returns a string containing the string representation of each of {@code parts}, using the
    * previously configured separator between each.
    */
-  public final String join(@Nullable Object[] parts) {
+  public final String join(@Nullable @Readonly Object @Readonly [] parts) {
     @SuppressWarnings("nullness") // TODO: b/316358623 - Remove suppression after fixing checker
-    List<?> partsList = Arrays.<@Nullable Object>asList(parts);
+    List<?> partsList = Arrays.<@Nullable @Readonly Object>asList(parts);
     return join(partsList);
   }
 
@@ -238,7 +240,7 @@ public class Joiner {
    * configured separator between each.
    */
   public final String join(
-      @CheckForNull Object first, @CheckForNull Object second, @Nullable Object... rest) {
+      @CheckForNull @Readonly Object first, @CheckForNull @Readonly Object second, @Nullable @Readonly Object... rest) {
     return join(iterable(first, second, rest));
   }
 
@@ -250,7 +252,7 @@ public class Joiner {
     checkNotNull(nullText);
     return new Joiner(this) {
       @Override
-      CharSequence toString(@CheckForNull Object part) {
+      @Readonly CharSequence toString(@CheckForNull @Readonly Object part) {
         return (part == null) ? nullText : Joiner.this.toString(part);
       }
 
@@ -274,7 +276,7 @@ public class Joiner {
     return new Joiner(this) {
       @Override
       public <A extends Appendable> A appendTo(
-          A appendable, Iterator<? extends @Nullable Object> parts) throws IOException {
+          A appendable, @Readonly Iterator<? extends @Nullable @Readonly Object> parts) throws IOException {
         checkNotNull(appendable, "appendable");
         checkNotNull(parts, "parts");
         while (parts.hasNext()) {
@@ -356,7 +358,7 @@ public class Joiner {
      * configured separator and key-value separator, to {@code appendable}.
      */
     @CanIgnoreReturnValue
-    public <A extends Appendable> A appendTo(A appendable, Map<?, ?> map) throws IOException {
+    public <A extends Appendable> A appendTo(A appendable, @Readonly Map<?, ?> map) throws IOException {
       return appendTo(appendable, map.entrySet());
     }
 
@@ -366,7 +368,7 @@ public class Joiner {
      * #appendTo(Appendable, Map)}, except that it does not throw {@link IOException}.
      */
     @CanIgnoreReturnValue
-    public StringBuilder appendTo(StringBuilder builder, Map<?, ?> map) {
+    public StringBuilder appendTo(StringBuilder builder, @Readonly Map<?, ?> map) {
       return appendTo(builder, map.entrySet());
     }
 
@@ -377,7 +379,7 @@ public class Joiner {
      * @since 10.0
      */
     @CanIgnoreReturnValue
-    public <A extends Appendable> A appendTo(A appendable, Iterable<? extends Entry<?, ?>> entries)
+    public <A extends Appendable> A appendTo(A appendable, @Readonly Iterable<? extends @Readonly Entry<?, ?>> entries)
         throws IOException {
       return appendTo(appendable, entries.iterator());
     }
@@ -389,7 +391,7 @@ public class Joiner {
      * @since 11.0
      */
     @CanIgnoreReturnValue
-    public <A extends Appendable> A appendTo(A appendable, Iterator<? extends Entry<?, ?>> parts)
+    public <A extends Appendable> A appendTo(A appendable, @Readonly Iterator<? extends @Readonly Entry<?, ?>> parts)
         throws IOException {
       checkNotNull(appendable);
       if (parts.hasNext()) {
@@ -416,7 +418,7 @@ public class Joiner {
      * @since 10.0
      */
     @CanIgnoreReturnValue
-    public StringBuilder appendTo(StringBuilder builder, Iterable<? extends Entry<?, ?>> entries) {
+    public StringBuilder appendTo(StringBuilder builder, @Readonly Iterable<? extends @Readonly Entry<?, ?>> entries) {
       return appendTo(builder, entries.iterator());
     }
 
@@ -428,7 +430,7 @@ public class Joiner {
      * @since 11.0
      */
     @CanIgnoreReturnValue
-    public StringBuilder appendTo(StringBuilder builder, Iterator<? extends Entry<?, ?>> entries) {
+    public StringBuilder appendTo(StringBuilder builder, @Readonly Iterator<? extends @Readonly Entry<?, ?>> entries) {
       try {
         appendTo((Appendable) builder, entries);
       } catch (IOException impossible) {
@@ -441,7 +443,7 @@ public class Joiner {
      * Returns a string containing the string representation of each entry of {@code map}, using the
      * previously configured separator and key-value separator.
      */
-    public String join(Map<?, ?> map) {
+    public String join(@Readonly Map<?, ?> map) {
       return join(map.entrySet());
     }
 
@@ -451,7 +453,7 @@ public class Joiner {
      *
      * @since 10.0
      */
-    public String join(Iterable<? extends Entry<?, ?>> entries) {
+    public String join(@Readonly Iterable<? extends @Readonly Entry<?, ?>> entries) {
       return join(entries.iterator());
     }
 
@@ -461,7 +463,7 @@ public class Joiner {
      *
      * @since 11.0
      */
-    public String join(Iterator<? extends Entry<?, ?>> entries) {
+    public String join(@Readonly Iterator<? extends @Readonly Entry<?, ?>> entries) {
       return appendTo(new StringBuilder(), entries).toString();
     }
 
@@ -474,7 +476,7 @@ public class Joiner {
     }
   }
 
-  CharSequence toString(@CheckForNull Object part) {
+  @Readonly CharSequence toString(@CheckForNull @Readonly Object part) {
     /*
      * requireNonNull is not safe: Joiner.on(...).join(somethingThatContainsNull) will indeed throw.
      * However, Joiner.on(...).useForNull(...).join(somethingThatContainsNull) *is* safe -- because
@@ -496,10 +498,10 @@ public class Joiner {
     return (part instanceof CharSequence) ? (CharSequence) part : part.toString();
   }
 
-  private static Iterable<@Nullable Object> iterable(
-      @CheckForNull Object first, @CheckForNull Object second, @Nullable Object[] rest) {
+  private static Iterable<@Nullable @Readonly Object> iterable(
+      @CheckForNull @Readonly Object first, @CheckForNull @Readonly Object second, @Nullable @Readonly Object @Readonly [] rest) {
     checkNotNull(rest);
-    return new AbstractList<@Nullable Object>() {
+    return new @Mutable AbstractList<@Nullable @Readonly Object>() {
       @Pure
       @Override
       public @NonNegative int size() {
@@ -508,7 +510,7 @@ public class Joiner {
 
       @Override
       @CheckForNull
-      public Object get(int index) {
+      public @Readonly Object get(int index) {
         switch (index) {
           case 0:
             return first;

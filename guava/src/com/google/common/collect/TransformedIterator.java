@@ -52,7 +52,7 @@ abstract class TransformedIterator<F extends @Nullable @Readonly Object, T exten
 
   @Override
   @ParametricNullness
-  public final T next(@Mutable TransformedIterator<F, T> this) {
+  public final T next(@Readonly TransformedIterator<F, T> this) {
     return transform(backingIterator.next());
   }
 

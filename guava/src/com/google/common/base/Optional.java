@@ -22,10 +22,12 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.Covariant;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An immutable object that may contain a non-null reference to another object. Each instance of
@@ -282,7 +284,7 @@ public abstract class Optional<T> implements Serializable {
    *
    * @since 11.0
    */
-  public abstract Set<@NonNull T> asSet();
+  public abstract @Immutable Set<@NonNull T> asSet();
 
   /**
    * If the instance is present, it is transformed with the given {@link Function}; otherwise,
@@ -295,7 +297,7 @@ public abstract class Optional<T> implements Serializable {
    * @throws NullPointerException if the function returns {@code null}
    * @since 12.0
    */
-  public abstract <V extends @NonNull Object> Optional<V> transform(Function<? super T, V> function);
+  public abstract <V extends @NonNull @Readonly Object> Optional<V> transform(Function<? super T, V> function);
 
   /**
    * Returns {@code true} if {@code object} is an {@code Optional} instance, and either the
@@ -305,7 +307,7 @@ public abstract class Optional<T> implements Serializable {
    * <p><b>Comparison to {@code java.util.Optional}:</b> no differences.
    */
   @Override
-  public abstract boolean equals(@CheckForNull Object object);
+  public abstract boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns a hash code for this instance.

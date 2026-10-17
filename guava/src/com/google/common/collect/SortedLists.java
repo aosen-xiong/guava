@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.RandomAccess;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
@@ -50,10 +51,10 @@ final class SortedLists {
      */
     ANY_PRESENT {
       @Override
-      <E extends @Nullable Object> int resultIndex(
+      <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         return foundIndex;
       }
@@ -61,10 +62,10 @@ final class SortedLists {
     /** Return the index of the last list element that compares as equal to the key. */
     LAST_PRESENT {
       @Override
-      <E extends @Nullable Object> int resultIndex(
+      <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         // Of course, we have to use binary search to find the precise
         // breakpoint...
@@ -86,10 +87,10 @@ final class SortedLists {
     /** Return the index of the first list element that compares as equal to the key. */
     FIRST_PRESENT {
       @Override
-      <E extends @Nullable Object> int resultIndex(
+      <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         // Of course, we have to use binary search to find the precise
         // breakpoint...
@@ -115,10 +116,10 @@ final class SortedLists {
      */
     FIRST_AFTER {
       @Override
-      public <E extends @Nullable Object> int resultIndex(
+      public <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         return LAST_PRESENT.resultIndex(comparator, key, list, foundIndex) + 1;
       }
@@ -129,19 +130,19 @@ final class SortedLists {
      */
     LAST_BEFORE {
       @Override
-      public <E extends @Nullable Object> int resultIndex(
+      public <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         return FIRST_PRESENT.resultIndex(comparator, key, list, foundIndex) - 1;
       }
     };
 
-    abstract <E extends @Nullable Object> int resultIndex(
+    abstract <E extends @Nullable @Readonly Object> int resultIndex(
         Comparator<? super E> comparator,
         @ParametricNullness E key,
-        List<? extends E> list,
+        @Readonly List<? extends E> list,
         int foundIndex);
   }
 
@@ -200,8 +201,8 @@ final class SortedLists {
    * KeyAbsentBehavior)} using {@link Ordering#natural}.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends Comparable> int binarySearch(
-      List<? extends E> list,
+  public static <E extends @Immutable Comparable> int binarySearch(
+      @Readonly List<? extends E> list,
       E e,
       KeyPresentBehavior presentBehavior,
       KeyAbsentBehavior absentBehavior) {
@@ -216,8 +217,8 @@ final class SortedLists {
    * KeyAbsentBehavior)} using {@link Ordering#natural}.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends @Nullable Object, K extends Comparable> int binarySearch(
-      List<E> list,
+  public static <E extends @Nullable @Readonly Object, K extends @Immutable Comparable> int binarySearch(
+      @Readonly List<E> list,
       Function<? super E, K> keyFunction,
       K key,
       KeyPresentBehavior presentBehavior,
@@ -234,8 +235,8 @@ final class SortedLists {
    * KeyAbsentBehavior)} using {@link Lists#transform(List, Function) Lists.transform(list,
    * keyFunction)}.
    */
-  public static <E extends @Nullable Object, K extends @Nullable @Immutable Object> int binarySearch(
-      List<E> list,
+  public static <E extends @Nullable @Readonly Object, K extends @Nullable @Immutable Object> int binarySearch(
+      @Readonly List<E> list,
       Function<? super E, K> keyFunction,
       @ParametricNullness K key,
       Comparator<? super K> keyComparator,
@@ -268,8 +269,8 @@ final class SortedLists {
    * @return the index determined by the {@code KeyPresentBehavior}, if the key is in the list;
    *     otherwise the index determined by the {@code KeyAbsentBehavior}.
    */
-  public static <E extends @Nullable Object> int binarySearch(
-      List<? extends E> list,
+  public static <E extends @Nullable @Readonly Object> int binarySearch(
+      @Readonly List<? extends E> list,
       @ParametricNullness E key,
       Comparator<? super E> comparator,
       KeyPresentBehavior presentBehavior,

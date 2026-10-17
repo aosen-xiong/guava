@@ -46,6 +46,7 @@ import org.checkerframework.checker.index.qual.SameLen;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An immutable array of {@code double} values, with an API resembling {@link List}.
@@ -549,17 +550,17 @@ public final class ImmutableDoubleArray implements Serializable {
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       return indexOf(target) >= 0;
     }
 
     @Override
-    public @GTENegativeOne int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @GTENegativeOne int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       return target instanceof Double ? parent.indexOf((Double) target) : -1;
     }
 
     @Override
-    public @GTENegativeOne int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @GTENegativeOne int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       return target instanceof Double ? parent.lastIndexOf((Double) target) : -1;
     }
 
@@ -581,7 +582,7 @@ public final class ImmutableDoubleArray implements Serializable {
      * therefore i is an index for parent.array
      */
     @SuppressWarnings("upperbound:array.access.unsafe.high") // index incremented in for-each over list of same length
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object instanceof AsList) {
         AsList that = (AsList) object;
         return this.parent.equals(that.parent);
@@ -621,7 +622,7 @@ public final class ImmutableDoubleArray implements Serializable {
    * values as this one, in the same order. Values are compared as if by {@link Double#equals}.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -690,11 +691,11 @@ public final class ImmutableDoubleArray implements Serializable {
     return start > 0 || end < array.length;
   }
 
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return trimmed();
   }
 
-  Object readResolve() {
+  @Readonly Object readResolve() {
     return isEmpty() ? EMPTY : this;
   }
 }

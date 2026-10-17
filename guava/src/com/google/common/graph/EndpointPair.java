@@ -25,6 +25,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.errorprone.annotations.Immutable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -67,7 +68,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
   }
 
   /** Returns an {@link EndpointPair} representing the endpoints of an edge in {@code network}. */
-  static <N> EndpointPair<N> of(Network<?, ?> network, N nodeU, N nodeV) {
+  static <N> EndpointPair<N> of(@Readonly Network<?, ?> network, N nodeU, N nodeV) {
     return network.isDirected() ? ordered(nodeU, nodeV) : unordered(nodeU, nodeV);
   }
 
@@ -135,7 +136,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
    * ordered {@link EndpointPair} is never equal to an unordered {@link EndpointPair}.
    */
   @Override
-  public abstract boolean equals(@CheckForNull Object obj);
+  public abstract boolean equals(@CheckForNull @Readonly Object obj);
 
   /**
    * The hashcode of an ordered {@link EndpointPair} is equal to {@code Objects.hashCode(source(),
@@ -166,7 +167,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj == this) {
         return true;
       }
@@ -214,7 +215,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj == this) {
         return true;
       }

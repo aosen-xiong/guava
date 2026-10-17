@@ -42,10 +42,12 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An assortment of mainly legacy static utility methods that operate on or return objects of type
@@ -94,7 +96,7 @@ public final class Iterables {
    * @since 10.0
    */
   @Deprecated
-  public static <E> Iterable<E> unmodifiableIterable(ImmutableCollection<E> iterable) {
+  public static <E> @Immutable Iterable<E> unmodifiableIterable(ImmutableCollection<E> iterable) {
     return checkNotNull(iterable);
   }
 
@@ -206,7 +208,7 @@ public final class Iterables {
    */
   @CanIgnoreReturnValue
   public static <T extends @Nullable @Readonly Object> boolean removeIf(
-      Iterable<T> removeFrom, Predicate<? super T> predicate) {
+      Iterable<T> removeFrom, @Readonly Predicate<? super T> predicate) {
     if (removeFrom instanceof Collection) {
       return ((Collection<T>) removeFrom).removeIf(predicate);
     }
@@ -216,7 +218,7 @@ public final class Iterables {
   /** Removes and returns the first matching element, or returns {@code null} if there is none. */
   @CheckForNull
   static <T extends @Nullable @Readonly Object> T removeFirstMatching(
-      Iterable<T> removeFrom, Predicate<? super T> predicate) {
+      Iterable<T> removeFrom, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate);
     Iterator<T> iterator = removeFrom.iterator();
     while (iterator.hasNext()) {
@@ -254,7 +256,7 @@ public final class Iterables {
    * generally guaranteed.
    */
   @Pure
-  public static String toString(Iterable<?> iterable) {
+  public static String toString(@Readonly Iterable<?> iterable) {
     return Iterators.toString(iterable.iterator());
   }
 
@@ -268,7 +270,7 @@ public final class Iterables {
    * @throws IllegalArgumentException if the iterable contains multiple elements
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getOnlyElement(Iterable<T> iterable) {
+  public static <T extends @Nullable @Readonly Object> T getOnlyElement(@Readonly Iterable<T> iterable) {
     return Iterators.getOnlyElement(iterable.iterator());
   }
 
@@ -295,12 +297,12 @@ public final class Iterables {
    * @return a newly-allocated array into which all the elements of the iterable have been copied
    */
   @GwtIncompatible // Array.newInstance(Class, int)
-  public static <T extends @Nullable Object> T[] toArray(
+  public static <T extends @Nullable @Readonly Object> T[] toArray(
       Iterable<? extends T> iterable, Class<@NonNull T> type) {
     return toArray(iterable, ObjectArrays.newArray(type, 0));
   }
 
-  static <T extends @Nullable @Readonly Object> T[] toArray(Iterable<? extends T> iterable, T[] array) {
+  static <T extends @Nullable @Readonly Object> T[] toArray(@Readonly Iterable<? extends T> iterable, T[] array) {
     Collection<? extends T> collection = castOrCopyToCollection(iterable);
     return collection.toArray(array);
   }
@@ -311,7 +313,7 @@ public final class Iterables {
    * @param iterable the iterable to copy
    * @return a newly-allocated array into which all the elements of the iterable have been copied
    */
-  static @Nullable Object[] toArray(Iterable<?> iterable) {
+  static @Nullable @Readonly Object[] toArray(@Readonly Iterable<?> iterable) {
     return castOrCopyToCollection(iterable).toArray();
   }
 
@@ -320,8 +322,8 @@ public final class Iterables {
    * returned. Otherwise, an {@link java.util.ArrayList} is created with the contents of the
    * iterable in the same iteration order.
    */
-  private static <E extends @Nullable @Readonly Object> Collection<E> castOrCopyToCollection(
-      Iterable<E> iterable) {
+  private static <E extends @Nullable @Readonly Object> @Readonly Collection<E> castOrCopyToCollection(
+      @Readonly Iterable<E> iterable) {
     return (iterable instanceof Collection)
         ? (Collection<E>) iterable
         : Lists.newArrayList(iterable.iterator());
@@ -437,8 +439,9 @@ public final class Iterables {
    * <p><b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
    * Stream.concat(a, b)}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> concat(
-      Iterable<? extends T> a, Iterable<? extends T> b) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:return.type.incompatible"}) // the view's iterator reads and removes through a's and b's iterators, so it has their mutability; an anonymous FluentIterable cannot be created @PolyMutable
+  public static <T extends @Nullable @Readonly Object> @PolyMutable Iterable<T> concat(
+      @PolyMutable Iterable<? extends T> a, @PolyMutable Iterable<? extends T> b) {
     return FluentIterable.concat(a, b);
   }
 
@@ -581,7 +584,7 @@ public final class Iterables {
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#filter}.
    */
   public static <T extends @Nullable @Readonly Object> Iterable<T> filter(
-      final Iterable<T> unfiltered, final Predicate<? super T> retainIfTrue) {
+      final Iterable<T> unfiltered, final @Readonly Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
     return new FluentIterable<T>() {
@@ -636,7 +639,7 @@ public final class Iterables {
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#anyMatch}.
    */
   public static <T extends @Nullable @Readonly Object> boolean any(
-      Iterable<T> iterable, Predicate<? super T> predicate) {
+      Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.any(iterable.iterator(), predicate);
   }
 
@@ -662,7 +665,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T find(
-      Iterable<T> iterable, Predicate<? super T> predicate) {
+      @Readonly Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.find(iterable.iterator(), predicate);
   }
 
@@ -679,8 +682,8 @@ public final class Iterables {
   // The signature we really want here is...
   //
   // <T extends @Nullable Object> @JointlyNullable T find(
-  //     Iterable<? extends T> iterable,
-  //     Predicate<? super T> predicate,
+  @Readonly //     Iterable<? extends T> iterable,
+  //     @Readonly Predicate<? super T> predicate,
   //     @JointlyNullable T defaultValue);
   //
   // ...where "@JointlyNullable" is similar to @PolyNull but slightly different:
@@ -693,8 +696,8 @@ public final class Iterables {
   // - @JointlyNullable means "@Nullable or no annotation"
   @CheckForNull
   public static <T extends @Nullable @Readonly Object> T find(
-      Iterable<? extends T> iterable,
-      Predicate<? super T> predicate,
+      @Readonly Iterable<? extends T> iterable,
+      @Readonly Predicate<? super T> predicate,
       @CheckForNull T defaultValue) {
     return Iterators.find(iterable.iterator(), predicate, defaultValue);
   }
@@ -833,7 +836,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getFirst(
-      Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
+      @Readonly Iterable<? extends T> iterable, @ParametricNullness T defaultValue) {
     return Iterators.getNext(iterable.iterator(), defaultValue);
   }
 
@@ -847,7 +850,7 @@ public final class Iterables {
    * @throws NoSuchElementException if the iterable is empty
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getLast(Iterable<T> iterable) {
+  public static <T extends @Nullable @Readonly Object> T getLast(@Readonly Iterable<T> iterable) {
     // TODO(kevinb): Support a concurrently modified collection?
     if (iterable instanceof List) {
       List<T> list = (List<T>) iterable;
@@ -932,7 +935,7 @@ public final class Iterables {
          * remove() method would remove one of the skipped elements instead of
          * throwing an IllegalStateException.
          */
-        return new Iterator<T>() {
+        return new @Mutable Iterator<T>() {
           boolean atStart = true;
 
           @Override
@@ -1070,7 +1073,7 @@ public final class Iterables {
    *
    * @since 11.0
    */
-  public static <T extends @Nullable Object> Iterable<T> mergeSorted(
+  public static <T extends @Nullable @Readonly Object> Iterable<T> mergeSorted(
       final Iterable<? extends Iterable<? extends T>> iterables,
       final Comparator<? super T> comparator) {
     checkNotNull(iterables, "iterables");

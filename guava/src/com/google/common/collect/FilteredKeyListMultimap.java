@@ -23,6 +23,8 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link Multimaps#filterKeys(ListMultimap, Predicate)}.
@@ -31,29 +33,30 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 final class FilteredKeyListMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends FilteredKeyMultimap<K, V> implements ListMultimap<K, V> {
-  FilteredKeyListMultimap(ListMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
+  FilteredKeyListMultimap(@ReceiverDependentMutable ListMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
     super(unfiltered, keyPredicate);
   }
 
   @Override
-  public ListMultimap<K, V> unfiltered() {
-    return (ListMultimap<K, V>) super.unfiltered();
+  public @ReceiverDependentMutable ListMultimap<K, V> unfiltered() {
+    return (@ReceiverDependentMutable ListMultimap<K, V>) super.unfiltered();
   }
 
   @Override
-  public List<V> get(@ParametricNullness K key) {
-    return (List<V>) super.get(key);
+  public @ReceiverDependentMutable List<V> get(@ParametricNullness K key) {
+    return (@ReceiverDependentMutable List<V>) super.get(key);
   }
 
   @Override
-  public List<V> removeAll(@CheckForNull @Readonly Object key) {
-    return (List<V>) super.removeAll(key);
+  public @Readonly List<V> removeAll(@Mutable FilteredKeyListMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    return (@Readonly List<V>) super.removeAll(key);
   }
 
   @Override
-  public List<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+  public List<V> replaceValues(@Mutable FilteredKeyListMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
     return (List<V>) super.replaceValues(key, values);
   }
 }

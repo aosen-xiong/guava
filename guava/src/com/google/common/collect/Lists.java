@@ -112,7 +112,7 @@ public final class Lists {
   @SafeVarargs
   @GwtCompatible(serializable = true)
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public static <E extends @Nullable Object> ArrayList<E> newArrayList(E... elements) {
+  public static <E extends @Nullable @Readonly Object> ArrayList<E> newArrayList(E... elements) {
     checkNotNull(elements); // for GWT
     // Avoid integer overflow when a large array is passed in
     int capacity = computeArrayListCapacity(elements.length);
@@ -135,7 +135,7 @@ public final class Lists {
    */
   @GwtCompatible(serializable = true)
   public static <E extends @Nullable @Readonly Object> ArrayList<E> newArrayList(
-      Iterable<? extends E> elements) {
+      @Readonly Iterable<? extends E> elements) {
     checkNotNull(elements); // for GWT
     // Let ArrayList's sizing logic work, if possible
     return (elements instanceof Collection)
@@ -152,7 +152,7 @@ public final class Lists {
    */
   @GwtCompatible(serializable = true)
   public static <E extends @Nullable @Readonly Object> ArrayList<E> newArrayList(
-      Iterator<? extends E> elements) {
+      @Readonly Iterator<? extends E> elements) {
     ArrayList<E> list = newArrayList();
     Iterators.addAll(list, elements);
     return list;
@@ -543,8 +543,9 @@ public final class Lists {
    * java.util.stream.Stream#map}. This method is not being deprecated, but we gently encourage you
    * to migrate to streams.
    */
-  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> List<T> transform(
-          @PolyMutable List<F> fromList, Function<? super F, ? extends T> function) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @PolyMutable List<T> transform(
+          @PolyMutable List<F> fromList, @Readonly Function<? super F, ? extends T> function) {
     return (fromList instanceof RandomAccess)
         ? new @PolyMutable TransformingRandomAccessList<>(fromList, function)
         : new @PolyMutable TransformingSequentialList<>(fromList, function);
@@ -572,7 +573,7 @@ public final class Lists {
      * can be overkill. That's why we forward this call directly to the backing list.
      */
     @Override
-    protected void removeRange(int fromIndex, int toIndex) {
+    protected void removeRange(@Mutable TransformingSequentialList<F, T> this, int fromIndex, int toIndex) {
       fromList.subList(fromIndex, toIndex).clear();
     }
 
@@ -588,8 +589,8 @@ public final class Lists {
     }
 
     @Override
-    public ListIterator<T> listIterator(final int index) {
-      return new TransformedListIterator<F, T>(fromList.listIterator(index)) {
+    public @ReceiverDependentMutable ListIterator<T> listIterator(final int index) {
+      return new @ReceiverDependentMutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
         @Override
         @ParametricNullness
         T transform(@ParametricNullness F from) {
@@ -599,7 +600,7 @@ public final class Lists {
     }
 
     @Override
-    public boolean removeIf(@Mutable TransformingSequentialList<F, T> this, Predicate<? super T> filter) {
+    public boolean removeIf(@Mutable TransformingSequentialList<F, T> this, @Readonly Predicate<? super T> filter) {
       checkNotNull(filter);
       return fromList.removeIf(element -> filter.test(function.apply(element)));
     }
@@ -631,7 +632,7 @@ public final class Lists {
      * can be overkill. That's why we forward this call directly to the backing list.
      */
     @Override
-    protected void removeRange(int fromIndex, int toIndex) {
+    protected void removeRange(@Mutable TransformingRandomAccessList<F, T> this, int fromIndex, int toIndex) {
       fromList.subList(fromIndex, toIndex).clear();
     }
 
@@ -642,13 +643,13 @@ public final class Lists {
     }
 
     @Override
-    public Iterator<T> iterator(@Readonly TransformingRandomAccessList<F, T> this) {
+    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this) {
       return listIterator();
     }
 
     @Override
-    public ListIterator<T> listIterator(@Readonly TransformingRandomAccessList<F, T> this, int index) {
-      return new TransformedListIterator<F, T>(fromList.listIterator(index)) {
+    public @ReceiverDependentMutable ListIterator<T> listIterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this, int index) {
+      return new @ReceiverDependentMutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
         @Override
         T transform(F from) {
           return function.apply(from);
@@ -663,7 +664,7 @@ public final class Lists {
     }
 
     @Override
-    public boolean removeIf(@Mutable TransformingRandomAccessList<F, T> this, Predicate<? super T> filter) {
+    public boolean removeIf(@Mutable TransformingRandomAccessList<F, T> this, @Readonly Predicate<? super T> filter) {
       checkNotNull(filter);
       return fromList.removeIf(element -> filter.test(function.apply(element)));
     }
@@ -698,12 +699,13 @@ public final class Lists {
    * @return a list of consecutive sublists
    * @throws IllegalArgumentException if {@code partitionSize} is nonpositive
    */
-  public static <T extends @Nullable @Readonly Object> List<List<T>> partition(List<T> list, int size) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <T extends @Nullable @Readonly Object> @PolyMutable List<List<T>> partition(@PolyMutable List<T> list, int size) {
     checkNotNull(list);
     checkArgument(size > 0);
     return (list instanceof RandomAccess)
-        ? new RandomAccessPartition<>(list, size)
-        : new Partition<>(list, size);
+        ? new @PolyMutable RandomAccessPartition<>(list, size)
+        : new @PolyMutable Partition<>(list, size);
   }
 
   @ReceiverDependentMutable
@@ -814,7 +816,7 @@ public final class Lists {
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -823,7 +825,7 @@ public final class Lists {
   private static final class CharSequenceAsList extends AbstractList<Character> {
     private final CharSequence sequence;
 
-    CharSequenceAsList(CharSequence sequence) {
+    CharSequenceAsList(@ReceiverDependentMutable CharSequence sequence) {
       this.sequence = sequence;
     }
 
@@ -850,19 +852,20 @@ public final class Lists {
    *
    * @since 7.0
    */
-  public static <T extends @Nullable @Readonly Object> List<T> reverse(List<T> list) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <T extends @Nullable @Readonly Object> @PolyMutable List<T> reverse(@PolyMutable List<T> list) {
     if (list instanceof ImmutableList) {
       // Avoid nullness warnings.
-      List<?> reversed = ((ImmutableList<?>) list).reverse();
+      List<?> reversed = ((@PolyMutable ImmutableList<?>) list).reverse();
       @SuppressWarnings("unchecked")
       List<T> result = (List<T>) reversed;
       return result;
     } else if (list instanceof ReverseList) {
-      return ((ReverseList<T>) list).getForwardList();
+      return ((@PolyMutable ReverseList<T>) list).getForwardList();
     } else if (list instanceof RandomAccess) {
-      return new RandomAccessReverseList<>(list);
+      return new @PolyMutable RandomAccessReverseList<>(list);
     } else {
-      return new ReverseList<>(list);
+      return new @PolyMutable ReverseList<>(list);
     }
   }
 
@@ -929,13 +932,13 @@ public final class Lists {
     }
 
     @Override
-    public @PolyMutable List<T> subList(@PolyMutable ReverseList<T> this, int fromIndex, int toIndex) {
+    public @ReceiverDependentMutable List<T> subList(@ReceiverDependentMutable ReverseList<T> this, int fromIndex, int toIndex) {
       checkPositionIndexes(fromIndex, toIndex, size());
       return reverse(forwardList.subList(reversePosition(toIndex), reversePosition(fromIndex)));
     }
 
     @Override
-    public Iterator<T> iterator(@Readonly ReverseList<T> this) {
+    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable ReverseList<T> this) {
       return listIterator();
     }
 
@@ -943,7 +946,7 @@ public final class Lists {
     public ListIterator<T> listIterator(@Readonly ReverseList<T> this, int index) {
       int start = reversePosition(index);
       final ListIterator<T> forwardIterator = forwardList.listIterator(start);
-      return new ListIterator<T>() {
+      return new @Mutable ListIterator<T>() {
 
         boolean canRemoveOrSet;
 

@@ -161,8 +161,8 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * Returns a serializable ordering that uses the natural order of the values. The ordering throws
    * a {@link NullPointerException} when passed a null parameter.
    *
-   * <p>The type specification is {@code <C extends Comparable>}, instead of the technically correct
-   * {@code <C extends Comparable<? super C>>}, to support legacy types from before Java 5.
+   * <p>The type specification is {@code <C extends @Immutable Comparable>}, instead of the technically correct
+   * {@code <C extends @Immutable Comparable<? super C>>}, to support legacy types from before Java 5.
    *
    * <p><b>Java 8+ users:</b> use {@link Comparator#naturalOrder} instead.
    */
@@ -170,7 +170,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
   @SuppressWarnings({"unchecked", "rawtypes"})
   // TODO(kevinb): right way to explain this??
   // plus https://github.com/google/guava/issues/989
-  public static <C extends Comparable> Ordering<C> natural() {
+  public static <C extends @Immutable Comparable> Ordering<C> natural() {
     return (Ordering<C>) NaturalOrdering.INSTANCE;
   }
 
@@ -192,7 +192,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    *     wraps that comparator
    */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable @Readonly Object> Ordering<T> from(Comparator<T> comparator) {
+  public static <T extends @Nullable @Readonly Object> Ordering<T> from(@Readonly Comparator<T> comparator) {
     return (comparator instanceof Ordering)
         ? (Ordering<T>) comparator
         : new ComparatorOrdering<T>(comparator);
@@ -470,7 +470,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
     return new ByFunctionOrdering<>(function, this);
   }
 
-  <T2 extends @Immutable T> Ordering<Entry<T2, ?>> onKeys() {
+  <T2 extends @Immutable T> Ordering<@Readonly Entry<T2, ?>> onKeys() {
     return onResultOf(Maps.<T2>keyFunction());
   }
 

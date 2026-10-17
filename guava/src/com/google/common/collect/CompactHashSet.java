@@ -47,6 +47,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -54,6 +55,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * CompactHashSet is an implementation of a Set. All optional operations (adding and removing) are
@@ -116,7 +118,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    */
   @SafeVarargs
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public static <E extends @Nullable Object> CompactHashSet<E> create(E... elements) {
+  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> create(E... elements) {
     CompactHashSet<E> set = createWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
@@ -131,7 +133,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    *     elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <E extends @Nullable Object> CompactHashSet<E> createWithExpectedSize(
+  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> createWithExpectedSize(
       int expectedSize) {
     return new CompactHashSet<>(expectedSize);
   }
@@ -224,7 +226,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   /** Pseudoconstructor for serialization support. */
-  void init(int expectedSize) {
+  void init(@Mutable CompactHashSet<E> this, int expectedSize) {
     Preconditions.checkArgument(expectedSize >= 0, "Expected size must be >= 0");
 
     // Save expectedSize for use in allocArrays()
@@ -239,7 +241,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   /** Handle lazy allocation of arrays. */
   @CanIgnoreReturnValue
-  int allocArrays() {
+  int allocArrays(@Mutable CompactHashSet<E> this) {
     Preconditions.checkState(needsAllocArrays(), "Arrays already allocated");
 
     int expectedSize = metadata;
@@ -269,7 +271,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   @VisibleForTesting
   @CanIgnoreReturnValue
-  Set<E> convertToHashFloodingResistantImplementation() {
+  Set<E> convertToHashFloodingResistantImplementation(@Mutable CompactHashSet<E> this) {
     Set<E> newDelegate = createHashFloodingResistantDelegate(hashTableMask() + 1);
     for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
       newDelegate.add(element(i));
@@ -287,7 +289,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   /** Stores the hash table mask as the number of bits needed to represent an index. */
-  private void setHashTableMask(int mask) {
+  private void setHashTableMask(@Mutable CompactHashSet<E> this, int mask) {
     int hashTableBits = Integer.SIZE - Integer.numberOfLeadingZeros(mask);
     metadata =
         CompactHashing.maskCombine(metadata, hashTableBits, CompactHashing.HASH_TABLE_BITS_MASK);
@@ -298,13 +300,13 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
     return (1 << (metadata & CompactHashing.HASH_TABLE_BITS_MASK)) - 1;
   }
 
-  void incrementModCount() {
+  void incrementModCount(@Mutable CompactHashSet<E> this) {
     metadata += CompactHashing.MODIFICATION_COUNT_INCREMENT;
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean add(@ParametricNullness E object) {
+  public boolean add(@Mutable CompactHashSet<E> this, @ParametricNullness E object) {
     if (needsAllocArrays()) {
       allocArrays();
     }
@@ -371,7 +373,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   /** Resizes the entries storage if necessary. */
-  private void resizeMeMaybe(int newSize) {
+  private void resizeMeMaybe(@Mutable CompactHashSet<E> this, int newSize) {
     int entriesSize = requireEntries().length;
     if (newSize > entriesSize) {
       // 1.5x but round up to nearest odd (this is optimal for memory consumption on Android)
@@ -387,13 +389,13 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    * Resizes the internal entries array to the specified capacity, which may be greater or less than
    * the current capacity.
    */
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactHashSet<E> this, int newCapacity) {
     this.entries = Arrays.copyOf(requireEntries(), newCapacity);
     this.elements = Arrays.copyOf(requireElements(), newCapacity);
   }
 
   @CanIgnoreReturnValue
-  private int resizeTable(int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
+  private int resizeTable(@Mutable CompactHashSet<E> this, int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
     Object newTable = CompactHashing.createTable(newCapacity);
     int newMask = newCapacity - 1;
 
@@ -430,7 +432,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (needsAllocArrays()) {
       return false;
     }
@@ -459,7 +461,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
+  public boolean remove(@Mutable CompactHashSet<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     if (needsAllocArrays()) {
       return false;
     }
@@ -554,7 +556,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
     if (delegate != null) {
       return delegate.iterator();
     }
-    return new Iterator<E>() {
+    return new @Mutable Iterator<E>() {
       int expectedMetadata = metadata;
       int currentIndex = firstEntryIndex();
       int indexToRemove = -1;
@@ -636,7 +638,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   @Override
-  public @PolyNull @PolySigned Object[] toArray(CompactHashSet<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactHashSet<@PolyNull @PolySigned @PolyMutable E> this) {
     if (needsAllocArrays()) {
       return new Object[0];
     }
@@ -647,7 +649,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-  public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
     if (needsAllocArrays()) {
       if (a.length > 0) {
         a[0] = null;
@@ -664,7 +666,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    * Ensures that this {@code CompactHashSet} has the smallest representation in memory, given its
    * current size.
    */
-  public void trimToSize() {
+  public void trimToSize(@Mutable CompactHashSet<E> this) {
     if (needsAllocArrays()) {
       return;
     }
@@ -687,7 +689,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactHashSet<E> this) {
     if (needsAllocArrays()) {
       return;
     }
@@ -718,7 +720,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
 
   @SuppressWarnings("unchecked")
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable CompactHashSet<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int elementCount = stream.readInt();
     if (elementCount < 0) {

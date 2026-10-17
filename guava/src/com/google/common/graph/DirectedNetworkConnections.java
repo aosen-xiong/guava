@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableBiMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An implementation of {@link NetworkConnections} for directed networks.
@@ -33,18 +34,18 @@ import java.util.Set;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class DirectedNetworkConnections<N, E> extends AbstractDirectedNetworkConnections<N, E> {
+final class DirectedNetworkConnections<N extends @Immutable Object, E extends @Immutable Object> extends AbstractDirectedNetworkConnections<N, E> {
 
   DirectedNetworkConnections(Map<E, N> inEdgeMap, Map<E, N> outEdgeMap, int selfLoopCount) {
     super(inEdgeMap, outEdgeMap, selfLoopCount);
   }
 
-  static <N, E> DirectedNetworkConnections<N, E> of() {
+  static <N extends @Immutable Object, E extends @Immutable Object> DirectedNetworkConnections<N, E> of() {
     return new DirectedNetworkConnections<>(
         HashBiMap.<E, N>create(EXPECTED_DEGREE), HashBiMap.<E, N>create(EXPECTED_DEGREE), 0);
   }
 
-  static <N, E> DirectedNetworkConnections<N, E> ofImmutable(
+  static <N extends @Immutable Object, E extends @Immutable Object> DirectedNetworkConnections<N, E> ofImmutable(
       Map<E, N> inEdges, Map<E, N> outEdges, int selfLoopCount) {
     return new DirectedNetworkConnections<>(
         ImmutableBiMap.copyOf(inEdges), ImmutableBiMap.copyOf(outEdges), selfLoopCount);

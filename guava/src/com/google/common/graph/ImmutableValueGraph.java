@@ -45,14 +45,15 @@ import com.google.errorprone.annotations.Immutable;
 @Immutable(containerOf = {"N", "V"})
 @SuppressWarnings("Immutable") // Extends StandardValueGraph but uses ImmutableMaps.
 @ElementTypesAreNonnullByDefault
-public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
+@org.checkerframework.checker.mutability.qual.Immutable
+public final class ImmutableValueGraph<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> extends StandardValueGraph<N, V> {
 
   private ImmutableValueGraph(ValueGraph<N, V> graph) {
     super(ValueGraphBuilder.from(graph), getNodeConnections(graph), graph.edges().size());
   }
 
   /** Returns an immutable copy of {@code graph}. */
-  public static <N, V> ImmutableValueGraph<N, V> copyOf(ValueGraph<N, V> graph) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> ImmutableValueGraph<N, V> copyOf(ValueGraph<N, V> graph) {
     return (graph instanceof ImmutableValueGraph)
         ? (ImmutableValueGraph<N, V>) graph
         : new ImmutableValueGraph<N, V>(graph);
@@ -64,7 +65,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
    * @deprecated no need to use this
    */
   @Deprecated
-  public static <N, V> ImmutableValueGraph<N, V> copyOf(ImmutableValueGraph<N, V> graph) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> ImmutableValueGraph<N, V> copyOf(ImmutableValueGraph<N, V> graph) {
     return checkNotNull(graph);
   }
 
@@ -78,7 +79,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
     return new ImmutableGraph<>(this); // safe because the view is effectively immutable
   }
 
-  private static <N, V> ImmutableMap<N, GraphConnections<N, V>> getNodeConnections(
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> ImmutableMap<N, GraphConnections<N, V>> getNodeConnections(
       ValueGraph<N, V> graph) {
     // ImmutableMap.Builder maintains the order of the elements as inserted, so the map will have
     // whatever ordering the graph's nodes do, so ImmutableSortedMap is unnecessary even if the
@@ -90,7 +91,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
     return nodeConnections.buildOrThrow();
   }
 
-  private static <N, V> GraphConnections<N, V> connectionsOf(ValueGraph<N, V> graph, N node) {
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> GraphConnections<N, V> connectionsOf(ValueGraph<N, V> graph, N node) {
     Function<N, V> successorNodeToValueFn =
         (N successorNode) ->
             // requireNonNull is safe because the endpoint pair comes from the graph.
@@ -123,7 +124,7 @@ public final class ImmutableValueGraph<N, V> extends StandardValueGraph<N, V> {
    *
    * @since 28.0
    */
-  public static class Builder<N, V> {
+  public static class Builder<N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> {
 
     private final MutableValueGraph<N, V> mutableValueGraph;
 

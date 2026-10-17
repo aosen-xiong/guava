@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -53,7 +54,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
-public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements BiMap<K, V> {
+@Immutable
+public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableMap<K, V> implements BiMap<K, V> {
 
   /**
    * Returns a {@link Collector} that accumulates elements into an {@code ImmutableBiMap} whose keys
@@ -67,7 +69,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableBiMap<K, V>> toImmutableBiMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -283,9 +285,10 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @since 31.0
    */
   @SafeVarargs
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     @SuppressWarnings("unchecked") // we will only ever read these
-    Entry<K, V>[] entries2 = (Entry<K, V>[]) entries;
+    @Immutable Entry<K, V>[] entries2 = (@Immutable Entry<K, V>[]) entries;
     return RegularImmutableBiMap.fromEntries(entries2);
   }
 
@@ -309,7 +312,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    *
    * @since 23.1
    */
-  public static <K, V> Builder<K, V> builderWithExpectedSize(int expectedSize) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> Builder<K, V> builderWithExpectedSize(int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     return new Builder<>(expectedSize);
   }
@@ -455,13 +458,14 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
      * @since 31.0
      */
     @Override
+    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     public ImmutableBiMap<K, V> buildOrThrow() {
       switch (size) {
         case 0:
           return of();
         case 1:
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> onlyEntry = requireNonNull(entries[0]);
+          @Immutable Entry<K, V> onlyEntry = requireNonNull(entries[0]);
           return of(onlyEntry.getKey(), onlyEntry.getValue());
         default:
           /*
@@ -476,7 +480,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
               entries = Arrays.copyOf(entries, size);
             }
             Arrays.sort(
-                (Entry<K, V>[]) entries, // Entries up to size are not null
+                (@Immutable Entry<K, V>[]) entries, // Entries up to size are not null
                 0,
                 size,
                 Ordering.from(valueComparator).onResultOf(Maps.valueFunction()));
@@ -503,6 +507,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
 
     @Override
     @VisibleForTesting
+    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     ImmutableBiMap<K, V> buildJdkBacked() {
       checkState(
           valueComparator == null,
@@ -512,7 +517,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
           return of();
         case 1:
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> onlyEntry = requireNonNull(entries[0]);
+          @Immutable Entry<K, V> onlyEntry = requireNonNull(entries[0]);
           return of(onlyEntry.getKey(), onlyEntry.getValue());
         default:
           entriesUsed = true;
@@ -559,15 +564,16 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * @throws NullPointerException if any key, value, or entry is null
    * @since 19.0
    */
-  public static <K, V> ImmutableBiMap<K, V> copyOf(
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant
-    Entry<K, V>[] entryArray = (Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
+    @Immutable Entry<K, V>[] entryArray = (@Immutable Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
     switch (entryArray.length) {
       case 0:
         return of();
       case 1:
-        Entry<K, V> entry = entryArray[0];
+        @Immutable Entry<K, V> entry = entryArray[0];
         return of(entry.getKey(), entry.getValue());
       default:
         /*
@@ -627,7 +633,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    * bimap and its inverse in sync during serialization, the way AbstractBiMap does.
    */
   @J2ktIncompatible // serialization
-  private static class SerializedForm<K, V> extends ImmutableMap.SerializedForm<K, V> {
+  private static class SerializedForm<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableMap.SerializedForm<K, V> {
     SerializedForm(ImmutableBiMap<K, V> bimap) {
       super(bimap);
     }
@@ -642,7 +648,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
 
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<>(this);
   }
 
@@ -660,7 +666,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    */
   @Deprecated
   @DoNotCall("Use toImmutableBiMap")
-  public static <T extends @Nullable Object, K, V>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -677,7 +683,7 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
    */
   @Deprecated
   @DoNotCall("Use toImmutableBiMap")
-  public static <T extends @Nullable Object, K, V>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableMap<K, V>> toImmutableMap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction,
@@ -688,17 +694,17 @@ public abstract class ImmutableBiMap<K, V> extends ImmutableMap<K, V> implements
   private static final long serialVersionUID = 0xcafebabe;
 
 @Override
-public boolean containsKey(@Nullable @UnknownSignedness Object arg0) { return super.containsKey(arg0); }
+public boolean containsKey(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.containsKey(arg0); }
 
 @Override
-public boolean containsValue(@Nullable @UnknownSignedness Object arg0) { return super.containsValue(arg0); }
+public boolean containsValue(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.containsValue(arg0); }
 
 @Override
-public boolean equals(@Nullable Object arg0) { return super.equals(arg0); }
+public boolean equals(@Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @SideEffectFree
 @Override
-public ImmutableSet<Map.Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
+public ImmutableSet<Map.@Immutable Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
 
 @SideEffectFree
 @Override

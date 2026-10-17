@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods for {@link Graph}, {@link ValueGraph}, and {@link Network} instances.
@@ -151,7 +152,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * @since 33.1.0 (present with return type {@code Graph} since 20.0)
    */
   // TODO(b/31438252): Consider potential optimizations for this algorithm.
-  public static <N> ImmutableGraph<N> transitiveClosure(Graph<N> graph) {
+  public static <N extends @Immutable Object> ImmutableGraph<N> transitiveClosure(Graph<N> graph) {
     ImmutableGraph.Builder<N> transitiveClosure =
         GraphBuilder.from(graph).allowsSelfLoops(true).<N>immutable();
     // Every node is, at a minimum, reachable from itself. Since the resulting transitive closure

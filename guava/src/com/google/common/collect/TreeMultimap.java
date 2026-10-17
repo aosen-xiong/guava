@@ -94,7 +94,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * Creates an empty {@code TreeMultimap} ordered by the natural ordering of its keys and values.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <K extends Comparable, V extends Comparable> TreeMultimap<K, V> create() {
+  public static <K extends @Immutable Comparable, V extends @Immutable Comparable> TreeMultimap<K, V> create() {
     return new TreeMultimap<>(Ordering.natural(), Ordering.natural());
   }
 
@@ -117,7 +117,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @param multimap the multimap whose contents are copied to this multimap
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <K extends Comparable, V extends Comparable> TreeMultimap<K, V> create(
+  public static <K extends @Immutable Comparable, V extends @Immutable Comparable> TreeMultimap<K, V> create(
       Multimap<? extends K, ? extends V> multimap) {
     return new TreeMultimap<>(Ordering.natural(), Ordering.natural(), multimap);
   }
@@ -137,7 +137,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable TreeMultimap<K, V> this) {
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable TreeMultimap<K, V> this) {
     return createMaybeNavigableAsMap();
   }
 
@@ -179,7 +179,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   /** @since 14.0 (present with return type {@code SortedSet} since 2.0) */
   @Override
   @GwtIncompatible // NavigableSet
-  public @PolyMutable NavigableSet<V> get(@PolyMutable TreeMultimap<K, V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable NavigableSet<V> get(@ReceiverDependentMutable TreeMultimap<K, V> this, @ParametricNullness K key) {
     return (@PolyMutable NavigableSet<V>) super.get(key);
   }
 
@@ -194,7 +194,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    */
   @SideEffectFree
   @Override
-  public @PolyMutable NavigableSet<K> keySet(@PolyMutable TreeMultimap<K, V> this) {
+  public @ReceiverDependentMutable NavigableSet<K> keySet(@ReceiverDependentMutable TreeMultimap<K, V> this) {
     return (NavigableSet<K>) super.keySet();
   }
 
@@ -208,7 +208,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @since 14.0 (present with return type {@code SortedMap} since 2.0)
    */
   @Override
-  public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> asMap(@PolyMutable TreeMultimap<K, V> this) {
+  public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable TreeMultimap<K, V> this) {
     return (@PolyMutable NavigableMap<K, @PolyMutable Collection<V>>) super.asMap();
   }
 
@@ -228,7 +228,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
   @SuppressWarnings("unchecked") // reading data stored by writeObject
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable TreeMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     keyComparator = requireNonNull((Comparator<? super K>) stream.readObject());
     valueComparator = requireNonNull((Comparator<? super V>) stream.readObject());
@@ -245,5 +245,5 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
 public boolean equals(@Readonly TreeMultimap<K, V> this, @Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
-public SortedSet<V> removeAll(@Nullable Object arg0) { return super.removeAll(arg0); }
+public SortedSet<V> removeAll(@Nullable @Readonly Object arg0) { return super.removeAll(arg0); }
 }

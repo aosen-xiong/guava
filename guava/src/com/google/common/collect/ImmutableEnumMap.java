@@ -29,6 +29,7 @@ import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -41,8 +42,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @SuppressWarnings("serial") // we're overriding default serialization
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> extends IteratorBasedImmutableMap<K, V> {
-  static <K extends Enum<K>, V extends @Immutable Object> ImmutableMap<K, V> asImmutable(EnumMap<K, V> map) {
+final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutableMap<K, V> {
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: every caller hands over a fresh EnumMap that no one else references
+  static <K extends Enum<K>, V> ImmutableMap<K, V> asImmutable(EnumMap<K, V> map) {
     switch (map.size()) {
       case 0:
         return ImmutableMap.of();
@@ -56,13 +58,13 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
 
   private final transient EnumMap<K, V> delegate;
 
-  private ImmutableEnumMap(EnumMap<K, V> delegate) {
+  private ImmutableEnumMap(@Immutable EnumMap<K, V> delegate) {
     this.delegate = delegate;
     checkArgument(!delegate.isEmpty());
   }
 
   @Override
-  UnmodifiableIterator<K> keyIterator() {
+  @Immutable UnmodifiableIterator<K> keyIterator() {
     return Iterators.unmodifiableIterator(delegate.keySet().iterator());
   }
 
@@ -77,18 +79,18 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
   }
 
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return delegate.containsKey(key);
   }
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return delegate.get(key);
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -99,12 +101,14 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
   }
 
   @Override
-  UnmodifiableIterator<Entry<K, V>> entryIterator() {
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible"}) // the delegate is a private EnumMap that is never modified after construction, and Maps.unmodifiableEntry wraps each of its entries so it cannot be modified either: the entries are immutable
+  @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
     return Maps.unmodifiableEntryIterator(delegate.entrySet().iterator());
   }
 
   @Override
-  Spliterator<Entry<K, V>> entrySpliterator() {
+  @SuppressWarnings("mutability:methodref.return.invalid") // the delegate is a private EnumMap that is never modified after construction, and Maps.unmodifiableEntry wraps each of its entries so it cannot be modified either: the entries are immutable
+  Spliterator<@Immutable Entry<K, V>> entrySpliterator() {
     return CollectSpliterators.map(delegate.entrySet().spliterator(), Maps::unmodifiableEntry);
   }
 
@@ -121,7 +125,7 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
   // All callers of the constructor are restricted to <K extends Enum<K>>.
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new EnumSerializedForm<>(delegate);
   }
 
@@ -135,9 +139,9 @@ final class ImmutableEnumMap<K extends Enum<K>, V extends @Immutable Object> ext
    */
   @J2ktIncompatible // serialization
   private static class EnumSerializedForm<K extends Enum<K>, V> implements Serializable {
-    final EnumMap<K, V> delegate;
+    final @Immutable EnumMap<K, V> delegate;
 
-    EnumSerializedForm(EnumMap<K, V> delegate) {
+    EnumSerializedForm(@Immutable EnumMap<K, V> delegate) {
       this.delegate = delegate;
     }
 

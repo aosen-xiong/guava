@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -37,6 +38,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @AnnotatedFor({"nullness"})
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface MapDifference<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> {
   /**
    * Returns {@code true} if there are no differences between the two maps; that is, if the maps are
@@ -48,25 +50,25 @@ public interface MapDifference<K extends @Nullable @Immutable Object, V extends 
    * Returns an unmodifiable map containing the entries from the left map whose keys are not present
    * in the right map.
    */
-  Map<K, V> entriesOnlyOnLeft();
+  @Readonly Map<K, V> entriesOnlyOnLeft();
 
   /**
    * Returns an unmodifiable map containing the entries from the right map whose keys are not
    * present in the left map.
    */
-  Map<K, V> entriesOnlyOnRight();
+  @Readonly Map<K, V> entriesOnlyOnRight();
 
   /**
    * Returns an unmodifiable map containing the entries that appear in both maps; that is, the
    * intersection of the two maps.
    */
-  Map<K, V> entriesInCommon();
+  @Readonly Map<K, V> entriesInCommon();
 
   /**
    * Returns an unmodifiable map describing keys that appear in both maps, but with different
    * values.
    */
-  Map<K, ValueDifference<V>> entriesDiffering();
+  @Readonly Map<K, ValueDifference<V>> entriesDiffering();
 
   /**
    * Compares the specified object with this instance for equality. Returns {@code true} if the
@@ -76,7 +78,7 @@ public interface MapDifference<K extends @Nullable @Immutable Object, V extends 
    */
   @Pure
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns the hash code for this instance. This is defined as the hash code of
@@ -112,7 +114,7 @@ public interface MapDifference<K extends @Nullable @Immutable Object, V extends 
      */
     @Pure
     @Override
-    boolean equals(@CheckForNull Object other);
+    boolean equals(@CheckForNull @Readonly Object other);
 
     /**
      * The hash code equals the value {@code Arrays.asList(leftValue(), rightValue()).hashCode()}.

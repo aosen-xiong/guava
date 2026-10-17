@@ -49,7 +49,7 @@ class EmptyImmutableListMultimap extends ImmutableListMultimap<@Immutable Object
     return super.asMap();
   }
 
-  private Object readResolve() {
+  private @Readonly Object readResolve() {
     return INSTANCE; // preserve singleton property
   }
 

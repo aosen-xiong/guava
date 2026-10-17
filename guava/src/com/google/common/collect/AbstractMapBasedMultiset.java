@@ -47,6 +47,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Basic implementation of {@code Multiset<E>} backed by an instance of {@code Map<E, Count>}.
@@ -79,7 +80,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   /** Used during deserialization only. The backing map must be empty. */
-  void setBackingMap(@ReceiverDependentMutable Map<E, Count> backingMap) {
+  void setBackingMap(@Mutable AbstractMapBasedMultiset<E> this, @ReceiverDependentMutable Map<E, Count> backingMap) {
     this.backingMap = backingMap;
   }
 
@@ -94,14 +95,14 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
    */
   @SideEffectFree
   @Override
-  public Set<Multiset.Entry<E>> entrySet() {
+  public @ReceiverDependentMutable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet() {
     return super.entrySet();
   }
 
   @Override
   Iterator<E> elementIterator() {
     final Iterator<Map.Entry<E, Count>> backingEntries = backingMap.entrySet().iterator();
-    return new Iterator<E>() {
+    return new @Mutable Iterator<E>() {
       @CheckForNull Map.Entry<E, Count> toRemove;
 
       @Override
@@ -130,7 +131,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   @Override
   Iterator<Entry<E>> entryIterator() {
     final Iterator<Map.Entry<E, Count>> backingEntries = backingMap.entrySet().iterator();
-    return new Iterator<Multiset.Entry<E>>() {
+    return new @Mutable Iterator<Multiset.Entry<E>>() {
       @CheckForNull Map.Entry<E, Count> toRemove;
 
       @Override
@@ -142,7 +143,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
       public Multiset.Entry<E> next() {
         final Map.Entry<E, Count> mapEntry = backingEntries.next();
         toRemove = mapEntry;
-        return new Multisets.AbstractEntry<E>() {
+        return new Multisets.@Mutable AbstractEntry<E>() {
           @Override
           @ParametricNullness
           public E getElement() {
@@ -180,7 +181,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable AbstractMapBasedMultiset<E> this) {
     for (Count frequency : backingMap.values()) {
       frequency.set(0);
     }
@@ -202,8 +203,8 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   @Override
-  public Iterator<E> iterator() {
-    return new MapBasedMultisetIterator();
+  public @ReceiverDependentMutable Iterator<E> iterator() {
+    return new @ReceiverDependentMutable MapBasedMultisetIterator();
   }
 
   /*
@@ -214,9 +215,9 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   @ReceiverDependentMutable
   private class MapBasedMultisetIterator implements Iterator<E> {
     final Iterator<Map.Entry<E, Count>> entryIterator;
-    @CheckForNull Map.Entry<E, Count> currentEntry;
-    int occurrencesLeft;
-    boolean canRemove;
+    @CheckForNull @Assignable Map.Entry<E, Count> currentEntry;
+    @Assignable int occurrencesLeft;
+    @Assignable boolean canRemove;
 
     MapBasedMultisetIterator() {
       this.entryIterator = backingMap.entrySet().iterator();
@@ -244,7 +245,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable MapBasedMultisetIterator this) {
       checkRemove(canRemove);
       /*
        * requireNonNull is safe because canRemove is set to true only after we initialize

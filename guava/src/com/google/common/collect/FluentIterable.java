@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
@@ -162,7 +163,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0 (since 18.0 as an overload of {@code of})
    */
-  public static <E extends @Nullable Object> FluentIterable<E> from(E[] elements) {
+  public static <E extends @Nullable @Readonly Object> FluentIterable<E> from(E[] elements) {
     return from(Arrays.asList(elements));
   }
 
@@ -194,7 +195,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0
    */
-  public static <T extends @Nullable Object> FluentIterable<T> concat(
+  public static <T extends @Nullable @Readonly Object> FluentIterable<T> concat(
       Iterable<? extends T> a, Iterable<? extends T> b) {
     return concatNoDefensiveCopy(a, b);
   }
@@ -212,7 +213,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0
    */
-  public static <T extends @Nullable Object> FluentIterable<T> concat(
+  public static <T extends @Nullable @Readonly Object> FluentIterable<T> concat(
       Iterable<? extends T> a, Iterable<? extends T> b, Iterable<? extends T> c) {
     return concatNoDefensiveCopy(a, b, c);
   }
@@ -231,7 +232,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0
    */
-  public static <T extends @Nullable Object> FluentIterable<T> concat(
+  public static <T extends @Nullable @Readonly Object> FluentIterable<T> concat(
       Iterable<? extends T> a,
       Iterable<? extends T> b,
       Iterable<? extends T> c,
@@ -255,7 +256,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @since 20.0
    */
   @SafeVarargs
-  public static <T extends @Nullable Object> FluentIterable<T> concat(
+  public static <T extends @Nullable @Readonly Object> FluentIterable<T> concat(
       Iterable<? extends T>... inputs) {
     return concatNoDefensiveCopy(Arrays.copyOf(inputs, inputs.length));
   }
@@ -274,7 +275,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0
    */
-  public static <T extends @Nullable Object> FluentIterable<T> concat(
+  public static <T extends @Nullable @Readonly Object> FluentIterable<T> concat(
       final Iterable<? extends Iterable<? extends T>> inputs) {
     checkNotNull(inputs);
     return new FluentIterable<T>() {
@@ -296,7 +297,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
       public Iterator<T> iterator() {
         return Iterators.concat(
             /* lazily generate the iterators on each input only as needed */
-            new AbstractIndexedListIterator<Iterator<? extends T>>(inputs.length) {
+            new @Mutable AbstractIndexedListIterator<Iterator<? extends T>>(inputs.length) {
               @Override
               public Iterator<? extends T> get(int i) {
                 return inputs[i].iterator();
@@ -313,7 +314,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0
    */
-  public static <E extends @Nullable Object> FluentIterable<E> of() {
+  public static <E extends @Nullable @Readonly Object> FluentIterable<E> of() {
     return FluentIterable.from(Collections.<E>emptyList());
   }
 
@@ -325,7 +326,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * @since 20.0
    */
-  public static <E extends @Nullable Object> FluentIterable<E> of(
+  public static <E extends @Nullable @Readonly Object> FluentIterable<E> of(
       @ParametricNullness E element, E... elements) {
     return from(Lists.asList(element, elements));
   }
@@ -415,7 +416,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#filter} (same).
    */
-  public final FluentIterable<E> filter(Predicate<? super E> predicate) {
+  public final FluentIterable<E> filter(@Readonly Predicate<? super E> predicate) {
     return from(Iterables.filter(getDelegate(), predicate));
   }
 
@@ -729,7 +730,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @since 14.0
    */
   @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
-  public final <K> ImmutableListMultimap<K, @NonNull E> index(Function<? super E, K> keyFunction) {
+  public final <K extends @Immutable Object> ImmutableListMultimap<K, @NonNull E> index(Function<? super E, K> keyFunction) {
     return Multimaps.index((Iterable<@NonNull E>) getDelegate(), keyFunction);
   }
 
@@ -764,7 +765,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @since 14.0
    */
   @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
-  public final <K> ImmutableMap<K, @NonNull E> uniqueIndex(Function<? super E, K> keyFunction) {
+  public final <K extends @Immutable Object> ImmutableMap<K, @NonNull E> uniqueIndex(Function<? super E, K> keyFunction) {
     return Maps.uniqueIndex((Iterable<@NonNull E>) getDelegate(), keyFunction);
   }
 
@@ -856,7 +857,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
   }
 
   /** Function that transforms {@code Iterable<E>} into a fluent iterable. */
-  private static class FromIterableFunction<E extends @Nullable Object>
+  private static class FromIterableFunction<E extends @Nullable @Readonly Object>
       implements Function<Iterable<E>, FluentIterable<E>> {
     @Override
     public FluentIterable<E> apply(Iterable<E> fromObject) {

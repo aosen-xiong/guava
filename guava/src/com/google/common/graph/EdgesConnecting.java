@@ -24,8 +24,10 @@ import com.google.common.collect.UnmodifiableIterator;
 import java.util.AbstractSet;
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to represent the set of edges connecting an (implicit) origin node to a target node.
@@ -37,7 +39,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class EdgesConnecting<E> extends AbstractSet<E> {
+final class EdgesConnecting<E extends @Immutable Object> extends AbstractSet<E> {
 
   private final Map<?, E> nodeToOutEdge;
   private final Object targetNode;
@@ -48,7 +50,7 @@ final class EdgesConnecting<E> extends AbstractSet<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     E connectingEdge = getConnectingEdge();
     return (connectingEdge == null)
         ? ImmutableSet.<E>of().iterator()
@@ -61,7 +63,7 @@ final class EdgesConnecting<E> extends AbstractSet<E> {
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object edge) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object edge) {
     E connectingEdge = getConnectingEdge();
     return (connectingEdge != null && connectingEdge.equals(edge));
   }

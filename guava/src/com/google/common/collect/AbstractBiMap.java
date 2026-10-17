@@ -92,7 +92,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  protected @PolyMutable Map<K, V> delegate(@PolyMutable AbstractBiMap<K,V> this) {
+  protected @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable AbstractBiMap<K,V> this) {
     return delegate;
   }
 
@@ -248,15 +248,15 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   // Views
 
   @Override
-  public @PolyMutable BiMap<V, K> inverse(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     return inverse;
   }
 
-  @LazyInit @CheckForNull private transient Set<K> keySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<K> keySet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<K> result = keySet;
     return (result == null) ? keySet = new KeySet() : result;
   }
@@ -265,7 +265,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   @ReceiverDependentMutable
   private class KeySet extends ForwardingSet<K> {
     @Override
-    protected @PolyMutable Set<K> delegate(@PolyMutable KeySet this) {
+    protected @ReceiverDependentMutable Set<K> delegate(@ReceiverDependentMutable KeySet this) {
       return delegate.keySet();
     }
 
@@ -299,11 +299,11 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<V> valueSet;
+  @LazyInit @CheckForNull private transient @Assignable Set<V> valueSet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<V> values(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     /*
      * We can almost reuse the inverse's keySet, except we have to fix the
      * iteration order so that it is consistent with the forward map.
@@ -318,7 +318,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     final Set<V> valuesDelegate = inverse.keySet();
 
     @Override
-    protected @PolyMutable Set<V> delegate(@PolyMutable ValueSet this) {
+    protected @ReceiverDependentMutable Set<V> delegate(@ReceiverDependentMutable ValueSet this) {
       return valuesDelegate;
     }
 
@@ -346,11 +346,11 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<Entry<K, V>> result = entrySet;
     return (result == null) ? entrySet = new EntrySet() : result;
   }
@@ -364,7 +364,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    protected @PolyMutable Entry<K, V> delegate(@PolyMutable BiMapEntry this) {
+    protected @ReceiverDependentMutable Entry<K, V> delegate(@ReceiverDependentMutable BiMapEntry this) {
       return delegate;
     }
 
@@ -387,7 +387,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   Iterator<Entry<K, V>> entrySetIterator(@Readonly AbstractBiMap<K, V> this) {
     final Iterator<Entry<K, V>> iterator = delegate.entrySet().iterator();
-    return new Iterator<Entry<K, V>>() {
+    return new @Mutable Iterator<Entry<K, V>>() {
       @CheckForNull Entry<K, V> entry;
 
       @Override
@@ -420,7 +420,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     final Set<Entry<K, V>> esDelegate = delegate.entrySet();
 
     @Override
-    protected Set<Entry<K, V>> delegate(@PolyMutable EntrySet this) {
+    protected @ReceiverDependentMutable Set<Entry<K, V>> delegate(@ReceiverDependentMutable EntrySet this) {
       return esDelegate;
     }
 
@@ -547,7 +547,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
     @GwtIncompatible // Not needed in the emulated source.
     @J2ktIncompatible
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return inverse().inverse();
     }
 

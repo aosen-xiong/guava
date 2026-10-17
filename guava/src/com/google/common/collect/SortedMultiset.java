@@ -54,35 +54,35 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * ordering of the elements is used.
    */
   @Override
-  Comparator<? super E> comparator();
+  @Readonly Comparator<? super E> comparator();
 
   /**
    * Returns the entry of the first element in this multiset, or {@code null} if this multiset is
    * empty.
    */
   @CheckForNull
-  Entry<E> firstEntry();
+  @Readonly Entry<E> firstEntry();
 
   /**
    * Returns the entry of the last element in this multiset, or {@code null} if this multiset is
    * empty.
    */
   @CheckForNull
-  Entry<E> lastEntry();
+  @Readonly Entry<E> lastEntry();
 
   /**
    * Returns and removes the entry associated with the lowest element in this multiset, or returns
    * {@code null} if this multiset is empty.
    */
   @CheckForNull
-  Entry<E> pollFirstEntry();
+  @Readonly Entry<E> pollFirstEntry();
 
   /**
    * Returns and removes the entry associated with the greatest element in this multiset, or returns
    * {@code null} if this multiset is empty.
    */
   @CheckForNull
-  Entry<E> pollLastEntry();
+  @Readonly Entry<E> pollLastEntry();
 
   /**
    * Returns a {@link NavigableSet} view of the distinct elements in this multiset.
@@ -90,7 +90,7 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * @since 14.0 (present with return type {@code SortedSet} since 11.0)
    */
   @Override
-  NavigableSet<E> elementSet();
+  @ReceiverDependentMutable NavigableSet<E> elementSet(@ReceiverDependentMutable SortedMultiset<E> this);
 
   /**
    * {@inheritDoc}
@@ -99,7 +99,7 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * multiset's comparator.
    */
   @Override
-  Set<Entry<E>> entrySet();
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable SortedMultiset<E> this);
 
   /**
    * {@inheritDoc}
@@ -108,13 +108,13 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * comparator.
    */
   @Override
-  Iterator<E> iterator();
+  @ReceiverDependentMutable Iterator<E> iterator();
 
   /**
    * Returns a descending view of this multiset. Modifications made to either map will be reflected
    * in the other.
    */
-  SortedMultiset<E> descendingMultiset();
+  @ReceiverDependentMutable SortedMultiset<E> descendingMultiset(@ReceiverDependentMutable SortedMultiset<E> this);
 
   /**
    * Returns a view of this multiset restricted to the elements less than {@code upperBound},
@@ -125,7 +125,7 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * <p>The returned multiset will throw an {@link IllegalArgumentException} on attempts to add
    * elements outside its range.
    */
-  SortedMultiset<E> headMultiset(@ParametricNullness E upperBound, BoundType boundType);
+  @ReceiverDependentMutable SortedMultiset<E> headMultiset(@ReceiverDependentMutable SortedMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType);
 
   /**
    * Returns a view of this multiset restricted to the range between {@code lowerBound} and {@code
@@ -139,8 +139,8 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * <p>This method is equivalent to {@code tailMultiset(lowerBound,
    * lowerBoundType).headMultiset(upperBound, upperBoundType)}.
    */
-  SortedMultiset<E> subMultiset(
-      @ParametricNullness E lowerBound,
+  @ReceiverDependentMutable SortedMultiset<E> subMultiset(
+      @ReceiverDependentMutable SortedMultiset<E> this, @ParametricNullness E lowerBound,
       BoundType lowerBoundType,
       @ParametricNullness E upperBound,
       BoundType upperBoundType);
@@ -154,5 +154,5 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * <p>The returned multiset will throw an {@link IllegalArgumentException} on attempts to add
    * elements outside its range.
    */
-  SortedMultiset<E> tailMultiset(@ParametricNullness E lowerBound, BoundType boundType);
+  @ReceiverDependentMutable SortedMultiset<E> tailMultiset(@ReceiverDependentMutable SortedMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType);
 }

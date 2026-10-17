@@ -244,7 +244,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * time the cell is returned by a method call to the set or its iterator.
    */
   @Override
-  public @PolyMutable Set<Cell<R, C, V>> cellSet(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return super.cellSet();
   }
 
@@ -265,7 +265,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public Cell<R, C, V> next(@Mutable CellIterator this) {
+    public @Immutable Cell<R, C, V> next(@Mutable CellIterator this) {
       if (!columnIterator.hasNext()) {
         rowEntry = rowIterator.next();
         columnIterator = rowEntry.getValue().entrySet().iterator();
@@ -335,7 +335,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       this.rowKey = checkNotNull(rowKey);
     }
 
-    @CheckForNull Map<C, V> backingRowMap;
+    @CheckForNull @Assignable Map<C, V> backingRowMap;
 
     final void updateBackingRowMapField() {
       if (backingRowMap == null || (backingRowMap.isEmpty() && backingMap.containsKey(rowKey))) {
@@ -349,7 +349,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     // Call this every time we perform a removal.
-    void maintainEmptyInvariant() {
+    void maintainEmptyInvariant(@Mutable Row this) {
       updateBackingRowMapField();
       if (backingRowMap != null && backingRowMap.isEmpty()) {
         backingMap.remove(rowKey);
@@ -372,7 +372,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @Override
     @CheckForNull
-    public V put(C key, V value) {
+    public V put(@Mutable Row this, C key, V value) {
       checkNotNull(key);
       checkNotNull(value);
       if (backingRowMap != null && !backingRowMap.isEmpty()) {
@@ -383,7 +383,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @Override
     @CheckForNull
-    public V remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public V remove(@Mutable Row this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       updateBackingRowMapField();
       if (backingRowMap == null) {
         return null;
@@ -394,7 +394,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable Row this) {
       updateBackingRowMapField();
       if (backingRowMap != null) {
         backingRowMap.clear();
@@ -409,13 +409,13 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    Iterator<Entry<C, V>> entryIterator() {
+    @Readonly Iterator<Entry<C, V>> entryIterator() {
       updateBackingRowMapField();
       if (backingRowMap == null) {
         return Iterators.emptyModifiableIterator();
       }
       final Iterator<Entry<C, V>> iterator = backingRowMap.entrySet().iterator();
-      return new Iterator<Entry<C, V>>() {
+      return new @Mutable Iterator<Entry<C, V>>() {
         @Override
         public boolean hasNext() {
           return iterator.hasNext();
@@ -444,7 +444,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     Entry<C, V> wrapEntry(final Entry<C, V> entry) {
-      return new ForwardingMapEntry<C, V>() {
+      return new @Mutable ForwardingMapEntry<C, V>() {
         @Override
         protected Entry<C, V> delegate() {
           return entry;
@@ -456,7 +456,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
         }
 
         @Override
-        public boolean equals(@CheckForNull Object object) {
+        public boolean equals(@CheckForNull @Readonly Object object) {
           // TODO(lowasser): identify why this affects GWT tests
           return standardEquals(object);
         }
@@ -577,7 +577,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(Collection<?> c) {
+      public boolean retainAll(@Readonly Collection<?> c) {
         return removeFromColumnIf(not(in(c)));
       }
     }
@@ -652,7 +652,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(final Collection<?> c) {
+      public boolean retainAll(final @Readonly Collection<?> c) {
         return removeFromColumnIf(Maps.<R>keyPredicateOnEntries(not(in(c))));
       }
     }
@@ -674,23 +674,23 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean removeAll(final Collection<?> c) {
+      public boolean removeAll(final @Readonly Collection<?> c) {
         return removeFromColumnIf(Maps.<V>valuePredicateOnEntries(in(c)));
       }
 
       @Override
-      public boolean retainAll(final Collection<?> c) {
+      public boolean retainAll(final @Readonly Collection<?> c) {
         return removeFromColumnIf(Maps.<V>valuePredicateOnEntries(not(in(c))));
       }
     }
   }
 
   @Override
-  public @PolyMutable Set<R> rowKeySet(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Set<R> rowKeySet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return rowMap().keySet();
   }
 
-  @LazyInit @CheckForNull private transient Set<C> columnKeySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<C> columnKeySet;
 
   /**
    * {@inheritDoc}
@@ -701,7 +701,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * etc., skipping any columns that have appeared previously.
    */
   @Override
-  public Set<C> columnKeySet() {
+  public @ReceiverDependentMutable Set<C> columnKeySet() {
     Set<C> result = columnKeySet;
     return (result == null) ? columnKeySet = new ColumnKeySet() : result;
   }
@@ -739,7 +739,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
+    public boolean removeAll(@Readonly Collection<?> c) {
       checkNotNull(c);
       boolean changed = false;
       Iterator<Map<C, V>> iterator = backingMap.values().iterator();
@@ -758,7 +758,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
+    public boolean retainAll(@Readonly Collection<?> c) {
       checkNotNull(c);
       boolean changed = false;
       Iterator<Map<C, V>> iterator = backingMap.values().iterator();
@@ -791,7 +791,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     // consistent with equals().
     final Map<C, V> seen = factory.get();
     final Iterator<Map<C, V>> mapIterator = backingMap.values().iterator();
-    Iterator<Entry<C, V>> entryIterator = Iterators.emptyIterator();
+    @Assignable Iterator<Entry<C, V>> entryIterator = Iterators.emptyIterator();
 
     @Override
     @CheckForNull
@@ -819,14 +819,14 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * row, and so on.
    */
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return super.values();
   }
 
-  @LazyInit @CheckForNull private transient Map<R, Map<C, V>> rowMap;
+  @LazyInit @CheckForNull private transient @Assignable Map<R, Map<C, V>> rowMap;
 
   @Override
-  public @PolyMutable Map<R, Map<C, V>> rowMap(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     Map<R, Map<C, V>> result = rowMap;
     return (result == null) ? rowMap = createRowMap() : result;
   }
@@ -906,10 +906,10 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
   }
 
-  @LazyInit @CheckForNull private transient ColumnMap columnMap;
+  @LazyInit @CheckForNull private transient @Assignable ColumnMap columnMap;
 
   @Override
-  public @PolyMutable Map<C, Map<R, V>> columnMap(@PolyMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> columnMap(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     ColumnMap result = columnMap;
     return (result == null) ? columnMap = new ColumnMap() : result;
   }
@@ -973,7 +973,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
         if (obj instanceof Entry) {
           Entry<?, ?> entry = (Entry<?, ?>) obj;
           if (containsColumn(entry.getKey())) {
@@ -999,7 +999,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean removeAll(Collection<?> c) {
+      public boolean removeAll(@Readonly Collection<?> c) {
         /*
          * We can't inherit the normal implementation (which calls
          * Sets.removeAllImpl(Set, *Collection*)) because, under some
@@ -1011,7 +1011,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(Collection<?> c) {
+      public boolean retainAll(@Readonly Collection<?> c) {
         checkNotNull(c);
         boolean changed = false;
         for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
@@ -1042,7 +1042,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean removeAll(Collection<?> c) {
+      public boolean removeAll(@Readonly Collection<?> c) {
         checkNotNull(c);
         boolean changed = false;
         for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
@@ -1055,7 +1055,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(Collection<?> c) {
+      public boolean retainAll(@Readonly Collection<?> c) {
         checkNotNull(c);
         boolean changed = false;
         for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {

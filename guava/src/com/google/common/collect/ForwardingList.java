@@ -70,7 +70,7 @@ public abstract class ForwardingList<E extends @Nullable @Readonly Object> exten
   protected ForwardingList() {}
 
   @Override
-  protected abstract @PolyMutable List<E> delegate(@PolyMutable ForwardingList<E> this);
+  protected abstract @ReceiverDependentMutable List<E> delegate(@ReceiverDependentMutable ForwardingList<E> this);
 
   @Override
   public void add(@Mutable ForwardingList<E> this, int index, @ParametricNullness E element) {
@@ -104,12 +104,12 @@ public abstract class ForwardingList<E extends @Nullable @Readonly Object> exten
   }
 
   @Override
-  public ListIterator<E> listIterator(@Readonly ForwardingList<E> this) {
+  public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable ForwardingList<E> this) {
     return delegate().listIterator();
   }
 
   @Override
-  public ListIterator<E> listIterator(@Readonly ForwardingList<E> this, int index) {
+  public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable ForwardingList<E> this, int index) {
     return delegate().listIterator(index);
   }
 
@@ -129,7 +129,7 @@ public abstract class ForwardingList<E extends @Nullable @Readonly Object> exten
 
   @SideEffectFree
   @Override
-  public @PolyMutable List<E> subList(@PolyMutable ForwardingList<E> this, int fromIndex, int toIndex) {
+  public @ReceiverDependentMutable List<E> subList(@ReceiverDependentMutable ForwardingList<E> this, int fromIndex, int toIndex) {
     return delegate().subList(fromIndex, toIndex);
   }
 

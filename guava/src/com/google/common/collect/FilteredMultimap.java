@@ -37,7 +37,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ReceiverDependentMutable
 interface FilteredMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends Multimap<K, V> {
-  @PolyMutable Multimap<K, V> unfiltered(@PolyMutable FilteredMultimap<K, V> this);
+  @ReceiverDependentMutable Multimap<K, V> unfiltered(@ReceiverDependentMutable FilteredMultimap<K, V> this);
 
   Predicate<? super Entry<K, V>> entryPredicate(@Readonly FilteredMultimap<K, V> this);
 }

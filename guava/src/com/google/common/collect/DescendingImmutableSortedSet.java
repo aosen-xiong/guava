@@ -53,7 +53,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     return forward.descendingIterator();
   }
 
@@ -81,7 +81,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Override
   @GwtIncompatible("NavigableSet")
-  public UnmodifiableIterator<E> descendingIterator() {
+  public @Immutable UnmodifiableIterator<E> descendingIterator() {
     return forward.iterator();
   }
 
@@ -116,7 +116,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@CheckForNull @Readonly Object target) {
     int index = forward.indexOf(target);
     if (index == -1) {
       return index;
@@ -134,7 +134,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   @SuppressWarnings("RedundantOverride")
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

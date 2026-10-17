@@ -64,7 +64,7 @@ public interface PeekingIterator<E extends @Nullable @Readonly Object> extends I
   @CanIgnoreReturnValue
   @Override
   @ParametricNullness
-  E next(@Mutable PeekingIterator<E> this);
+  E next(@Readonly PeekingIterator<E> this);
 
   /**
    * {@inheritDoc}

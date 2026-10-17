@@ -26,6 +26,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -282,7 +283,7 @@ public final class HostAndPort implements Serializable {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object other) {
+  public boolean equals(@CheckForNull @Readonly Object other) {
     if (this == other) {
       return true;
     }

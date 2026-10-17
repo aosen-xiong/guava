@@ -44,12 +44,13 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 // TODO(b/278589132): Remove the redundant "@NonNull" on B once it's no longer required by J2KT.
+@Immutable
 public final class ImmutableClassToInstanceMap<B>
     extends ForwardingMap<Class<? extends @NonNull B>, B>
     implements ClassToInstanceMap<B>, Serializable {
 
   private static final ImmutableClassToInstanceMap<@Readonly Object> EMPTY =
-      new ImmutableClassToInstanceMap<>(ImmutableMap.<Class<?>, Object>of());
+      new ImmutableClassToInstanceMap<>(ImmutableMap.<Class<?>, @Readonly Object>of());
 
   /**
    * Returns an empty {@code ImmutableClassToInstanceMap}.
@@ -128,7 +129,7 @@ public final class ImmutableClassToInstanceMap<B>
       return this;
     }
 
-    private static <T> T cast(Class<T> type, Object value) {
+    private static <T> T cast(Class<T> type, @Readonly Object value) {
       return Primitives.wrap(type).cast(value);
     }
 
@@ -178,6 +179,7 @@ public final class ImmutableClassToInstanceMap<B>
   }
 
   @Override
+  @SuppressWarnings("mutability:override.return.invalid") // an @Immutable class cannot restate ForwardingObject's @PolyMutable delegate(): its receiver is always @Immutable, so the poly always means @Immutable
   protected @Immutable Map<Class<? extends B>, B> delegate() {
     return delegate;
   }

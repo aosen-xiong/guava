@@ -136,7 +136,7 @@ public final class EnumHashBiMap<K extends Enum<K>, V extends @Nullable @Immutab
 
   @SuppressWarnings("unchecked") // reading field populated by writeObject
   @GwtIncompatible // java.io.ObjectInputStream
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable EnumHashBiMap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     keyTypeOrObjectUnderJ2cl = (Class<K>) requireNonNull(stream.readObject());
     /*

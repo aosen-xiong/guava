@@ -44,7 +44,9 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Represents an <a href="http://en.wikipedia.org/wiki/Internet_media_type">Internet Media Type</a>
@@ -73,6 +75,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @Immutable
+@org.checkerframework.checker.mutability.qual.Immutable
 @ElementTypesAreNonnullByDefault
 public final class MediaType {
   private static final String CHARSET_ATTRIBUTE = "charset";
@@ -769,11 +772,11 @@ public final class MediaType {
   private final String subtype;
   private final ImmutableListMultimap<String, String> parameters;
 
-  @LazyInit @CheckForNull private String toString;
+  @LazyInit @CheckForNull private @Assignable String toString;
 
-  @LazyInit private int hashCode;
+  @LazyInit private @Assignable int hashCode;
 
-  @LazyInit @CheckForNull private Optional<Charset> parsedCharset;
+  @LazyInit @CheckForNull private @Assignable Optional<Charset> parsedCharset;
 
   private MediaType(String type, String subtype, ImmutableListMultimap<String, String> parameters) {
     this.type = type;
@@ -796,7 +799,7 @@ public final class MediaType {
     return parameters;
   }
 
-  private Map<String, ImmutableMultiset<String>> parametersAsMap() {
+  private @org.checkerframework.checker.mutability.qual.Immutable Map<String, ImmutableMultiset<String>> parametersAsMap() {
     return Maps.transformValues(parameters.asMap(), ImmutableMultiset::copyOf);
   }
 
@@ -957,7 +960,7 @@ public final class MediaType {
   }
 
   private static MediaType create(
-      String type, String subtype, Multimap<String, String> parameters) {
+      String type, String subtype, @Readonly Multimap<String, String> parameters) {
     checkNotNull(type);
     checkNotNull(subtype);
     checkNotNull(parameters);
@@ -1141,7 +1144,7 @@ public final class MediaType {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     } else if (obj instanceof MediaType) {

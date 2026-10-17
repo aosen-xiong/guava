@@ -46,7 +46,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
     this.delegateList = delegateList;
   }
 
-  RegularImmutableAsList(ImmutableCollection<E> delegate, Object @Readonly [] array) {
+  RegularImmutableAsList(ImmutableCollection<E> delegate, @Readonly Object @Readonly [] array) {
     this(delegate, ImmutableList.<E>asImmutableList(array));
   }
 
@@ -61,8 +61,8 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
 
   @SuppressWarnings("unchecked") // safe covariant cast!
   @Override
-  public UnmodifiableListIterator<E> listIterator(int index) {
-    return (UnmodifiableListIterator<E>) delegateList.listIterator(index);
+  public @Immutable UnmodifiableListIterator<E> listIterator(int index) {
+    return (@Immutable UnmodifiableListIterator<E>) delegateList.listIterator(index);
   }
 
   @GwtIncompatible // not present in emulated superclass
@@ -80,7 +80,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
 
   @Override
   @CheckForNull
-  Object[] internalArray() {
+  @Readonly Object @Readonly [] internalArray() {
     return delegateList.internalArray();
   }
 
@@ -104,7 +104,7 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

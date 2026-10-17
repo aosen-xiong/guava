@@ -70,12 +70,12 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
   protected ForwardingSortedSet() {}
 
   @Override
-  protected abstract @PolyMutable SortedSet<E> delegate(@PolyMutable ForwardingSortedSet<E> this);
+  protected abstract @ReceiverDependentMutable SortedSet<E> delegate(@ReceiverDependentMutable ForwardingSortedSet<E> this);
 
   @SideEffectFree
   @Override
   @CheckForNull
-  public Comparator<? super E> comparator(@Readonly ForwardingSortedSet<E> this) {
+  public @Readonly Comparator<? super E> comparator(@Readonly ForwardingSortedSet<E> this) {
     return delegate().comparator();
   }
 
@@ -88,7 +88,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
 
   @SideEffectFree
   @Override
-  public SortedSet<E> headSet(@Readonly ForwardingSortedSet<E> this, @ParametricNullness E toElement) {
+  public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable ForwardingSortedSet<E> this, @ParametricNullness E toElement) {
     return delegate().headSet(toElement);
   }
 
@@ -101,13 +101,13 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
 
   @SideEffectFree
   @Override
-  public @PolyMutable SortedSet<E> subSet(@PolyMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
+  public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
     return delegate().subSet(fromElement, toElement);
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable SortedSet<E> tailSet(@PolyMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement) {
+  public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable ForwardingSortedSet<E> this, @ParametricNullness E fromElement) {
     return delegate().tailSet(fromElement);
   }
 
@@ -119,7 +119,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
    * @since 7.0
    */
   @Override
-  protected boolean standardContains(@CheckForNull Object object) {
+  protected boolean standardContains(@CheckForNull @Readonly Object object) {
     try {
       // any ClassCastExceptions and NullPointerExceptions are caught
       @SuppressWarnings({"unchecked", "nullness"})
@@ -139,7 +139,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
    * @since 7.0
    */
   @Override
-  protected boolean standardRemove(@CheckForNull Object object) {
+  protected boolean standardRemove(@CheckForNull @Readonly Object object) {
     try {
       // any ClassCastExceptions and NullPointerExceptions are caught
       @SuppressWarnings({"unchecked", "nullness"})
@@ -165,7 +165,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
    *
    * @since 7.0
    */
-  protected SortedSet<E> standardSubSet(
+  protected @ReceiverDependentMutable SortedSet<E> standardSubSet(
       @ParametricNullness E fromElement, @ParametricNullness E toElement) {
     return tailSet(fromElement).headSet(toElement);
   }

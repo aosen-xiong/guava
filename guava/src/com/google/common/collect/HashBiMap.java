@@ -105,7 +105,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return bimap;
   }
 
-  static final class BiEntry<K extends @Nullable Object, V extends @Nullable Object>
+  static final class BiEntry<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends ImmutableEntry<K, V> {
     final int keyHash;
     final int valueHash;
@@ -152,7 +152,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     init(expectedSize);
   }
 
-  private void init(int expectedSize) {
+  private void init(@Mutable HashBiMap<K, V> this, int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     int tableSize = Hashing.closedTableSize(expectedSize, LOAD_FACTOR);
     this.hashTableKToV = createTable(tableSize);
@@ -400,7 +400,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return Maps.keyOrNull(oldEntryForValue);
   }
 
-  private void rehashIfNecessary() {
+  private void rehashIfNecessary(@Mutable HashBiMap<K, V> this) {
     @Nullable BiEntry<K, V>[] oldKToV = hashTableKToV;
     if (Hashing.needsResizing(size, oldKToV.length, LOAD_FACTOR)) {
       int newTableSize = oldKToV.length * 2;
@@ -454,7 +454,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return size;
   }
 
-  private abstract class Itr<T extends @Nullable Object> implements Iterator<T> {
+  private abstract class Itr<T extends @Nullable @Readonly Object> implements Iterator<T> {
     @CheckForNull BiEntry<K, V> next = firstInKeyInsertionOrder;
     @CheckForNull BiEntry<K, V> toRemove = null;
     int expectedModCount = modCount;
@@ -499,7 +499,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable HashBiMap<K,V> this) {
     return new @PolyMutable KeySet();
   }
 
@@ -535,7 +535,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public @PolyMutable Set<V> values(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable HashBiMap<K,V> this) {
     return inverse().keySet();
   }
 
@@ -602,7 +602,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+  public void replaceAll(@Mutable HashBiMap<K, V> this, BiFunction<? super K, ? super V, ? extends V> function) {
     checkNotNull(function);
     BiEntry<K, V> oldFirst = firstInKeyInsertionOrder;
     clear();
@@ -615,7 +615,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   @LazyInit @RetainedWith @CheckForNull private transient @Assignable BiMap<V, K> inverse;
 
   @Override
-  public @PolyMutable BiMap<V, K> inverse(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable HashBiMap<K,V> this) {
     BiMap<V, K> result = inverse;
     return (result == null) ? inverse = new Inverse() : result;
   }
@@ -676,13 +676,13 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public @PolyMutable BiMap<K, V> inverse(@PolyMutable Inverse this) {
+    public @ReceiverDependentMutable BiMap<K, V> inverse(@ReceiverDependentMutable Inverse this) {
       return forward();
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) V> keySet(@PolyMutable Inverse this) {
-      return new @PolyMutable InverseKeySet();
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) V> keySet(@ReceiverDependentMutable Inverse this) {
+      return new @ReceiverDependentMutable InverseKeySet();
     }
 
     @ReceiverDependentMutable
@@ -692,7 +692,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
         BiEntry<K, V> entry = seekByValue(o, smearedHash(o));
         if (entry == null) {
           return false;
@@ -715,7 +715,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public Set<K> values() {
+    public @ReceiverDependentMutable Set<K> values() {
       return forward().keySet();
     }
 
@@ -783,7 +783,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       }
     }
 
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new InverseSerializedForm<>(HashBiMap.this);
     }
 
@@ -800,11 +800,11 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       implements Serializable {
     private final HashBiMap<K, V> bimap;
 
-    InverseSerializedForm(HashBiMap<K, V> bimap) {
+    InverseSerializedForm(@ReceiverDependentMutable HashBiMap<K, V> bimap) {
       this.bimap = bimap;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return bimap.inverse();
     }
   }
@@ -821,7 +821,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable HashBiMap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int size = Serialization.readCount(stream);
     init(16); // resist hostile attempts to allocate gratuitous heap

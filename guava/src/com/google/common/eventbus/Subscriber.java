@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -107,7 +108,7 @@ class Subscriber {
   }
 
   @Override
-  public final boolean equals(@CheckForNull Object obj) {
+  public final boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj instanceof Subscriber) {
       Subscriber that = (Subscriber) obj;
       // Use == so that different equal instances will still receive events.

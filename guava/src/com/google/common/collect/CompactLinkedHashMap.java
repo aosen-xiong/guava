@@ -33,11 +33,13 @@ import java.util.Spliterators;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * CompactLinkedHashMap is an implementation of a Map with insertion or LRU iteration order,
@@ -63,12 +65,12 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtIncompatible // not worth using in GWT for now
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends CompactHashMap<K, V> {
   // TODO(lowasser): implement removeEldestEntry so this can be used as a drop-in replacement
 
   /** Creates an empty {@code CompactLinkedHashMap} instance. */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       CompactLinkedHashMap<K, V> create() {
     return new CompactLinkedHashMap<>();
   }
@@ -82,7 +84,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
    *     expectedSize} elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       CompactLinkedHashMap<K, V> createWithExpectedSize(int expectedSize) {
     return new CompactLinkedHashMap<>(expectedSize);
   }
@@ -122,14 +124,14 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void init(int expectedSize) {
+  void init(@Mutable CompactLinkedHashMap<K, V> this, int expectedSize) {
     super.init(expectedSize);
     this.firstEntry = ENDPOINT;
     this.lastEntry = ENDPOINT;
   }
 
   @Override
-  int allocArrays() {
+  int allocArrays(@Mutable CompactLinkedHashMap<K, V> this) {
     int expectedSize = super.allocArrays();
     this.links = new long[expectedSize];
     return expectedSize;
@@ -142,7 +144,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
 
   @Override
   @CanIgnoreReturnValue
-  Map<K, V> convertToHashFloodingResistantImplementation() {
+  Map<K, V> convertToHashFloodingResistantImplementation(@Mutable CompactLinkedHashMap<K, V> this) {
     Map<K, V> result = super.convertToHashFloodingResistantImplementation();
     links = null;
     return result;
@@ -173,7 +175,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
     setLink(entry, (link(entry) & ~predMask) | ((long) (pred + 1) << 32));
   }
 
-  private void setSucceeds(int pred, int succ) {
+  private void setSucceeds(@Mutable CompactLinkedHashMap<K, V> this, int pred, int succ) {
     if (pred == ENDPOINT) {
       firstEntry = succ;
     } else {
@@ -188,7 +190,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void insertEntry(
+  void insertEntry(@Mutable CompactLinkedHashMap<K, V> this, 
       int entryIndex, @ParametricNullness K key, @ParametricNullness V value, int hash, int mask) {
     super.insertEntry(entryIndex, key, value, hash, mask);
     setSucceeds(lastEntry, entryIndex);
@@ -208,7 +210,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void moveLastEntry(int dstIndex, int mask) {
+  void moveLastEntry(@Mutable CompactLinkedHashMap<K, V> this, int dstIndex, int mask) {
     int srcIndex = size() - 1;
     super.moveLastEntry(dstIndex, mask);
 
@@ -221,7 +223,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactLinkedHashMap<K, V> this, int newCapacity) {
     super.resizeEntries(newCapacity);
     links = Arrays.copyOf(requireLinks(), newCapacity);
   }
@@ -260,7 +262,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
 
       @Override
       @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-      public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+      public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
         return ObjectArrays.toArrayImpl(this, a);
       }
 
@@ -284,7 +286,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
 
       @Override
       @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-      public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+      public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
         return ObjectArrays.toArrayImpl(this, a);
       }
 
@@ -297,7 +299,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactLinkedHashMap<K, V> this) {
     if (needsAllocArrays()) {
       return;
     }

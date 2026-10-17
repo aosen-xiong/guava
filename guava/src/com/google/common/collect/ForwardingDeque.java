@@ -57,7 +57,7 @@ public abstract class ForwardingDeque<E extends @Nullable @Readonly Object> exte
   protected ForwardingDeque() {}
 
   @Override
-  protected abstract @PolyMutable Deque<E> delegate(@PolyMutable ForwardingDeque<E> this);
+  protected abstract @ReceiverDependentMutable Deque<E> delegate(@ReceiverDependentMutable ForwardingDeque<E> this);
 
   @Override
   public void addFirst(@Mutable ForwardingDeque<E> this, @ParametricNullness E e) {
@@ -70,7 +70,7 @@ public abstract class ForwardingDeque<E extends @Nullable @Readonly Object> exte
   }
 
   @Override
-  public Iterator<E> descendingIterator(@Readonly ForwardingDeque<E> this) {
+  public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable ForwardingDeque<E> this) {
     return delegate().descendingIterator();
   }
 

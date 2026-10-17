@@ -32,7 +32,6 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -283,7 +282,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    *     no effect on the multimap.
    */
   @CanIgnoreReturnValue
-  Collection<V> replaceValues(@Mutable Multimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  @Readonly Collection<V> replaceValues(@Mutable Multimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
 
   /**
    * Removes all values associated with the key {@code key}.
@@ -295,7 +294,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    *     modifiable, but updating it will have no effect on the multimap.
    */
   @CanIgnoreReturnValue
-  Collection<V> removeAll(@Mutable Multimap<K, V> this, @CompatibleWith("K") @CheckForNull @Readonly Object key);
+  @Readonly Collection<V> removeAll(@Mutable Multimap<K, V> this, @CompatibleWith("K") @CheckForNull @Readonly Object key);
 
   /** Removes all key-value pairs from the multimap, leaving it {@linkplain #isEmpty empty}. */
   void clear(@Mutable Multimap<K, V> this);
@@ -309,7 +308,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    *
    * <p>Changes to the returned collection will update the underlying multimap, and vice versa.
    */
-  @PolyMutable Collection<V> get(@PolyMutable Multimap<K, V> this, @ParametricNullness K key);
+  @ReceiverDependentMutable Collection<V> get(@ReceiverDependentMutable Multimap<K, V> this, @ParametricNullness K key);
 
   /**
    * Returns a view collection of all <i>distinct</i> keys contained in this multimap. Note that the
@@ -318,7 +317,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    * <p>Changes to the returned set will update the underlying multimap, and vice versa. However,
    * <i>adding</i> to the returned set is not possible.
    */
-  @PolyMutable Set<K> keySet(@PolyMutable Multimap<K,V> this);
+  @ReceiverDependentMutable Set<K> keySet(@ReceiverDependentMutable Multimap<K,V> this);
 
   /**
    * Returns a view collection containing the key from each key-value pair in this multimap,
@@ -328,7 +327,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    * <p>Changes to the returned multiset will update the underlying multimap, and vice versa.
    * However, <i>adding</i> to the returned collection is not possible.
    */
-  @PolyMutable Multiset<K> keys(@PolyMutable Multimap<K,V> this);
+  @ReceiverDependentMutable Multiset<K> keys(@ReceiverDependentMutable Multimap<K,V> this);
 
   /**
    * Returns a view collection containing the <i>value</i> from each key-value pair contained in
@@ -337,7 +336,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    * <p>Changes to the returned collection will update the underlying multimap, and vice versa.
    * However, <i>adding</i> to the returned collection is not possible.
    */
-  @PolyMutable Collection<V> values(@PolyMutable Multimap<K,V> this);
+  @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable Multimap<K,V> this);
 
   /**
    * Returns a view collection of all key-value pairs contained in this multimap, as {@link Entry}
@@ -346,7 +345,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    * <p>Changes to the returned collection or the entries it contains will update the underlying
    * multimap, and vice versa. However, <i>adding</i> to the returned collection is not possible.
    */
-  @PolyMutable Collection<@PolyMutable Entry<K, V>> entries(@PolyMutable Multimap<K,V> this);
+  @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable Multimap<K,V> this);
 
   /**
    * Performs the given action for all key-value pairs contained in this multimap. If an ordering is
@@ -373,7 +372,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    * underlying multimap, and vice versa. The map does not support {@code put} or {@code putAll},
    * nor do its entries support {@link Entry#setValue setValue}.
    */
-  @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable Multimap<K,V> this);
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable Multimap<K,V> this);
 
   // Comparison and hashing
 

@@ -18,6 +18,7 @@ import com.google.common.annotations.GwtIncompatible;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to classes in the {@code java.util.concurrent.atomic} package.
@@ -45,7 +46,7 @@ public final class Atomics {
    * @param initialValue the initial value
    * @return a new {@code AtomicReference} with the given initial value
    */
-  public static <V extends @Nullable Object> AtomicReference<V> newReference(
+  public static <V extends @Nullable @Readonly Object> AtomicReference<V> newReference(
       @ParametricNullness V initialValue) {
     return new AtomicReference<>(initialValue);
   }
@@ -67,7 +68,7 @@ public final class Atomics {
    * @param array the array to copy elements from
    * @return a new {@code AtomicReferenceArray} copied from the given array
    */
-  public static <E extends @Nullable Object> AtomicReferenceArray<E> newReferenceArray(E[] array) {
+  public static <E extends @Nullable @Readonly Object> AtomicReferenceArray<E> newReferenceArray(E[] array) {
     return new AtomicReferenceArray<>(array);
   }
 }

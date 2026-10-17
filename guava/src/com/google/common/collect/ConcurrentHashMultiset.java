@@ -135,7 +135,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    * @throws IllegalArgumentException if {@code countMap} is not empty
    * @since 20.0
    */
-  public static <E> ConcurrentHashMultiset<E> create(ConcurrentMap<E, AtomicInteger> countMap) {
+  public static <E extends @Immutable Object> ConcurrentHashMultiset<E> create(ConcurrentMap<E, AtomicInteger> countMap) {
     return new ConcurrentHashMultiset<>(countMap);
   }
 
@@ -181,7 +181,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    */
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object @ReceiverDependentMutable [] toArray(@ReceiverDependentMutable ConcurrentHashMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly ConcurrentHashMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
     return snapshot().toArray();
   }
 
@@ -466,29 +466,29 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   @Override
   Set<E> createElementSet() {
     Set<E> delegate = countMap.keySet();
-    return new ForwardingSet<E>() {
+    return new @Mutable ForwardingSet<E>() {
       @Override
       protected Set<E> delegate() {
         return delegate;
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return object != null && Collections2.safeContains(delegate, object);
       }
 
       @Override
-      public boolean containsAll(Collection<?> collection) {
+      public boolean containsAll(@Readonly Collection<?> collection) {
         return standardContainsAll(collection);
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object object) {
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return object != null && Collections2.safeRemove(delegate, object);
       }
 
       @Override
-      public boolean removeAll(Collection<?> c) {
+      public boolean removeAll(@Readonly Collection<?> c) {
         return standardRemoveAll(c);
       }
     };
@@ -523,7 +523,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
     // AbstractIterator makes this fairly clean, but it doesn't support remove(). To support
     // remove(), we create an AbstractIterator, and then use ForwardingIterator to delegate to it.
     Iterator<Entry<E>> readOnlyIterator =
-        new AbstractIterator<Entry<E>>() {
+        new @Mutable AbstractIterator<Entry<E>>() {
           private final Iterator<Map.Entry<E, AtomicInteger>> mapEntries =
               countMap.entrySet().iterator();
 
@@ -543,7 +543,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
           }
         };
 
-    return new ForwardingIterator<Entry<E>>() {
+    return new @Mutable ForwardingIterator<Entry<E>>() {
       @CheckForNull private Entry<E> last;
 
       @Override
@@ -591,7 +591,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
 
     @CFComment("signedness: is same as E, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       return snapshot().toArray();
     }
 
@@ -601,8 +601,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
       return snapshot().toArray(array);
     }
 
-    private List<Multiset.Entry<E>> snapshot() {
-      List<Multiset.Entry<E>> list = Lists.newArrayListWithExpectedSize(size());
+    private List<Multiset.@Readonly Entry<E>> snapshot() {
+      List<Multiset.@Readonly Entry<E>> list = Lists.newArrayListWithExpectedSize(size());
       // Not Iterables.addAll(list, this), because that'll forward right back here.
       Iterators.addAll(list, iterator());
       return list;

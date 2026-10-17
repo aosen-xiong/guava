@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -58,6 +59,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
   @SuppressWarnings("Immutable") // We don't modify this after construction.
   private final int[] cellColumnIndices;
 
+  @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:illegal.array.write"}) // freeze: @Unique @Mutable to @Immutable; construction: the constructor fills its own rowCounts and columnCounts
   DenseImmutableTable(
       ImmutableList<Cell<R, C, V>> cellList,
       ImmutableSet<R> rowSpace,
@@ -134,14 +136,14 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     }
 
     @Override
-    UnmodifiableIterator<Entry<K, V>> entryIterator() {
-      return new AbstractIterator<Entry<K, V>>() {
-        private int index = -1;
+    @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
+      return new @Immutable AbstractIterator<@Immutable Entry<K, V>>() {
+        private @Assignable int index = -1;
         private final int maxIndex = keyToIndex().size();
 
         @Override
         @CheckForNull
-        protected Entry<K, V> computeNext() {
+        protected @Immutable Entry<K, V> computeNext() {
           for (index++; index < maxIndex; index++) {
             V value = getValue(index);
             if (value != null) {
@@ -158,7 +160,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @J2ktIncompatible // serialization
     @Override
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -193,7 +195,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -228,7 +230,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -260,7 +262,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -292,28 +294,28 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
 
   @Override
-  public ImmutableMap<C, Map<R, V>> columnMap() {
+  public ImmutableMap<C, @Immutable Map<R, V>> columnMap() {
     // Casts without copying.
     ImmutableMap<C, ImmutableMap<R, V>> columnMap = this.columnMap;
-    return ImmutableMap.<C, Map<R, V>>copyOf(columnMap);
+    return ImmutableMap.<C, @Immutable Map<R, V>>copyOf(columnMap);
   }
 
   @Override
-  public ImmutableMap<R, Map<C, V>> rowMap() {
+  public ImmutableMap<R, @Immutable Map<C, V>> rowMap() {
     // Casts without copying.
     ImmutableMap<R, ImmutableMap<C, V>> rowMap = this.rowMap;
-    return ImmutableMap.<R, Map<C, V>>copyOf(rowMap);
+    return ImmutableMap.<R, @Immutable Map<C, V>>copyOf(rowMap);
   }
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V get(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     return ((rowIndex == null) || (columnIndex == null)) ? null : values[rowIndex][columnIndex];
@@ -344,7 +346,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return SerializedForm.create(this, cellRowIndices, cellColumnIndices);
   }
 }

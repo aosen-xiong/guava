@@ -56,6 +56,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -63,6 +64,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * The concurrent hash map implementation built by {@link MapMaker}.
@@ -403,7 +405,7 @@ class MapMakerInternalMap<
   }
 
   /** Concrete implementation of {@link InternalEntry} for strong keys and strong values. */
-  static class StrongKeyStrongValueEntry<K, V>
+  static class StrongKeyStrongValueEntry<K extends @Immutable Object, V>
       extends AbstractStrongKeyEntry<K, V, StrongKeyStrongValueEntry<K, V>>
       implements StrongValueEntry<K, V, StrongKeyStrongValueEntry<K, V>> {
     @CheckForNull private volatile V value = null;
@@ -418,7 +420,7 @@ class MapMakerInternalMap<
       return value;
     }
 
-    private static final class LinkedStrongKeyStrongValueEntry<K, V>
+    private static final class LinkedStrongKeyStrongValueEntry<K extends @Immutable Object, V>
         extends StrongKeyStrongValueEntry<K, V> {
       private final StrongKeyStrongValueEntry<K, V> next;
 
@@ -440,7 +442,7 @@ class MapMakerInternalMap<
       private static final Helper<?, ?> INSTANCE = new Helper<>();
 
       @SuppressWarnings("unchecked")
-      static <K, V> Helper<K, V> instance() {
+      static <K extends @Immutable Object, V> Helper<K, V> instance() {
         return (Helper<K, V>) INSTANCE;
       }
 
@@ -496,7 +498,7 @@ class MapMakerInternalMap<
   }
 
   /** Concrete implementation of {@link InternalEntry} for strong keys and weak values. */
-  static class StrongKeyWeakValueEntry<K, V>
+  static class StrongKeyWeakValueEntry<K extends @Immutable Object, V>
       extends AbstractStrongKeyEntry<K, V, StrongKeyWeakValueEntry<K, V>>
       implements WeakValueEntry<K, V, StrongKeyWeakValueEntry<K, V>> {
     private volatile WeakValueReference<K, V, StrongKeyWeakValueEntry<K, V>> valueReference =
@@ -517,7 +519,7 @@ class MapMakerInternalMap<
       return valueReference;
     }
 
-    private static final class LinkedStrongKeyWeakValueEntry<K, V>
+    private static final class LinkedStrongKeyWeakValueEntry<K extends @Immutable Object, V>
         extends StrongKeyWeakValueEntry<K, V> {
       private final StrongKeyWeakValueEntry<K, V> next;
 
@@ -539,7 +541,7 @@ class MapMakerInternalMap<
       private static final Helper<?, ?> INSTANCE = new Helper<>();
 
       @SuppressWarnings("unchecked")
-      static <K, V> Helper<K, V> instance() {
+      static <K extends @Immutable Object, V> Helper<K, V> instance() {
         return (Helper<K, V>) INSTANCE;
       }
 
@@ -597,7 +599,7 @@ class MapMakerInternalMap<
   }
 
   /** Concrete implementation of {@link InternalEntry} for strong keys and {@link Dummy} values. */
-  static class StrongKeyDummyValueEntry<K>
+  static class StrongKeyDummyValueEntry<K extends @Immutable Object>
       extends AbstractStrongKeyEntry<K, Dummy, StrongKeyDummyValueEntry<K>>
       implements StrongValueEntry<K, Dummy, StrongKeyDummyValueEntry<K>> {
 
@@ -610,7 +612,7 @@ class MapMakerInternalMap<
       return Dummy.VALUE;
     }
 
-    private static final class LinkedStrongKeyDummyValueEntry<K>
+    private static final class LinkedStrongKeyDummyValueEntry<K extends @Immutable Object>
         extends StrongKeyDummyValueEntry<K> {
       private final StrongKeyDummyValueEntry<K> next;
 
@@ -711,7 +713,7 @@ class MapMakerInternalMap<
   }
 
   /** Concrete implementation of {@link InternalEntry} for weak keys and {@link Dummy} values. */
-  static class WeakKeyDummyValueEntry<K>
+  static class WeakKeyDummyValueEntry<K extends @Immutable Object>
       extends AbstractWeakKeyEntry<K, Dummy, WeakKeyDummyValueEntry<K>>
       implements StrongValueEntry<K, Dummy, WeakKeyDummyValueEntry<K>> {
 
@@ -724,7 +726,7 @@ class MapMakerInternalMap<
       return Dummy.VALUE;
     }
 
-    private static final class LinkedWeakKeyDummyValueEntry<K> extends WeakKeyDummyValueEntry<K> {
+    private static final class LinkedWeakKeyDummyValueEntry<K extends @Immutable Object> extends WeakKeyDummyValueEntry<K> {
       private final WeakKeyDummyValueEntry<K> next;
 
       private LinkedWeakKeyDummyValueEntry(
@@ -749,7 +751,7 @@ class MapMakerInternalMap<
       private static final Helper<?> INSTANCE = new Helper<>();
 
       @SuppressWarnings("unchecked")
-      static <K> Helper<K> instance() {
+      static <K extends @Immutable Object> Helper<K> instance() {
         return (Helper<K>) INSTANCE;
       }
 
@@ -802,7 +804,7 @@ class MapMakerInternalMap<
   }
 
   /** Concrete implementation of {@link InternalEntry} for weak keys and strong values. */
-  static class WeakKeyStrongValueEntry<K, V>
+  static class WeakKeyStrongValueEntry<K extends @Immutable Object, V>
       extends AbstractWeakKeyEntry<K, V, WeakKeyStrongValueEntry<K, V>>
       implements StrongValueEntry<K, V, WeakKeyStrongValueEntry<K, V>> {
     @CheckForNull private volatile V value = null;
@@ -817,7 +819,7 @@ class MapMakerInternalMap<
       return value;
     }
 
-    private static final class LinkedWeakKeyStrongValueEntry<K, V>
+    private static final class LinkedWeakKeyStrongValueEntry<K extends @Immutable Object, V>
         extends WeakKeyStrongValueEntry<K, V> {
       private final WeakKeyStrongValueEntry<K, V> next;
 
@@ -898,7 +900,7 @@ class MapMakerInternalMap<
   }
 
   /** Concrete implementation of {@link InternalEntry} for weak keys and weak values. */
-  static class WeakKeyWeakValueEntry<K, V>
+  static class WeakKeyWeakValueEntry<K extends @Immutable Object, V>
       extends AbstractWeakKeyEntry<K, V, WeakKeyWeakValueEntry<K, V>>
       implements WeakValueEntry<K, V, WeakKeyWeakValueEntry<K, V>> {
     private volatile WeakValueReference<K, V, WeakKeyWeakValueEntry<K, V>> valueReference =
@@ -918,7 +920,7 @@ class MapMakerInternalMap<
       return valueReference;
     }
 
-    private static final class LinkedWeakKeyWeakValueEntry<K, V>
+    private static final class LinkedWeakKeyWeakValueEntry<K extends @Immutable Object, V>
         extends WeakKeyWeakValueEntry<K, V> {
       private final WeakKeyWeakValueEntry<K, V> next;
 
@@ -1137,7 +1139,7 @@ class MapMakerInternalMap<
     return segmentFor(hash).copyEntry(original, newNext);
   }
 
-  int hash(Object key) {
+  int hash(@Readonly Object key) {
     int h = keyEquivalence.hash(key);
     return rehash(h);
   }
@@ -1300,7 +1302,7 @@ class MapMakerInternalMap<
       return new AtomicReferenceArray<E>(size);
     }
 
-    void initTable(AtomicReferenceArray<E> newTable) {
+    void initTable(@Mutable Segment<K, V, E, S> this, AtomicReferenceArray<E> newTable) {
       this.threshold = newTable.length() * 3 / 4; // 0.75
       this.table = newTable;
     }
@@ -1374,13 +1376,13 @@ class MapMakerInternalMap<
 
     /** Unsafely removes the given entry from this segment's hash table. */
     @CanIgnoreReturnValue
-    boolean removeTableEntryForTesting(InternalEntry<K, V, ?> entry) {
+    boolean removeTableEntryForTesting(@Mutable Segment<K, V, E, S> this, InternalEntry<K, V, ?> entry) {
       return removeEntryForTesting(castForTesting(entry));
     }
 
     /** Unsafely removes the given entry from the given chain in this segment's hash table. */
     @CheckForNull
-    E removeFromChainForTesting(InternalEntry<K, V, ?> first, InternalEntry<K, V, ?> entry) {
+    E removeFromChainForTesting(@Mutable Segment<K, V, E, S> this, InternalEntry<K, V, ?> first, InternalEntry<K, V, ?> entry) {
       return removeFromChain(castForTesting(first), castForTesting(entry));
     }
 
@@ -1476,7 +1478,7 @@ class MapMakerInternalMap<
     }
 
     @CheckForNull
-    V get(Object key, int hash) {
+    V get(@Readonly Object key, int hash) {
       try {
         E e = getLiveEntry(key, hash);
         if (e == null) {
@@ -1493,7 +1495,7 @@ class MapMakerInternalMap<
       }
     }
 
-    boolean containsKey(@UnknownSignedness Object key, int hash) {
+    boolean containsKey(@UnknownSignedness @Readonly Object key, int hash) {
       try {
         if (count != 0) { // read-volatile
           E e = getLiveEntry(key, hash);
@@ -1536,7 +1538,7 @@ class MapMakerInternalMap<
     }
 
     @CheckForNull
-    V put(K key, int hash, V value, boolean onlyIfAbsent) {
+    V put(@Mutable Segment<K, V, E, S> this, K key, int hash, V value, boolean onlyIfAbsent) {
       lock();
       try {
         preWriteCleanup();
@@ -1595,7 +1597,7 @@ class MapMakerInternalMap<
 
     /** Expands the table if possible. */
     @GuardedBy("this")
-    void expand() {
+    void expand(@Mutable Segment<K, V, E, S> this) {
       AtomicReferenceArray<E> oldTable = table;
       int oldCapacity = oldTable.length();
       if (oldCapacity >= MAXIMUM_CAPACITY) {
@@ -1662,7 +1664,7 @@ class MapMakerInternalMap<
       this.count = newCount;
     }
 
-    boolean replace(K key, int hash, V oldValue, V newValue) {
+    boolean replace(@Mutable Segment<K, V, E, S> this, K key, int hash, V oldValue, V newValue) {
       lock();
       try {
         preWriteCleanup();
@@ -1710,7 +1712,7 @@ class MapMakerInternalMap<
     }
 
     @CheckForNull
-    V replace(K key, int hash, V newValue) {
+    V replace(@Mutable Segment<K, V, E, S> this, K key, int hash, V newValue) {
       lock();
       try {
         preWriteCleanup();
@@ -1753,7 +1755,7 @@ class MapMakerInternalMap<
 
     @CheckForNull
     @CanIgnoreReturnValue
-    V remove(Object key, int hash) {
+    V remove(@Mutable Segment<K, V, E, S> this, @Readonly Object key, int hash) {
       lock();
       try {
         preWriteCleanup();
@@ -1793,7 +1795,7 @@ class MapMakerInternalMap<
       }
     }
 
-    boolean remove(Object key, int hash, Object value) {
+    boolean remove(@Mutable Segment<K, V, E, S> this, @Readonly Object key, int hash, @Readonly Object value) {
       lock();
       try {
         preWriteCleanup();
@@ -1834,7 +1836,7 @@ class MapMakerInternalMap<
       }
     }
 
-    void clear() {
+    void clear(@Mutable Segment<K, V, E, S> this) {
       if (count != 0) {
         lock();
         try {
@@ -1867,7 +1869,7 @@ class MapMakerInternalMap<
      */
     @GuardedBy("this")
     @CheckForNull
-    E removeFromChain(E first, E entry) {
+    E removeFromChain(@Mutable Segment<K, V, E, S> this, E first, E entry) {
       int newCount = count;
       E newFirst = entry.getNext();
       for (E e = first; e != entry; e = e.getNext()) {
@@ -1884,7 +1886,7 @@ class MapMakerInternalMap<
 
     /** Removes an entry whose key has been garbage collected. */
     @CanIgnoreReturnValue
-    boolean reclaimKey(E entry, int hash) {
+    boolean reclaimKey(@Mutable Segment<K, V, E, S> this, E entry, int hash) {
       lock();
       try {
         int newCount = count - 1;
@@ -1911,7 +1913,7 @@ class MapMakerInternalMap<
 
     /** Removes an entry whose value has been garbage collected. */
     @CanIgnoreReturnValue
-    boolean reclaimValue(K key, int hash, WeakValueReference<K, V, E> valueReference) {
+    boolean reclaimValue(@Mutable Segment<K, V, E, S> this, K key, int hash, WeakValueReference<K, V, E> valueReference) {
       lock();
       try {
         int newCount = this.count - 1;
@@ -1945,7 +1947,7 @@ class MapMakerInternalMap<
 
     /** Clears a value that has not yet been set, and thus does not require count to be modified. */
     @CanIgnoreReturnValue
-    boolean clearValueForTesting(
+    boolean clearValueForTesting(@Mutable Segment<K, V, E, S> this, 
         K key,
         int hash,
         WeakValueReference<K, V, ? extends InternalEntry<K, V, ?>> valueReference) {
@@ -1977,7 +1979,7 @@ class MapMakerInternalMap<
     }
 
     @GuardedBy("this")
-    boolean removeEntryForTesting(E entry) {
+    boolean removeEntryForTesting(@Mutable Segment<K, V, E, S> this, E entry) {
       int hash = entry.getHash();
       int newCount = this.count - 1;
       AtomicReferenceArray<E> table = this.table;
@@ -2002,7 +2004,7 @@ class MapMakerInternalMap<
      * Returns {@code true} if the value has been partially collected, meaning that the value is
      * null.
      */
-    static <K, V, E extends InternalEntry<K, V, E>> boolean isCollected(E entry) {
+    static <K extends @Immutable Object, V, E extends InternalEntry<K, V, E>> boolean isCollected(E entry) {
       return entry.getValue() == null;
     }
 
@@ -2063,7 +2065,7 @@ class MapMakerInternalMap<
 
   /** Concrete implementation of {@link Segment} for strong keys and strong values. */
   @ReceiverDependentMutable
-  static final class StrongKeyStrongValueSegment<K, V>
+  static final class StrongKeyStrongValueSegment<K extends @Immutable Object, V>
       extends Segment<K, V, StrongKeyStrongValueEntry<K, V>, StrongKeyStrongValueSegment<K, V>> {
     StrongKeyStrongValueSegment(
         MapMakerInternalMap<
@@ -2074,7 +2076,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    StrongKeyStrongValueSegment<K, V> self() {
+    @ReceiverDependentMutable StrongKeyStrongValueSegment<K, V> self() {
       return this;
     }
 
@@ -2165,7 +2167,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    StrongKeyDummyValueSegment<K> self() {
+    @ReceiverDependentMutable StrongKeyDummyValueSegment<K> self() {
       return this;
     }
 
@@ -2190,12 +2192,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    WeakKeyStrongValueSegment<K, V> self() {
+    @ReceiverDependentMutable WeakKeyStrongValueSegment<K, V> self() {
       return this;
     }
 
     @Override
-    ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
@@ -2230,17 +2232,17 @@ class MapMakerInternalMap<
     }
 
     @Override
-    WeakKeyWeakValueSegment<K, V> self() {
+    @ReceiverDependentMutable WeakKeyWeakValueSegment<K, V> self() {
       return this;
     }
 
     @Override
-    ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
     @Override
-    ReferenceQueue<V> getValueReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<V> getValueReferenceQueueForTesting() {
       return queueForValues;
     }
 
@@ -2290,7 +2292,7 @@ class MapMakerInternalMap<
 
   /** Concrete implementation of {@link Segment} for weak keys and {@link Dummy} values. */
   @ReceiverDependentMutable
-  static final class WeakKeyDummyValueSegment<K>
+  static final class WeakKeyDummyValueSegment<K extends @Immutable Object>
       extends Segment<K, Dummy, WeakKeyDummyValueEntry<K>, WeakKeyDummyValueSegment<K>> {
     private final ReferenceQueue<K> queueForKeys = new ReferenceQueue<K>();
 
@@ -2301,12 +2303,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    WeakKeyDummyValueSegment<K> self() {
+    @ReceiverDependentMutable WeakKeyDummyValueSegment<K> self() {
       return this;
     }
 
     @Override
-    ReferenceQueue<K> getKeyReferenceQueueForTesting() {
+    @ReceiverDependentMutable ReferenceQueue<K> getKeyReferenceQueueForTesting() {
       return queueForKeys;
     }
 
@@ -2406,7 +2408,7 @@ class MapMakerInternalMap<
 
   @CheckForNull
   @Override
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return null;
     }
@@ -2428,7 +2430,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return false;
     }
@@ -2437,7 +2439,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     if (value == null) {
       return false;
     }
@@ -2495,7 +2497,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public void putAll(Map<? extends K, ? extends V> m) {
+  public void putAll(@Readonly Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> e : m.entrySet()) {
       put(e.getKey(), e.getValue());
     }
@@ -2504,7 +2506,7 @@ class MapMakerInternalMap<
   @CheckForNull
   @CanIgnoreReturnValue
   @Override
-  public V remove(@CheckForNull @UnknownSignedness Object key) {
+  public V remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return null;
     }
@@ -2514,7 +2516,7 @@ class MapMakerInternalMap<
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness Object key, @CheckForNull @UnknownSignedness Object value) {
+  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
     if (key == null || value == null) {
       return false;
     }
@@ -2551,26 +2553,26 @@ class MapMakerInternalMap<
     }
   }
 
-  @LazyInit @CheckForNull transient Set<K> keySet;
+  @LazyInit @CheckForNull transient @Assignable Set<K> keySet;
 
   @Override
-  public Set<@KeyFor({"this"}) K> keySet() {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet() {
     Set<K> ks = keySet;
     return (ks != null) ? ks : (keySet = new KeySet());
   }
 
-  @LazyInit @CheckForNull transient Collection<V> values;
+  @LazyInit @CheckForNull transient @Assignable Collection<V> values;
 
   @Override
-  public Collection<V> values() {
+  public @ReceiverDependentMutable Collection<V> values() {
     Collection<V> vs = values;
     return (vs != null) ? vs : (values = new Values());
   }
 
-  @LazyInit @CheckForNull transient Set<Entry<K, V>> entrySet;
+  @LazyInit @CheckForNull transient @Assignable Set<Entry<K, V>> entrySet;
 
   @Override
-  public Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
     Set<Entry<K, V>> es = entrySet;
     return (es != null) ? es : (entrySet = new EntrySet());
   }
@@ -2581,12 +2583,12 @@ class MapMakerInternalMap<
   abstract class HashIterator<T> implements Iterator<T> {
 
     int nextSegmentIndex;
-    int nextTableIndex;
-    @CheckForNull Segment<K, V, E, S> currentSegment;
-    @CheckForNull AtomicReferenceArray<E> currentTable;
-    @CheckForNull E nextEntry;
-    @CheckForNull WriteThroughEntry nextExternal;
-    @CheckForNull WriteThroughEntry lastReturned;
+    @Assignable int nextTableIndex;
+    @CheckForNull @Assignable Segment<K, V, E, S> currentSegment;
+    @CheckForNull @Assignable AtomicReferenceArray<E> currentTable;
+    @CheckForNull @Assignable E nextEntry;
+    @CheckForNull @Assignable WriteThroughEntry nextExternal;
+    @CheckForNull @Assignable WriteThroughEntry lastReturned;
 
     HashIterator() {
       nextSegmentIndex = segments.length - 1;
@@ -2679,7 +2681,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable HashIterator<T> this) {
       checkRemove(lastReturned != null);
       MapMakerInternalMap.this.remove(lastReturned.getKey());
       lastReturned = null;
@@ -2729,7 +2731,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       // Cannot use key and value equivalence
       if (object instanceof Entry) {
         Entry<?, ?> that = (Entry<?, ?>) object;
@@ -2745,7 +2747,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public V setValue(V newValue) {
+    public V setValue(@Mutable WriteThroughEntry this, V newValue) {
       V oldValue = put(key, newValue);
       value = newValue; // only if put succeeds
       return oldValue;
@@ -2766,8 +2768,8 @@ class MapMakerInternalMap<
   final class KeySet extends SafeToArraySet<K> {
 
     @Override
-    public Iterator<K> iterator() {
-      return new KeyIterator();
+    public @ReceiverDependentMutable Iterator<K> iterator() {
+      return new @ReceiverDependentMutable KeyIterator();
     }
 
     @Override
@@ -2781,12 +2783,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean contains(@UnknownSignedness Object o) {
+    public boolean contains(@UnknownSignedness @Readonly Object o) {
       return MapMakerInternalMap.this.containsKey(o);
     }
 
     @Override
-    public boolean remove(@UnknownSignedness Object o) {
+    public boolean remove(@UnknownSignedness @Readonly Object o) {
       return MapMakerInternalMap.this.remove(o) != null;
     }
 
@@ -2801,8 +2803,8 @@ class MapMakerInternalMap<
   final class Values extends AbstractCollection<V> {
 
     @Override
-    public Iterator<V> iterator() {
-      return new ValueIterator();
+    public @ReceiverDependentMutable Iterator<V> iterator() {
+      return new @ReceiverDependentMutable ValueIterator();
     }
 
     @Override
@@ -2816,7 +2818,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean contains(@UnknownSignedness Object o) {
+    public boolean contains(@UnknownSignedness @Readonly Object o) {
       return MapMakerInternalMap.this.containsValue(o);
     }
 
@@ -2830,7 +2832,7 @@ class MapMakerInternalMap<
 
     @CFComment("qualifers depend on V, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       return toArrayList(this).toArray();
     }
 
@@ -2850,7 +2852,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean contains(@UnknownSignedness Object o) {
+    public boolean contains(@UnknownSignedness @Readonly Object o) {
       if (!(o instanceof Entry)) {
         return false;
       }
@@ -2865,7 +2867,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean remove(@UnknownSignedness Object o) {
+    public boolean remove(@UnknownSignedness @Readonly Object o) {
       if (!(o instanceof Entry)) {
         return false;
       }
@@ -2895,7 +2897,7 @@ class MapMakerInternalMap<
     // https://code.google.com/p/android/issues/detail?id=36519 / http://r.android.com/47508
 
     @Override
-    public @PolyNull @PolySigned Object[] toArray(SafeToArraySet<@PolyNull @PolySigned E> this) {
+    public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly SafeToArraySet<@PolyNull @PolySigned @PolyMutable E> this) {
       return toArrayList(this).toArray();
     }
 
@@ -2916,7 +2918,7 @@ class MapMakerInternalMap<
 
   private static final long serialVersionUID = 5;
 
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializationProxy<>(
         entryHelper.keyStrength(),
         entryHelper.valueStrength(),
@@ -2964,7 +2966,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    protected ConcurrentMap<K, V> delegate() {
+    protected @ReceiverDependentMutable ConcurrentMap<K, V> delegate() {
       return delegate;
     }
 
@@ -2991,7 +2993,7 @@ class MapMakerInternalMap<
 
     @SuppressWarnings("unchecked")
     @J2ktIncompatible // java.io.ObjectInputStream
-    void readEntries(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    void readEntries(@Mutable AbstractSerializationProxy<K, V> this, ObjectInputStream in) throws IOException, ClassNotFoundException {
       while (true) {
         K key = (K) in.readObject();
         if (key == null) {
@@ -3007,7 +3009,7 @@ class MapMakerInternalMap<
    * The actual object that gets serialized. Unfortunately, readResolve() doesn't get called when a
    * circular dependency is present, so the proxy must be able to behave as the map itself.
    */
-  private static final class SerializationProxy<K, V> extends AbstractSerializationProxy<K, V> {
+  private static final class SerializationProxy<K extends @Immutable Object, V> extends AbstractSerializationProxy<K, V> {
     private static final long serialVersionUID = 3;
 
     SerializationProxy(
@@ -3034,7 +3036,7 @@ class MapMakerInternalMap<
       readEntries(in);
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return delegate;
     }
   }

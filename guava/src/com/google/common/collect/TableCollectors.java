@@ -36,7 +36,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 @ElementTypesAreNonnullByDefault
 final class TableCollectors {
 
-  static <T extends @Nullable Object, R extends @Immutable Object, C extends @Immutable Object, V>
+  static <T extends @Nullable @Readonly Object, R extends @Immutable Object, C extends @Immutable Object, V>
       Collector<T, ?, ImmutableTable<R, C, V>> toImmutableTable(
           Function<? super T, ? extends R> rowFunction,
           Function<? super T, ? extends C> columnFunction,
@@ -52,7 +52,7 @@ final class TableCollectors {
         ImmutableTable.Builder::build);
   }
 
-  static <T extends @Nullable Object, R extends @Immutable Object, C extends @Immutable Object, V>
+  static <T extends @Nullable @Readonly Object, R extends @Immutable Object, C extends @Immutable Object, V>
       Collector<T, ?, ImmutableTable<R, C, V>> toImmutableTable(
           Function<? super T, ? extends R> rowFunction,
           Function<? super T, ? extends C> columnFunction,
@@ -83,9 +83,9 @@ final class TableCollectors {
   }
 
   static <
-          T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -104,9 +104,9 @@ final class TableCollectors {
   }
 
   static <
-          T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -199,7 +199,7 @@ final class TableCollectors {
     }
   }
 
-  private static <R extends @Nullable Object, C extends @Nullable Object, V> void mergeTables(
+  private static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V> void mergeTables(
       Table<R, C, V> table,
       @ParametricNullness R row,
       @ParametricNullness C column,

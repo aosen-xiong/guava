@@ -42,6 +42,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A striped {@code Lock/Semaphore/ReadWriteLock}. This offers the underlying lock striping similar

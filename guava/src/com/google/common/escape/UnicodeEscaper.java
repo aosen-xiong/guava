@@ -24,6 +24,7 @@ import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LengthOf;
 import org.checkerframework.checker.index.qual.LessThan;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -253,7 +254,7 @@ public abstract class UnicodeEscaper extends Escaper {
    * @return the Unicode code point for the given index or the negated value of the trailing high
    *     surrogate character at the end of the sequence
    */
-  protected static int codePointAt(CharSequence seq, @IndexFor("#1") int index_, @IndexOrHigh("#1") int end) {
+  protected static int codePointAt(@Readonly CharSequence seq, @IndexFor("#1") int index_, @IndexOrHigh("#1") int end) {
     checkNotNull(seq);
     @IndexOrHigh("seq") int index = index_;
     if (index < end) {

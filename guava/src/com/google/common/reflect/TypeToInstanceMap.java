@@ -19,7 +19,9 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A map, each entry of which maps a {@link TypeToken} to an instance of that type. In addition to
@@ -42,7 +44,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @DoNotMock("Use ImmutableTypeToInstanceMap or MutableTypeToInstanceMap")
 @ElementTypesAreNonnullByDefault
-public interface TypeToInstanceMap<B extends @Nullable Object>
+@ReceiverDependentMutable
+public interface TypeToInstanceMap<B extends @Nullable @Readonly Object>
     extends Map<TypeToken<? extends @NonNull B>, B> {
 
   /**

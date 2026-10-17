@@ -51,6 +51,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
@@ -86,7 +87,7 @@ public final class Streams {
    * Returns a sequential {@link Stream} of the remaining contents of {@code iterator}. Do not use
    * {@code iterator} directly after passing it to this method.
    */
-  public static <T extends @Nullable Object> Stream<T> stream(Iterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> Stream<T> stream(Iterator<T> iterator) {
     return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
   }
 
@@ -343,7 +344,7 @@ public final class Streams {
    * This may harm parallel performance.
    */
   @Beta
-  public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object, R extends @Nullable @Readonly Object>
+  public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object, R extends @Nullable @Immutable Object>
       Stream<R> zip(
           Stream<A> streamA, Stream<B> streamB, BiFunction<? super A, ? super B, R> function) {
     checkNotNull(streamA);
@@ -454,7 +455,7 @@ public final class Streams {
    * <p>The order of the resulting stream is defined if and only if the order of the original stream
    * was defined.
    */
-  public static <T extends @Nullable @Readonly Object, R extends @Nullable @Readonly Object> Stream<R> mapWithIndex(
+  public static <T extends @Nullable @Readonly Object, R extends @Nullable @Immutable Object> Stream<R> mapWithIndex(
       Stream<T> stream, FunctionWithIndex<? super T, ? extends R> function) {
     checkNotNull(stream);
     checkNotNull(function);
@@ -537,7 +538,7 @@ public final class Streams {
    * <p>The order of the resulting stream is defined if and only if the order of the original stream
    * was defined.
    */
-  public static <R extends @Nullable @Readonly Object> Stream<R> mapWithIndex(
+  public static <R extends @Nullable @Immutable Object> Stream<R> mapWithIndex(
       IntStream stream, IntFunctionWithIndex<R> function) {
     checkNotNull(stream);
     checkNotNull(function);
@@ -616,7 +617,7 @@ public final class Streams {
    * <p>The order of the resulting stream is defined if and only if the order of the original stream
    * was defined.
    */
-  public static <R extends @Nullable @Readonly Object> Stream<R> mapWithIndex(
+  public static <R extends @Nullable @Immutable Object> Stream<R> mapWithIndex(
       LongStream stream, LongFunctionWithIndex<R> function) {
     checkNotNull(stream);
     checkNotNull(function);
@@ -695,7 +696,7 @@ public final class Streams {
    * <p>The order of the resulting stream is defined if and only if the order of the original stream
    * was defined.
    */
-  public static <R extends @Nullable @Readonly Object> Stream<R> mapWithIndex(
+  public static <R extends @Nullable @Immutable Object> Stream<R> mapWithIndex(
       DoubleStream stream, DoubleFunctionWithIndex<R> function) {
     checkNotNull(stream);
     checkNotNull(function);
@@ -760,7 +761,7 @@ public final class Streams {
    *
    * @since 21.0
    */
-  public interface FunctionWithIndex<T extends @Nullable @Readonly Object, R extends @Nullable @Readonly Object> {
+  public interface FunctionWithIndex<T extends @Nullable @Readonly Object, R extends @Nullable @Immutable Object> {
     /** Applies this function to the given argument and its index within a stream. */
     @ParametricNullness
     R apply(@ParametricNullness T from, long index);
@@ -768,7 +769,7 @@ public final class Streams {
 
   private abstract static class MapWithIndexSpliterator<
           F extends @Readonly Spliterator<?>,
-          R extends @Nullable @Readonly Object,
+          R extends @Nullable @Immutable Object,
           S extends @Readonly MapWithIndexSpliterator<F, R, S>>
       implements Spliterator<R> {
     final F fromSpliterator;
@@ -815,7 +816,7 @@ public final class Streams {
    *
    * @since 21.0
    */
-  public interface IntFunctionWithIndex<R extends @Nullable @Readonly Object> {
+  public interface IntFunctionWithIndex<R extends @Nullable @Immutable Object> {
     /** Applies this function to the given argument and its index within a stream. */
     @ParametricNullness
     R apply(int from, long index);
@@ -829,7 +830,7 @@ public final class Streams {
    *
    * @since 21.0
    */
-  public interface LongFunctionWithIndex<R extends @Nullable @Readonly Object> {
+  public interface LongFunctionWithIndex<R extends @Nullable @Immutable Object> {
     /** Applies this function to the given argument and its index within a stream. */
     @ParametricNullness
     R apply(long from, long index);
@@ -843,7 +844,7 @@ public final class Streams {
    *
    * @since 21.0
    */
-  public interface DoubleFunctionWithIndex<R extends @Nullable @Readonly Object> {
+  public interface DoubleFunctionWithIndex<R extends @Nullable @Immutable Object> {
     /** Applies this function to the given argument and its index within a stream. */
     @ParametricNullness
     R apply(double from, long index);

@@ -84,7 +84,7 @@ final class Platform {
    * Returns the platform preferred set implementation that preserves insertion order when used only
    * for insertions.
    */
-  static <E extends @Nullable Object> Set<E> preservesInsertionOrderOnAddsSet() {
+  static <E extends @Nullable @Readonly Object> Set<E> preservesInsertionOrderOnAddsSet() {
     return CompactHashSet.create();
   }
 
@@ -100,7 +100,7 @@ final class Platform {
    * about arrays for now, as they're a mess. (We previously discussed this in the review of
    * ObjectArrays, which is the main caller of this method.)
    */
-  static <T extends @Nullable Object> T[] newArray(T[] reference, int length) {
+  static <T extends @Nullable @Readonly Object> T[] newArray(T[] reference, int length) {
     T[] empty = reference.length == 0 ? reference : Arrays.copyOf(reference, 0);
     return Arrays.copyOf(empty, length);
   }
@@ -119,7 +119,7 @@ final class Platform {
    * likewise not type-checked)? Could our single caller do something different?
    */
   @SuppressWarnings({"nullness", "unchecked"})
-  static <T extends @Nullable Object> T[] copy(Object[] source, int from, int to, T[] arrayOfType) {
+  static <T extends @Nullable @Readonly Object> T[] copy(@Readonly Object @Readonly [] source, int from, int to, T[] arrayOfType) {
     return Arrays.copyOfRange(source, from, to, (Class<? extends T[]>) arrayOfType.getClass());
   }
 

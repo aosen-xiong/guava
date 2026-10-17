@@ -22,6 +22,7 @@ import java.util.NavigableSet;
 import java.util.SortedSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
@@ -61,7 +62,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
   protected ForwardingNavigableSet() {}
 
   @Override
-  protected abstract NavigableSet<E> delegate();
+  protected abstract @ReceiverDependentMutable NavigableSet<E> delegate();
 
   @Override
   @CheckForNull
@@ -129,7 +130,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
 
   @Override
   @CheckForNull
-  public E pollFirst() {
+  public E pollFirst(@Mutable ForwardingNavigableSet<E> this) {
     return delegate().pollFirst();
   }
 
@@ -145,7 +146,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
 
   @Override
   @CheckForNull
-  public E pollLast() {
+  public E pollLast(@Mutable ForwardingNavigableSet<E> this) {
     return delegate().pollLast();
   }
 
@@ -170,7 +171,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
   }
 
   @Override
-  public NavigableSet<E> descendingSet() {
+  public @ReceiverDependentMutable NavigableSet<E> descendingSet() {
     return delegate().descendingSet();
   }
 
@@ -191,12 +192,12 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
   }
 
   @Override
-  public Iterator<E> descendingIterator() {
+  public @ReceiverDependentMutable Iterator<E> descendingIterator() {
     return delegate().descendingIterator();
   }
 
   @Override
-  public NavigableSet<E> subSet(
+  public @ReceiverDependentMutable NavigableSet<E> subSet(
       @ParametricNullness E fromElement,
       boolean fromInclusive,
       @ParametricNullness E toElement,
@@ -209,7 +210,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * {@code headSet} and {@code tailSet} methods. In many cases, you may wish to override {@link
    * #subSet(Object, boolean, Object, boolean)} to forward to this implementation.
    */
-  protected NavigableSet<E> standardSubSet(
+  protected @ReceiverDependentMutable NavigableSet<E> standardSubSet(
       @ParametricNullness E fromElement,
       boolean fromInclusive,
       @ParametricNullness E toElement,
@@ -224,13 +225,13 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    * implementation.
    */
   @Override
-  protected SortedSet<E> standardSubSet(
+  protected @ReceiverDependentMutable SortedSet<E> standardSubSet(
       @ParametricNullness E fromElement, @ParametricNullness E toElement) {
     return subSet(fromElement, true, toElement, false);
   }
 
   @Override
-  public NavigableSet<E> headSet(@ParametricNullness E toElement, boolean inclusive) {
+  public @ReceiverDependentMutable NavigableSet<E> headSet(@ParametricNullness E toElement, boolean inclusive) {
     return delegate().headSet(toElement, inclusive);
   }
 
@@ -244,7 +245,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
   }
 
   @Override
-  public NavigableSet<E> tailSet(@ParametricNullness E fromElement, boolean inclusive) {
+  public @ReceiverDependentMutable NavigableSet<E> tailSet(@ParametricNullness E fromElement, boolean inclusive) {
     return delegate().tailSet(fromElement, inclusive);
   }
 

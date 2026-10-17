@@ -38,6 +38,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -55,10 +58,11 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public abstract class AbstractNetwork<N, E> implements Network<N, E> {
   @Override
-  public Graph<N> asGraph() {
-    return new AbstractGraph<N>() {
+  public @ReceiverDependentMutable Graph<N> asGraph() {
+    return new @ReceiverDependentMutable AbstractGraph<N>() {
       @Override
       public Set<N> nodes() {
         return AbstractNetwork.this.nodes();
@@ -71,7 +75,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
         }
 
         // Optimized implementation assumes no parallel edges (1:1 edge to EndpointPair mapping).
-        return new AbstractSet<EndpointPair<N>>() {
+        return new @Mutable AbstractSet<EndpointPair<N>>() {
           @Override
           public Iterator<EndpointPair<N>> iterator() {
             return Iterators.transform(
@@ -88,7 +92,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
           // Network<LinkedList>.
           @SuppressWarnings("unchecked")
           @Override
-          public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+          public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
             if (!(obj instanceof EndpointPair)) {
               return false;
             }
@@ -258,7 +262,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
   }
 
   @Override
-  public final boolean equals(@CheckForNull Object obj) {
+  public final boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     }
@@ -327,7 +331,7 @@ public abstract class AbstractNetwork<N, E> implements Network<N, E> {
         () -> String.format(NODE_PAIR_REMOVED_FROM_GRAPH, nodeU, nodeV));
   }
 
-  private static <N, E> Map<E, EndpointPair<N>> edgeIncidentNodesMap(final Network<N, E> network) {
+  private static <N, E> Map<E, EndpointPair<N>> edgeIncidentNodesMap(final @Readonly Network<N, E> network) {
     return Maps.asMap(network.edges(), network::incidentNodes);
   }
 }

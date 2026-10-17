@@ -36,7 +36,7 @@ final class UsingToStringOrdering extends Ordering<Object> implements Serializab
   }
 
   // preserve singleton-ness, so equals() and hashCode() work correctly
-  private Object readResolve() {
+  private @Readonly Object readResolve() {
     return INSTANCE;
   }
 

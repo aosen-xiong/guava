@@ -17,6 +17,7 @@
 package com.google.common.graph;
 
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A non-public interface for the methods shared between {@link Graph} and {@link ValueGraph}.
@@ -25,6 +26,7 @@ import java.util.Set;
  * @param <N> Node parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 interface BaseGraph<N> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
   //
   // Graph-level accessors

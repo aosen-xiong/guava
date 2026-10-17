@@ -53,7 +53,7 @@ public final class ObjectArrays {
    */
   @GwtIncompatible // Array.newInstance(Class, int)
   @SuppressWarnings("unchecked")
-  public static <T extends @Nullable Object> T[] newArray(Class<@NonNull T> type, int length) {
+  public static <T extends @Nullable @Readonly Object> T[] newArray(Class<@NonNull T> type, int length) {
     return (T[]) Array.newInstance(type, length);
   }
 
@@ -75,7 +75,7 @@ public final class ObjectArrays {
    * @param type the component type of the returned array
    */
   @GwtIncompatible // Array.newInstance(Class, int)
-  public static <T extends @Nullable Object> T[] concat(
+  public static <T extends @Nullable @Readonly Object> T[] concat(
       T[] first, T[] second, Class<@NonNull T> type) {
     T[] result = newArray(type, first.length + second.length);
     System.arraycopy(first, 0, result, 0, first.length);
@@ -201,7 +201,7 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  private static @Nullable Object [] fillArray(Iterable<?> elements, @Nullable Object [] array) {
+  private static @Nullable Object [] fillArray(@Readonly Iterable<?> elements, @Nullable Object [] array) {
     int i = 0;
     for (Object element : elements) {
       array[i++] = element;
@@ -232,7 +232,7 @@ public final class ObjectArrays {
   // We do this instead of Preconditions.checkNotNull to save boxing and array
   // creation cost.
   @CanIgnoreReturnValue
-  static @PolySigned Object checkElementNotNull(@PolySigned @Readonly Object element, int index) {
+  static @PolySigned @Readonly Object checkElementNotNull(@PolySigned @Readonly Object element, int index) {
     if (element == null) {
       throw new NullPointerException("at index " + index);
     }

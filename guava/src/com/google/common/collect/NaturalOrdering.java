@@ -71,7 +71,7 @@ final class NaturalOrdering extends Ordering<@Readonly Comparable<?>> implements
   }
 
   // preserving singleton-ness gives equals()/hashCode() for free
-  private Object readResolve() {
+  private @Readonly Object readResolve() {
     return INSTANCE;
   }
 

@@ -37,6 +37,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** Static methods used to implement {@link Futures#getChecked(Future, Class)}. */
 @J2ktIncompatible
@@ -45,7 +48,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 final class FuturesGetChecked {
   @CanIgnoreReturnValue
   @ParametricNullness
-  static <V extends @Nullable Object, X extends Exception> V getChecked(
+  static <V extends @Nullable @Readonly Object, X extends Exception> V getChecked(
       Future<V> future, Class<X> exceptionClass) throws X {
     return getChecked(bestGetCheckedTypeValidator(), future, exceptionClass);
   }
@@ -54,7 +57,7 @@ final class FuturesGetChecked {
   @CanIgnoreReturnValue
   @VisibleForTesting
   @ParametricNullness
-  static <V extends @Nullable Object, X extends Exception> V getChecked(
+  static <V extends @Nullable @Readonly Object, X extends Exception> V getChecked(
       GetCheckedTypeValidator validator, Future<V> future, Class<X> exceptionClass) throws X {
     validator.validateClass(exceptionClass);
     try {
@@ -71,7 +74,7 @@ final class FuturesGetChecked {
   /** Implementation of {@link Futures#getChecked(Future, Class, long, TimeUnit)}. */
   @CanIgnoreReturnValue
   @ParametricNullness
-  static <V extends @Nullable Object, X extends Exception> V getChecked(
+  static <V extends @Nullable @Readonly Object, X extends Exception> V getChecked(
       Future<V> future, Class<X> exceptionClass, long timeout, TimeUnit unit) throws X {
     // TODO(cpovirk): benchmark a version of this method that accepts a GetCheckedTypeValidator
     bestGetCheckedTypeValidator().validateClass(exceptionClass);
@@ -89,6 +92,7 @@ final class FuturesGetChecked {
   }
 
   @VisibleForTesting
+  @ReceiverDependentMutable
   interface GetCheckedTypeValidator {
     void validateClass(Class<? extends Exception> exceptionClass);
   }
@@ -98,13 +102,13 @@ final class FuturesGetChecked {
   }
 
   @VisibleForTesting
-  static GetCheckedTypeValidator weakSetValidator() {
+  static @Immutable GetCheckedTypeValidator weakSetValidator() {
     return GetCheckedTypeValidatorHolder.WeakSetValidator.INSTANCE;
   }
 
   @J2ObjCIncompatible // ClassValue
   @VisibleForTesting
-  static GetCheckedTypeValidator classValueValidator() {
+  static @Immutable GetCheckedTypeValidator classValueValidator() {
     return GetCheckedTypeValidatorHolder.ClassValueValidator.INSTANCE;
   }
 

@@ -338,7 +338,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Set<Entry<K, V>> entries(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<Entry<K, V>> entries(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.entries();
   }
 
@@ -353,7 +353,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    * <i>adding</i> to the returned set is not possible.
    */
   @Override
-  public @PolyMutable Set<K> keySet(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<K> keySet(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.keySet();
   }
 
@@ -366,7 +366,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.values();
   }
 
@@ -408,12 +408,12 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
     @CFComment("PICO: this is okay only if the field can not be directly accessed")
     @Override
-    public @PolyMutable ValueSetLink<K, V> getPredecessorInValueSet(@PolyMutable ValueSet this) {
+    public @ReceiverDependentMutable ValueSetLink<K, V> getPredecessorInValueSet(@ReceiverDependentMutable ValueSet this) {
       return lastEntry;
     }
 
     @Override
-    public @PolyMutable ValueSetLink<K, V> getSuccessorInValueSet(@PolyMutable ValueSet this) {
+    public @ReceiverDependentMutable ValueSetLink<K, V> getSuccessorInValueSet(@ReceiverDependentMutable ValueSet this) {
       return firstEntry;
     }
 
@@ -428,8 +428,8 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
     }
 
     @Override
-    public Iterator<V> iterator(@PolyMutable ValueSet this) {
-      return new Iterator<V>() {
+    public Iterator<V> iterator(@ReceiverDependentMutable ValueSet this) {
+      return new @Mutable Iterator<V>() {
         ValueSetLink<K, V> nextEntry = firstEntry;
         @CheckForNull ValueEntry<K, V> toRemove;
         int expectedModCount = modCount;
@@ -582,7 +582,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
   @Override
   Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable LinkedHashMultimap<K, V> this) {
-    return new Iterator<@PolyMutable Entry<K, V>>() {
+    return new @Mutable Iterator<@PolyMutable Entry<K, V>>() {
       ValueEntry<K, V> nextEntry = multimapHeaderEntry.getSuccessorInMultimap();
       @CheckForNull ValueEntry<K, V> toRemove;
 
@@ -592,7 +592,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
       }
 
       @Override
-      public Entry<K, V> next() {
+      public @Immutable Entry<K, V> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
@@ -612,7 +612,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
   }
 
   @Override
-  Spliterator<@PolyMutable Entry<K, V>> entrySpliterator(@PolyMutable LinkedHashMultimap<K, V> this) {
+  Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return Spliterators.spliterator(entries(), Spliterator.DISTINCT | Spliterator.ORDERED);
   }
 
@@ -653,7 +653,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable LinkedHashMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     multimapHeaderEntry = ValueEntry.newHeader();
     succeedsInMultimap(multimapHeaderEntry, multimapHeaderEntry);

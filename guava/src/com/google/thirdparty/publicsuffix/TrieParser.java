@@ -21,6 +21,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import java.util.Deque;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** Parser for a map of reversed domain names stored as a serialized radix tree. */
 @GwtCompatible
@@ -33,7 +34,7 @@ final class TrieParser {
    * map of public suffixes. The encoded trie string may be broken into multiple chunks to avoid the
    * 64k limit on string literal size. In-memory strings can be much larger (2G).
    */
-  static ImmutableMap<String, PublicSuffixType> parseTrie(CharSequence... encodedChunks) {
+  static ImmutableMap<String, PublicSuffixType> parseTrie(@Readonly CharSequence... encodedChunks) {
     String encoded = DIRECT_JOINER.join(encodedChunks);
     return parseFullString(encoded);
   }
@@ -63,7 +64,7 @@ final class TrieParser {
    */
   private static int doParseTrieToBuilder(
       Deque<CharSequence> stack,
-      CharSequence encoded,
+      @Readonly CharSequence encoded,
       int start,
       ImmutableMap.Builder<String, PublicSuffixType> builder) {
 

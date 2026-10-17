@@ -74,11 +74,11 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
   }
 
   @Override
-  Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
+  @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
     if (collection instanceof NavigableSet) {
-      return new WrappedNavigableSet(key, (NavigableSet<V>) collection, null);
+      return new @ReceiverDependentMutable WrappedNavigableSet(key, (@ReceiverDependentMutable NavigableSet<V>) collection, null);
     } else {
-      return new WrappedSortedSet(key, (SortedSet<V>) collection, null);
+      return new @ReceiverDependentMutable WrappedSortedSet(key, (@ReceiverDependentMutable SortedSet<V>) collection, null);
     }
   }
 
@@ -95,7 +95,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    * Multimap} interface.
    */
   @Override
-  public @PolyMutable SortedSet<V> get(@PolyMutable AbstractSortedSetMultimap<K, V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable SortedSet<V> get(@ReceiverDependentMutable AbstractSortedSetMultimap<K, V> this, @ParametricNullness K key) {
     return (@PolyMutable SortedSet<V>) super.get(key);
   }
 
@@ -141,7 +141,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    * SortedSet} values.
    */
   @Override
-  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractSortedSetMultimap<K,V> this) {
+  public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractSortedSetMultimap<K,V> this) {
     return super.asMap();
   }
 
@@ -153,7 +153,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable AbstractSortedSetMultimap<K,V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable AbstractSortedSetMultimap<K,V> this) {
     return super.values();
   }
 

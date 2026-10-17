@@ -20,6 +20,7 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A notification of the removal of a single entry. The key and/or value may be null if they were
@@ -34,7 +35,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public final class RemovalNotification<K, V>
+public final class RemovalNotification<K extends @Immutable Object, V>
     extends SimpleImmutableEntry<@Nullable K, @Nullable V> {
   private final RemovalCause cause;
 
@@ -45,7 +46,7 @@ public final class RemovalNotification<K, V>
    *
    * @since 19.0
    */
-  public static <K, V> RemovalNotification<K, V> create(
+  public static <K extends @Immutable Object, V> RemovalNotification<K, V> create(
       @CheckForNull K key, @CheckForNull V value, RemovalCause cause) {
     return new RemovalNotification<>(key, value, cause);
   }

@@ -33,7 +33,6 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -261,7 +260,7 @@ public interface Multiset<E extends @Readonly @Nullable Object> extends Collecti
    *
    * @return a view of the set of distinct elements in this multiset
    */
-  @PolyMutable Set<E> elementSet(@PolyMutable Multiset<E> this);
+  @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable Multiset<E> this);
 
   /**
    * Returns a view of the contents of this multiset, grouped into {@code Multiset.Entry} instances,
@@ -279,7 +278,7 @@ public interface Multiset<E extends @Readonly @Nullable Object> extends Collecti
    *
    * @return a set of entries representing the data of this multiset
    */
-  @PolyMutable Set<Entry<E>> entrySet(@PolyMutable Multiset<E> this);
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable Multiset<E> this);
 
   /**
    * An unmodifiable element-count pair for a multiset. The {@link Multiset#entrySet} method returns
@@ -413,7 +412,7 @@ public interface Multiset<E extends @Readonly @Nullable Object> extends Collecti
    * iterator, though not necessarily sequentially.
    */
   @Override
-  Iterator<E> iterator(@Readonly Multiset<E> this);
+  @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable Multiset<E> this);
 
   /**
    * Determines whether this multiset contains the specified element.

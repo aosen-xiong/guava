@@ -53,6 +53,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Provides utility methods for working with byte arrays and I/O streams.
@@ -891,7 +892,7 @@ public final class ByteStreams {
    */
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
-  public static <T extends @Nullable Object> T readBytes(
+  public static <T extends @Nullable @Readonly Object> T readBytes(
       InputStream input, ByteProcessor<T> processor) throws IOException {
     checkNotNull(input);
     checkNotNull(processor);

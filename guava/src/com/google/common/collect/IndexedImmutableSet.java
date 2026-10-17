@@ -37,7 +37,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   abstract E get(int index);
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Immutable UnmodifiableIterator<E> iterator() {
     return asList().iterator();
   }
 
@@ -89,7 +89,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
       @Override
       @J2ktIncompatible // serialization
       @GwtIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     };
@@ -100,7 +100,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

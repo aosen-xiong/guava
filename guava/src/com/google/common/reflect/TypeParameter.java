@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -61,7 +62,7 @@ public abstract class TypeParameter<T> extends TypeCapture<T> {
   }
 
   @Override
-  public final boolean equals(@CheckForNull Object o) {
+  public final boolean equals(@CheckForNull @Readonly Object o) {
     if (o instanceof TypeParameter) {
       TypeParameter<?> that = (TypeParameter<?>) o;
       return typeVariable.equals(that.typeVariable);

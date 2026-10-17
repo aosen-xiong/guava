@@ -32,6 +32,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Serializes execution of tasks, somewhat like an "asynchronous {@code synchronized} block." Each
@@ -147,7 +148,7 @@ public final class ExecutionSequencer {
    * execute, but if the output future is cancelled before {@link Callable#call()} is invoked,
    * {@link Callable#call()} will not be invoked.
    */
-  public <T extends @Nullable Object> ListenableFuture<T> submit(
+  public <T extends @Nullable @Readonly Object> ListenableFuture<T> submit(
       Callable<T> callable, Executor executor) {
     checkNotNull(callable);
     checkNotNull(executor);
@@ -173,7 +174,7 @@ public final class ExecutionSequencer {
    * callable} or a callable that has begun to execute, but if the output future is cancelled before
    * {@link AsyncCallable#call()} is invoked, {@link AsyncCallable#call()} will not be invoked.
    */
-  public <T extends @Nullable Object> ListenableFuture<T> submitAsync(
+  public <T extends @Nullable @Readonly Object> ListenableFuture<T> submitAsync(
       AsyncCallable<T> callable, Executor executor) {
     checkNotNull(callable);
     checkNotNull(executor);

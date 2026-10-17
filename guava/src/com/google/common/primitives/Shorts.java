@@ -47,6 +47,8 @@ import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code short} primitives, that are not already found in
@@ -377,7 +379,7 @@ public final class Shorts extends ShortsMethodsForWeb {
       return "Shorts.stringConverter()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -455,7 +457,7 @@ public final class Shorts extends ShortsMethodsForWeb {
    *
    * @since 2.0
    */
-  public static Comparator<short[]> lexicographicalComparator() {
+  public static @Immutable Comparator<short[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -676,14 +678,14 @@ public final class Shorts extends ShortsMethodsForWeb {
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Short) && Shorts.indexOf(array, (@Signed Short) target, start, end) != -1;
     }
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Short) {
         int i = Shorts.indexOf(array, (@Signed Short) target, start, end);
@@ -696,7 +698,7 @@ public final class Shorts extends ShortsMethodsForWeb {
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // non-generic container class
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Short) {
         int i = Shorts.lastIndexOf(array, (@Signed Short) target, start, end);
@@ -728,7 +730,7 @@ public final class Shorts extends ShortsMethodsForWeb {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

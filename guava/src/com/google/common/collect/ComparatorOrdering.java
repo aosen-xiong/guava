@@ -34,9 +34,9 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 final class ComparatorOrdering<T extends @Readonly @Nullable Object> extends Ordering<T>
     implements Serializable {
-  final Comparator<T> comparator;
+  final @Readonly Comparator<T> comparator;
 
-  ComparatorOrdering(Comparator<T> comparator) {
+  ComparatorOrdering(@Readonly Comparator<T> comparator) {
     this.comparator = checkNotNull(comparator);
   }
 

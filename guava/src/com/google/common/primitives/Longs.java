@@ -489,7 +489,7 @@ public final class Longs {
       return "Longs.stringConverter()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -838,13 +838,13 @@ public final class Longs {
 
     @Override
     @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
-    public @PolyMutable List<Long> subList(@PolyMutable LongArrayAsList this, @IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
+    public @ReceiverDependentMutable List<Long> subList(@ReceiverDependentMutable LongArrayAsList this, @IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
       if (fromIndex == toIndex) {
         return Collections.emptyList();
       }
-      return new LongArrayAsList(array, start + fromIndex, start + toIndex);
+      return new @ReceiverDependentMutable LongArrayAsList(array, start + fromIndex, start + toIndex);
     }
 
     @Override

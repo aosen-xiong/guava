@@ -27,7 +27,6 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -68,7 +67,7 @@ public interface RangeMap<K extends @Immutable Comparable, V> {
    * the range map, or {@code null} otherwise.
    */
   @CheckForNull
-  @PolyMutable Entry<Range<K>, V> getEntry(@PolyMutable RangeMap<K, V> this, K key);
+  @ReceiverDependentMutable Entry<Range<K>, V> getEntry(@ReceiverDependentMutable RangeMap<K, V> this, K key);
 
   /**
    * Returns the minimal range {@linkplain Range#encloses(Range) enclosing} the ranges in this
@@ -157,7 +156,7 @@ public interface RangeMap<K extends @Immutable Comparable, V> {
    *
    * <p>It is guaranteed that no empty ranges will be in the returned {@code Map}.
    */
-  @PolyMutable Map<Range<K>, V> asMapOfRanges(@PolyMutable RangeMap<K, V> this);
+  @ReceiverDependentMutable Map<Range<K>, V> asMapOfRanges(@ReceiverDependentMutable RangeMap<K, V> this);
 
   /**
    * Returns a view of this range map as an unmodifiable {@code Map<Range<K>, V>}. Modifications to
@@ -170,7 +169,7 @@ public interface RangeMap<K extends @Immutable Comparable, V> {
    *
    * @since 19.0
    */
-  @PolyMutable Map<Range<K>, V> asDescendingMapOfRanges(@PolyMutable RangeMap<K, V> this);
+  @ReceiverDependentMutable Map<Range<K>, V> asDescendingMapOfRanges(@ReceiverDependentMutable RangeMap<K, V> this);
 
   /**
    * Returns a view of the part of this range map that intersects with {@code range}.
@@ -186,7 +185,7 @@ public interface RangeMap<K extends @Immutable Comparable, V> {
    * insert a range not {@linkplain Range#encloses(Range) enclosed} by {@code range}.
    */
   // TODO(cpovirk): Consider documenting that IAE on the various methods that can throw it.
-  @PolyMutable RangeMap<K, V> subRangeMap(@PolyMutable RangeMap<K, V> this, Range<K> range);
+  @ReceiverDependentMutable RangeMap<K, V> subRangeMap(@ReceiverDependentMutable RangeMap<K, V> this, Range<K> range);
 
   /**
    * Returns {@code true} if {@code obj} is another {@code RangeMap} that has an equivalent {@link

@@ -44,6 +44,8 @@ import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.IntRange;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A Bloom filter for instances of {@code T}. A Bloom filter offers an approximate containment test
@@ -74,12 +76,13 @@ import org.checkerframework.common.value.qual.IntRange;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
-public final class BloomFilter<T extends @Nullable Object> implements Predicate<T>, Serializable {
+public final class BloomFilter<T extends @Nullable @Readonly Object> implements Predicate<T>, Serializable {
   /**
    * A strategy to translate T instances, to {@code numHashFunctions} bit indexes.
    *
    * <p>Implementations should be collections of pure functions (i.e. stateless).
    */
+  @ReceiverDependentMutable
   interface Strategy extends java.io.Serializable {
 
     /**
@@ -87,7 +90,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
      *
      * <p>Returns whether any bits changed as a result of this operation.
      */
-    <T extends @Nullable Object> boolean put(
+    <T extends @Nullable @Readonly Object> boolean put(
         @ParametricNullness T object,
         Funnel<? super T> funnel,
         int numHashFunctions,
@@ -97,7 +100,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
      * Queries {@code numHashFunctions} bits of the given bit array, by hashing a user element;
      * returns {@code true} if and only if all selected bits are set.
      */
-    <T extends @Nullable Object> boolean mightContain(
+    <T extends @Nullable @Readonly Object> boolean mightContain(
         @ParametricNullness T object,
         Funnel<? super T> funnel,
         int numHashFunctions,
@@ -284,7 +287,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -324,7 +327,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    * @return a {@code Collector} generating a {@code BloomFilter} of the received elements
    * @since 23.0
    */
-  public static <T extends @Nullable Object> Collector<T, ?, BloomFilter<T>> toBloomFilter(
+  public static <T extends @Nullable @Readonly Object> Collector<T, ?, BloomFilter<T>> toBloomFilter(
       Funnel<? super T> funnel, @Positive long expectedInsertions) {
     return toBloomFilter(funnel, expectedInsertions, 0.03);
   }
@@ -351,7 +354,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    * @return a {@code Collector} generating a {@code BloomFilter} of the received elements
    * @since 23.0
    */
-  public static <T extends @Nullable Object> Collector<T, ?, BloomFilter<T>> toBloomFilter(
+  public static <T extends @Nullable @Readonly Object> Collector<T, ?, BloomFilter<T>> toBloomFilter(
       Funnel<? super T> funnel, @Positive long expectedInsertions, double fpp) {
     checkNotNull(funnel);
     checkArgument(
@@ -389,7 +392,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    * @param fpp the desired false positive probability (must be positive and less than 1.0)
    * @return a {@code BloomFilter}
    */
-  public static <T extends @Nullable Object> BloomFilter<T> create(
+  public static <T extends @Nullable @Readonly Object> BloomFilter<T> create(
       Funnel<? super T> funnel, @Positive int expectedInsertions, @NonNegative @LessThan("1") double fpp) {
     return create(funnel, (long) expectedInsertions, fpp);
   }
@@ -415,13 +418,13 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    * @return a {@code BloomFilter}
    * @since 19.0
    */
-  public static <T extends @Nullable Object> BloomFilter<T> create(
+  public static <T extends @Nullable @Readonly Object> BloomFilter<T> create(
       Funnel<? super T> funnel, @Positive long expectedInsertions, double fpp) {
     return create(funnel, expectedInsertions, fpp, BloomFilterStrategies.MURMUR128_MITZ_64);
   }
 
   @VisibleForTesting
-  static <T extends @Nullable Object> BloomFilter<T> create(
+  static <T extends @Nullable @Readonly Object> BloomFilter<T> create(
       Funnel<? super T> funnel, @NonNegative long expectedInsertions, double fpp, Strategy strategy) {
     checkNotNull(funnel);
     checkArgument(
@@ -467,7 +470,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    *     BloomFilter}; must be positive
    * @return a {@code BloomFilter}
    */
-  public static <T extends @Nullable Object> BloomFilter<T> create(
+  public static <T extends @Nullable @Readonly Object> BloomFilter<T> create(
       Funnel<? super T> funnel, @Positive int expectedInsertions) {
     return create(funnel, (long) expectedInsertions);
   }
@@ -492,7 +495,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
    * @return a {@code BloomFilter}
    * @since 19.0
    */
-  public static <T extends @Nullable Object> BloomFilter<T> create(
+  public static <T extends @Nullable @Readonly Object> BloomFilter<T> create(
       Funnel<? super T> funnel, @Positive long expectedInsertions) {
     return create(funnel, expectedInsertions, 0.03); // FYI, for 3%, we always get 5 hash functions
   }
@@ -543,7 +546,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
     return (long) (-n * Math.log(p) / (Math.log(2) * Math.log(2)));//(1)
   }
 
-  private Object writeReplace() {
+  private @Readonly Object writeReplace() {
     return new SerialForm<T>(this);
   }
 
@@ -551,7 +554,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
     throw new InvalidObjectException("Use SerializedForm");
   }
 
-  private static class SerialForm<T extends @Nullable Object> implements Serializable {
+  private static class SerialForm<T extends @Nullable @Readonly Object> implements Serializable {
     final long[] data;
     final @IntRange(from = 0, to = 255) int numHashFunctions;
     final Funnel<? super T> funnel;
@@ -564,7 +567,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
       this.strategy = bf.strategy;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return new BloomFilter<T>(new LockFreeBitArray(data), numHashFunctions, funnel, strategy);
     }
 
@@ -610,7 +613,7 @@ public final class BloomFilter<T extends @Nullable Object> implements Predicate<
       "lowerbound:array.access.unsafe.low",
       "upperbound:array.access.unsafe.high",
   })
-  public static <T extends @Nullable Object> BloomFilter<T> readFrom(
+  public static <T extends @Nullable @Readonly Object> BloomFilter<T> readFrom(
       InputStream in, Funnel<? super T> funnel) throws IOException {
     checkNotNull(in, "InputStream");
     checkNotNull(funnel, "Funnel");

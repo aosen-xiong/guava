@@ -22,6 +22,7 @@ import com.google.common.primitives.Ints;
 import java.util.Arrays;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Helper classes and static methods for implementing compact hash-based collections.
@@ -157,8 +158,8 @@ final class CompactHashing {
   }
 
   static int remove(
-      @CheckForNull Object key,
-      @CheckForNull Object value,
+      @CheckForNull @Readonly Object key,
+      @CheckForNull @Readonly Object value,
       int mask,
       Object table,
       int[] entries,

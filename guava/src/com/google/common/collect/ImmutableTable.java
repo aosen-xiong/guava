@@ -358,7 +358,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * as well.
    */
   @Override
-  public abstract ImmutableMap<C, Map<R, V>> columnMap();
+  public abstract ImmutableMap<C, @Immutable Map<R, V>> columnMap();
 
   /**
    * {@inheritDoc}
@@ -384,7 +384,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * as well.
    */
   @Override
-  public abstract ImmutableMap<R, Map<C, V>> rowMap();
+  public abstract ImmutableMap<R, @Immutable Map<C, V>> rowMap();
 
   @Override
   public boolean contains(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
@@ -433,7 +433,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final void putAll(Table<? extends R, ? extends C, ? extends V> table) {
+  public final void putAll(@Readonly Table<? extends R, ? extends C, ? extends V> table) {
     throw new UnsupportedOperationException();
   }
 
@@ -448,7 +448,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
   @CheckForNull
-  public final V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public final V remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     throw new UnsupportedOperationException();
   }
 
@@ -458,19 +458,20 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    */
   @Immutable
   static final class SerializedForm implements Serializable {
-    private final Object[] rowKeys;
-    private final Object[] columnKeys;
+    private final @Immutable Object[] rowKeys;
+    private final @Immutable Object[] columnKeys;
 
-    private final Object[] cellValues;
+    private final @Readonly Object[] cellValues;
     private final int[] cellRowIndices;
     private final int[] cellColumnIndices;
 
+    @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     private SerializedForm(
-        Object[] rowKeys,
-        Object[] columnKeys,
-        Object[] cellValues,
-        int[] cellRowIndices,
-        int[] cellColumnIndices) {
+        @Immutable Object @Readonly [] rowKeys,
+        @Immutable Object @Readonly [] columnKeys,
+        @Readonly Object @Readonly [] cellValues,
+        int @Readonly [] cellRowIndices,
+        int @Readonly [] cellColumnIndices) {
       this.rowKeys = rowKeys;
       this.columnKeys = columnKeys;
       this.cellValues = cellValues;
@@ -478,8 +479,9 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
       this.cellColumnIndices = cellColumnIndices;
     }
 
+    @SuppressWarnings("mutability:argument.type.incompatible") // rowKeySet() and columnKeySet() hold the table's @Immutable keys: toArray()'s poly does not bind to a wildcard's bound
     static SerializedForm create(
-        ImmutableTable<?, ?, ?> table, int[] cellRowIndices, int[] cellColumnIndices) {
+        ImmutableTable<?, ?, ?> table, int @Readonly [] cellRowIndices, int @Readonly [] cellColumnIndices) {
       return new SerializedForm(
           table.rowKeySet().toArray(),
           table.columnKeySet().toArray(),
@@ -510,7 +512,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
 
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  abstract Object writeReplace();
+  abstract @Readonly Object writeReplace();
 
   @GwtIncompatible // serialization
   @J2ktIncompatible

@@ -20,8 +20,10 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Collections;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /** Implementation of an {@link Optional} containing a reference. */
 @GwtCompatible
@@ -67,12 +69,12 @@ final class Present<T> extends Optional<T> {
   }
 
   @Override
-  public Set<@NonNull T> asSet() {
+  public @Immutable Set<@NonNull T> asSet() {
     return Collections.singleton(reference);
   }
 
   @Override
-  public <V extends @NonNull Object> Optional<V> transform(Function<? super T, V> function) {
+  public <V extends @NonNull @Readonly Object> Optional<V> transform(Function<? super T, V> function) {
     return new Present<>(
         checkNotNull(
             function.apply(reference),
@@ -80,7 +82,7 @@ final class Present<T> extends Optional<T> {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object instanceof Present) {
       Present<?> other = (Present<?>) object;
       return reference.equals(other.reference);

@@ -235,7 +235,7 @@ public final class Preconditions {
   @AssertMethod(IllegalArgumentException.class)
   @Pure
   public static void checkArgument(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1));
     }
@@ -299,7 +299,7 @@ public final class Preconditions {
   @AssertMethod(IllegalArgumentException.class)
   @Pure
   public static void checkArgument(
-      boolean expression, String errorMessageTemplate, char p1, @CheckForNull Object p2) {
+      boolean expression, String errorMessageTemplate, char p1, @CheckForNull @Readonly Object p2) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -363,7 +363,7 @@ public final class Preconditions {
   @AssertMethod(IllegalArgumentException.class)
   @Pure
   public static void checkArgument(
-      boolean expression, String errorMessageTemplate, int p1, @CheckForNull Object p2) {
+      boolean expression, String errorMessageTemplate, int p1, @CheckForNull @Readonly Object p2) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -427,7 +427,7 @@ public final class Preconditions {
   @AssertMethod(IllegalArgumentException.class)
   @Pure
   public static void checkArgument(
-      boolean expression, String errorMessageTemplate, long p1, @CheckForNull Object p2) {
+      boolean expression, String errorMessageTemplate, long p1, @CheckForNull @Readonly Object p2) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -443,7 +443,7 @@ public final class Preconditions {
   @AssertMethod(IllegalArgumentException.class)
   @Pure
   public static void checkArgument(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1, char p2) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1, char p2) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -459,7 +459,7 @@ public final class Preconditions {
   @AssertMethod(IllegalArgumentException.class)
   @Pure
   public static void checkArgument(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1, int p2) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1, int p2) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -475,7 +475,7 @@ public final class Preconditions {
   @AssertMethod(IllegalArgumentException.class)
   @Pure
   public static void checkArgument(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1, long p2) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1, long p2) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -494,8 +494,8 @@ public final class Preconditions {
       boolean expression,
       // TODO: cl/604933487 - Make errorMessageTemplate consistently @CheckForNull across overloads.
       @CheckForNull String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2) {
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -513,9 +513,9 @@ public final class Preconditions {
   public static void checkArgument(
       boolean expression,
       String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2,
-      @CheckForNull Object p3) {
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2,
+      @CheckForNull @Readonly Object p3) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2, p3));
     }
@@ -533,10 +533,10 @@ public final class Preconditions {
   public static void checkArgument(
       boolean expression,
       String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2,
-      @CheckForNull Object p3,
-      @CheckForNull Object p4) {
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2,
+      @CheckForNull @Readonly Object p3,
+      @CheckForNull @Readonly Object p4) {
     if (!expression) {
       throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1, p2, p3, p4));
     }
@@ -669,7 +669,7 @@ public final class Preconditions {
   @AssertMethod(IllegalStateException.class)
   @Pure
   public static void checkState(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1));
     }
@@ -734,7 +734,7 @@ public final class Preconditions {
   @AssertMethod(IllegalStateException.class)
   @Pure
   public static void checkState(
-      boolean expression, String errorMessageTemplate, char p1, @CheckForNull Object p2) {
+      boolean expression, String errorMessageTemplate, char p1, @CheckForNull @Readonly Object p2) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -799,7 +799,7 @@ public final class Preconditions {
   @AssertMethod(IllegalStateException.class)
   @Pure
   public static void checkState(
-      boolean expression, String errorMessageTemplate, int p1, @CheckForNull Object p2) {
+      boolean expression, String errorMessageTemplate, int p1, @CheckForNull @Readonly Object p2) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -864,7 +864,7 @@ public final class Preconditions {
   @AssertMethod(IllegalStateException.class)
   @Pure
   public static void checkState(
-      boolean expression, String errorMessageTemplate, long p1, @CheckForNull Object p2) {
+      boolean expression, String errorMessageTemplate, long p1, @CheckForNull @Readonly Object p2) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -881,7 +881,7 @@ public final class Preconditions {
   @AssertMethod(IllegalStateException.class)
   @Pure
   public static void checkState(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1, char p2) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1, char p2) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -898,7 +898,7 @@ public final class Preconditions {
   @AssertMethod(IllegalStateException.class)
   @Pure
   public static void checkState(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1, int p2) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1, int p2) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -915,27 +915,7 @@ public final class Preconditions {
   @AssertMethod(IllegalStateException.class)
   @Pure
   public static void checkState(
-      boolean expression, String errorMessageTemplate, @CheckForNull Object p1, long p2) {
-    if (!expression) {
-      throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
-    }
-  }
-
-  /**
-   * Ensures the truth of an expression involving the state of the calling instance, but not
-   * involving any parameters to the calling method.
-   *
-   * <p>See {@link #checkState(boolean, String, Object...)} for details.
-   *
-   * @since 20.0 (varargs overload since 2.0)
-   */
-  @AssertMethod(IllegalStateException.class)
-  @Pure
-  public static void checkState(
-      boolean expression,
-      String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2) {
+      boolean expression, String errorMessageTemplate, @CheckForNull @Readonly Object p1, long p2) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -954,9 +934,29 @@ public final class Preconditions {
   public static void checkState(
       boolean expression,
       String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2,
-      @CheckForNull Object p3) {
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2) {
+    if (!expression) {
+      throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2));
+    }
+  }
+
+  /**
+   * Ensures the truth of an expression involving the state of the calling instance, but not
+   * involving any parameters to the calling method.
+   *
+   * <p>See {@link #checkState(boolean, String, Object...)} for details.
+   *
+   * @since 20.0 (varargs overload since 2.0)
+   */
+  @AssertMethod(IllegalStateException.class)
+  @Pure
+  public static void checkState(
+      boolean expression,
+      String errorMessageTemplate,
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2,
+      @CheckForNull @Readonly Object p3) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2, p3));
     }
@@ -975,10 +975,10 @@ public final class Preconditions {
   public static void checkState(
       boolean expression,
       String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2,
-      @CheckForNull Object p3,
-      @CheckForNull Object p4) {
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2,
+      @CheckForNull @Readonly Object p3,
+      @CheckForNull @Readonly Object p4) {
     if (!expression) {
       throw new IllegalStateException(lenientFormat(errorMessageTemplate, p1, p2, p3, p4));
     }
@@ -1121,7 +1121,7 @@ public final class Preconditions {
   @CanIgnoreReturnValue
   @Pure
   public static <T> T checkNotNull(
-      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull Object p1) {
+      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull @Readonly Object p1) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1));
     }
@@ -1189,7 +1189,7 @@ public final class Preconditions {
   @CanIgnoreReturnValue
   @Pure
   public static <T> T checkNotNull(
-      @CheckForNull T reference, String errorMessageTemplate, char p1, @CheckForNull Object p2) {
+      @CheckForNull T reference, String errorMessageTemplate, char p1, @CheckForNull @Readonly Object p2) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -1257,7 +1257,7 @@ public final class Preconditions {
   @CanIgnoreReturnValue
   @Pure
   public static <T> T checkNotNull(
-      @CheckForNull T reference, String errorMessageTemplate, int p1, @CheckForNull Object p2) {
+      @CheckForNull T reference, String errorMessageTemplate, int p1, @CheckForNull @Readonly Object p2) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -1325,7 +1325,7 @@ public final class Preconditions {
   @CanIgnoreReturnValue
   @Pure
   public static <T> T checkNotNull(
-      @CheckForNull T reference, String errorMessageTemplate, long p1, @CheckForNull Object p2) {
+      @CheckForNull T reference, String errorMessageTemplate, long p1, @CheckForNull @Readonly Object p2) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -1342,7 +1342,7 @@ public final class Preconditions {
   @CanIgnoreReturnValue
   @Pure
   public static <T> T checkNotNull(
-      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull Object p1, char p2) {
+      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull @Readonly Object p1, char p2) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -1359,7 +1359,7 @@ public final class Preconditions {
   @CanIgnoreReturnValue
   @Pure
   public static <T> T checkNotNull(
-      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull Object p1, int p2) {
+      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull @Readonly Object p1, int p2) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -1376,27 +1376,7 @@ public final class Preconditions {
   @CanIgnoreReturnValue
   @Pure
   public static <T> T checkNotNull(
-      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull Object p1, long p2) {
-    if (reference == null) {
-      throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
-    }
-    return reference;
-  }
-
-  /**
-   * Ensures that an object reference passed as a parameter to the calling method is not null.
-   *
-   * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
-   *
-   * @since 20.0 (varargs overload since 2.0)
-   */
-  @CanIgnoreReturnValue
-  @Pure
-  public static <T> T checkNotNull(
-      @CheckForNull T reference,
-      String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2) {
+      @CheckForNull T reference, String errorMessageTemplate, @CheckForNull @Readonly Object p1, long p2) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
     }
@@ -1415,9 +1395,29 @@ public final class Preconditions {
   public static <T> T checkNotNull(
       @CheckForNull T reference,
       String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2,
-      @CheckForNull Object p3) {
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2) {
+    if (reference == null) {
+      throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2));
+    }
+    return reference;
+  }
+
+  /**
+   * Ensures that an object reference passed as a parameter to the calling method is not null.
+   *
+   * <p>See {@link #checkNotNull(Object, String, Object...)} for details.
+   *
+   * @since 20.0 (varargs overload since 2.0)
+   */
+  @CanIgnoreReturnValue
+  @Pure
+  public static <T> T checkNotNull(
+      @CheckForNull T reference,
+      String errorMessageTemplate,
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2,
+      @CheckForNull @Readonly Object p3) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2, p3));
     }
@@ -1436,10 +1436,10 @@ public final class Preconditions {
   public static <T> T checkNotNull(
       @CheckForNull T reference,
       String errorMessageTemplate,
-      @CheckForNull Object p1,
-      @CheckForNull Object p2,
-      @CheckForNull Object p3,
-      @CheckForNull Object p4) {
+      @CheckForNull @Readonly Object p1,
+      @CheckForNull @Readonly Object p2,
+      @CheckForNull @Readonly Object p3,
+      @CheckForNull @Readonly Object p4) {
     if (reference == null) {
       throw new NullPointerException(lenientFormat(errorMessageTemplate, p1, p2, p3, p4));
     }

@@ -194,7 +194,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
    *
    * @since 10.0
    */
-  public static final class Wrapper<T extends @Nullable Object> implements Serializable {
+  public static final class Wrapper<T extends @Nullable @Readonly Object> implements Serializable {
     /*
      * Equivalence's type argument is always non-nullable: Equivalence<Number>, never
      * Equivalence<@Nullable Number>. That can still produce wrappers of various types --
@@ -224,7 +224,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
      * equivalence.
      */
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj == this) {
         return true;
       }
@@ -309,7 +309,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (this == obj) {
         return true;
       }
@@ -373,7 +373,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
       return o.hashCode();
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -394,7 +394,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
       return System.identityHashCode(o);
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

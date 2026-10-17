@@ -35,6 +35,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.ObjIntConsumer;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -104,7 +106,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
     this.counts = new int[enumConstants.length];
   }
 
-  private boolean isActuallyE(@CheckForNull Object o) {
+  private boolean isActuallyE(@CheckForNull @Readonly Object o) {
     if (o instanceof Enum) {
       Enum<?> e = (Enum<?>) o;
       int index = e.ordinal();
@@ -135,7 +137,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     // isActuallyE checks for null, but we check explicitly to help nullness checkers.
     if (element == null || !isActuallyE(element)) {
       return 0;
@@ -168,7 +170,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   // Modification Operations
   @CanIgnoreReturnValue
   @Override
-  public int remove(@CheckForNull Object element, int occurrences) {
+  public int remove(@CheckForNull @Readonly Object element, int occurrences) {
     // isActuallyE checks for null, but we check explicitly to help nullness checkers.
     if (element == null || !isActuallyE(element)) {
       return 0;
@@ -272,7 +274,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
     return new Itr<Entry<E>>() {
       @Override
       Entry<E> output(final int index) {
-        return new Multisets.AbstractEntry<E>() {
+        return new Multisets.@Mutable AbstractEntry<E>() {
           @Override
           public E getElement() {
             return enumConstants[index];
@@ -329,9 +331,9 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
 
   @Pure
   @Override
-  public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super.contains(arg0); }
+  public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.contains(arg0); }
 
   @Pure
   @Override
-  public boolean containsAll(Collection<?> arg0) { return super.containsAll(arg0); }
+  public boolean containsAll(@Readonly Collection<?> arg0) { return super.containsAll(arg0); }
 }

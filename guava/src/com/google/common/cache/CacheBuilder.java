@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A builder of {@link LoadingCache} and {@link Cache} instances.
@@ -191,7 +192,7 @@ import javax.annotation.CheckForNull;
  */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-public final class CacheBuilder<K, V> {
+public final class CacheBuilder<K extends @Immutable Object, V> {
   private static final int DEFAULT_INITIAL_CAPACITY = 16;
   private static final int DEFAULT_CONCURRENCY_LEVEL = 4;
 

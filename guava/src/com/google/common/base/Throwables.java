@@ -34,7 +34,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to instances of {@link Throwable}.
@@ -410,7 +412,7 @@ public final class Throwables {
      * TODO(cpovirk): Consider the UnsignedBytes pattern if it performs faster and doesn't cause
      * AOSP grief.
      */
-    return new AbstractList<StackTraceElement>() {
+    return new @Mutable AbstractList<StackTraceElement>() {
       /*
        * The following requireNonNull calls are safe because we use jlaStackTrace() only if
        * lazyStackTraceIsLazy() returns true.
@@ -433,7 +435,7 @@ public final class Throwables {
 
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
-  private static Object invokeAccessibleNonThrowingMethod(
+  private static @Readonly Object invokeAccessibleNonThrowingMethod(
       Method method, Object receiver, Object... params) {
     try {
       return method.invoke(receiver, params);
@@ -486,7 +488,7 @@ public final class Throwables {
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   @CheckForNull
-  private static Object getJLA() {
+  private static @Readonly Object getJLA() {
     try {
       /*
        * We load sun.misc.* classes using reflection since Android doesn't support these classes and

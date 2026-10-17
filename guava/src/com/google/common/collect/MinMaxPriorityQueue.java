@@ -43,11 +43,14 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * A double-ended priority queue, which provides constant-time access to both its least element and
@@ -110,7 +113,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Creates a new min-max priority queue with default settings: natural order, no maximum size, no
    * initial contents, and an initial expected size of 11.
    */
-  public static <E extends Comparable<E>> MinMaxPriorityQueue<E> create() {
+  public static <E extends @Immutable Comparable<E>> MinMaxPriorityQueue<E> create() {
     return new Builder<Comparable<E>>(Ordering.natural()).create();
   }
 
@@ -118,7 +121,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Creates a new min-max priority queue using natural order, no maximum size, and initially
    * containing the given elements.
    */
-  public static <E extends Comparable<E>> MinMaxPriorityQueue<E> create(
+  public static <E extends @Immutable Comparable<E>> MinMaxPriorityQueue<E> create(
       Iterable<? extends E> initialContents) {
     return new Builder<E>(Ordering.<E>natural()).create(initialContents);
   }
@@ -274,7 +277,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @CanIgnoreReturnValue
   @Override
-  public boolean addAll(Collection<? extends E> newElements) {
+  public boolean addAll(@Readonly Collection<? extends E> newElements) {
     boolean modified = false;
     for (E element : newElements) {
       offer(element);
@@ -924,7 +927,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
-  public @PolyNull @PolySigned Object[] toArray(MinMaxPriorityQueue<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly MinMaxPriorityQueue<@PolyNull @PolySigned @PolyMutable E> this) {
     Object[] copyTo = new Object[size];
     System.arraycopy(queue, 0, copyTo, 0, size);
     return copyTo;

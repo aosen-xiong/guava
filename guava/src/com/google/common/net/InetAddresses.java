@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.formatter.qual.FormatMethod;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to {@link InetAddress} instances.
@@ -1155,7 +1156,7 @@ public final class InetAddresses {
 
   @FormatMethod
   private static IllegalArgumentException formatIllegalArgumentException(
-      String format, Object... args) {
+      String format, @Readonly Object... args) {
     return new IllegalArgumentException(String.format(Locale.ROOT, format, args));
   }
 }

@@ -23,6 +23,7 @@ import com.google.common.annotations.GwtIncompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import java.util.Map;
 
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
@@ -37,7 +38,7 @@ import org.checkerframework.framework.qual.CFComment;
 @ElementTypesAreNonnullByDefault
 @CFComment("Value need to be immutable because it is later used for constructing a bimap")
 @Immutable
-class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V extends @Immutable Object> extends ImmutableTable<R, C, V> {
+class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V> extends ImmutableTable<R, C, V> {
   final R singleRowKey;
   final C singleColumnKey;
   final V singleValue;
@@ -61,13 +62,13 @@ class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
-  public ImmutableMap<C, Map<R, V>> columnMap() {
-    return ImmutableMap.of(singleColumnKey, (Map<R, V>) ImmutableMap.of(singleRowKey, singleValue));
+  public ImmutableMap<C, @Immutable Map<R, V>> columnMap() {
+    return ImmutableMap.of(singleColumnKey, (@Immutable Map<R, V>) ImmutableMap.of(singleRowKey, singleValue));
   }
 
   @Override
-  public ImmutableMap<R, Map<C, V>> rowMap() {
-    return ImmutableMap.of(singleRowKey, (Map<C, V>) ImmutableMap.of(singleColumnKey, singleValue));
+  public ImmutableMap<R, @Immutable Map<C, V>> rowMap() {
+    return ImmutableMap.of(singleRowKey, (@Immutable Map<C, V>) ImmutableMap.of(singleColumnKey, singleValue));
   }
 
   @Override
@@ -88,7 +89,7 @@ class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable 
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return SerializedForm.create(this, new int[] {0}, new int[] {0});
   }
 }

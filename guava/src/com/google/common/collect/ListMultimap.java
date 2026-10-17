@@ -25,7 +25,6 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -60,7 +59,7 @@ public interface ListMultimap<K extends @Nullable @Immutable Object, V extends @
    * the {@link Multimap} interface.
    */
   @Override
-  @ReceiverDependentMutable List<V> get(@Readonly ListMultimap<K,V> this, @ParametricNullness K key);
+  @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable ListMultimap<K,V> this, @ParametricNullness K key);
 
   /**
    * {@inheritDoc}
@@ -71,7 +70,7 @@ public interface ListMultimap<K extends @Nullable @Immutable Object, V extends @
    */
   @CanIgnoreReturnValue
   @Override
-  @ReceiverDependentMutable List<V> removeAll(@Mutable ListMultimap<K,V> this, @CheckForNull @Readonly Object key);
+  @Readonly List<V> removeAll(@Mutable ListMultimap<K,V> this, @CheckForNull @Readonly Object key);
 
   /**
    * {@inheritDoc}
@@ -82,7 +81,7 @@ public interface ListMultimap<K extends @Nullable @Immutable Object, V extends @
    */
   @CanIgnoreReturnValue
   @Override
-  @ReceiverDependentMutable List<V> replaceValues(@Mutable ListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  @Readonly List<V> replaceValues(@Mutable ListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values);
 
   /**
    * {@inheritDoc}
@@ -92,7 +91,7 @@ public interface ListMultimap<K extends @Nullable @Immutable Object, V extends @
    * Multimaps#asMap(ListMultimap)} instead.
    */
   @Override
-  @PolyMutable Map<K, Collection<V>> asMap(@PolyMutable ListMultimap<K,V> this);
+  @ReceiverDependentMutable Map<K, Collection<V>> asMap(@ReceiverDependentMutable ListMultimap<K,V> this);
 
   /**
    * Compares the specified object to this multimap for equality.

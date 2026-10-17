@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import javax.annotation.CheckForNull;
 
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
@@ -63,7 +64,7 @@ public abstract class ForwardingCache<K extends @Immutable Object, V> extends Fo
    * <? extends Object> is mostly the same as <?> to plain Java. But to nullness checkers, they
    * differ: <? extends Object> means "non-null types," while <?> means "all types."
    */
-  public ImmutableMap<K, V> getAllPresent(Iterable<? extends Object> keys) {
+  public ImmutableMap<K, V> getAllPresent(@Readonly Iterable<? extends Object> keys) {
     return delegate().getAllPresent(keys);
   }
 
@@ -75,19 +76,19 @@ public abstract class ForwardingCache<K extends @Immutable Object, V> extends Fo
 
   /** @since 12.0 */
   @Override
-  public void putAll(Map<? extends K, ? extends V> m) {
+  public void putAll(@Readonly Map<? extends K, ? extends V> m) {
     delegate().putAll(m);
   }
 
   @Override
-  public void invalidate(Object key) {
+  public void invalidate(@Readonly Object key) {
     delegate().invalidate(key);
   }
 
   /** @since 11.0 */
   @Override
   // For discussion of <? extends Object>, see getAllPresent.
-  public void invalidateAll(Iterable<? extends Object> keys) {
+  public void invalidateAll(@Readonly Iterable<? extends Object> keys) {
     delegate().invalidateAll(keys);
   }
 

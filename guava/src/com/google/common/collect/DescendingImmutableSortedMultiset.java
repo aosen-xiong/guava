@@ -33,7 +33,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
+final class DescendingImmutableSortedMultiset<E extends @Immutable Object> extends ImmutableSortedMultiset<E> {
   private final transient ImmutableSortedMultiset<E> forward;
 
   DescendingImmutableSortedMultiset(ImmutableSortedMultiset<E> forward) {
@@ -47,13 +47,13 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
 
   @Override
   @CheckForNull
-  public Entry<E> firstEntry() {
+  public @Immutable Entry<E> firstEntry() {
     return forward.lastEntry();
   }
 
   @Override
   @CheckForNull
-  public Entry<E> lastEntry() {
+  public @Immutable Entry<E> lastEntry() {
     return forward.firstEntry();
   }
 
@@ -68,7 +68,7 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   }
 
   @Override
-  Entry<E> getEntry(int index) {
+  @Immutable Entry<E> getEntry(int index) {
     return forward.entrySet().asList().reverse().get(index);
   }
 
@@ -96,7 +96,7 @@ final class DescendingImmutableSortedMultiset<E> extends ImmutableSortedMultiset
   @SuppressWarnings("RedundantOverride")
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

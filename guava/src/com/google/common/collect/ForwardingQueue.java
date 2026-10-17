@@ -22,6 +22,7 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -59,25 +60,25 @@ public abstract class ForwardingQueue<E extends @Nullable @Readonly Object> exte
   protected ForwardingQueue() {}
 
   @Override
-  protected abstract Queue<E> delegate();
+  protected abstract @ReceiverDependentMutable Queue<E> delegate();
 
   @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
   @Override
-  public boolean offer(@ParametricNullness E o) {
+  public boolean offer(@Mutable ForwardingQueue<E> this, @ParametricNullness E o) {
     return delegate().offer(o);
   }
 
   @CanIgnoreReturnValue // TODO(cpovirk): Consider removing this?
   @Override
   @CheckForNull
-  public E poll() {
+  public E poll(@Mutable ForwardingQueue<E> this) {
     return delegate().poll();
   }
 
   @CanIgnoreReturnValue
   @Override
   @ParametricNullness
-  public E remove() {
+  public E remove(@Mutable ForwardingQueue<E> this) {
     return delegate().remove();
   }
 
@@ -99,7 +100,7 @@ public abstract class ForwardingQueue<E extends @Nullable @Readonly Object> exte
    *
    * @since 7.0
    */
-  protected boolean standardOffer(@ParametricNullness E e) {
+  protected boolean standardOffer(@Mutable ForwardingQueue<E> this, @ParametricNullness E e) {
     try {
       return add(e);
     } catch (IllegalStateException caught) {
@@ -129,7 +130,7 @@ public abstract class ForwardingQueue<E extends @Nullable @Readonly Object> exte
    * @since 7.0
    */
   @CheckForNull
-  protected E standardPoll() {
+  protected E standardPoll(@Mutable ForwardingQueue<E> this) {
     try {
       return remove();
     } catch (NoSuchElementException caught) {
