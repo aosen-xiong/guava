@@ -674,9 +674,10 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
    *
    * @since 13.0
    */
+  @Immutable
   public class TypeSet extends ForwardingSet<TypeToken<? super T>> implements Serializable {
 
-    @CheckForNull private transient ImmutableSet<TypeToken<? super T>> types;
+    @CheckForNull private transient @Assignable ImmutableSet<TypeToken<? super T>> types;
 
     TypeSet() {}
 
@@ -719,10 +720,11 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     private static final long serialVersionUID = 0;
   }
 
+  @Immutable
   private final class InterfaceSet extends TypeSet {
 
     private final transient TypeSet allTypes;
-    @CheckForNull private transient ImmutableSet<TypeToken<? super T>> interfaces;
+    @CheckForNull private transient @Assignable ImmutableSet<TypeToken<? super T>> interfaces;
 
     InterfaceSet(TypeSet allTypes) {
       this.allTypes = allTypes;
@@ -765,9 +767,10 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     private static final long serialVersionUID = 0;
   }
 
+  @Immutable
   private final class ClassSet extends TypeSet {
 
-    @CheckForNull private transient ImmutableSet<TypeToken<? super T>> classes;
+    @CheckForNull private transient @Assignable ImmutableSet<TypeToken<? super T>> classes;
 
     @Override
     protected @Immutable Set<TypeToken<? super T>> delegate() {
@@ -1309,6 +1312,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     return Types.JavaVersion.JAVA7.newArrayType(componentType);
   }
 
+  @Immutable
   private static final class SimpleTypeToken<T> extends TypeToken<T> {
 
     SimpleTypeToken(Type type) {

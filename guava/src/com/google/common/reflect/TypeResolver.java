@@ -54,6 +54,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
  * @since 15.0
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class TypeResolver {
 
   private final TypeTable typeTable;
@@ -276,6 +277,7 @@ public final class TypeResolver {
   }
 
   /** A TypeTable maintains mapping from {@link TypeVariable} to types. */
+  @Immutable
   private static class TypeTable {
     private final ImmutableMap<TypeVariableKey, Type> map;
 
@@ -553,9 +555,9 @@ public final class TypeResolver {
    */
   @Immutable
   static final class TypeVariableKey {
-    private final @Readonly TypeVariable<?> var;
+    private final @Immutable TypeVariable<?> var;
 
-    TypeVariableKey(@Readonly TypeVariable<?> var) {
+    TypeVariableKey(@Immutable TypeVariable<?> var) {
       this.var = checkNotNull(var);
     }
 

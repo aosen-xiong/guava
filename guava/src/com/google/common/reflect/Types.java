@@ -49,6 +49,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Utilities for working with {@link Type}.
@@ -222,6 +223,7 @@ final class Types {
     return null;
   }
 
+  @Immutable
   private static final class GenericArrayTypeImpl implements GenericArrayType, Serializable {
 
     private final Type componentType;
@@ -257,6 +259,7 @@ final class Types {
     private static final long serialVersionUID = 0;
   }
 
+  @Immutable
   private static final class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 
     @CheckForNull private final Type ownerType;
@@ -469,6 +472,7 @@ final class Types {
     }
   }
 
+  @Immutable
   static final class WildcardTypeImpl implements WildcardType, Serializable {
 
     private final ImmutableList<Type> lowerBounds;
