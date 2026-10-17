@@ -2026,7 +2026,7 @@ public final class Sets {
   }
 
   /** Remove each element in an iterable from a set. */
-  static boolean removeAllImpl(Set<?> set, Iterator<?> iterator) {
+  static boolean removeAllImpl(Set<?> set, @Readonly Iterator<?> iterator) {
     boolean changed = false;
     while (iterator.hasNext()) {
       changed |= set.remove(iterator.next());
