@@ -754,8 +754,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       return Iterators.pollNext(descendingIterator());
     }
 
-    private NavigableSet<V> wrap(NavigableSet<V> wrapped) {
-      return new WrappedNavigableSet(key, wrapped, (getAncestor() == null) ? this : getAncestor());
+    private @ReceiverDependentMutable NavigableSet<V> wrap(@ReceiverDependentMutable NavigableSet<V> wrapped) {
+      return new @ReceiverDependentMutable WrappedNavigableSet(key, wrapped, (getAncestor() == null) ? this : getAncestor());
     }
 
     @Override
