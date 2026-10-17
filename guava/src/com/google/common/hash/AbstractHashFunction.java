@@ -34,6 +34,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 abstract class AbstractHashFunction implements HashFunction {
   @Override
   public <T extends @Nullable @Readonly Object> HashCode hashObject(

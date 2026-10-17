@@ -57,6 +57,7 @@ import org.checkerframework.common.value.qual.MinLen;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 final class Murmur3_32HashFunction extends AbstractHashFunction implements Serializable {
   static final HashFunction MURMUR3_32 =
       new Murmur3_32HashFunction(0, /* supplementaryPlaneFix= */ false);

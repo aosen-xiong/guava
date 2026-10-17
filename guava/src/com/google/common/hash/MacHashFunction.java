@@ -24,6 +24,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * {@link HashFunction} adapter for {@link Mac} instances.
@@ -32,13 +33,14 @@ import javax.crypto.Mac;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 final class MacHashFunction extends AbstractHashFunction {
 
   @SuppressWarnings("Immutable") // cloned before each use
-  private final Mac prototype;
+  private final @Mutable Mac prototype;
 
   @SuppressWarnings("Immutable") // keys are immutable, but not provably so
-  private final Key key;
+  private final @Mutable Key key;
 
   private final String toString;
   private final @NonNegative int bits;

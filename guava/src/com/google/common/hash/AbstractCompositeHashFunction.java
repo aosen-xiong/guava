@@ -35,10 +35,11 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 abstract class AbstractCompositeHashFunction extends AbstractHashFunction {
 
   @SuppressWarnings("Immutable") // array not modified after creation
-  final HashFunction[] functions;
+  final HashFunction @Readonly [] functions;
 
   AbstractCompositeHashFunction(HashFunction... functions) {
     for (HashFunction function : functions) {

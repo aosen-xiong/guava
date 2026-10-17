@@ -120,6 +120,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  * @since 11.0
  */
 @Immutable
+@org.checkerframework.checker.mutability.qual.Immutable
 @ElementTypesAreNonnullByDefault
 public interface HashFunction {
   /**

@@ -26,6 +26,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.common.value.qual.ArrayLenRange;
 import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Implementation of FarmHash Fingerprint64, an open-source fingerprinting algorithm for strings.
@@ -45,6 +46,7 @@ import org.checkerframework.common.value.qual.MinLen;
  * @author Geoff Pike
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class FarmHashFingerprint64 extends AbstractNonStreamingHashFunction {
   static final HashFunction FARMHASH_FINGERPRINT_64 = new FarmHashFingerprint64();
 

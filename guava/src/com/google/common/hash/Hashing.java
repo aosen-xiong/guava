@@ -780,6 +780,7 @@ public final class Hashing {
     return new ConcatenatedHashFunction(list.toArray(new HashFunction[0]));
   }
 
+  @org.checkerframework.checker.mutability.qual.Immutable
   private static final class ConcatenatedHashFunction extends AbstractCompositeHashFunction {
 
     private ConcatenatedHashFunction(HashFunction... functions) {
