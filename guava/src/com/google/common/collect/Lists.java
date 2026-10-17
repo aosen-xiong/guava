@@ -543,8 +543,9 @@ public final class Lists {
    * java.util.stream.Stream#map}. This method is not being deprecated, but we gently encourage you
    * to migrate to streams.
    */
-  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> List<T> transform(
-          @PolyMutable List<F> fromList, Function<? super F, ? extends T> function) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @PolyMutable List<T> transform(
+          @PolyMutable List<F> fromList, @Readonly Function<? super F, ? extends T> function) {
     return (fromList instanceof RandomAccess)
         ? new @PolyMutable TransformingRandomAccessList<>(fromList, function)
         : new @PolyMutable TransformingSequentialList<>(fromList, function);
@@ -698,12 +699,13 @@ public final class Lists {
    * @return a list of consecutive sublists
    * @throws IllegalArgumentException if {@code partitionSize} is nonpositive
    */
-  public static <T extends @Nullable @Readonly Object> List<List<T>> partition(List<T> list, int size) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <T extends @Nullable @Readonly Object> @PolyMutable List<List<T>> partition(@PolyMutable List<T> list, int size) {
     checkNotNull(list);
     checkArgument(size > 0);
     return (list instanceof RandomAccess)
-        ? new RandomAccessPartition<>(list, size)
-        : new Partition<>(list, size);
+        ? new @PolyMutable RandomAccessPartition<>(list, size)
+        : new @PolyMutable Partition<>(list, size);
   }
 
   @ReceiverDependentMutable
@@ -850,19 +852,20 @@ public final class Lists {
    *
    * @since 7.0
    */
-  public static <T extends @Nullable @Readonly Object> List<T> reverse(List<T> list) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <T extends @Nullable @Readonly Object> @PolyMutable List<T> reverse(@PolyMutable List<T> list) {
     if (list instanceof ImmutableList) {
       // Avoid nullness warnings.
-      List<?> reversed = ((ImmutableList<?>) list).reverse();
+      List<?> reversed = ((@PolyMutable ImmutableList<?>) list).reverse();
       @SuppressWarnings("unchecked")
       List<T> result = (List<T>) reversed;
       return result;
     } else if (list instanceof ReverseList) {
-      return ((ReverseList<T>) list).getForwardList();
+      return ((@PolyMutable ReverseList<T>) list).getForwardList();
     } else if (list instanceof RandomAccess) {
-      return new RandomAccessReverseList<>(list);
+      return new @PolyMutable RandomAccessReverseList<>(list);
     } else {
-      return new ReverseList<>(list);
+      return new @PolyMutable ReverseList<>(list);
     }
   }
 

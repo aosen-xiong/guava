@@ -284,9 +284,10 @@ public final class Collections2 {
    *
    * <p><b>{@code Stream} equivalent:</b> {@link java.util.stream.Stream#map Stream.map}.
    */
-  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Collection<T> transform(
-      Collection<F> fromCollection, @Readonly Function<? super F, T> function) {
-    return new TransformedCollection<>(fromCollection, function);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @PolyMutable Collection<T> transform(
+      @PolyMutable Collection<F> fromCollection, @Readonly Function<? super F, T> function) {
+    return new @PolyMutable TransformedCollection<>(fromCollection, function);
   }
 
   @ReceiverDependentMutable

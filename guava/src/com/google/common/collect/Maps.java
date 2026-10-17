@@ -1862,6 +1862,7 @@ public final class Maps {
    * function} should be fast. To avoid lazy evaluation when the returned map doesn't need to be a
    * view, copy the returned map into a new map of your choosing.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       @PolyMutable Map<K, V2> transformValues(@PolyMutable Map<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
@@ -1904,10 +1905,11 @@ public final class Maps {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      SortedMap<K, V2> transformValues(
-          SortedMap<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
+      @PolyMutable SortedMap<K, V2> transformValues(
+          @PolyMutable SortedMap<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
     return transformEntries(fromMap, asEntryTransformer(function));
   }
 
@@ -1949,11 +1951,12 @@ public final class Maps {
    *
    * @since 13.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      NavigableMap<K, V2> transformValues(
-          NavigableMap<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
+      @PolyMutable NavigableMap<K, V2> transformValues(
+          @PolyMutable NavigableMap<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
     return transformEntries(fromMap, asEntryTransformer(function));
   }
 
@@ -2004,6 +2007,7 @@ public final class Maps {
    *
    * @since 7.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
     @PolyMutable Map<K, V2> transformEntries(
@@ -2058,11 +2062,12 @@ public final class Maps {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      SortedMap<K, V2> transformEntries(
-          SortedMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
-    return new TransformedEntriesSortedMap<>(fromMap, transformer);
+      @PolyMutable SortedMap<K, V2> transformEntries(
+          @PolyMutable SortedMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
+    return new @PolyMutable TransformedEntriesSortedMap<>(fromMap, transformer);
   }
 
   /**
@@ -2113,12 +2118,13 @@ public final class Maps {
    *
    * @since 13.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      NavigableMap<K, V2> transformEntries(
-          NavigableMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
-    return new TransformedEntriesNavigableMap<>(fromMap, transformer);
+      @PolyMutable NavigableMap<K, V2> transformEntries(
+          @PolyMutable NavigableMap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
+    return new @PolyMutable TransformedEntriesNavigableMap<>(fromMap, transformer);
   }
 
   /**

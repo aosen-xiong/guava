@@ -218,11 +218,12 @@ public final class Tables {
    * columnKeySet().iterator()} doesn't. With a transposed {@link HashBasedTable}, it's the other
    * way around.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Table<C, R, V> transpose(Table<R, C, V> table) {
+      @PolyMutable Table<C, R, V> transpose(@PolyMutable Table<R, C, V> table) {
     return (table instanceof TransposeTable)
-        ? ((TransposeTable<R, C, V>) table).original
-        : new TransposeTable<C, R, V>(table);
+        ? ((@PolyMutable TransposeTable<R, C, V>) table).original
+        : new @PolyMutable TransposeTable<C, R, V>(table);
   }
 
   @ReceiverDependentMutable
@@ -411,14 +412,15 @@ public final class Tables {
    *
    * @since 10.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           R extends @Nullable @Immutable Object,
           C extends @Nullable @Immutable Object,
           V1 extends @Nullable @Readonly Object,
           V2 extends @Nullable @Readonly Object>
-      Table<R, C, V2> transformValues(
-          Table<R, C, V1> fromTable, Function<? super V1, V2> function) {
-    return new TransformedTable<>(fromTable, function);
+      @PolyMutable Table<R, C, V2> transformValues(
+          @PolyMutable Table<R, C, V1> fromTable, @Readonly Function<? super V1, V2> function) {
+    return new @PolyMutable TransformedTable<>(fromTable, function);
   }
 
   @ReceiverDependentMutable

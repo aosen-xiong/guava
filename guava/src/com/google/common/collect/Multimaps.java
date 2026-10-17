@@ -1361,10 +1361,11 @@ public final class Multimaps {
    *
    * @since 7.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      Multimap<K, V2> transformValues(
-          Multimap<K, V1> fromMultimap, final Function<? super V1, V2> function) {
+      @PolyMutable Multimap<K, V2> transformValues(
+          @PolyMutable Multimap<K, V1> fromMultimap, final @Readonly Function<? super V1, V2> function) {
     checkNotNull(function);
     EntryTransformer<K, V1, V2> transformer = Maps.asEntryTransformer(function);
     return transformEntries(fromMultimap, transformer);
@@ -1410,10 +1411,11 @@ public final class Multimaps {
    *
    * @since 7.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      ListMultimap<K, V2> transformValues(
-          ListMultimap<K, V1> fromMultimap, final Function<? super V1, V2> function) {
+      @PolyMutable ListMultimap<K, V2> transformValues(
+          @PolyMutable ListMultimap<K, V1> fromMultimap, final @Readonly Function<? super V1, V2> function) {
     checkNotNull(function);
     EntryTransformer<K, V1, V2> transformer = Maps.asEntryTransformer(function);
     return transformEntries(fromMultimap, transformer);
@@ -1470,11 +1472,12 @@ public final class Multimaps {
    *
    * @since 7.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      Multimap<K, V2> transformEntries(
-          Multimap<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
-    return new TransformedEntriesMultimap<>(fromMap, transformer);
+      @PolyMutable Multimap<K, V2> transformEntries(
+          @PolyMutable Multimap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
+    return new @PolyMutable TransformedEntriesMultimap<>(fromMap, transformer);
   }
 
   /**
@@ -1525,11 +1528,12 @@ public final class Multimaps {
    *
    * @since 7.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      ListMultimap<K, V2> transformEntries(
-          ListMultimap<K, V1> fromMap, EntryTransformer<? super K, ? super V1, V2> transformer) {
-    return new TransformedEntriesListMultimap<>(fromMap, transformer);
+      @PolyMutable ListMultimap<K, V2> transformEntries(
+          @PolyMutable ListMultimap<K, V1> fromMap, @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
+    return new @PolyMutable TransformedEntriesListMultimap<>(fromMap, transformer);
   }
 
   @ReceiverDependentMutable

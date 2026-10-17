@@ -54,7 +54,7 @@ final class SortedLists {
       <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         return foundIndex;
       }
@@ -65,7 +65,7 @@ final class SortedLists {
       <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         // Of course, we have to use binary search to find the precise
         // breakpoint...
@@ -90,7 +90,7 @@ final class SortedLists {
       <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         // Of course, we have to use binary search to find the precise
         // breakpoint...
@@ -119,7 +119,7 @@ final class SortedLists {
       public <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         return LAST_PRESENT.resultIndex(comparator, key, list, foundIndex) + 1;
       }
@@ -133,7 +133,7 @@ final class SortedLists {
       public <E extends @Nullable @Readonly Object> int resultIndex(
           Comparator<? super E> comparator,
           @ParametricNullness E key,
-          List<? extends E> list,
+          @Readonly List<? extends E> list,
           int foundIndex) {
         return FIRST_PRESENT.resultIndex(comparator, key, list, foundIndex) - 1;
       }
@@ -142,7 +142,7 @@ final class SortedLists {
     abstract <E extends @Nullable @Readonly Object> int resultIndex(
         Comparator<? super E> comparator,
         @ParametricNullness E key,
-        List<? extends E> list,
+        @Readonly List<? extends E> list,
         int foundIndex);
   }
 
@@ -202,7 +202,7 @@ final class SortedLists {
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
   public static <E extends @Immutable Comparable> int binarySearch(
-      List<? extends E> list,
+      @Readonly List<? extends E> list,
       E e,
       KeyPresentBehavior presentBehavior,
       KeyAbsentBehavior absentBehavior) {
@@ -270,7 +270,7 @@ final class SortedLists {
    *     otherwise the index determined by the {@code KeyAbsentBehavior}.
    */
   public static <E extends @Nullable @Readonly Object> int binarySearch(
-      List<? extends E> list,
+      @Readonly List<? extends E> list,
       @ParametricNullness E key,
       Comparator<? super E> comparator,
       KeyPresentBehavior presentBehavior,
