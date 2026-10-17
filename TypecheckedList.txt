@@ -362,8 +362,8 @@ T2 util/concurrent/SettableFuture.java   # surfaced only in target-set mode
 # -J-Xss256m). A crashed file reports ZERO diagnostics, so it looks clean:
 # they must be excluded from the baseline, not counted as passing.
 # See guava-annotation-strategy.md section 5.5.
-X  collect/ImmutableSet.java
 X  io/TempFileCreator.java
+T2 collect/ImmutableSet.java   # no longer crashes (2026-10-16)
 T2 collect/CompoundOrdering.java   # moved out of the baseline (target-set mode)
 T2 collect/NullsFirstOrdering.java   # moved out of the baseline (target-set mode)
 T2 collect/NullsLastOrdering.java   # moved out of the baseline (target-set mode)

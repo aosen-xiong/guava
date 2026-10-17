@@ -371,7 +371,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     @Override
-    int copyIntoArray(@Nullable Object[] dst, int offset) {
+    int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
       return asList().copyIntoArray(dst, offset);
     }
 
@@ -418,9 +418,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    */
   @J2ktIncompatible // serialization
   private static class SerializedForm implements Serializable {
-    final Object[] elements;
+    final @Readonly Object[] elements;
 
-    SerializedForm(Object[] elements) {
+    SerializedForm(@Readonly Object[] elements) {
       this.elements = elements;
     }
 
@@ -737,7 +737,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    */
   private static final @Mutable class RegularSetBuilderImpl<E> extends SetBuilderImpl<E> {
     // null until at least two elements are present
-    @CheckForNull private @Nullable Object[] hashTable;
+    @CheckForNull private @Nullable @Readonly Object[] hashTable;
     private int maxRunBeforeFallback;
     private int expandTableThreshold;
     private int hashCode;
@@ -842,8 +842,8 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     /** Builds a new open-addressed hash table from the first n objects in elements. */
-    static @Nullable Object @Mutable [] rebuildHashTable(int newTableSize, Object[] elements, int n) {
-      @Nullable Object [] hashTable = new @Nullable Object @Mutable [newTableSize];
+    static @Nullable @Readonly Object @Mutable [] rebuildHashTable(int newTableSize, @Readonly Object @Readonly [] elements, int n) {
+      @Nullable @Readonly Object [] hashTable = new @Nullable Object @Mutable [newTableSize];
       int mask = hashTable.length - 1;
       for (int i = 0; i < n; i++) {
         // requireNonNull is safe because we ensure that the first n elements have been populated.
@@ -903,7 +903,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
      * <p>This method may return {@code true} even on truly random input, but {@code
      * ImmutableSetTest} tests that the probability of that is low.
      */
-    static boolean hashFloodingDetected(@Nullable Object @Mutable [] hashTable) {
+    static boolean hashFloodingDetected(@Nullable @Readonly Object @Readonly [] hashTable) {
       int maxRunBeforeFallback = maxRunBeforeFallback(hashTable.length);
       int mask = hashTable.length - 1;
 
@@ -984,6 +984,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     @Override
+    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: delegate is this builder's own HashSet, not shared after build()
     ImmutableSet<E> build() {
       switch (distinct) {
         case 0:
