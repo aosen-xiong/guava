@@ -1930,7 +1930,7 @@ public final class Multimaps {
     }
 
     @Override
-    protected @PolyMutable Set<Entry<K, @PolyMutable Collection<V>>> createEntrySet(@PolyMutable AsMap<K, V> this) {
+    protected @ReceiverDependentMutable Set<Entry<K, @ReceiverDependentMutable Collection<V>>> createEntrySet(@ReceiverDependentMutable AsMap<K, V> this) {
       return new EntrySet();
     }
 

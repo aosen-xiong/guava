@@ -1382,7 +1382,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    protected @PolyMutable Set<@PolyMutable Entry<K, @PolyMutable Collection<V>>> createEntrySet(@PolyMutable AsMap this) {
+    protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> createEntrySet(@ReceiverDependentMutable AsMap this) {
       return new AsMapEntries();
     }
 
@@ -1580,8 +1580,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    @PolyMutable SortedSet<K> createKeySet(@PolyMutable SortedAsMap this) {
-      return new @PolyMutable SortedKeySet(sortedMap());
+    @ReceiverDependentMutable SortedSet<K> createKeySet(@ReceiverDependentMutable SortedAsMap this) {
+      return new @ReceiverDependentMutable SortedKeySet(sortedMap());
     }
   }
 
@@ -1698,8 +1698,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    @PolyMutable NavigableSet<K> createKeySet(@PolyMutable NavigableAsMap this) {
-      return new @PolyMutable NavigableKeySet(sortedMap());
+    @ReceiverDependentMutable NavigableSet<K> createKeySet(@ReceiverDependentMutable NavigableAsMap this) {
+      return new @ReceiverDependentMutable NavigableKeySet(sortedMap());
     }
 
     @Override

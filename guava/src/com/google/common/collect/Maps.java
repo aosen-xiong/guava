@@ -823,6 +823,7 @@ public final class Maps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> asMap(
           @PolyMutable Set<K> set, @Readonly Function<? super K, V> function) {
     return new @PolyMutable AsMapView<>(set, function);
@@ -851,6 +852,7 @@ public final class Maps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable SortedMap<K, V> asMap(
       @PolyMutable SortedSet<K> set, @Readonly Function<? super K, V> function) {
     return new @PolyMutable SortedAsMapView<>(set, function);
@@ -879,6 +881,7 @@ public final class Maps {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable NavigableMap<K, V> asMap(
       @PolyMutable NavigableSet<K> set, @Readonly Function<? super K, V> function) {
@@ -892,7 +895,7 @@ public final class Maps {
     private final Set<K> set;
     final @Readonly Function<? super K, V> function;
 
-    @PolyMutable Set<K> backingSet(@PolyMutable AsMapView<K, V> this) {
+    @ReceiverDependentMutable Set<K> backingSet(@ReceiverDependentMutable AsMapView<K, V> this) {
       return set;
     }
 
@@ -902,12 +905,12 @@ public final class Maps {
     }
 
     @Override
-    public @PolyMutable Set<K> createKeySet(@PolyMutable AsMapView<K, V> this) {
+    public @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable AsMapView<K, V> this) {
       return removeOnlySet(backingSet());
     }
 
     @Override
-    @PolyMutable Collection<V> createValues(@PolyMutable AsMapView<K, V> this) {
+    @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable AsMapView<K, V> this) {
       return Collections2.transform(set, function);
     }
 
@@ -957,7 +960,7 @@ public final class Maps {
     }
 
     @Override
-    protected @PolyMutable Set<@PolyMutable Entry<K, V>> createEntrySet(@PolyMutable AsMapView<K, V> this) {
+    protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable AsMapView<K, V> this) {
       @WeakOuter
       class EntrySetImpl extends EntrySet<K, V> {
         @Override
@@ -1000,7 +1003,7 @@ public final class Maps {
     }
 
     @Override
-    @PolyMutable SortedSet<K> backingSet(@PolyMutable SortedAsMapView<K, V> this) {
+    @ReceiverDependentMutable SortedSet<K> backingSet(@ReceiverDependentMutable SortedAsMapView<K, V> this) {
       return (SortedSet<K>) super.backingSet();
     }
 
@@ -1111,12 +1114,12 @@ public final class Maps {
     }
 
     @Override
-    Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable NavigableAsMapView<K, V> this) {
+    Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable NavigableAsMapView<K, V> this) {
       return asMapEntryIterator(set, function);
     }
 
     @Override
-    Spliterator<@PolyMutable Entry<K, V>> entrySpliterator(@PolyMutable NavigableAsMapView<K, V> this) {
+    Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable NavigableAsMapView<K, V> this) {
       return CollectSpliterators.map(set.spliterator(), e -> immutableEntry(e, function.apply(e)));
     }
 
@@ -1126,7 +1129,7 @@ public final class Maps {
     }
 
     @Override
-    Iterator<@PolyMutable Entry<K, V>> descendingEntryIterator(@PolyMutable NavigableAsMapView<K, V> this) {
+    Iterator<@ReceiverDependentMutable Entry<K, V>> descendingEntryIterator(@ReceiverDependentMutable NavigableAsMapView<K, V> this) {
       return descendingMap().entrySet().iterator();
     }
 
@@ -3039,8 +3042,8 @@ public final class Maps {
     }
 
     @Override
-    @PolyMutable Collection<V> createValues(@PolyMutable AbstractFilteredMap<K, V> this) {
-      return new @PolyMutable FilteredMapValues<>(this, unfiltered, predicate);
+    @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable AbstractFilteredMap<K, V> this) {
+      return new @ReceiverDependentMutable FilteredMapValues<>(this, unfiltered, predicate);
     }
   }
 
@@ -3126,12 +3129,12 @@ public final class Maps {
     }
 
     @Override
-    protected @PolyMutable Set<@PolyMutable Entry<K, V>> createEntrySet(@PolyMutable FilteredKeyMap<K, V> this) {
+    protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable FilteredKeyMap<K, V> this) {
       return Sets.filter(unfiltered.entrySet(), predicate);
     }
 
     @Override
-    @PolyMutable Set<K> createKeySet(@PolyMutable FilteredKeyMap<K, V> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable FilteredKeyMap<K, V> this) {
       return Sets.filter(unfiltered.keySet(), keyPredicate);
     }
 
@@ -3160,7 +3163,7 @@ public final class Maps {
     }
 
     @Override
-    protected @PolyMutable Set<@PolyMutable Entry<K, V>> createEntrySet(@PolyMutable FilteredEntryMap<K, V> this) {
+    protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable FilteredEntryMap<K, V> this) {
       return new EntrySet();
     }
 
@@ -3910,7 +3913,7 @@ public final class Maps {
      * Creates the entry set to be returned by {@link #entrySet()}. This method is invoked at most
      * once on a given map, at the time when {@code entrySet} is first called.
      */
-    abstract @PolyMutable Set<@PolyMutable Entry<K, V>> createEntrySet(@PolyMutable ViewCachingAbstractMap<K, V> this);
+    abstract @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this);
 
     @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
@@ -3928,7 +3931,7 @@ public final class Maps {
       return (result == null) ? keySet = createKeySet() : result;
     }
 
-    @PolyMutable Set<K> createKeySet(@PolyMutable ViewCachingAbstractMap<K, V> this) {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this) {
       return new KeySet<>(this);
     }
 
@@ -3940,8 +3943,8 @@ public final class Maps {
       return (result == null) ? values = createValues() : result;
     }
 
-    @PolyMutable Collection<V> createValues(@PolyMutable ViewCachingAbstractMap<K, V> this) {
-      return new @PolyMutable Values<>(this);
+    @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this) {
+      return new @ReceiverDependentMutable Values<>(this);
     }
   }
 
@@ -3952,16 +3955,16 @@ public final class Maps {
     @Override
     public abstract @NonNegative int size();
 
-    abstract Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable IteratorBasedAbstractMap<K, V> this);
+    abstract Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable IteratorBasedAbstractMap<K, V> this);
 
-    Spliterator<@PolyMutable Entry<K, V>> entrySpliterator(@PolyMutable IteratorBasedAbstractMap<K, V> this) {
+    Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable IteratorBasedAbstractMap<K, V> this) {
       return Spliterators.spliterator(
           entryIterator(), size(), Spliterator.SIZED | Spliterator.DISTINCT);
     }
 
     @Override
-    public Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable IteratorBasedAbstractMap<K, V> this) {
-      return new @PolyMutable EntrySet<K, V>() {
+    public Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable IteratorBasedAbstractMap<K, V> this) {
+      return new @ReceiverDependentMutable EntrySet<K, V>() {
         @Override
         Map<K, V> map() {
           return IteratorBasedAbstractMap.this;
