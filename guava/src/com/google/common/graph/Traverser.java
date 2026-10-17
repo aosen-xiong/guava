@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An object that can traverse the nodes that are reachable from a specified (set of) start node(s)
@@ -239,7 +240,7 @@ public abstract class Traverser<N> {
    * @see #breadthFirst(Object)
    * @since 24.1
    */
-  public final Iterable<N> breadthFirst(Iterable<? extends N> startNodes) {
+  public final Iterable<N> breadthFirst(@Readonly Iterable<? extends N> startNodes) {
     ImmutableSet<N> validated = validate(startNodes);
     return new Iterable<N>() {
       @Override
@@ -294,7 +295,7 @@ public abstract class Traverser<N> {
    * @see #depthFirstPreOrder(Object)
    * @since 24.1
    */
-  public final Iterable<N> depthFirstPreOrder(Iterable<? extends N> startNodes) {
+  public final Iterable<N> depthFirstPreOrder(@Readonly Iterable<? extends N> startNodes) {
     ImmutableSet<N> validated = validate(startNodes);
     return new Iterable<N>() {
       @Override
@@ -349,7 +350,7 @@ public abstract class Traverser<N> {
    * @see #depthFirstPostOrder(Object)
    * @since 24.1
    */
-  public final Iterable<N> depthFirstPostOrder(Iterable<? extends N> startNodes) {
+  public final Iterable<N> depthFirstPostOrder(@Readonly Iterable<? extends N> startNodes) {
     ImmutableSet<N> validated = validate(startNodes);
     return new Iterable<N>() {
       @Override
@@ -362,7 +363,7 @@ public abstract class Traverser<N> {
   abstract Traversal<N> newTraversal();
 
   @SuppressWarnings("CheckReturnValue")
-  private ImmutableSet<N> validate(Iterable<? extends N> startNodes) {
+  private ImmutableSet<N> validate(@Readonly Iterable<? extends N> startNodes) {
     ImmutableSet<N> copy = ImmutableSet.copyOf(startNodes);
     for (N node : copy) {
       successorFunction.successors(node); // Will throw if node doesn't exist
@@ -387,7 +388,7 @@ public abstract class Traverser<N> {
       return new Traversal<N>(graph) {
         @Override
         @CheckForNull
-        N visitNext(Deque<Iterator<? extends N>> horizon) {
+        N visitNext(Deque<@Readonly Iterator<? extends N>> horizon) {
           Iterator<? extends N> top = horizon.getFirst();
           while (top.hasNext()) {
             N element = top.next();
@@ -414,7 +415,7 @@ public abstract class Traverser<N> {
       return new Traversal<N>(tree) {
         @CheckForNull
         @Override
-        N visitNext(Deque<Iterator<? extends N>> horizon) {
+        N visitNext(Deque<@Readonly Iterator<? extends N>> horizon) {
           Iterator<? extends N> top = horizon.getFirst();
           if (top.hasNext()) {
             return checkNotNull(top.next());
@@ -425,11 +426,11 @@ public abstract class Traverser<N> {
       };
     }
 
-    final Iterator<N> breadthFirst(Iterator<? extends N> startNodes) {
+    final Iterator<N> breadthFirst(@Readonly Iterator<? extends N> startNodes) {
       return topDown(startNodes, InsertionOrder.BACK);
     }
 
-    final Iterator<N> preOrder(Iterator<? extends N> startNodes) {
+    final Iterator<N> preOrder(@Readonly Iterator<? extends N> startNodes) {
       return topDown(startNodes, InsertionOrder.FRONT);
     }
 
@@ -439,8 +440,8 @@ public abstract class Traverser<N> {
      * determined by the {@code InsertionOrder} parameter: nieces are placed at the FRONT before
      * aunts for pre-order; while in BFS they are placed at the BACK after aunts.
      */
-    private Iterator<N> topDown(Iterator<? extends N> startNodes, InsertionOrder order) {
-      Deque<Iterator<? extends N>> horizon = new ArrayDeque<>();
+    private Iterator<N> topDown(@Readonly Iterator<? extends N> startNodes, InsertionOrder order) {
+      Deque<@Readonly Iterator<? extends N>> horizon = new ArrayDeque<>();
       horizon.add(startNodes);
       return new @Mutable AbstractIterator<N>() {
         @Override
@@ -463,9 +464,9 @@ public abstract class Traverser<N> {
       };
     }
 
-    final Iterator<N> postOrder(Iterator<? extends N> startNodes) {
+    final Iterator<N> postOrder(@Readonly Iterator<? extends N> startNodes) {
       Deque<N> ancestorStack = new ArrayDeque<>();
-      Deque<Iterator<? extends N>> horizon = new ArrayDeque<>();
+      Deque<@Readonly Iterator<? extends N>> horizon = new ArrayDeque<>();
       horizon.add(startNodes);
       return new @Mutable AbstractIterator<N>() {
         @Override
@@ -499,7 +500,7 @@ public abstract class Traverser<N> {
      * additional values interleaved with those shown above.)
      */
     @CheckForNull
-    abstract N visitNext(Deque<Iterator<? extends N>> horizon);
+    abstract N visitNext(Deque<@Readonly Iterator<? extends N>> horizon);
   }
 
   /** Poor man's method reference for {@code Deque::addFirst} and {@code Deque::addLast}. */
