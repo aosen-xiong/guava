@@ -680,7 +680,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean removeIf(java.util.function.Predicate<? super E> filter) {
+    public final boolean removeIf(java.util.function.@Readonly Predicate<? super E> filter) {
       throw new UnsupportedOperationException();
     }
 
@@ -1067,7 +1067,7 @@ public final class Sets {
    */
   // TODO(kevinb): how to omit that last sentence when building GWT javadoc?
   public static <E extends @Nullable @Readonly Object> Set<E> filter(
-          @Readonly Set<E> unfiltered, Predicate<? super E> predicate) {
+          @Readonly Set<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof SortedSet) {
       return filter((SortedSet<E>) unfiltered, predicate);
     }
@@ -1107,7 +1107,7 @@ public final class Sets {
    * @since 11.0
    */
   public static <E extends @Nullable @Readonly Object> @PolyMutable SortedSet<E> filter(
-      @PolyMutable SortedSet<E> unfiltered, Predicate<? super E> predicate) {
+      @PolyMutable SortedSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
@@ -1145,7 +1145,7 @@ public final class Sets {
    */
   @GwtIncompatible // NavigableSet
   public static <E extends @Nullable Object> NavigableSet<E> filter(
-      NavigableSet<E> unfiltered, Predicate<? super E> predicate) {
+      NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
@@ -1160,7 +1160,7 @@ public final class Sets {
   @ReceiverDependentMutable
   private static class FilteredSet<E extends @Nullable @Readonly Object> extends FilteredCollection<E>
       implements Set<E> {
-    FilteredSet(@ReceiverDependentMutable Set<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredSet(@ReceiverDependentMutable Set<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       super(unfiltered, predicate);
     }
 
@@ -1179,7 +1179,7 @@ public final class Sets {
   private static class FilteredSortedSet<E extends @Nullable @Readonly Object> extends FilteredSet<E>
       implements SortedSet<E> {
 
-    FilteredSortedSet(@ReceiverDependentMutable SortedSet<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredSortedSet(@ReceiverDependentMutable SortedSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       super(unfiltered, predicate);
     }
 
@@ -1229,7 +1229,7 @@ public final class Sets {
   @ReceiverDependentMutable
   private static class FilteredNavigableSet<E extends @Nullable @Readonly Object> extends FilteredSortedSet<E>
       implements NavigableSet<E> {
-    FilteredNavigableSet(@ReceiverDependentMutable NavigableSet<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredNavigableSet(@ReceiverDependentMutable NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       super(unfiltered, predicate);
     }
 
@@ -1872,7 +1872,7 @@ public final class Sets {
     // default methods not forwarded by ForwardingSortedSet
 
     @Override
-    public boolean removeIf(java.util.function.Predicate<? super E> filter) {
+    public boolean removeIf(java.util.function.@Readonly Predicate<? super E> filter) {
       throw new UnsupportedOperationException();
     }
 

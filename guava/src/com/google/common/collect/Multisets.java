@@ -212,7 +212,7 @@ public final class Multisets {
     }
 
     @Override
-    public boolean removeIf(java.util.function.Predicate<? super E> filter) {
+    public boolean removeIf(java.util.function.@Readonly Predicate<? super E> filter) {
       throw new UnsupportedOperationException();
     }
 

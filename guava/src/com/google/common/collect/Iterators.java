@@ -235,7 +235,7 @@ public final class Iterators {
    */
   @CanIgnoreReturnValue
   public static <T extends @Nullable @Readonly Object> boolean removeIf(
-      Iterator<T> removeFrom, Predicate<? super T> predicate) {
+      Iterator<T> removeFrom, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate);
     boolean modified = false;
     while (removeFrom.hasNext()) {
@@ -708,7 +708,7 @@ public final class Iterators {
    * predicate.
    */
   public static <T extends @Nullable @Readonly Object> boolean any(
-      Iterator<T> iterator, Predicate<? super T> predicate) {
+      Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     return indexOf(iterator, predicate) != -1;
   }
 
@@ -739,7 +739,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T find(
-      @Readonly Iterator<T> iterator, Predicate<? super T> predicate) {
+      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(iterator);
     checkNotNull(predicate);
     while (iterator.hasNext()) {
@@ -763,7 +763,7 @@ public final class Iterators {
   @CheckForNull
   public static <T extends @Nullable @Readonly Object> T find(
       @Readonly Iterator<? extends T> iterator,
-      Predicate<? super T> predicate,
+      @Readonly Predicate<? super T> predicate,
       @CheckForNull T defaultValue) {
     checkNotNull(iterator);
     checkNotNull(predicate);
@@ -814,7 +814,7 @@ public final class Iterators {
    * @since 2.0
    */
   public static <T extends @Nullable @Readonly Object> int indexOf(
-      Iterator<T> iterator, Predicate<? super T> predicate) {
+      Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate, "predicate");
     for (int i = 0; iterator.hasNext(); i++) {
       T current = iterator.next();
@@ -834,7 +834,7 @@ public final class Iterators {
    * element.
    */
   public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Iterator<T> transform(
-      Iterator<F> fromIterator, Function<? super F, ? extends T> function) {
+      Iterator<F> fromIterator, @Readonly Function<? super F, ? extends T> function) {
     checkNotNull(function);
     return new TransformedIterator<F, T>(fromIterator) {
       @ParametricNullness

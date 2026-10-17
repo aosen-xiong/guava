@@ -336,7 +336,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean removeIf(Predicate<? super E> filter) {
+  public final boolean removeIf(@Readonly Predicate<? super E> filter) {
     throw new UnsupportedOperationException();
   }
 

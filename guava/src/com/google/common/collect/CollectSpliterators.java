@@ -115,7 +115,7 @@ final class CollectSpliterators {
   static <InElementT extends @Nullable @Readonly Object, OutElementT extends @Nullable @Readonly Object>
       Spliterator<OutElementT> map(
           Spliterator<InElementT> fromSpliterator,
-          Function<? super InElementT, ? extends OutElementT> function) {
+          @Readonly Function<? super InElementT, ? extends OutElementT> function) {
     checkNotNull(fromSpliterator);
     checkNotNull(function);
     return new @Mutable Spliterator<OutElementT>() {
@@ -153,7 +153,7 @@ final class CollectSpliterators {
 
   /** Returns a {@code Spliterator} filtered by the specified predicate. */
   static <T extends @Nullable @Readonly Object> Spliterator<T> filter(
-      Spliterator<T> fromSpliterator, Predicate<? super T> predicate) {
+      Spliterator<T> fromSpliterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(fromSpliterator);
     checkNotNull(predicate);
     class Splitr implements Spliterator<T>, Consumer<T> {

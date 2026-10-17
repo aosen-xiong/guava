@@ -120,7 +120,7 @@ public final class Predicates {
    * as a false predicate is found.
    */
   public static <T extends @Nullable @Readonly Object> Predicate<T> and(
-      Predicate<? super T> first, Predicate<? super T> second) {
+      @Readonly Predicate<? super T> first, @Readonly Predicate<? super T> second) {
     return new AndPredicate<>(Predicates.<T>asList(checkNotNull(first), checkNotNull(second)));
   }
 
@@ -228,7 +228,7 @@ public final class Predicates {
    * @return the composition of the provided function and predicate
    */
   public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object> Predicate<A> compose(
-      Predicate<B> predicate, Function<A, ? extends B> function) {
+      @Readonly Predicate<B> predicate, Function<A, ? extends B> function) {
     return new CompositionPredicate<>(predicate, function);
   }
 
@@ -358,9 +358,9 @@ public final class Predicates {
   /** @see Predicates#and(Iterable) */
   private static class AndPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
-    private final List<? extends Predicate<? super T>> components;
+    private final List<? extends @Readonly Predicate<? super T>> components;
 
-    private AndPredicate(List<? extends Predicate<? super T>> components) {
+    private AndPredicate(List<? extends @Readonly Predicate<? super T>> components) {
       this.components = components;
     }
 
@@ -404,9 +404,9 @@ public final class Predicates {
   /** @see Predicates#or(Iterable) */
   private static class OrPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
-    private final List<? extends Predicate<? super T>> components;
+    private final List<? extends @Readonly Predicate<? super T>> components;
 
-    private OrPredicate(List<? extends Predicate<? super T>> components) {
+    private OrPredicate(List<? extends @Readonly Predicate<? super T>> components) {
       this.components = components;
     }
 
@@ -630,10 +630,10 @@ public final class Predicates {
   /** @see Predicates#compose(Predicate, Function) */
   private static class CompositionPredicate<A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object>
       implements Predicate<A>, Serializable {
-    final Predicate<B> p;
+    final @Readonly Predicate<B> p;
     final Function<A, ? extends B> f;
 
-    private CompositionPredicate(Predicate<B> p, Function<A, ? extends B> f) {
+    private CompositionPredicate(@Readonly Predicate<B> p, Function<A, ? extends B> f) {
       this.p = checkNotNull(p);
       this.f = checkNotNull(f);
     }
@@ -737,10 +737,10 @@ public final class Predicates {
     private static final long serialVersionUID = 0;
   }
 
-  private static <T extends @Nullable @Readonly Object> List<Predicate<? super T>> asList(
-      Predicate<? super T> first, Predicate<? super T> second) {
+  private static <T extends @Nullable @Readonly Object> List<@Readonly Predicate<? super T>> asList(
+      @Readonly Predicate<? super T> first, @Readonly Predicate<? super T> second) {
     // TODO(kevinb): understand why we still get a warning despite @SafeVarargs!
-    return Arrays.<Predicate<? super T>>asList(first, second);
+    return Arrays.<@Readonly Predicate<? super T>>asList(first, second);
   }
 
   private static <T> List<T> defensiveCopy(T... array) {

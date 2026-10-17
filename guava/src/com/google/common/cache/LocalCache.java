@@ -4678,7 +4678,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
 
     @Override
-    public boolean removeIf(Predicate<? super V> filter) {
+    public boolean removeIf(@Readonly Predicate<? super V> filter) {
       checkNotNull(filter);
       return LocalCache.this.removeIf((k, v) -> filter.test(v));
     }
@@ -4710,7 +4710,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
 
     @Override
-    public boolean removeIf(Predicate<? super Entry<K, V>> filter) {
+    public boolean removeIf(@Readonly Predicate<? super Entry<K, V>> filter) {
       checkNotNull(filter);
       return LocalCache.this.removeIf((k, v) -> filter.test(Maps.immutableEntry(k, v)));
     }

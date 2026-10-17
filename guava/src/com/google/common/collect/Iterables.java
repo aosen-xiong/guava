@@ -208,7 +208,7 @@ public final class Iterables {
    */
   @CanIgnoreReturnValue
   public static <T extends @Nullable @Readonly Object> boolean removeIf(
-      Iterable<T> removeFrom, Predicate<? super T> predicate) {
+      Iterable<T> removeFrom, @Readonly Predicate<? super T> predicate) {
     if (removeFrom instanceof Collection) {
       return ((Collection<T>) removeFrom).removeIf(predicate);
     }
@@ -218,7 +218,7 @@ public final class Iterables {
   /** Removes and returns the first matching element, or returns {@code null} if there is none. */
   @CheckForNull
   static <T extends @Nullable @Readonly Object> T removeFirstMatching(
-      Iterable<T> removeFrom, Predicate<? super T> predicate) {
+      Iterable<T> removeFrom, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate);
     Iterator<T> iterator = removeFrom.iterator();
     while (iterator.hasNext()) {
@@ -584,7 +584,7 @@ public final class Iterables {
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#filter}.
    */
   public static <T extends @Nullable @Readonly Object> Iterable<T> filter(
-      final Iterable<T> unfiltered, final Predicate<? super T> retainIfTrue) {
+      final Iterable<T> unfiltered, final @Readonly Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
     return new FluentIterable<T>() {
@@ -639,7 +639,7 @@ public final class Iterables {
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#anyMatch}.
    */
   public static <T extends @Nullable @Readonly Object> boolean any(
-      Iterable<T> iterable, Predicate<? super T> predicate) {
+      Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.any(iterable.iterator(), predicate);
   }
 
@@ -665,7 +665,7 @@ public final class Iterables {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T find(
-      @Readonly Iterable<T> iterable, Predicate<? super T> predicate) {
+      @Readonly Iterable<T> iterable, @Readonly Predicate<? super T> predicate) {
     return Iterators.find(iterable.iterator(), predicate);
   }
 
@@ -683,7 +683,7 @@ public final class Iterables {
   //
   // <T extends @Nullable Object> @JointlyNullable T find(
   @Readonly //     Iterable<? extends T> iterable,
-  //     Predicate<? super T> predicate,
+  //     @Readonly Predicate<? super T> predicate,
   //     @JointlyNullable T defaultValue);
   //
   // ...where "@JointlyNullable" is similar to @PolyNull but slightly different:
@@ -697,7 +697,7 @@ public final class Iterables {
   @CheckForNull
   public static <T extends @Nullable @Readonly Object> T find(
       @Readonly Iterable<? extends T> iterable,
-      Predicate<? super T> predicate,
+      @Readonly Predicate<? super T> predicate,
       @CheckForNull T defaultValue) {
     return Iterators.find(iterable.iterator(), predicate, defaultValue);
   }

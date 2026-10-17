@@ -599,7 +599,7 @@ public final class Lists {
     }
 
     @Override
-    public boolean removeIf(@Mutable TransformingSequentialList<F, T> this, Predicate<? super T> filter) {
+    public boolean removeIf(@Mutable TransformingSequentialList<F, T> this, @Readonly Predicate<? super T> filter) {
       checkNotNull(filter);
       return fromList.removeIf(element -> filter.test(function.apply(element)));
     }
@@ -663,7 +663,7 @@ public final class Lists {
     }
 
     @Override
-    public boolean removeIf(@Mutable TransformingRandomAccessList<F, T> this, Predicate<? super T> filter) {
+    public boolean removeIf(@Mutable TransformingRandomAccessList<F, T> this, @Readonly Predicate<? super T> filter) {
       checkNotNull(filter);
       return fromList.removeIf(element -> filter.test(function.apply(element)));
     }

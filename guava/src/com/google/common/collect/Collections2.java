@@ -139,9 +139,9 @@ public final class Collections2 {
   @ReceiverDependentMutable
   static class FilteredCollection<E extends @Nullable @Readonly Object> extends AbstractCollection<E> {
     final Collection<E> unfiltered;
-    final @Mutable Predicate<? super E> predicate;
+    final @Readonly Predicate<? super E> predicate;
 
-    FilteredCollection(@ReceiverDependentMutable Collection<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredCollection(@ReceiverDependentMutable Collection<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       this.unfiltered = unfiltered;
       this.predicate = predicate;
     }
@@ -230,7 +230,7 @@ public final class Collections2 {
     }
 
     @Override
-    public boolean removeIf(@Mutable FilteredCollection<E> this, java.util.function.Predicate<? super E> filter) {
+    public boolean removeIf(@Mutable FilteredCollection<E> this, java.util.function.@Readonly Predicate<? super E> filter) {
       checkNotNull(filter);
       return unfiltered.removeIf(element -> predicate.apply(element) && filter.test(element));
     }
@@ -284,7 +284,7 @@ public final class Collections2 {
    * <p><b>{@code Stream} equivalent:</b> {@link java.util.stream.Stream#map Stream.map}.
    */
   public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Collection<T> transform(
-      Collection<F> fromCollection, Function<? super F, T> function) {
+      Collection<F> fromCollection, @Readonly Function<? super F, T> function) {
     return new TransformedCollection<>(fromCollection, function);
   }
 
@@ -292,9 +292,9 @@ public final class Collections2 {
   static class TransformedCollection<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
       extends AbstractCollection<T> {
     final Collection<F> fromCollection;
-    final @Mutable Function<? super F, ? extends T> function;
+    final @Readonly Function<? super F, ? extends T> function;
 
-    TransformedCollection(@ReceiverDependentMutable Collection<F> fromCollection, Function<? super F, ? extends T> function) {
+    TransformedCollection(@ReceiverDependentMutable Collection<F> fromCollection, @Readonly Function<? super F, ? extends T> function) {
       this.fromCollection = checkNotNull(fromCollection);
       this.function = checkNotNull(function);
     }
@@ -328,7 +328,7 @@ public final class Collections2 {
     }
 
     @Override
-    public boolean removeIf(@Mutable TransformedCollection<F, T> this, java.util.function.Predicate<? super T> filter) {
+    public boolean removeIf(@Mutable TransformedCollection<F, T> this, java.util.function.@Readonly Predicate<? super T> filter) {
       checkNotNull(filter);
       return fromCollection.removeIf(element -> filter.test(function.apply(element)));
     }

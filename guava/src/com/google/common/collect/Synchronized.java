@@ -254,7 +254,7 @@ final class Synchronized {
 
     @Pure
     @Override
-    public boolean removeIf(@Mutable SynchronizedCollection<E> this, Predicate<? super E> filter) {
+    public boolean removeIf(@Mutable SynchronizedCollection<E> this, @Readonly Predicate<? super E> filter) {
       synchronized (mutex) {
         return delegate().removeIf(filter);
       }

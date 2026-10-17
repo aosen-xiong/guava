@@ -416,7 +416,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#filter} (same).
    */
-  public final FluentIterable<E> filter(Predicate<? super E> predicate) {
+  public final FluentIterable<E> filter(@Readonly Predicate<? super E> predicate) {
     return from(Iterables.filter(getDelegate(), predicate));
   }
 
