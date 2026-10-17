@@ -1372,7 +1372,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
         }
 
         @Override
-        ImmutableList<K> collectTypes(Iterable<? extends K> types) {
+        ImmutableList<K> collectTypes(@Readonly Iterable<? extends K> types) {
           ImmutableList.Builder<K> builder = ImmutableList.builder();
           for (K type : types) {
             if (!getRawType(type).isInterface()) {
@@ -1388,7 +1388,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       return collectTypes(ImmutableList.of(type));
     }
 
-    ImmutableList<K> collectTypes(Iterable<? extends K> types) {
+    ImmutableList<K> collectTypes(@Readonly Iterable<? extends K> types) {
       // type -> order number. 1 for Object, 2 for anything directly below, so on so forth.
       Map<K, Integer> map = Maps.newHashMap();
       for (K type : types) {

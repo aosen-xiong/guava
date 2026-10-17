@@ -2191,7 +2191,7 @@ public final class Maps {
   /** Returns a view of an entry transformed by the specified transformer. */
   static <V2 extends @Nullable @Readonly Object, K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object>
       Entry<K, V2> transformEntry(
-          final @Readonly EntryTransformer<? super K, ? super V1, V2> transformer, final Entry<K, V1> entry) {
+          final @Readonly EntryTransformer<? super K, ? super V1, V2> transformer, final @Readonly Entry<K, V1> entry) {
     checkNotNull(transformer);
     checkNotNull(entry);
     return new @Mutable AbstractMapEntry<K, V2>() {
@@ -2493,7 +2493,7 @@ public final class Maps {
     }
 
     @CheckForNull
-    private @PolyMutable Entry<K, V2> transformEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @CheckForNull Entry<K, V1> entry) {
+    private @PolyMutable Entry<K, V2> transformEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @CheckForNull @Readonly Entry<K, V1> entry) {
       return (entry == null) ? null : Maps.transformEntry(transformer, entry);
     }
 
@@ -3592,7 +3592,7 @@ public final class Maps {
 
   @CheckForNull
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Entry<K, V> unmodifiableOrNull(@CheckForNull Entry<K, ? extends V> entry) {
+      Entry<K, V> unmodifiableOrNull(@CheckForNull @Readonly Entry<K, ? extends V> entry) {
     return (entry == null) ? null : Maps.unmodifiableEntry(entry);
   }
 

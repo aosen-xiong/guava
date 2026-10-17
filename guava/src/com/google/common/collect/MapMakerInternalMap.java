@@ -1139,7 +1139,7 @@ class MapMakerInternalMap<
     return segmentFor(hash).copyEntry(original, newNext);
   }
 
-  int hash(Object key) {
+  int hash(@Readonly Object key) {
     int h = keyEquivalence.hash(key);
     return rehash(h);
   }
@@ -1755,7 +1755,7 @@ class MapMakerInternalMap<
 
     @CheckForNull
     @CanIgnoreReturnValue
-    V remove(@Mutable Segment<K, V, E, S> this, Object key, int hash) {
+    V remove(@Mutable Segment<K, V, E, S> this, @Readonly Object key, int hash) {
       lock();
       try {
         preWriteCleanup();
@@ -1795,7 +1795,7 @@ class MapMakerInternalMap<
       }
     }
 
-    boolean remove(@Mutable Segment<K, V, E, S> this, Object key, int hash, Object value) {
+    boolean remove(@Mutable Segment<K, V, E, S> this, @Readonly Object key, int hash, @Readonly Object value) {
       lock();
       try {
         preWriteCleanup();

@@ -119,7 +119,7 @@ public final class TypeResolver {
   }
 
   /** Returns a new {@code TypeResolver} with {@code variable} mapping to {@code type}. */
-  TypeResolver where(Map<TypeVariableKey, ? extends Type> mappings) {
+  TypeResolver where(@Readonly Map<TypeVariableKey, ? extends Type> mappings) {
     return new TypeResolver(typeTable.where(mappings));
   }
 
@@ -288,7 +288,7 @@ public final class TypeResolver {
     }
 
     /** Returns a new {@code TypeResolver} with {@code variable} mapping to {@code type}. */
-    final TypeTable where(Map<TypeVariableKey, ? extends Type> mappings) {
+    final TypeTable where(@Readonly Map<TypeVariableKey, ? extends Type> mappings) {
       ImmutableMap.Builder<TypeVariableKey, Type> builder = ImmutableMap.builder();
       builder.putAll(map);
       for (Entry<TypeVariableKey, ? extends Type> mapping : mappings.entrySet()) {

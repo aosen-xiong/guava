@@ -1453,7 +1453,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       }
     }
 
-    @Immutable Entry<K, Collection<V>> wrapEntry(Entry<K, Collection<V>> entry) {
+    @Immutable Entry<K, Collection<V>> wrapEntry(@Readonly Entry<K, Collection<V>> entry) {
       K key = entry.getKey();
       return Maps.immutableEntry(key, wrapCollection(key, entry.getValue()));
     }

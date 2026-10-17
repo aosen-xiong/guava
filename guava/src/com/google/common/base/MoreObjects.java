@@ -332,7 +332,7 @@ public final class MoreObjects {
       return addUnconditionalHolder(String.valueOf(value));
     }
 
-    private static boolean isEmpty(Object value) {
+    private static boolean isEmpty(@Readonly Object value) {
       // Put types estimated to be the most frequent first.
       if (value instanceof CharSequence) {
         return ((CharSequence) value).length() == 0;

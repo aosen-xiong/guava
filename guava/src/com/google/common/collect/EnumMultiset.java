@@ -106,7 +106,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
     this.counts = new int[enumConstants.length];
   }
 
-  private boolean isActuallyE(@CheckForNull Object o) {
+  private boolean isActuallyE(@CheckForNull @Readonly Object o) {
     if (o instanceof Enum) {
       Enum<?> e = (Enum<?>) o;
       int index = e.ordinal();

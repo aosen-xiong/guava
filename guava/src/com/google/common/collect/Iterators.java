@@ -675,7 +675,7 @@ public final class Iterators {
    * {@code retainIfTrue}.
    */
   public static <T extends @Nullable @Readonly Object> @Readonly UnmodifiableIterator<T> filter(
-      Iterator<T> unfiltered, Predicate<? super T> retainIfTrue) {
+      @Readonly Iterator<T> unfiltered, Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
     return new @Mutable AbstractIterator<T>() {
@@ -699,7 +699,7 @@ public final class Iterators {
    */
   @SuppressWarnings("unchecked") // can cast to <T> because non-Ts are removed
   @GwtIncompatible // Class.isInstance
-  public static <T> @Readonly UnmodifiableIterator<T> filter(Iterator<?> unfiltered, Class<T> desiredType) {
+  public static <T> @Readonly UnmodifiableIterator<T> filter(@Readonly Iterator<?> unfiltered, Class<T> desiredType) {
     return (@Readonly UnmodifiableIterator<T>) filter(unfiltered, instanceOf(desiredType));
   }
 
@@ -739,7 +739,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T find(
-      Iterator<T> iterator, Predicate<? super T> predicate) {
+      @Readonly Iterator<T> iterator, Predicate<? super T> predicate) {
     checkNotNull(iterator);
     checkNotNull(predicate);
     while (iterator.hasNext()) {
@@ -762,7 +762,7 @@ public final class Iterators {
   // For discussion of this signature, see the corresponding overload of *Iterables*.find.
   @CheckForNull
   public static <T extends @Nullable @Readonly Object> T find(
-      Iterator<? extends T> iterator,
+      @Readonly Iterator<? extends T> iterator,
       Predicate<? super T> predicate,
       @CheckForNull T defaultValue) {
     checkNotNull(iterator);

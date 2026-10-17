@@ -3076,7 +3076,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
 
     @CheckForNull
-    V remove(Object key, int hash) {
+    V remove(@Readonly Object key, int hash) {
       lock();
       try {
         long now = map.ticker.read();
@@ -3122,7 +3122,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
       }
     }
 
-    boolean remove(Object key, int hash, Object value) {
+    boolean remove(@Readonly Object key, int hash, @Readonly Object value) {
       lock();
       try {
         long now = map.ticker.read();
@@ -4315,7 +4315,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   @CheckForNull
   @CanIgnoreReturnValue
   @Override
-  public V remove(@CheckForNull @UnknownSignedness Object key) {
+  public V remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return null;
     }
@@ -4325,7 +4325,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness Object key, @CheckForNull @UnknownSignedness Object value) {
+  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
     if (key == null || value == null) {
       return false;
     }

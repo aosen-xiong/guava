@@ -167,7 +167,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
   /** Returns the range that spans the given range and entry, if the entry can be coalesced. */
   private static <K extends @Immutable Comparable, V> Range<K> coalesce(
-      Range<K> range, V value, @CheckForNull Entry<@Immutable Cut<K>, RangeMapEntry<K, V>> entry) {
+      Range<K> range, V value, @CheckForNull @Readonly Entry<@Immutable Cut<K>, RangeMapEntry<K, V>> entry) {
     if (entry != null
         && entry.getValue().getKey().isConnected(range)
         && entry.getValue().getValue().equals(value)) {
