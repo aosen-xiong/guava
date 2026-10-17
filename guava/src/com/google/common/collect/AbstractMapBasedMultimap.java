@@ -1257,7 +1257,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @Override
   @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
-    return new Values();
+    return new @ReceiverDependentMutable Values();
   }
 
   @Override
@@ -1307,9 +1307,9 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   @Override
   @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     if (this instanceof SetMultimap) {
-      return new EntrySet();
+      return new @ReceiverDependentMutable EntrySet();
     } else {
-      return new Entries();
+      return new @ReceiverDependentMutable Entries();
     }
   }
 

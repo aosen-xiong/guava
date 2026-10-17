@@ -113,9 +113,9 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     if (keyPredicate.apply(key)) {
       return unfiltered.get(key);
     } else if (unfiltered instanceof SetMultimap) {
-      return new AddRejectingSet<>(key);
+      return new @ReceiverDependentMutable AddRejectingSet<>(key);
     } else {
-      return new AddRejectingList<>(key);
+      return new @ReceiverDependentMutable AddRejectingList<>(key);
     }
   }
 

@@ -844,7 +844,7 @@ public final class Longs {
       if (fromIndex == toIndex) {
         return Collections.emptyList();
       }
-      return new LongArrayAsList(array, start + fromIndex, start + toIndex);
+      return new @ReceiverDependentMutable LongArrayAsList(array, start + fromIndex, start + toIndex);
     }
 
     @Override

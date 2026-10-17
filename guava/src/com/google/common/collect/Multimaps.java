@@ -1568,7 +1568,7 @@ public final class Multimaps {
 
     @Override
     @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V2>> createEntries(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
-      return new Entries();
+      return new @ReceiverDependentMutable Entries();
     }
 
     @Override
