@@ -35,7 +35,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ReceiverDependentMutable
-abstract class LinkedHashMultimapGwtSerializationDependencies<K extends @Immutable Object, V>
+abstract class LinkedHashMultimapGwtSerializationDependencies<K extends @Immutable Object, V extends @Immutable Object>
     extends AbstractSetMultimap<K, V> {
   LinkedHashMultimapGwtSerializationDependencies(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map) {
     super(map);

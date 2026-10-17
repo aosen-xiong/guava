@@ -36,7 +36,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-final class FilteredKeySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+final class FilteredKeySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends FilteredKeyMultimap<K, V> implements FilteredSetMultimap<K, V> {
 
   FilteredKeySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {

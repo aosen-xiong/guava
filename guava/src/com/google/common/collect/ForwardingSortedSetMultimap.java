@@ -42,7 +42,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
 public abstract class ForwardingSortedSetMultimap<
-        K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+        K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends ForwardingSetMultimap<K, V> implements SortedSetMultimap<K, V> {
 
   /** Constructor for use by subclasses. */

@@ -33,7 +33,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-interface FilteredSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+interface FilteredSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends FilteredMultimap<K, V>, SetMultimap<K, V> {
   @Override
   @ReceiverDependentMutable SetMultimap<K, V> unfiltered(@ReceiverDependentMutable FilteredSetMultimap<K, V> this);

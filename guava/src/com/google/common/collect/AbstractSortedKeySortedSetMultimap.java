@@ -41,7 +41,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
 abstract class AbstractSortedKeySortedSetMultimap<
-        K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+        K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractSortedSetMultimap<K, V> {
 
   AbstractSortedKeySortedSetMultimap(@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> map) {

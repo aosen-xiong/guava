@@ -57,7 +57,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public interface SortedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+public interface SortedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends SetMultimap<K, V> {
   // Following Javadoc copied from Multimap.
 

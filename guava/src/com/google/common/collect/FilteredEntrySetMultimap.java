@@ -38,7 +38,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends FilteredEntryMultimap<K, V> implements FilteredSetMultimap<K, V> {
 
   FilteredEntrySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {

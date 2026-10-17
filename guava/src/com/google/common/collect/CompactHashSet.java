@@ -56,6 +56,7 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * CompactHashSet is an implementation of a Set. All optional operations (adding and removing) are
@@ -87,11 +88,11 @@ import org.checkerframework.checker.mutability.qual.PolyMutable;
 @GwtIncompatible // not worth using in GWT for now
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E> implements Serializable {
+class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<E> implements Serializable {
   // TODO(user): cache all field accesses in local vars
 
   /** Creates an empty {@code CompactHashSet} instance. */
-  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> create() {
+  public static <E extends @Nullable @Immutable Object> CompactHashSet<E> create() {
     return new CompactHashSet<>();
   }
 
@@ -102,7 +103,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    * @param collection the elements that the set should contain
    * @return a new {@code CompactHashSet} containing those elements (minus duplicates)
    */
-  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> create(
+  public static <E extends @Nullable @Immutable Object> CompactHashSet<E> create(
       Collection<? extends E> collection) {
     CompactHashSet<E> set = createWithExpectedSize(collection.size());
     set.addAll(collection);
@@ -118,7 +119,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    */
   @SafeVarargs
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> create(E... elements) {
+  public static <E extends @Nullable @Immutable Object> CompactHashSet<E> create(E... elements) {
     CompactHashSet<E> set = createWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
@@ -133,7 +134,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
    *     elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <E extends @Nullable @Readonly Object> CompactHashSet<E> createWithExpectedSize(
+  public static <E extends @Nullable @Immutable Object> CompactHashSet<E> createWithExpectedSize(
       int expectedSize) {
     return new CompactHashSet<>(expectedSize);
   }
@@ -638,7 +639,7 @@ class CompactHashSet<E extends @Nullable @Readonly Object> extends AbstractSet<E
   }
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactHashSet<@PolyNull @PolySigned @PolyMutable E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactHashSet<@PolyNull @PolySigned E> this) {
     if (needsAllocArrays()) {
       return new Object[0];
     }

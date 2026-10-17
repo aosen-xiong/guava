@@ -61,7 +61,7 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public final class HashMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+public final class HashMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends HashMultimapGwtSerializationDependencies<K, V> {
   private static final int DEFAULT_VALUES_PER_KEY = 2;
 
@@ -73,7 +73,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * <p>This method will soon be deprecated in favor of {@code
    * MultimapBuilder.hashKeys().hashSetValues().build()}.
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       HashMultimap<K, V> create() {
     return new HashMultimap<>();
   }
@@ -90,7 +90,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * @throws IllegalArgumentException if {@code expectedKeys} or {@code expectedValuesPerKey} is
    *     negative
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> HashMultimap<K, V> create(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> HashMultimap<K, V> create(
       int expectedKeys, int expectedValuesPerKey) {
     return new HashMultimap<>(expectedKeys, expectedValuesPerKey);
   }
@@ -106,7 +106,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * @param multimap the multimap whose contents are copied to this multimap
    */
   @CFComment("PICO: good example to have poly only for mutable and immutable, like boolean algebra")
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable HashMultimap<K, V> create(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable HashMultimap<K, V> create(
       @PolyMutable Multimap<? extends K, ? extends V> multimap) {
     return new @PolyMutable HashMultimap<>(multimap);
   }

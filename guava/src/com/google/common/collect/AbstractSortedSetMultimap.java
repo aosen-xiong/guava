@@ -44,7 +44,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractSetMultimap<K, V> implements SortedSetMultimap<K, V> {
   /**
    * Creates a new multimap that uses the provided map.

@@ -35,6 +35,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * CompactLinkedHashSet is an implementation of a Set, which a predictable iteration order that
@@ -60,10 +61,10 @@ import org.checkerframework.checker.mutability.qual.PolyMutable;
 @GwtIncompatible // not worth using in GWT for now
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class CompactLinkedHashSet<E extends @Nullable @Readonly Object> extends CompactHashSet<E> {
+class CompactLinkedHashSet<E extends @Nullable @Immutable Object> extends CompactHashSet<E> {
 
   /** Creates an empty {@code CompactLinkedHashSet} instance. */
-  public static <E extends @Nullable @Readonly Object> CompactLinkedHashSet<E> create() {
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> create() {
     return new CompactLinkedHashSet<>();
   }
 
@@ -74,7 +75,7 @@ class CompactLinkedHashSet<E extends @Nullable @Readonly Object> extends Compact
    * @param collection the elements that the set should contain
    * @return a new {@code CompactLinkedHashSet} containing those elements (minus duplicates)
    */
-  public static <E extends @Nullable @Readonly Object> CompactLinkedHashSet<E> create(
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> create(
       Collection<? extends E> collection) {
     CompactLinkedHashSet<E> set = createWithExpectedSize(collection.size());
     set.addAll(collection);
@@ -90,7 +91,7 @@ class CompactLinkedHashSet<E extends @Nullable @Readonly Object> extends Compact
    */
   @SafeVarargs
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public static <E extends @Nullable @Readonly Object> CompactLinkedHashSet<E> create(E... elements) {
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> create(E... elements) {
     CompactLinkedHashSet<E> set = createWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
@@ -105,7 +106,7 @@ class CompactLinkedHashSet<E extends @Nullable @Readonly Object> extends Compact
    *     expectedSize} elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <E extends @Nullable @Readonly Object> CompactLinkedHashSet<E> createWithExpectedSize(
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> createWithExpectedSize(
       int expectedSize) {
     return new CompactLinkedHashSet<>(expectedSize);
   }
@@ -242,7 +243,7 @@ class CompactLinkedHashSet<E extends @Nullable @Readonly Object> extends Compact
   }
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactLinkedHashSet<@PolyNull @PolySigned @PolyMutable E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactLinkedHashSet<@PolyNull @PolySigned E> this) {
     return ObjectArrays.toArrayImpl(this);
   }
 

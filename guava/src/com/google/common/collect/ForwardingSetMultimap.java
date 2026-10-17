@@ -42,7 +42,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public abstract class ForwardingSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+public abstract class ForwardingSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends ForwardingMultimap<K, V> implements SetMultimap<K, V> {
 
   @Override

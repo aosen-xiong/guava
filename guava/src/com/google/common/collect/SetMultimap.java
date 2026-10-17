@@ -61,7 +61,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness", "mutability"})
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @Readonly @Nullable Object>
+public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @Immutable @Nullable Object>
     extends Multimap<K, V> {
   /**
    * {@inheritDoc}

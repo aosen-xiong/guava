@@ -427,14 +427,14 @@ public final class Multimaps {
    * @param factory supplier of new, empty sets that will each hold all values for a given key
    * @throws IllegalArgumentException if {@code map} is not empty
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       SetMultimap<K, V> newSetMultimap(
           Map<K, Collection<V>> map, final Supplier<? extends Set<V>> factory) {
     return new CustomSetMultimap<>(map, factory);
   }
 
   @ReceiverDependentMutable
-  private static class CustomSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  private static class CustomSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends AbstractSetMultimap<K, V> {
     transient Supplier<? extends @ReceiverDependentMutable Set<V>> factory;
 
@@ -536,7 +536,7 @@ public final class Multimaps {
    *     key
    * @throws IllegalArgumentException if {@code map} is not empty
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       SortedSetMultimap<K, V> newSortedSetMultimap(
           Map<K, Collection<V>> map, final Supplier<? extends SortedSet<V>> factory) {
     return new CustomSortedSetMultimap<>(map, factory);
@@ -544,7 +544,7 @@ public final class Multimaps {
 
   @ReceiverDependentMutable
   private static class CustomSortedSetMultimap<
-          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends AbstractSortedSetMultimap<K, V> {
     transient Supplier<? extends @ReceiverDependentMutable SortedSet<V>> factory;
     @CheckForNull transient @Readonly Comparator<? super V> valueComparator;
@@ -844,7 +844,7 @@ public final class Multimaps {
 
   @ReceiverDependentMutable
   private static class UnmodifiableSetMultimap<
-          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends UnmodifiableMultimap<K, V> implements SetMultimap<K, V> {
     UnmodifiableSetMultimap(@ReceiverDependentMutable SetMultimap<K, V> delegate) {
       super(delegate);
@@ -885,7 +885,7 @@ public final class Multimaps {
 
   @ReceiverDependentMutable
   private static class UnmodifiableSortedSetMultimap<
-          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends UnmodifiableSetMultimap<K, V> implements SortedSetMultimap<K, V> {
     UnmodifiableSortedSetMultimap(@ReceiverDependentMutable SortedSetMultimap<K, V> delegate) {
       super(delegate);
@@ -930,7 +930,7 @@ public final class Multimaps {
    * @param multimap the multimap to be wrapped
    * @return a synchronized view of the specified multimap
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       SetMultimap<K, V> synchronizedSetMultimap(SetMultimap<K, V> multimap) {
     return Synchronized.setMultimap(multimap, null);
   }
@@ -947,7 +947,7 @@ public final class Multimaps {
    * @return an unmodifiable view of the specified multimap
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     @PolyMutable SetMultimap<K, V> unmodifiableSetMultimap(@PolyMutable SetMultimap<K, V> delegate) {
     if (delegate instanceof UnmodifiableSetMultimap || delegate instanceof ImmutableSetMultimap) {
       return delegate;
@@ -962,7 +962,7 @@ public final class Multimaps {
    * @since 10.0
    */
   @Deprecated
-  public static <K extends @Immutable Object, V> @Readonly SetMultimap<K, V> unmodifiableSetMultimap(
+  public static <K extends @Immutable Object, V extends @Immutable Object> @Readonly SetMultimap<K, V> unmodifiableSetMultimap(
       ImmutableSetMultimap<K, @Immutable V> delegate) {
     return checkNotNull(delegate);
   }
@@ -978,7 +978,7 @@ public final class Multimaps {
    * @param multimap the multimap to be wrapped
    * @return a synchronized view of the specified multimap
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       SortedSetMultimap<K, V> synchronizedSortedSetMultimap(SortedSetMultimap<K, V> multimap) {
     return Synchronized.sortedSetMultimap(multimap, null);
   }
@@ -995,7 +995,7 @@ public final class Multimaps {
    * @return an unmodifiable view of the specified multimap
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     @PolyMutable SortedSetMultimap<K, V> unmodifiableSortedSetMultimap(@PolyMutable SortedSetMultimap<K, V> delegate) {
     if (delegate instanceof UnmodifiableSortedSetMultimap) {
       return delegate;
@@ -1105,7 +1105,7 @@ public final class Multimaps {
    */
   @SuppressWarnings("unchecked")
   // safe by specification of SetMultimap.asMap()
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, @PolyMutable Set<V>> asMap(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable Map<K, @PolyMutable Set<V>> asMap(
           @PolyMutable SetMultimap<K, V> multimap) {
     return (@PolyMutable Map<K, @PolyMutable Set<V>>) (@PolyMutable Map<K, ?>) multimap.asMap();
   }
@@ -1118,7 +1118,7 @@ public final class Multimaps {
    */
   @SuppressWarnings("unchecked")
   // safe by specification of SortedSetMultimap.asMap()
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, @PolyMutable SortedSet<V>> asMap(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable Map<K, @PolyMutable SortedSet<V>> asMap(
           @PolyMutable SortedSetMultimap<K, V> multimap) {
     return (@PolyMutable Map<K, @PolyMutable SortedSet<V>>) (@PolyMutable Map<K, ?>) multimap.asMap();
   }
@@ -1149,7 +1149,7 @@ public final class Multimaps {
    *
    * @param map the backing map for the returned multimap view
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> SetMultimap<K, V> forMap(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> SetMultimap<K, V> forMap(
       Map<K, V> map) {
     return new MapMultimap<>(map);
   }
@@ -2026,7 +2026,7 @@ public final class Multimaps {
    * @since 11.0
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Multimap<K, V> filterKeys(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable Multimap<K, V> filterKeys(
       @PolyMutable Multimap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof SetMultimap) {
       return filterKeys((@PolyMutable SetMultimap<K, V>) unfiltered, keyPredicate);
@@ -2072,7 +2072,7 @@ public final class Multimaps {
    * @since 14.0
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       @PolyMutable SetMultimap<K, V> filterKeys(
           @PolyMutable SetMultimap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     if (unfiltered instanceof FilteredKeySetMultimap) {
@@ -2275,7 +2275,7 @@ public final class Multimaps {
    * avoid that problem.
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
-  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       @PolyMutable Multimap<K, V> filterFiltered(
           @PolyMutable FilteredMultimap<K, V> multimap, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate =
@@ -2290,7 +2290,7 @@ public final class Multimaps {
    * avoid that problem.
    */
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
-  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  private static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       @PolyMutable SetMultimap<K, V> filterFiltered(
           @PolyMutable FilteredSetMultimap<K, V> multimap, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     Predicate<Entry<K, V>> predicate =

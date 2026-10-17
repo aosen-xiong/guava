@@ -51,7 +51,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractMultimap<K, V> implements FilteredMultimap<K, V> {
   final Multimap<K, V> unfiltered;
   final Predicate<? super Entry<K, V>> predicate;

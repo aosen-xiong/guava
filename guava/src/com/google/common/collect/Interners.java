@@ -82,7 +82,7 @@ public final class Interners {
       return this;
     }
 
-    public <E> Interner<E> build() {
+    public <E extends @Immutable Object> Interner<E> build() {
       if (!strong) {
         mapMaker.weakKeys();
       }
@@ -100,7 +100,7 @@ public final class Interners {
    * interned, thus preventing these instances from being garbage-collected. If this retention is
    * acceptable, this implementation may perform better than {@link #newWeakInterner}.
    */
-  public static <E> Interner<E> newStrongInterner() {
+  public static <E extends @Immutable Object> Interner<E> newStrongInterner() {
     return newBuilder().strong().build();
   }
 
@@ -111,7 +111,7 @@ public final class Interners {
    * the memory usage of that implementation is unacceptable.
    */
   @GwtIncompatible("java.lang.ref.WeakReference")
-  public static <E> Interner<E> newWeakInterner() {
+  public static <E extends @Immutable Object> Interner<E> newWeakInterner() {
     return newBuilder().weak().build();
   }
 

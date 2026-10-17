@@ -54,7 +54,7 @@ final class Platform {
   }
 
   /** Returns the platform preferred implementation of a set based on a hash table. */
-  static <E extends @Nullable @Readonly Object> Set<E> newHashSetWithExpectedSize(int expectedSize) {
+  static <E extends @Nullable @Immutable Object> Set<E> newHashSetWithExpectedSize(int expectedSize) {
     return Sets.newHashSetWithExpectedSize(expectedSize);
   }
 
@@ -67,7 +67,7 @@ final class Platform {
    * Returns the platform preferred implementation of an insertion ordered set based on a hash
    * table.
    */
-  static <E extends @Nullable @Readonly Object> Set<E> newLinkedHashSetWithExpectedSize(int expectedSize) {
+  static <E extends @Nullable @Immutable Object> Set<E> newLinkedHashSetWithExpectedSize(int expectedSize) {
     return Sets.newLinkedHashSetWithExpectedSize(expectedSize);
   }
 
@@ -84,7 +84,7 @@ final class Platform {
    * Returns the platform preferred set implementation that preserves insertion order when used only
    * for insertions.
    */
-  static <E extends @Nullable @Readonly Object> Set<E> preservesInsertionOrderOnAddsSet() {
+  static <E extends @Nullable @Immutable Object> Set<E> preservesInsertionOrderOnAddsSet() {
     return CompactHashSet.create();
   }
 

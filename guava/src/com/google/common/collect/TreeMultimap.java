@@ -85,7 +85,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractSortedKeySortedSetMultimap<K, V> {
   private transient @Mutable Comparator<? super K> keyComparator;
   private transient @Mutable Comparator<? super V> valueComparator;
@@ -105,7 +105,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @param keyComparator the comparator that determines the key ordering
    * @param valueComparator the comparator that determines the value ordering
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> TreeMultimap<K, V> create(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> TreeMultimap<K, V> create(
       Comparator<? super K> keyComparator, Comparator<? super V> valueComparator) {
     return new TreeMultimap<>(checkNotNull(keyComparator), checkNotNull(valueComparator));
   }

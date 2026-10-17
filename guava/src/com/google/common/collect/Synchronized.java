@@ -890,7 +890,7 @@ final class Synchronized {
   }
 
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable SetMultimap<K, V> setMultimap(
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable SetMultimap<K, V> setMultimap(
       @PolyMutable SetMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
     if (multimap instanceof SynchronizedSetMultimap || multimap instanceof BaseImmutableMultimap) {
       return multimap;
@@ -899,7 +899,7 @@ final class Synchronized {
   }
 
   @ReceiverDependentMutable
-  static class SynchronizedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  static class SynchronizedSetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends SynchronizedMultimap<K, V> implements SetMultimap<K, V> {
     @CheckForNull transient @Assignable Set<Map.@ReceiverDependentMutable Entry<K, V>> entrySet;
 
@@ -948,7 +948,7 @@ final class Synchronized {
   }
 
   @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       @PolyMutable SortedSetMultimap<K, V> sortedSetMultimap(
           @PolyMutable SortedSetMultimap<K, V> multimap, @CheckForNull @Readonly Object mutex) {
     if (multimap instanceof SynchronizedSortedSetMultimap) {
@@ -959,7 +959,7 @@ final class Synchronized {
 
   @ReceiverDependentMutable
   static final class SynchronizedSortedSetMultimap<
-          K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+          K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends SynchronizedSetMultimap<K, V> implements SortedSetMultimap<K, V> {
     SynchronizedSortedSetMultimap(@ReceiverDependentMutable SortedSetMultimap<K, V> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
