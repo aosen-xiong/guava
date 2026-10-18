@@ -195,7 +195,7 @@ public final class Collections2 {
     }
 
     @Override
-    public @Readonly Iterator<E> iterator(@Readonly FilteredCollection<E> this) {
+    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable FilteredCollection<E> this) {
       return Iterators.filter(unfiltered.iterator(), predicate);
     }
 

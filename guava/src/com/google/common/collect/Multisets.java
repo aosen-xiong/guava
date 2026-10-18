@@ -351,7 +351,7 @@ public final class Multisets {
     }
 
     @Override
-    public @Readonly UnmodifiableIterator<E> iterator(@Readonly FilteredMultiset<E> this) {
+    public @ReceiverDependentMutable UnmodifiableIterator<E> iterator(@ReceiverDependentMutable FilteredMultiset<E> this) {
       return Iterators.filter(unfiltered.iterator(), predicate);
     }
 

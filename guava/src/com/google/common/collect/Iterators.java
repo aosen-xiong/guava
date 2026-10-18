@@ -674,11 +674,12 @@ public final class Iterators {
    * Returns a view of {@code unfiltered} containing all elements that satisfy the input predicate
    * {@code retainIfTrue}.
    */
-  public static <T extends @Nullable @Readonly Object> @Readonly UnmodifiableIterator<T> filter(
-      @Readonly Iterator<T> unfiltered, @Readonly Predicate<? super T> retainIfTrue) {
+  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
+  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> filter(
+      @PolyMutable Iterator<T> unfiltered, @Readonly Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
-    return new @Mutable AbstractIterator<T>() {
+    return new @PolyMutable AbstractIterator<T>() {
       @Override
       @CheckForNull
       protected T computeNext() {

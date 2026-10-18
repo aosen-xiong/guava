@@ -1282,7 +1282,7 @@ public final class Sets {
     }
 
     @Override
-    public @Readonly Iterator<E> descendingIterator(@Readonly FilteredNavigableSet<E> this) {
+    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
       return Iterators.filter(unfiltered().descendingIterator(), predicate);
     }
 
