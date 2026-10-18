@@ -313,7 +313,7 @@ public final class Collections2 {
     }
 
     @Override
-    public Iterator<T> iterator(@Readonly TransformedCollection<F, T> this) {
+    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable TransformedCollection<F, T> this) {
       return Iterators.transform(fromCollection.iterator(), function);
     }
 

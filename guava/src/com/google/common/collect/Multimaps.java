@@ -1580,7 +1580,7 @@ public final class Multimaps {
     }
 
     @Override
-    Iterator<@PolyMutable Entry<K, V2>> entryIterator(@PolyMutable TransformedEntriesMultimap<K, V1, V2> this) {
+    @ReceiverDependentMutable Iterator<@PolyMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return Iterators.transform(
           fromMultimap.entries().iterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));
     }

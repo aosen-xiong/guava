@@ -329,7 +329,7 @@ public final class Tables {
     }
 
     @Override
-    Iterator<Cell<C, R, V>> cellIterator() {
+    @ReceiverDependentMutable Iterator<Cell<C, R, V>> cellIterator(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return Iterators.transform(original.cellSet().iterator(), Tables::transposeCell);
     }
 
@@ -508,7 +508,7 @@ public final class Tables {
     }
 
     @Override
-    Iterator<Cell<R, C, V2>> cellIterator(@Readonly TransformedTable<R, C, V1, V2> this) {
+    @ReceiverDependentMutable Iterator<Cell<R, C, V2>> cellIterator(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return Iterators.transform(fromTable.cellSet().iterator(), cellFunction());
     }
 

@@ -833,10 +833,11 @@ public final class Iterators {
    * successful {@code remove()} call, {@code fromIterator} no longer contains the corresponding
    * element.
    */
-  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Iterator<T> transform(
-      Iterator<F> fromIterator, @Readonly Function<? super F, ? extends T> function) {
+  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @PolyMutable Iterator<T> transform(
+      @PolyMutable Iterator<F> fromIterator, @Readonly Function<? super F, ? extends T> function) {
     checkNotNull(function);
-    return new TransformedIterator<F, T>(fromIterator) {
+    return new @PolyMutable TransformedIterator<F, T>(fromIterator) {
       @ParametricNullness
       @Override
       T transform(@ParametricNullness F from) {

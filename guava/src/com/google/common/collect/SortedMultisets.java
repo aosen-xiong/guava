@@ -60,7 +60,7 @@ final class SortedMultisets {
     }
 
     @Override
-    public Iterator<E> iterator() {
+    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable ElementSet<E> this) {
       return Multisets.elementIterator(multiset().entrySet().iterator());
     }
 

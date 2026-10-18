@@ -266,7 +266,7 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
     }
 
     @Override
-    public Iterator<E> iterator(@Readonly StandardElementSet this) {
+    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable ForwardingMultiset<E>.@ReceiverDependentMutable StandardElementSet this) {
       return Multisets.elementIterator(multiset().entrySet().iterator());
     }
   }
