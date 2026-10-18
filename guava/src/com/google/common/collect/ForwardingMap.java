@@ -276,12 +276,13 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected abstract class StandardEntrySet extends Maps.EntrySet<K, V> {
     /** Constructor for use by subclasses. */
     protected StandardEntrySet() {}
 
     @Override
-    Map<K, V> map() {
+    @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable ForwardingMap<K, V>.@ReceiverDependentMutable StandardEntrySet this) {
       return ForwardingMap.this;
     }
   }

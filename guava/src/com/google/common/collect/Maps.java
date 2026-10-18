@@ -4422,7 +4422,7 @@ public final class Maps {
   @ReceiverDependentMutable
   abstract static class EntrySet<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends Sets.ImprovedAbstractSet<@ReceiverDependentMutable Entry<K, V>> {
-    abstract @PolyMutable Map<K, V> map(@PolyMutable EntrySet<K, V> this);
+    abstract @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable EntrySet<K, V> this);
 
     @Override
     public @NonNegative int size(@Readonly EntrySet<K, V> this) {
