@@ -1694,7 +1694,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable NavigableAsMap this) {
-      return (@PolyMutable NavigableSet<K>) super.keySet();
+      return (@ReceiverDependentMutable NavigableSet<K>) super.keySet();
     }
 
     @Override

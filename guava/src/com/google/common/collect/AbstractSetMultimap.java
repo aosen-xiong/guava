@@ -85,7 +85,7 @@ abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V exte
    */
   @Override
   public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable AbstractSetMultimap<K, V> this, @ParametricNullness K key) {
-    return (@PolyMutable Set<V>) super.get(key);
+    return (@ReceiverDependentMutable Set<V>) super.get(key);
   }
 
   /**
@@ -97,7 +97,7 @@ abstract class AbstractSetMultimap<K extends @Nullable @Immutable Object, V exte
   @SideEffectFree
   @Override
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable AbstractSetMultimap<K, V> this) {
-    return (@PolyMutable Set<@PolyMutable Entry<K, V>>) super.entries();
+    return (@ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>>) super.entries();
   }
 
   /**

@@ -47,7 +47,7 @@ final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V ex
 
   @Override
   public @ReceiverDependentMutable SetMultimap<K, V> unfiltered(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this) {
-    return (@PolyMutable SetMultimap<K, V>) unfiltered;
+    return (@ReceiverDependentMutable SetMultimap<K, V>) unfiltered;
   }
 
   @Override
@@ -72,6 +72,6 @@ final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V ex
 
   @Override
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this) {
-    return (@PolyMutable Set<@PolyMutable Entry<K, V>>) super.entries();
+    return (@ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>>) super.entries();
   }
 }

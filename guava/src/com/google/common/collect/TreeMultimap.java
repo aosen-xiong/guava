@@ -180,7 +180,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   @Override
   @GwtIncompatible // NavigableSet
   public @ReceiverDependentMutable NavigableSet<V> get(@ReceiverDependentMutable TreeMultimap<K, V> this, @ParametricNullness K key) {
-    return (@PolyMutable NavigableSet<V>) super.get(key);
+    return (@ReceiverDependentMutable NavigableSet<V>) super.get(key);
   }
 
   /**
@@ -209,7 +209,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    */
   @Override
   public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable TreeMultimap<K, V> this) {
-    return (@PolyMutable NavigableMap<K, @PolyMutable Collection<V>>) super.asMap();
+    return (@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>>) super.asMap();
   }
 
   /**

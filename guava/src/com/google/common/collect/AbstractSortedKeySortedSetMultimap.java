@@ -50,7 +50,7 @@ abstract class AbstractSortedKeySortedSetMultimap<
 
   @Override
   public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
-    return (@PolyMutable SortedMap<K, @PolyMutable Collection<V>>) super.asMap();
+    return (@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>>) super.asMap();
   }
 
   @Override
@@ -60,7 +60,7 @@ abstract class AbstractSortedKeySortedSetMultimap<
 
   @Override
   public @ReceiverDependentMutable SortedSet<K> keySet(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
-    return (@PolyMutable SortedSet<K>) super.keySet();
+    return (@ReceiverDependentMutable SortedSet<K>) super.keySet();
   }
 
   @Override

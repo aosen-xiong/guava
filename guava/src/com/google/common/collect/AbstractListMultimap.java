@@ -85,7 +85,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
    */
   @Override
   public @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable AbstractListMultimap<K,V> this, @ParametricNullness K key) {
-    return (@PolyMutable List<V>) super.get(key);
+    return (@ReceiverDependentMutable List<V>) super.get(key);
   }
 
   /**

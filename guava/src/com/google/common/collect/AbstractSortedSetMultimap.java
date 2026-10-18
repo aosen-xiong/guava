@@ -96,7 +96,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    */
   @Override
   public @ReceiverDependentMutable SortedSet<V> get(@ReceiverDependentMutable AbstractSortedSetMultimap<K, V> this, @ParametricNullness K key) {
-    return (@PolyMutable SortedSet<V>) super.get(key);
+    return (@ReceiverDependentMutable SortedSet<V>) super.get(key);
   }
 
   /**
