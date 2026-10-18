@@ -140,7 +140,7 @@ public final class ObjectArrays {
     }
     fillArray(c, array);
     if (array.length > size) {
-      @Nullable Object[] unsoundlyCovariantArray = array;
+      @Nullable @Readonly Object[] unsoundlyCovariantArray = array;
       unsoundlyCovariantArray[size] = null;
     }
     return array;
@@ -163,7 +163,7 @@ public final class ObjectArrays {
     if (dst.length < len) {
       dst = newArray(dst, len);
     } else if (dst.length > len) {
-      @Nullable Object[] unsoundlyCovariantArray = dst;
+      @Nullable @Readonly Object[] unsoundlyCovariantArray = dst;
       unsoundlyCovariantArray[len] = null;
     }
     System.arraycopy(src, offset, dst, 0, len);
