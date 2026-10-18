@@ -649,6 +649,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       return asMapOfRanges().toString();
     }
 
+    @ReceiverDependentMutable
     class SubRangeMapAsMap extends AbstractMap<Range<K>, V> {
 
       @Override
@@ -796,8 +797,8 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       }
 
       @Override
-      public @PolyMutable Collection<V> values(@PolyMutable SubRangeMapAsMap this) {
-        return new Maps.Values<Range<K>, V>(this) {
+      public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable SubRangeMapAsMap this) {
+        return new Maps.@ReceiverDependentMutable Values<Range<K>, V>(this) {
           @Override
           public boolean removeAll(@Readonly Collection<?> c) {
             return removeEntryIf(compose(in(c), Maps.<V>valueFunction()));

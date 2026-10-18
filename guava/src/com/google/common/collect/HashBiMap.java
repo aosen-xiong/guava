@@ -624,7 +624,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   @ReceiverDependentMutable
   private final class Inverse extends IteratorBasedAbstractMap<V, K>
       implements BiMap<V, K>, Serializable {
-    @PolyMutable BiMap<K, V> forward(@PolyMutable Inverse this) {
+    @ReceiverDependentMutable BiMap<K, V> forward(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable Inverse this) {
       return HashBiMap.this;
     }
 

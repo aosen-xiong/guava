@@ -255,12 +255,13 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected class StandardElementSet extends Multisets.ElementSet<E> {
     /** Constructor for use by subclasses. */
     public StandardElementSet() {}
 
     @Override
-    Multiset<E> multiset(@PolyMutable ForwardingMultiset<E>.StandardElementSet this) {
+    @ReceiverDependentMutable Multiset<E> multiset(@ReceiverDependentMutable ForwardingMultiset<E>.@ReceiverDependentMutable StandardElementSet this) {
       return ForwardingMultiset.this;
     }
 
