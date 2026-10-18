@@ -199,7 +199,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
    * The elements contained in the set, in the range of [0, size()). The elements in [size(),
    * elements.length) are all {@code null}.
    */
-  @VisibleForTesting @CheckForNull transient @Nullable Object[] elements;
+  @VisibleForTesting @CheckForNull transient @Nullable @Readonly Object[] elements;
 
   /**
    * Keeps track of metadata like the number of hash table bits and modifications of this data
@@ -316,7 +316,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
       return delegate.add(object);
     }
     int[] entries = requireEntries();
-    @Nullable Object[] elements = requireElements();
+    @Nullable @Readonly Object[] elements = requireElements();
 
     int newEntryIndex = this.size; // current size, and pointer to the entry to be appended
     int newSize = newEntryIndex + 1;
@@ -497,7 +497,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
   void moveLastEntry(int dstIndex, int mask) {
     Object table = requireTable();
     int[] entries = requireEntries();
-    @Nullable Object[] elements = requireElements();
+    @Nullable @Readonly Object[] elements = requireElements();
     int srcIndex = size() - 1;
     if (dstIndex < srcIndex) {
       // move last entry to deleted spot
@@ -747,7 +747,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
     return requireNonNull(entries);
   }
 
-  private @Nullable Object[] requireElements() {
+  private @Nullable @Readonly Object[] requireElements() {
     return requireNonNull(elements);
   }
 

@@ -163,8 +163,8 @@ final class CompactHashing {
       int mask,
       Object table,
       int[] entries,
-      @Nullable Object[] keys,
-      @CheckForNull @Nullable Object[] values) {
+      @Nullable @Readonly Object[] keys,
+      @CheckForNull @Nullable @Readonly Object[] values) {
     int hash = Hashing.smearedHash(key);
     int tableIndex = hash & mask;
     int next = tableGet(table, tableIndex);

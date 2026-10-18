@@ -158,7 +158,7 @@ public final class ObjectArrays {
    * <i>only</i> if the caller knows that the collection does not contain any null elements.
    */
   static <T extends @Nullable @Readonly Object> T[] toArrayImpl(
-      @Nullable Object[] src, int offset, int len, T[] dst) {
+      @Nullable @Readonly Object[] src, int offset, int len, T[] dst) {
     checkPositionIndexes(offset, offset + len, src.length);
     if (dst.length < len) {
       dst = newArray(dst, len);
@@ -190,7 +190,7 @@ public final class ObjectArrays {
    * Returns a copy of the specified subrange of the specified array that is literally an Object[],
    * and not e.g. a {@code String[]}.
    */
-  static @Nullable Object[] copyAsObjectArray(@Nullable Object[] elements, int offset, int length) {
+  static @Nullable Object[] copyAsObjectArray(@Nullable @Readonly Object[] elements, int offset, int length) {
     checkPositionIndexes(offset, offset + length, elements.length);
     if (length == 0) {
       return new Object[0];

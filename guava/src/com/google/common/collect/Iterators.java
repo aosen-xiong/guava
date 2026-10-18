@@ -1124,7 +1124,7 @@ public final class Iterators {
       extends UnmodifiableIterator<T> {
     private static final Object SENTINEL = new Object();
 
-    private @Nullable Object valueOrSentinel;
+    private @Nullable @Readonly Object valueOrSentinel;
 
     SingletonIterator(T value) {
       this.valueOrSentinel = value;

@@ -223,13 +223,13 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * The keys of the entries in the map, in the range of [0, size()). The keys in [size(),
    * keys.length) are all {@code null}.
    */
-  @VisibleForTesting @CheckForNull transient @Nullable Object[] keys;
+  @VisibleForTesting @CheckForNull transient @Nullable @Readonly Object[] keys;
 
   /**
    * The values of the entries in the map, in the range of [0, size()). The values in [size(),
    * values.length) are all {@code null}.
    */
-  @VisibleForTesting @CheckForNull transient @Nullable Object[] values;
+  @VisibleForTesting @CheckForNull transient @Nullable @Readonly Object[] values;
 
   /**
    * Keeps track of metadata like the number of hash table bits and modifications of this data
@@ -358,8 +358,8 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
       return delegate.put(key, value);
     }
     int[] entries = requireEntries();
-    @Nullable Object[] keys = requireKeys();
-    @Nullable Object[] values = requireValues();
+    @Nullable @Readonly Object[] keys = requireKeys();
+    @Nullable @Readonly Object[] values = requireValues();
 
     int newEntryIndex = this.size; // current size, and pointer to the entry to be appended
     int newSize = newEntryIndex + 1;
@@ -583,8 +583,8 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   void moveLastEntry(@Mutable CompactHashMap<K, V> this, int dstIndex, int mask) {
     Object table = requireTable();
     int[] entries = requireEntries();
-    @Nullable Object[] keys = requireKeys();
-    @Nullable Object[] values = requireValues();
+    @Nullable @Readonly Object[] keys = requireKeys();
+    @Nullable @Readonly Object[] values = requireValues();
     int srcIndex = size() - 1;
     if (dstIndex < srcIndex) {
       // move last entry to deleted spot
@@ -734,7 +734,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] a) {
       if (needsAllocArrays()) {
         if (a.length > 0) {
-          @Nullable Object[] unsoundlyCovariantArray = a;
+          @Nullable @Readonly Object[] unsoundlyCovariantArray = a;
           unsoundlyCovariantArray[0] = null;
         }
         return a;
@@ -1056,7 +1056,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] a) {
       if (needsAllocArrays()) {
         if (a.length > 0) {
-          @Nullable Object[] unsoundlyCovariantArray = a;
+          @Nullable @Readonly Object[] unsoundlyCovariantArray = a;
           unsoundlyCovariantArray[0] = null;
         }
         return a;
@@ -1178,11 +1178,11 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return requireNonNull(entries);
   }
 
-  private @Nullable Object @ReceiverDependentMutable [] requireKeys() {
+  private @Nullable @Readonly Object @ReceiverDependentMutable [] requireKeys() {
     return requireNonNull(keys);
   }
 
-  private @Nullable Object @ReceiverDependentMutable [] requireValues() {
+  private @Nullable @Readonly Object @ReceiverDependentMutable [] requireValues() {
     return requireNonNull(values);
   }
 

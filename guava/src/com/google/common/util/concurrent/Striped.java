@@ -43,6 +43,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A striped {@code Lock/Semaphore/ReadWriteLock}. This offers the underlying lock striping similar
@@ -363,7 +364,7 @@ public abstract class Striped<L> {
    */
   private static class CompactStriped<L> extends PowerOfTwoStriped<L> {
     /** Size is a power of two. */
-    private final Object[] array;
+    private final @Readonly Object[] array;
 
     private CompactStriped(int stripes, Supplier<L> supplier) {
       super(stripes);

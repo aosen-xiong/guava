@@ -757,8 +757,8 @@ public final class Sets {
       @Override
       public @Readonly UnmodifiableIterator<E> iterator() {
         return new @Immutable AbstractIterator<E>() {
-          final Iterator<? extends E> itr1 = set1.iterator();
-          final Iterator<? extends E> itr2 = set2.iterator();
+          final @Readonly Iterator<? extends E> itr1 = set1.iterator();
+          final @Readonly Iterator<? extends E> itr2 = set2.iterator();
 
           @Override
           @CheckForNull
@@ -847,7 +847,7 @@ public final class Sets {
       @Override
       public UnmodifiableIterator<E> iterator() {
         return new @Immutable AbstractIterator<E>() {
-          final Iterator<E> itr = set1.iterator();
+          final @Readonly Iterator<E> itr = set1.iterator();
 
           @Override
           @CheckForNull
