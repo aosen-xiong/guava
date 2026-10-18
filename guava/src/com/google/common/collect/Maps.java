@@ -138,9 +138,10 @@ public final class Maps {
     return (Function) EntryFunction.VALUE;
   }
 
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Iterator<K> keyIterator(
-      Iterator<@PolyMutable Entry<K, V>> entryIterator) {
-    return new TransformedIterator<@PolyMutable Entry<K, V>, K>(entryIterator) {
+  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<K> keyIterator(
+      @PolyMutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
+    return new @PolyMutable TransformedIterator<@PolyMutable Entry<K, V>, K>(entryIterator) {
       @Override
       @ParametricNullness
       K transform(@Readonly Entry<K, V> entry) {
@@ -149,9 +150,10 @@ public final class Maps {
     };
   }
 
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> Iterator<V> valueIterator(
-      Iterator<@PolyMutable Entry<K, V>> entryIterator) {
-    return new TransformedIterator<@PolyMutable Entry<K, V>, V>(entryIterator) {
+  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
+  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<V> valueIterator(
+      @PolyMutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
+    return new @PolyMutable TransformedIterator<@PolyMutable Entry<K, V>, V>(entryIterator) {
       @Override
       @ParametricNullness
       V transform(@Readonly Entry<K, V> entry) {
@@ -4134,7 +4136,7 @@ public final class Maps {
     }
 
     @Override
-    public Iterator<K> iterator(@PolyMutable KeySet<K, V> this) {
+    public @ReceiverDependentMutable Iterator<K> iterator(@ReceiverDependentMutable KeySet<K, V> this) {
       return keyIterator(map().entrySet().iterator());
     }
 
@@ -4340,7 +4342,7 @@ public final class Maps {
     }
 
     @Override
-    public Iterator<V> iterator(@PolyMutable Values<K, V> this) {
+    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable Values<K, V> this) {
       return valueIterator(map().entrySet().iterator());
     }
 

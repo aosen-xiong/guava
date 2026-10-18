@@ -1827,7 +1827,7 @@ public final class Multimaps {
     }
 
     @Override
-    public Iterator<K> iterator(@ReceiverDependentMutable Keys<K, V> this) {
+    public @ReceiverDependentMutable Iterator<K> iterator(@ReceiverDependentMutable Keys<K, V> this) {
       return Maps.keyIterator(multimap.entries().iterator());
     }
 

@@ -1263,7 +1263,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @Override
   @CFComment("PICO: follow super's polymutable")
-  Iterator<V> valueIterator(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  @ReceiverDependentMutable Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return new Itr<V>() {
       @Override
       @ParametricNullness
