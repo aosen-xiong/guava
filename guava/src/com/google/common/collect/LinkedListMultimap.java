@@ -871,7 +871,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  Iterator<Entry<K, V>> entryIterator() {
+  @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     throw new AssertionError("should never be called");
   }
 

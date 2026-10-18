@@ -397,13 +397,13 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       new @Mutable RangeMap<@Immutable Comparable<?>, Object>() {
         @Override
         @CheckForNull
-        public Object get(Comparable<?> key) {
+        public Object get(@Readonly Comparable<?> key) {
           return null;
         }
 
         @Override
         @CheckForNull
-        public Entry<Range<@Immutable Comparable<?>>, Object> getEntry(Comparable<?> key) {
+        public Entry<Range<@Immutable Comparable<?>>, Object> getEntry(@Readonly Comparable<?> key) {
           return null;
         }
 

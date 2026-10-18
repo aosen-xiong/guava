@@ -378,7 +378,7 @@ public final class Multisets {
     }
 
     @Override
-    Iterator<Entry<E>> entryIterator() {
+    Iterator<@ReceiverDependentMutable Entry<E>> entryIterator() {
       throw new AssertionError("should never be called");
     }
 

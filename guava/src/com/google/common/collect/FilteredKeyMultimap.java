@@ -185,7 +185,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  Iterator<Entry<K, V>> entryIterator() {
+  @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable FilteredKeyMultimap<K, V> this) {
     throw new AssertionError("should never be called");
   }
 
