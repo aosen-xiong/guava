@@ -828,7 +828,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     @ParametricNullness
-    public V set(int index, @ParametricNullness V element) {
+    public V set(@Mutable AbstractMapBasedMultimap<K, V>.@Mutable WrappedList this, int index, @ParametricNullness V element) {
       refreshIfEmpty();
       return getListDelegate().set(index, element);
     }

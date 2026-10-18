@@ -449,7 +449,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   /** An {@code Iterator} over distinct keys in key head order. */
   @ReceiverDependentMutable private class DistinctKeyIterator implements Iterator<K> {
-    final Set<K> seenKeys = Sets.<K>newHashSetWithExpectedSize(keySet().size());
+    final @Mutable Set<K> seenKeys = Sets.<K>newHashSetWithExpectedSize(keySet().size());
     @CheckForNull @Assignable Node<K, V> next = head;
     @CheckForNull @Assignable Node<K, V> current;
     int expectedModCount = modCount;

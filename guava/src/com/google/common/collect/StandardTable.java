@@ -791,7 +791,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   private class ColumnKeyIterator extends AbstractIterator<C> {
     // Use the same map type to support TreeMaps with comparators that aren't
     // consistent with equals().
-    final Map<C, V> seen = factory.get();
+    final @Mutable Map<C, V> seen = factory.get();
     final Iterator<Map<C, V>> mapIterator = backingMap.values().iterator();
     @Assignable Iterator<Entry<C, V>> entryIterator = Iterators.emptyIterator();
 
