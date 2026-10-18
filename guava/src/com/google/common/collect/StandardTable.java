@@ -249,8 +249,8 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   }
 
   @Override
-  Iterator<Cell<R, C, V>> cellIterator(@Readonly StandardTable<R, C, V> this) {
-    return new CellIterator();
+  @ReceiverDependentMutable Iterator<Cell<R, C, V>> cellIterator(@ReceiverDependentMutable StandardTable<R, C, V> this) {
+    return new @ReceiverDependentMutable CellIterator();
   }
 
   @ReceiverDependentMutable

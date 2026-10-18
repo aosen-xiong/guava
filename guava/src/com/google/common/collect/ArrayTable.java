@@ -568,8 +568,8 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
-  Iterator<Cell<R, C, @Nullable V>> cellIterator() {
-    return new @Mutable AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
+  @ReceiverDependentMutable Iterator<Cell<R, C, @Nullable V>> cellIterator(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
+    return new @ReceiverDependentMutable AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
       @Override
       protected Cell<R, C, @Nullable V> get(final int index) {
         return getCell(index);

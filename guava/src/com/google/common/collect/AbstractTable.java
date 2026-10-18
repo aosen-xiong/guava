@@ -138,7 +138,7 @@ abstract class AbstractTable<
     return new @ReceiverDependentMutable CellSet();
   }
 
-  abstract Iterator<Table.Cell<R, C, V>> cellIterator(@Readonly AbstractTable<R, C, V> this);
+  abstract @ReceiverDependentMutable Iterator<Table.Cell<R, C, V>> cellIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this);
 
   abstract Spliterator<Table.Cell<R, C, V>> cellSpliterator(@Readonly AbstractTable<R, C, V> this);
 
@@ -175,7 +175,7 @@ abstract class AbstractTable<
     }
 
     @Override
-    public Iterator<Table.Cell<R, C, V>> iterator() {
+    public @ReceiverDependentMutable Iterator<Table.Cell<R, C, V>> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable CellSet this) {
       return cellIterator();
     }
 

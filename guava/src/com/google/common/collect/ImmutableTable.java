@@ -312,7 +312,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   abstract ImmutableSet<Cell<R, C, V>> createCellSet();
 
   @Override
-  final UnmodifiableIterator<Cell<R, C, V>> cellIterator() {
+  final @Immutable UnmodifiableIterator<Cell<R, C, V>> cellIterator() {
     throw new AssertionError("should never be called");
   }
 
