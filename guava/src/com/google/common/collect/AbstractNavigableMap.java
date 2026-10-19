@@ -99,25 +99,25 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   @CheckForNull
-  public @Immutable Entry<K, V> lowerEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> lowerEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return headMap(key, false).lastEntry();
   }
 
   @Override
   @CheckForNull
-  public @Immutable Entry<K, V> floorEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> floorEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return headMap(key, true).lastEntry();
   }
 
   @Override
   @CheckForNull
-  public @Immutable Entry<K, V> ceilingEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> ceilingEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return tailMap(key, true).firstEntry();
   }
 
   @Override
   @CheckForNull
-  public @Immutable Entry<K, V> higherEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> higherEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return tailMap(key, false).firstEntry();
   }
 

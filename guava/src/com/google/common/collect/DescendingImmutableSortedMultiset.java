@@ -47,13 +47,13 @@ final class DescendingImmutableSortedMultiset<E extends @Immutable Object> exten
 
   @Override
   @CheckForNull
-  public @Immutable Entry<E> firstEntry() {
+  public @Readonly Entry<E> firstEntry() {
     return forward.lastEntry();
   }
 
   @Override
   @CheckForNull
-  public @Immutable Entry<E> lastEntry() {
+  public @Readonly Entry<E> lastEntry() {
     return forward.firstEntry();
   }
 
