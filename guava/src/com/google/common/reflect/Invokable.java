@@ -31,6 +31,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -65,6 +66,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  *     31.0)
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   private final AccessibleObject accessibleObject;
   private final Member member;
@@ -362,6 +364,7 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   @SuppressWarnings("Java7ApiChecker")
   public abstract AnnotatedType getAnnotatedReturnType();
 
+  @Immutable
   static class MethodInvokable<T> extends Invokable<T, Object> {
 
     final Method method;
@@ -429,6 +432,7 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
     }
   }
 
+  @Immutable
   static class ConstructorInvokable<T> extends Invokable<T, T> {
 
     final Constructor<?> constructor;

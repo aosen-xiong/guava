@@ -599,7 +599,7 @@ public final class Shorts extends ShortsMethodsForWeb {
    * @throws NullPointerException if {@code collection} or any of its elements is null
    * @since 1.0 (parameter was {@code Collection<Short>} before 12.0)
    */
-  public static short[] toArray(Collection<? extends Number> collection) {
+  public static short[] toArray(Collection<? extends @Readonly Number> collection) {
     if (collection instanceof ShortArrayAsList) {
       return ((ShortArrayAsList) collection).toShortArray();
     }

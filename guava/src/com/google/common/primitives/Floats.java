@@ -548,7 +548,7 @@ public final class Floats extends FloatsMethodsForWeb {
    * @throws NullPointerException if {@code collection} or any of its elements is null
    * @since 1.0 (parameter was {@code Collection<Float>} before 12.0)
    */
-  public static float[] toArray(Collection<? extends Number> collection) {
+  public static float[] toArray(Collection<? extends @Readonly Number> collection) {
     if (collection instanceof FloatArrayAsList) {
       return ((FloatArrayAsList) collection).toFloatArray();
     }

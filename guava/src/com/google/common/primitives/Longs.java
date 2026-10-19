@@ -708,7 +708,7 @@ public final class Longs {
    * @throws NullPointerException if {@code collection} or any of its elements is null
    * @since 1.0 (parameter was {@code Collection<Long>} before 12.0)
    */
-  public static long[] toArray(Collection<? extends Number> collection) {
+  public static long[] toArray(Collection<? extends @Readonly Number> collection) {
     if (collection instanceof LongArrayAsList) {
       return ((LongArrayAsList) collection).toLongArray();
     }
