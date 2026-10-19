@@ -3237,6 +3237,7 @@ public final class Maps {
     @WeakOuter
     @ReceiverDependentMutable
     class KeySet extends Maps.KeySet<K, V> {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
       KeySet() {
         super(FilteredEntryMap.this);
       }

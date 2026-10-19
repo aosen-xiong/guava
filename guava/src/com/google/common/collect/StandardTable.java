@@ -639,6 +639,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     @WeakOuter
     @ReceiverDependentMutable
     private class KeySet extends Maps.KeySet<R, V> {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
       KeySet() {
         super(Column.this);
       }
@@ -667,6 +668,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     @WeakOuter
     @ReceiverDependentMutable
     private class Values extends Maps.Values<R, V> {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
       Values() {
         super(Column.this);
       }
@@ -1030,6 +1032,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     @WeakOuter
     @ReceiverDependentMutable
     private class ColumnMapValues extends Maps.Values<C, Map<R, V>> {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
       ColumnMapValues() {
         super(ColumnMap.this);
       }

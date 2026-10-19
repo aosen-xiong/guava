@@ -1007,6 +1007,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
   @WeakOuter
   @ReceiverDependentMutable class ValuesView extends Maps.Values<K, V> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     ValuesView() {
       super(CompactHashMap.this);
     }

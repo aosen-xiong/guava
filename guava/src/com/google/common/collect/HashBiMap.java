@@ -506,6 +506,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @ReceiverDependentMutable
   private final class KeySet extends Maps.KeySet<K, V> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     KeySet() {
       super(HashBiMap.this);
     }
@@ -688,6 +689,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
     @ReceiverDependentMutable
     private final class InverseKeySet extends Maps.KeySet<V, K> {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
       InverseKeySet() {
         super(Inverse.this);
       }
