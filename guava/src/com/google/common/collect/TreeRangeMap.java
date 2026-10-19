@@ -601,7 +601,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       return new SubRangeMapAsMap() {
 
         @Override
-        Iterator<Entry<Range<K>, V>> entryIterator() {
+        Iterator<@Immutable Entry<Range<K>, V>> entryIterator() {
           if (subRange.isEmpty()) {
             return Iterators.emptyIterator();
           }
@@ -611,11 +611,11 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
                   .descendingMap()
                   .values()
                   .iterator();
-          return new @Mutable AbstractIterator<Entry<Range<K>, V>>() {
+          return new @Mutable AbstractIterator<@Immutable Entry<Range<K>, V>>() {
 
             @Override
             @CheckForNull
-            protected Entry<Range<K>, V> computeNext() {
+            protected @Immutable Entry<Range<K>, V> computeNext() {
               if (backingItr.hasNext()) {
                 RangeMapEntry<K, V> entry = backingItr.next();
                 if (entry.getUpperBound().compareTo(subRange.lowerBound) <= 0) {
@@ -768,7 +768,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
         };
       }
 
-      Iterator<Entry<Range<K>, V>> entryIterator(@Readonly SubRangeMapAsMap this) {
+      Iterator<@Immutable Entry<Range<K>, V>> entryIterator(@Readonly SubRangeMapAsMap this) {
         if (subRange.isEmpty()) {
           return Iterators.emptyIterator();
         }
@@ -777,11 +777,11 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
                 entriesByLowerBound.floorKey(subRange.lowerBound), subRange.lowerBound);
         final Iterator<RangeMapEntry<K, V>> backingItr =
             entriesByLowerBound.tailMap(cutToStart, true).values().iterator();
-        return new @Mutable AbstractIterator<Entry<Range<K>, V>>() {
+        return new @Mutable AbstractIterator<@Immutable Entry<Range<K>, V>>() {
 
           @Override
           @CheckForNull
-          protected Entry<Range<K>, V> computeNext() {
+          protected @Immutable Entry<Range<K>, V> computeNext() {
             while (backingItr.hasNext()) {
               RangeMapEntry<K, V> entry = backingItr.next();
               if (entry.getLowerBound().compareTo(subRange.upperBound) >= 0) {

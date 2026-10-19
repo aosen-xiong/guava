@@ -374,7 +374,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> entryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> entryIterator() {
       /*
        * We want to start the iteration at the first range where the upper bound is in
        * upperBoundWindow.
@@ -397,10 +398,10 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
                   .iterator();
         }
       }
-      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (!backingItr.hasNext()) {
             return endOfData();
           }
@@ -520,7 +521,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> entryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> entryIterator() {
       /*
        * firstComplementRangeLowerBound is the first complement range lower bound inside
        * complementLowerBoundWindow. Complement range lower bounds are either positive range upper
@@ -551,12 +553,12 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       } else {
         return Iterators.emptyIterator();
       }
-      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         Cut<C> nextComplementRangeLowerBound = firstComplementRangeLowerBound;
 
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (complementLowerBoundWindow.upperBound.isLessThan(nextComplementRangeLowerBound)
               || nextComplementRangeLowerBound == Cut.<C>aboveAll()) {
             return endOfData();
@@ -576,7 +578,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
       /*
        * firstComplementRangeUpperBound is the upper bound of the last complement range with lower
        * bound inside complementLowerBoundWindow.
@@ -612,12 +615,12 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
         cut = positiveRangesByLowerBound.higherKey(Cut.<C>belowAll());
       }
       Cut<C> firstComplementRangeUpperBound = MoreObjects.firstNonNull(cut, Cut.<C>aboveAll());
-      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         Cut<C> nextComplementRangeUpperBound = firstComplementRangeUpperBound;
 
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (nextComplementRangeUpperBound == Cut.<C>belowAll()) {
             return endOfData();
           } else if (positiveItr.hasNext()) {
@@ -794,7 +797,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> entryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> entryIterator() {
       if (restriction.isEmpty()) {
         return Iterators.emptyIterator();
       }
@@ -818,10 +822,10 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       Cut<Cut<C>> upperBoundOnLowerBounds =
           Ordering.<Cut<Cut<C>>>natural()
               .min(lowerBoundWindow.upperBound, Cut.belowValue(restriction.upperBound));
-      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (!completeRangeItr.hasNext()) {
             return endOfData();
           }
@@ -837,7 +841,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
       if (restriction.isEmpty()) {
         return Iterators.emptyIterator();
       }
@@ -852,10 +857,10 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
               .descendingMap()
               .values()
               .iterator();
-      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (!completeRangeItr.hasNext()) {
             return endOfData();
           }
