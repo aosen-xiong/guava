@@ -461,7 +461,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  Iterator<Entry<E>> entryIterator() {
+  Iterator<@Readonly Entry<E>> entryIterator() {
     return new @Mutable Iterator<Entry<E>>() {
       @CheckForNull @Readonly AvlNode<E> current = firstNode();
       @CheckForNull Entry<E> prevEntry;
@@ -504,7 +504,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  Iterator<Entry<E>> descendingEntryIterator() {
+  Iterator<@Readonly Entry<E>> descendingEntryIterator() {
     return new @Mutable Iterator<Entry<E>>() {
       @CheckForNull @Readonly AvlNode<E> current = lastNode();
       @CheckForNull Entry<E> prevEntry = null;

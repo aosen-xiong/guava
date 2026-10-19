@@ -163,13 +163,13 @@ public final class Multisets {
       return (es == null) ? elementSet = createElementSet() : es;
     }
 
-    @LazyInit @CheckForNull transient @Assignable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet;
+    @LazyInit @CheckForNull transient @Assignable Set<Multiset.@Readonly Entry<E>> entrySet;
 
     @SideEffectFree
     @SuppressWarnings("unchecked")
     @Override
-    public @ReceiverDependentMutable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
-      Set<Multiset.@ReceiverDependentMutable Entry<E>> es = entrySet;
+    public @ReceiverDependentMutable Set<Multiset.@Readonly Entry<E>> entrySet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
+      Set<Multiset.@Readonly Entry<E>> es = entrySet;
       return (es == null)
           // Safe because the returned set is made unmodifiable and Entry
           // itself is readonly
@@ -366,7 +366,7 @@ public final class Multisets {
     }
 
     @Override
-    @ReceiverDependentMutable Set<Entry<E>> createEntrySet() {
+    @ReceiverDependentMutable Set<@Readonly Entry<E>> createEntrySet() {
       return Sets.filter(
           unfiltered.entrySet(),
           new Predicate<Entry<E>>() {
@@ -378,7 +378,7 @@ public final class Multisets {
     }
 
     @Override
-    Iterator<@ReceiverDependentMutable Entry<E>> entryIterator() {
+    Iterator<@Readonly Entry<E>> entryIterator() {
       throw new AssertionError("should never be called");
     }
 
@@ -467,14 +467,14 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<? extends Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
-        final Iterator<? extends Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
         // TODO(lowasser): consider making the entries live views
-        return new @Mutable AbstractIterator<Entry<E>>() {
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -530,13 +530,13 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<Entry<E>> iterator1 = multiset1.entrySet().iterator();
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<@Readonly Entry<E>> iterator1 = multiset1.entrySet().iterator();
         // TODO(lowasser): consider making the entries live views
-        return new @Mutable AbstractIterator<Entry<E>>() {
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             while (iterator1.hasNext()) {
               Entry<E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -602,13 +602,13 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<? extends Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
-        final Iterator<? extends Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
-        return new @Mutable AbstractIterator<Entry<E>>() {
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -661,7 +661,7 @@ public final class Multisets {
 
       @Override
       Iterator<E> elementIterator() {
-        final Iterator<Entry<E>> iterator1 = multiset1.entrySet().iterator();
+        final Iterator<@Readonly Entry<E>> iterator1 = multiset1.entrySet().iterator();
         return new @Mutable AbstractIterator<E>() {
           @Override
           @CheckForNull
@@ -679,12 +679,12 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<Entry<E>> iterator1 = multiset1.entrySet().iterator();
-        return new @Mutable AbstractIterator<Entry<E>>() {
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<@Readonly Entry<E>> iterator1 = multiset1.entrySet().iterator();
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             while (iterator1.hasNext()) {
               Entry<E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -752,7 +752,7 @@ public final class Multisets {
     checkNotNull(multisetToModify);
     checkNotNull(occurrencesToRetain);
     // Avoiding ConcurrentModificationExceptions is tricky.
-    Iterator<Entry<E>> entryIterator = multisetToModify.entrySet().iterator();
+    Iterator<@Readonly Entry<E>> entryIterator = multisetToModify.entrySet().iterator();
     boolean changed = false;
     while (entryIterator.hasNext()) {
       Entry<E> entry = entryIterator.next();
@@ -836,7 +836,7 @@ public final class Multisets {
     checkNotNull(occurrencesToRemove);
 
     boolean changed = false;
-    Iterator<? extends Entry<?>> entryIterator = multisetToModify.entrySet().iterator();
+    Iterator<? extends @Readonly Entry<?>> entryIterator = multisetToModify.entrySet().iterator();
     while (entryIterator.hasNext()) {
       Entry<?> entry = entryIterator.next();
       int removeCount = occurrencesToRemove.count(entry.getElement());
@@ -998,8 +998,8 @@ public final class Multisets {
 
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
   static <E extends @Nullable @Readonly Object> @PolyMutable Iterator<E> elementIterator(
-      @PolyMutable Iterator<@PolyMutable Entry<E>> entryIterator) {
-    return new @PolyMutable TransformedIterator<@PolyMutable Entry<E>, E>(entryIterator) {
+      @PolyMutable Iterator<@Readonly Entry<E>> entryIterator) {
+    return new @PolyMutable TransformedIterator<@Readonly Entry<E>, E>(entryIterator) {
       @Override
       @ParametricNullness
       E transform(@Readonly Entry<E> entry) {
@@ -1048,7 +1048,7 @@ public final class Multisets {
 
   @ReceiverDependentMutable
   abstract static class EntrySet<E extends @Nullable @Readonly Object>
-      extends Sets.ImprovedAbstractSet<Entry<E>> {
+      extends Sets.ImprovedAbstractSet<@Readonly Entry<E>> {
     abstract @ReceiverDependentMutable Multiset<E> multiset();
 
     @Override
@@ -1153,7 +1153,7 @@ public final class Multisets {
   }
 
   static <E extends @Nullable @Readonly Object> Spliterator<E> spliteratorImpl(Multiset<E> multiset) {
-    Spliterator<Entry<E>> entrySpliterator = multiset.entrySet().spliterator();
+    Spliterator<@Readonly Entry<E>> entrySpliterator = multiset.entrySet().spliterator();
     return CollectSpliterators.flatMap(
         entrySpliterator,
         entry -> Collections.nCopies(entry.getCount(), entry.getElement()).spliterator(),

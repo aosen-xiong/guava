@@ -95,7 +95,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
    */
   @SideEffectFree
   @Override
-  public @ReceiverDependentMutable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet() {
+  public @ReceiverDependentMutable Set<Multiset.@Readonly Entry<E>> entrySet() {
     return super.entrySet();
   }
 
@@ -130,7 +130,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   @Override
-  Iterator<Entry<E>> entryIterator() {
+  Iterator<@Readonly Entry<E>> entryIterator() {
     final Iterator<Map.Entry<E, Count>> backingEntries = backingMap.entrySet().iterator();
     return new @Mutable Iterator<Multiset.Entry<E>>() {
       @CheckForNull Map.Entry<E, Count> toRemove;

@@ -72,21 +72,21 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
   @Override
   @CheckForNull
   public @Readonly Entry<E> firstEntry() {
-    Iterator<Entry<E>> entryIterator = entryIterator();
+    Iterator<@Readonly Entry<E>> entryIterator = entryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
   @Override
   @CheckForNull
   public @Readonly Entry<E> lastEntry() {
-    Iterator<Entry<E>> entryIterator = descendingEntryIterator();
+    Iterator<@Readonly Entry<E>> entryIterator = descendingEntryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
   @Override
   @CheckForNull
   public @Readonly Entry<E> pollFirstEntry() {
-    Iterator<Entry<E>> entryIterator = entryIterator();
+    Iterator<@Readonly Entry<E>> entryIterator = entryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();
       result = Multisets.immutableEntry(result.getElement(), result.getCount());
@@ -99,7 +99,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
   @Override
   @CheckForNull
   public @Readonly Entry<E> pollLastEntry() {
-    Iterator<Entry<E>> entryIterator = descendingEntryIterator();
+    Iterator<@Readonly Entry<E>> entryIterator = descendingEntryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();
       result = Multisets.immutableEntry(result.getElement(), result.getCount());
@@ -121,7 +121,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
     return tailMultiset(fromElement, fromBoundType).headMultiset(toElement, toBoundType);
   }
 
-  abstract Iterator<Entry<E>> descendingEntryIterator();
+  abstract Iterator<@Readonly Entry<E>> descendingEntryIterator();
 
   Iterator<E> descendingIterator() {
     return Multisets.iteratorImpl(descendingMultiset());
@@ -145,7 +145,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
+      Iterator<@Readonly Entry<E>> entryIterator() {
         return descendingEntryIterator();
       }
 

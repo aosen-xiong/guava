@@ -94,7 +94,7 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
 
   @SideEffectFree
   @Override
-  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable ForwardingMultiset<E> this) {
+  public @ReceiverDependentMutable Set<@Readonly Entry<E>> entrySet(@ReceiverDependentMutable ForwardingMultiset<E> this) {
     return delegate().entrySet();
   }
 

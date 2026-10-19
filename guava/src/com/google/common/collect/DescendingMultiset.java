@@ -125,17 +125,17 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
     return forwardMultiset().firstEntry();
   }
 
-  abstract Iterator<Entry<E>> entryIterator();
+  abstract Iterator<@Readonly Entry<E>> entryIterator();
 
-  @LazyInit @CheckForNull private transient @Assignable Set<Entry<E>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<@Readonly Entry<E>> entrySet;
 
   @Override
-  public @ReceiverDependentMutable Set<Entry<E>> entrySet() {
-    Set<Entry<E>> result = entrySet;
+  public @ReceiverDependentMutable Set<@Readonly Entry<E>> entrySet() {
+    Set<@Readonly Entry<E>> result = entrySet;
     return (result == null) ? entrySet = createEntrySet() : result;
   }
 
-  Set<Entry<E>> createEntrySet() {
+  Set<@Readonly Entry<E>> createEntrySet() {
     @WeakOuter
     class EntrySetImpl extends Multisets.EntrySet<E> {
       @Override

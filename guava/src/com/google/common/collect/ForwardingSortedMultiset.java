@@ -133,7 +133,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    */
   @CheckForNull
   protected @Immutable Entry<E> standardFirstEntry() {
-    Iterator<Entry<E>> entryIterator = entrySet().iterator();
+    Iterator<@Readonly Entry<E>> entryIterator = entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
     }
@@ -156,7 +156,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    */
   @CheckForNull
   protected @Immutable Entry<E> standardLastEntry() {
-    Iterator<@ReceiverDependentMutable Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
+    Iterator<@Readonly Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
     }
@@ -178,7 +178,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    */
   @CheckForNull
   protected @Immutable Entry<E> standardPollFirstEntry(@Mutable ForwardingSortedMultiset<E> this) {
-    Iterator<Entry<E>> entryIterator = entrySet().iterator();
+    Iterator<@Readonly Entry<E>> entryIterator = entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
     }
@@ -203,7 +203,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
    */
   @CheckForNull
   protected @Immutable Entry<E> standardPollLastEntry(@Mutable ForwardingSortedMultiset<E> this) {
-    Iterator<Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
+    Iterator<@Readonly Entry<E>> entryIterator = descendingMultiset().entrySet().iterator();
     if (!entryIterator.hasNext()) {
       return null;
     }

@@ -385,7 +385,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
     }
 
     @Override
-    public Set<Multiset.Entry<K>> entrySet() {
+    public Set<Multiset.@Readonly Entry<K>> entrySet() {
       return new Multisets.@Mutable EntrySet<K>() {
 
         @Override

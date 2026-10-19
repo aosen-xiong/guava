@@ -278,7 +278,7 @@ public interface Multiset<E extends @Readonly @Nullable Object> extends Collecti
    *
    * @return a set of entries representing the data of this multiset
    */
-  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable Multiset<E> this);
+  @ReceiverDependentMutable Set<@Readonly Entry<E>> entrySet(@ReceiverDependentMutable Multiset<E> this);
 
   /**
    * An unmodifiable element-count pair for a multiset. The {@link Multiset#entrySet} method returns

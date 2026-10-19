@@ -547,7 +547,7 @@ final class Synchronized {
   static final class SynchronizedMultiset<E extends @Nullable @Readonly Object>
       extends SynchronizedCollection<E> implements Multiset<E> {
     @CheckForNull transient @Assignable Set<E> elementSet;
-    @CheckForNull transient @Assignable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet;
+    @CheckForNull transient @Assignable Set<Multiset.@Readonly Entry<E>> entrySet;
 
     SynchronizedMultiset(@ReceiverDependentMutable Multiset<E> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
@@ -606,7 +606,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @ReceiverDependentMutable Set<Multiset.@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable SynchronizedMultiset<E> this) {
+    public @ReceiverDependentMutable Set<Multiset.@Readonly Entry<E>> entrySet(@ReceiverDependentMutable SynchronizedMultiset<E> this) {
       synchronized (mutex) {
         if (entrySet == null) {
           entrySet = typePreservingSet(delegate().entrySet(), mutex);

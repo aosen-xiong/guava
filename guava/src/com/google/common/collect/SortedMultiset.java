@@ -99,7 +99,7 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * multiset's comparator.
    */
   @Override
-  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<E>> entrySet(@ReceiverDependentMutable SortedMultiset<E> this);
+  @ReceiverDependentMutable Set<@Readonly Entry<E>> entrySet(@ReceiverDependentMutable SortedMultiset<E> this);
 
   /**
    * {@inheritDoc}

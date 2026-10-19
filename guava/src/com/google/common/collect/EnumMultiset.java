@@ -270,7 +270,7 @@ public final class EnumMultiset<E extends Enum<E>> extends AbstractMultiset<E>
   }
 
   @Override
-  Iterator<Entry<E>> entryIterator() {
+  Iterator<@Readonly Entry<E>> entryIterator() {
     return new Itr<Entry<E>>() {
       @Override
       Entry<E> output(final int index) {

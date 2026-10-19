@@ -375,6 +375,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
 
   @SideEffectFree
   @Override
+  @SuppressWarnings("mutability:override.return.invalid") // an @Immutable set cannot be added to, so its @Immutable entries can be read as the @Readonly entries Multiset.entrySet promises. The checker has no covariant type arguments to state this
   public ImmutableSet<@Immutable Entry<E>> entrySet() {
     ImmutableSet<@Immutable Entry<E>> es = entrySet;
     return (es == null) ? (entrySet = createEntrySet()) : es;
