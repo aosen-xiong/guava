@@ -119,6 +119,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
       }
 
       @Override
+      @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
       public void remove() {
         checkState(toRemove != null, "no calls to next() since the last call to remove()");
         size -= toRemove.getValue().getAndSet(0);
@@ -165,6 +166,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
       }
 
       @Override
+      @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
       public void remove() {
         checkState(toRemove != null, "no calls to next() since the last call to remove()");
         size -= toRemove.getValue().getAndSet(0);
