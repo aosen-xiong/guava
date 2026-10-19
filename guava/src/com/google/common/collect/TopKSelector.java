@@ -277,7 +277,7 @@ final class TopKSelector<
    * this {@code TopKSelector}. This method returns in O(k log k) time.
    */
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public List<T> topK() {
+  public @Readonly List<T> topK() {
     @SuppressWarnings("nullness") // safe because we pass sort() a range that contains real Ts
     T[] castBuffer = (T[]) buffer;
     Arrays.sort(castBuffer, 0, bufferSize, comparator);

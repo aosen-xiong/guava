@@ -756,7 +756,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @since 8.0
    */
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public <E extends T> List<E> leastOf(Iterable<E> iterable, int k) {
+  public <E extends T> @Readonly List<E> leastOf(Iterable<E> iterable, int k) {
     if (iterable instanceof Collection) {
       Collection<E> collection = (Collection<E>) iterable;
       if (collection.size() <= 2L * k) {
@@ -792,7 +792,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @throws IllegalArgumentException if {@code k} is negative
    * @since 14.0
    */
-  public <E extends T> List<E> leastOf(Iterator<E> iterator, int k) {
+  public <E extends T> @Readonly List<E> leastOf(Iterator<E> iterator, int k) {
     checkNotNull(iterator);
     checkNonnegative(k, "k");
 
@@ -830,7 +830,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @throws IllegalArgumentException if {@code k} is negative
    * @since 8.0
    */
-  public <E extends T> List<E> greatestOf(Iterable<E> iterable, int k) {
+  public <E extends T> @Readonly List<E> greatestOf(Iterable<E> iterable, int k) {
     // TODO(kevinb): see if delegation is hurting performance noticeably
     // TODO(kevinb): if we change this implementation, add full unit tests.
     return this.<E>reverse().leastOf(iterable, k);
@@ -852,7 +852,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @throws IllegalArgumentException if {@code k} is negative
    * @since 14.0
    */
-  public <E extends T> List<E> greatestOf(Iterator<E> iterator, int k) {
+  public <E extends T> @Readonly List<E> greatestOf(Iterator<E> iterator, int k) {
     return this.<E>reverse().leastOf(iterator, k);
   }
 

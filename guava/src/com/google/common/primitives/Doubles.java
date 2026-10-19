@@ -588,6 +588,7 @@ public final class Doubles extends DoublesMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
+  @SuppressWarnings("mutability:return.type.incompatible") // an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
   public static List<Double> asList(double... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
@@ -680,7 +681,7 @@ public final class Doubles extends DoublesMethodsForWeb {
     }
 
     @Override
-    @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
+    @SuppressWarnings({"index", "mutability:return.type.incompatible"}) // index: needs https://github.com/kelloggm/checker-framework/issues/229. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
     public List<Double> subList(@IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);

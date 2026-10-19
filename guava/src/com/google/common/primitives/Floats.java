@@ -580,6 +580,7 @@ public final class Floats extends FloatsMethodsForWeb {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
+  @SuppressWarnings("mutability:return.type.incompatible") // an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
   public static List<Float> asList(float... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
@@ -666,7 +667,7 @@ public final class Floats extends FloatsMethodsForWeb {
     }
 
     @Override
-    @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
+    @SuppressWarnings({"index", "mutability:return.type.incompatible"}) // index: needs https://github.com/kelloggm/checker-framework/issues/229. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
     public List<Float> subList(@IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);

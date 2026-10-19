@@ -261,7 +261,7 @@ public final class Bytes {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  @SuppressWarnings({"signedness:argument", "signedness:return"}) // non-generic container class
+  @SuppressWarnings({"signedness:argument", "signedness:return", "mutability:return.type.incompatible"}) // signedness: non-generic container class. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
   public static List<@PolySigned Byte> asList(@PolySigned byte... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
@@ -350,7 +350,7 @@ public final class Bytes {
     }
 
     @Override
-    @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
+    @SuppressWarnings({"index", "mutability:return.type.incompatible"}) // index: needs https://github.com/kelloggm/checker-framework/issues/229. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
     public List<Byte> subList(@IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);

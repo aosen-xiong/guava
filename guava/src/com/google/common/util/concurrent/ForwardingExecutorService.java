@@ -62,26 +62,26 @@ public abstract class ForwardingExecutorService extends ForwardingObject
 
   @Override
   public <T extends @Nullable @UnknownSignedness @Readonly Object> List<Future<T>> invokeAll(
-      Collection<? extends Callable<T>> tasks) throws InterruptedException {
+      @Readonly Collection<? extends Callable<T>> tasks) throws InterruptedException {
     return delegate().invokeAll(tasks);
   }
 
   @Override
   public <T extends @Nullable @UnknownSignedness @Readonly Object> List<Future<T>> invokeAll(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+      @Readonly Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException {
     return delegate().invokeAll(tasks, timeout, unit);
   }
 
   @Override
-  public <T extends @Nullable @UnknownSignedness @Readonly Object> T invokeAny(Collection<? extends Callable<T>> tasks)
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T invokeAny(@Readonly Collection<? extends Callable<T>> tasks)
       throws InterruptedException, ExecutionException {
     return delegate().invokeAny(tasks);
   }
 
   @Override
   public <T extends @Nullable @UnknownSignedness @Readonly Object> T invokeAny(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+      @Readonly Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return delegate().invokeAny(tasks, timeout, unit);
   }

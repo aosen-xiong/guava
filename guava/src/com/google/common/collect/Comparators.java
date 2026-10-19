@@ -132,7 +132,7 @@ public final class Comparators {
    * @throws IllegalArgumentException if {@code k < 0}
    * @since 22.0
    */
-  public static <T extends @Nullable @Readonly Object> Collector<T, ?, List<T>> least(
+  public static <T extends @Nullable @Readonly Object> Collector<T, ?, @Readonly List<T>> least(
       int k, @Readonly Comparator<? super T> comparator) {
     checkNonnegative(k, "k");
     checkNotNull(comparator);
@@ -164,7 +164,7 @@ public final class Comparators {
    * @throws IllegalArgumentException if {@code k < 0}
    * @since 22.0
    */
-  public static <T extends @Nullable @Readonly Object> Collector<T, ?, List<T>> greatest(
+  public static <T extends @Nullable @Readonly Object> Collector<T, ?, @Readonly List<T>> greatest(
       int k, @Readonly Comparator<? super T> comparator) {
     return least(k, comparator.reversed());
   }

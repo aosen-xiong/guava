@@ -84,7 +84,7 @@ abstract class WrappingExecutorService implements ExecutorService {
    * @throws NullPointerException if any element of {@code tasks} is null
    */
   private <T extends @Nullable @Readonly Object> ImmutableList<Callable<T>> wrapTasks(
-      Collection<? extends Callable<T>> tasks) {
+      @Readonly Collection<? extends Callable<T>> tasks) {
     ImmutableList.Builder<Callable<T>> builder = ImmutableList.builder();
     for (Callable<T> task : tasks) {
       builder.add(wrapTask(task));
@@ -116,26 +116,26 @@ abstract class WrappingExecutorService implements ExecutorService {
 
   @Override
   public final <T extends @Nullable @UnknownSignedness @Readonly Object> List<Future<T>> invokeAll(
-      Collection<? extends Callable<T>> tasks) throws InterruptedException {
+      @Readonly Collection<? extends Callable<T>> tasks) throws InterruptedException {
     return delegate.invokeAll(wrapTasks(tasks));
   }
 
   @Override
   public final <T extends @Nullable @UnknownSignedness @Readonly Object> List<Future<T>> invokeAll(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+      @Readonly Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException {
     return delegate.invokeAll(wrapTasks(tasks), timeout, unit);
   }
 
   @Override
-  public final <T extends @Nullable @UnknownSignedness @Readonly Object> T invokeAny(Collection<? extends Callable<T>> tasks)
+  public final <T extends @Nullable @UnknownSignedness @Readonly Object> T invokeAny(@Readonly Collection<? extends Callable<T>> tasks)
       throws InterruptedException, ExecutionException {
     return delegate.invokeAny(wrapTasks(tasks));
   }
 
   @Override
   public final <T extends @Nullable @UnknownSignedness @Readonly Object> T invokeAny(
-      Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
+      @Readonly Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
       throws InterruptedException, ExecutionException, TimeoutException {
     return delegate.invokeAny(wrapTasks(tasks), timeout, unit);
   }
