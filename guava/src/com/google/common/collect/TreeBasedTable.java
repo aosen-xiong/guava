@@ -178,8 +178,8 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    *     source-compatible</a> since 7.0)
    */
   @Override
-  public SortedMap<C, V> row(R rowKey) {
-    return new TreeRow(rowKey);
+  public @ReceiverDependentMutable SortedMap<C, V> row(@ReceiverDependentMutable TreeBasedTable<R, C, V> this, R rowKey) {
+    return new @ReceiverDependentMutable TreeRow(rowKey);
   }
 
   @ReceiverDependentMutable
@@ -200,8 +200,8 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     }
 
     @Override
-    public SortedSet<@KeyFor({"this"}) C> keySet() {
-      return new Maps.SortedKeySet<>(this);
+    public @ReceiverDependentMutable SortedSet<@KeyFor({"this"}) C> keySet(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this) {
+      return new Maps.@ReceiverDependentMutable SortedKeySet<>(this);
     }
 
     @Override
@@ -223,21 +223,21 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     }
 
     @Override
-    public SortedMap<C, V> subMap(C fromKey, C toKey) {
+    public @ReceiverDependentMutable SortedMap<C, V> subMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this, C fromKey, C toKey) {
       checkArgument(rangeContains(checkNotNull(fromKey)) && rangeContains(checkNotNull(toKey)));
-      return new TreeRow(rowKey, fromKey, toKey);
+      return new @ReceiverDependentMutable TreeRow(rowKey, fromKey, toKey);
     }
 
     @Override
-    public SortedMap<C, V> headMap(C toKey) {
+    public @ReceiverDependentMutable SortedMap<C, V> headMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this, C toKey) {
       checkArgument(rangeContains(checkNotNull(toKey)));
-      return new TreeRow(rowKey, lowerBound, toKey);
+      return new @ReceiverDependentMutable TreeRow(rowKey, lowerBound, toKey);
     }
 
     @Override
-    public SortedMap<C, V> tailMap(C fromKey) {
+    public @ReceiverDependentMutable SortedMap<C, V> tailMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this, C fromKey) {
       checkArgument(rangeContains(checkNotNull(fromKey)));
-      return new TreeRow(rowKey, fromKey, upperBound);
+      return new @ReceiverDependentMutable TreeRow(rowKey, fromKey, upperBound);
     }
 
     @Override
@@ -310,7 +310,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
   // rowKeySet() and rowMap() are defined here so they appear in the Javadoc.
 
   @Override
-  public SortedSet<R> rowKeySet() {
+  public @ReceiverDependentMutable SortedSet<R> rowKeySet(@ReceiverDependentMutable TreeBasedTable<R, C, V> this) {
     return super.rowKeySet();
   }
 

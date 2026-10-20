@@ -731,8 +731,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    * <p>The returned list is not serializable and does not have random access.
    */
   @Override
-  public List<V> get(@ParametricNullness final K key) {
-    return new @Mutable AbstractSequentialList<V>() {
+  public @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable LinkedListMultimap<K, V> this, @ParametricNullness final K key) {
+    return new @ReceiverDependentMutable AbstractSequentialList<V>() {
       @Pure
       @Override
       public @NonNegative int size() {
@@ -805,7 +805,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
       }
 
       @Override
-      public ListIterator<V> listIterator(int index) {
+      public @ReceiverDependentMutable ListIterator<V> listIterator(@ReceiverDependentMutable ValuesImpl this, int index) {
         final NodeIterator nodeItr = new NodeIterator(index);
         return new TransformedListIterator<Entry<K, V>, V>(nodeItr) {
           @Override

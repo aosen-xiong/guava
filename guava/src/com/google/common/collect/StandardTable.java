@@ -715,7 +715,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   @ReceiverDependentMutable
   private class ColumnKeySet extends TableSet<C> {
     @Override
-    public Iterator<C> iterator() {
+    public @ReceiverDependentMutable Iterator<C> iterator(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnKeySet this) {
       return createColumnKeyIterator();
     }
 

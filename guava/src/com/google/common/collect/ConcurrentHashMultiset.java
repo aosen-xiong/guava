@@ -503,8 +503,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   /** @deprecated Internal method, use {@link #entrySet()}. */
   @Deprecated
   @Override
-  public Set<Multiset.Entry<E>> createEntrySet() {
-    return new EntrySet();
+  public @ReceiverDependentMutable Set<Multiset.Entry<E>> createEntrySet(@ReceiverDependentMutable ConcurrentHashMultiset<E> this) {
+    return new @ReceiverDependentMutable EntrySet();
   }
 
   @Override

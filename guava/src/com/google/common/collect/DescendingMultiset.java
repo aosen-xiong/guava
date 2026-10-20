@@ -157,7 +157,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   }
 
   @Override
-  public Iterator<E> iterator() {
+  public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable DescendingMultiset<E> this) {
     return Multisets.iteratorImpl(this);
   }
 

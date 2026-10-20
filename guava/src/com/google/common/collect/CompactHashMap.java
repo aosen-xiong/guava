@@ -1013,7 +1013,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public Iterator<V> iterator() {
+    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable CompactHashMap<K, V>.@ReceiverDependentMutable ValuesView this) {
       return valuesIterator();
     }
 

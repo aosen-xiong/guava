@@ -1302,7 +1302,7 @@ public final class Multimaps {
     }
 
     @Override
-    Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable MapMultimap<K, V> this) {
+    @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return map.entrySet().iterator();
     }
 

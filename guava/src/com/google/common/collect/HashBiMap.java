@@ -512,8 +512,8 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public Iterator<K> iterator() {
-      return new Itr<K>() {
+    public @ReceiverDependentMutable Iterator<K> iterator(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable KeySet this) {
+      return new @ReceiverDependentMutable Itr<K>() {
         @Override
         @ParametricNullness
         K output(BiEntry<K, V> entry) {
@@ -706,8 +706,8 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       }
 
       @Override
-      public Iterator<V> iterator() {
-        return new Itr<V>() {
+      public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable Inverse.@ReceiverDependentMutable InverseKeySet this) {
+        return new @ReceiverDependentMutable Itr<V>() {
           @Override
           @ParametricNullness
           V output(BiEntry<K, V> entry) {

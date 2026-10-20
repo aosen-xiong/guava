@@ -378,7 +378,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
   }
 
   @Override
-  public RangeMap<K, V> subRangeMap(Range<K> subRange) {
+  public @ReceiverDependentMutable RangeMap<K, V> subRangeMap(@ReceiverDependentMutable TreeRangeMap<K, V> this, Range<K> subRange) {
     if (subRange.equals(Range.all())) {
       return this;
     } else {
@@ -724,8 +724,8 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       }
 
       @Override
-      public Set<Range<K>> keySet() {
-        return new Maps.KeySet<Range<K>, V>(SubRangeMapAsMap.this) {
+      public @ReceiverDependentMutable Set<Range<K>> keySet(@ReceiverDependentMutable SubRangeMapAsMap this) {
+        return new Maps.@ReceiverDependentMutable KeySet<Range<K>, V>(SubRangeMapAsMap.this) {
           @Override
           public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
             return SubRangeMapAsMap.this.remove(o) != null;

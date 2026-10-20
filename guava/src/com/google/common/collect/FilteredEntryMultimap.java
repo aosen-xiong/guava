@@ -125,12 +125,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public Collection<V> get(@ParametricNullness K key) {
+  public @ReceiverDependentMutable Collection<V> get(@ReceiverDependentMutable FilteredEntryMultimap<K, V> this, @ParametricNullness K key) {
     return filterCollection(unfiltered.get(key), new ValuePredicate(key));
   }
 
   @Override
-  Collection<@ReceiverDependentMutable Entry<K, V>> createEntries() {
+  @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable FilteredEntryMultimap<K, V> this) {
     return filterCollection(unfiltered.entries(), predicate);
   }
 
@@ -348,8 +348,8 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  Multiset<K> createKeys() {
-    return new Keys();
+  @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable FilteredEntryMultimap<K, V> this) {
+    return new @ReceiverDependentMutable Keys();
   }
 
   @WeakOuter

@@ -76,7 +76,7 @@ class StandardRowSortedTable<R extends @Immutable Object, C extends @Immutable O
    * Table} interface.
    */
   @Override
-  public SortedSet<R> rowKeySet() {
+  public @ReceiverDependentMutable SortedSet<R> rowKeySet(@ReceiverDependentMutable StandardRowSortedTable<R, C, V> this) {
     return (SortedSet<R>) rowMap().keySet();
   }
 
