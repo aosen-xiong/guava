@@ -128,6 +128,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
     this.valueComparator = valueComparator;
   }
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private TreeMultimap(
       @Nullable Comparator<? super K> keyComparator,
       @Nullable Comparator<? super V> valueComparator,

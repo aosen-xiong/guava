@@ -128,6 +128,7 @@ public final class ArrayListMultimap<K extends @Nullable @Immutable Object, V ex
     this.expectedValuesPerKey = expectedValuesPerKey;
   }
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private ArrayListMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     this(
         multimap.keySet().size(),

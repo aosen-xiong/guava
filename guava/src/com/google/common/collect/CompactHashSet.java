@@ -213,6 +213,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
   private transient int size;
 
   /** Constructs a new empty instance of {@code CompactHashSet}. */
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   CompactHashSet() {
     init(CompactHashing.DEFAULT_SIZE);
   }
@@ -222,6 +223,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
    *
    * @param expectedSize the initial capacity of this {@code CompactHashSet}.
    */
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   CompactHashSet(int expectedSize) {
     init(expectedSize);
   }

@@ -1267,6 +1267,7 @@ class MapMakerInternalMap<
      */
     final @Mutable AtomicInteger readCount = new AtomicInteger();
 
+    @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
     Segment(MapMakerInternalMap<K, V, E, S> map, int initialCapacity) {
       this.map = map;
       initTable(newEntryArray(initialCapacity));

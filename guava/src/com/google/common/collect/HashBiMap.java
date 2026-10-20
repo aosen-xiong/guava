@@ -149,6 +149,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   private transient int mask;
   private transient int modCount;
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private HashBiMap(int expectedSize) {
     init(expectedSize);
   }
@@ -837,5 +838,5 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
 @Override
 @SideEffectFree
-public Set<Map.@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
+public @ReceiverDependentMutable Set<Map.@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable HashBiMap<K, V> this) { return super.entrySet(); }
 }

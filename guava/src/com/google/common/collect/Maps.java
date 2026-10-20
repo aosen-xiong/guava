@@ -964,18 +964,21 @@ public final class Maps {
     @Override
     protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable AsMapView<K, V> this) {
       @WeakOuter
+      @ReceiverDependentMutable
       class EntrySetImpl extends EntrySet<K, V> {
         @Override
-        Map<K, V> map() {
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+        @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable EntrySetImpl this) {
           return AsMapView.this;
         }
 
         @Override
-        public Iterator<Entry<K, V>> iterator() {
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+        public @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable EntrySetImpl this) {
           return asMapEntryIterator(backingSet(), function);
         }
       }
-      return new EntrySetImpl();
+      return new @ReceiverDependentMutable EntrySetImpl();
     }
 
     @Override
@@ -3966,31 +3969,34 @@ public final class Maps {
     }
 
     @Override
-    public Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable IteratorBasedAbstractMap<K, V> this) {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable IteratorBasedAbstractMap<K, V> this) {
       return new @ReceiverDependentMutable EntrySet<K, V>() {
         @Override
-        Map<K, V> map() {
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+        @ReceiverDependentMutable Map<K, V> map() {
           return IteratorBasedAbstractMap.this;
         }
 
         @Override
-        public Iterator<Entry<K, V>> iterator() {
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+        public @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator() {
           return entryIterator();
         }
 
         @Override
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
         public Spliterator<@ReceiverDependentMutable Entry<K, V>> spliterator() {
           return entrySpliterator();
         }
 
         @Override
-        public void forEach(Consumer<? super Entry<K, V>> action) {
+        public void forEach(Consumer<? super @ReceiverDependentMutable Entry<K, V>> action) {
           forEachEntry(action);
         }
       };
     }
 
-    void forEachEntry(Consumer<? super Entry<K, V>> action) {
+    void forEachEntry(Consumer<? super @ReceiverDependentMutable Entry<K, V>> action) {
       entryIterator().forEachRemaining(action);
     }
 
@@ -4630,18 +4636,21 @@ public final class Maps {
 
       @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable DescendingMap<K, V> this) {
       @WeakOuter
+      @ReceiverDependentMutable
       class EntrySetImpl extends EntrySet<K, V> {
         @Override
-        Map<K, V> map() {
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+        @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable EntrySetImpl this) {
           return DescendingMap.this;
         }
 
         @Override
-        public Iterator<Entry<K, V>> iterator() {
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+        public @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable EntrySetImpl this) {
           return entryIterator();
         }
       }
-      return new EntrySetImpl();
+      return new @ReceiverDependentMutable EntrySetImpl();
     }
 
     @Override

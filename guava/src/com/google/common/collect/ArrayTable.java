@@ -178,6 +178,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     eraseAll();
   }
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private ArrayTable(Table<R, C, ? extends @Nullable V> table) {
     this(table.rowKeySet(), table.columnKeySet());
     putAll(table);
