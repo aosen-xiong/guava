@@ -1154,8 +1154,9 @@ public final class Maps {
     }
   }
 
-  private static <E extends @Nullable @Readonly Object> Set<E> removeOnlySet(final Set<E> set) {
-    return new @Mutable ForwardingSet<E>() {
+  @SuppressWarnings("mutability") // one poly: an anonymous class cannot be created poly, and the remove-only view has its backing set's mutability, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable Set<E> removeOnlySet(final @PolyMutable Set<E> set) {
+    return new @PolyMutable ForwardingSet<E>() {
       @Override
       protected Set<E> delegate() {
         return set;
@@ -1173,9 +1174,10 @@ public final class Maps {
     };
   }
 
-  private static <E extends @Nullable @Readonly Object> SortedSet<E> removeOnlySortedSet(
-      final SortedSet<E> set) {
-    return new @Mutable ForwardingSortedSet<E>() {
+  @SuppressWarnings("mutability") // one poly: an anonymous class cannot be created poly, and the remove-only view has its backing set's mutability, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable SortedSet<E> removeOnlySortedSet(
+      final @PolyMutable SortedSet<E> set) {
+    return new @PolyMutable ForwardingSortedSet<E>() {
       @Override
       protected SortedSet<E> delegate() {
         return set;
@@ -1210,9 +1212,10 @@ public final class Maps {
   }
 
   @GwtIncompatible // NavigableSet
-  private static <E extends @Nullable @Readonly Object> NavigableSet<E> removeOnlyNavigableSet(
-      final NavigableSet<E> set) {
-    return new @Mutable ForwardingNavigableSet<E>() {
+  @SuppressWarnings("mutability") // one poly: an anonymous class cannot be created poly, and the remove-only view has its backing set's mutability, as in Collections.unmodifiableCollection
+  private static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> removeOnlyNavigableSet(
+      final @PolyMutable NavigableSet<E> set) {
+    return new @PolyMutable ForwardingNavigableSet<E>() {
       @Override
       protected NavigableSet<E> delegate() {
         return set;
