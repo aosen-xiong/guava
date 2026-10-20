@@ -233,9 +233,9 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
       return keyIndex.isEmpty();
     }
 
-    Entry<K, V> getEntry(final int index) {
+    @ReceiverDependentMutable Entry<K, V> getEntry(@ReceiverDependentMutable ArrayMap<K, V> this, final int index) {
       checkElementIndex(index, size());
-      return new @Mutable AbstractMapEntry<K, V>() {
+      return new @ReceiverDependentMutable AbstractMapEntry<K, V>() {
         @Override
         public K getKey() {
           return ArrayMap.this.getKey(index);

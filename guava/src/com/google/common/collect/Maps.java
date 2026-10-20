@@ -2226,12 +2226,12 @@ public final class Maps {
 
   /** Views an entry transformer as a function from entries to entries. */
   static <K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      Function<Entry<K, V1>, Entry<K, V2>> asEntryToEntryFunction(
+      Function<@Readonly Entry<K, V1>, Entry<K, V2>> asEntryToEntryFunction(
           final EntryTransformer<? super K, ? super V1, V2> transformer) {
     checkNotNull(transformer);
-    return new Function<Entry<K, V1>, Entry<K, V2>>() {
+    return new Function<@Readonly Entry<K, V1>, Entry<K, V2>>() {
       @Override
-      public Entry<K, V2> apply(final Entry<K, V1> entry) {
+      public Entry<K, V2> apply(final @Readonly Entry<K, V1> entry) {
         return transformEntry(transformer, entry);
       }
     };
