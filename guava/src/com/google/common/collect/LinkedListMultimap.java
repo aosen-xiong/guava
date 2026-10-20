@@ -876,7 +876,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  @ReceiverDependentMutable Map<K, Collection<V>> createAsMap(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     return new Multimaps.@ReceiverDependentMutable AsMap<>(this);
   }
 
@@ -927,5 +927,5 @@ public boolean equals(@Nullable @Readonly Object arg0) { return super.equals(arg
 public boolean remove(@Mutable LinkedListMultimap<K,V> this, @Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.remove(arg0, arg1); }
 
 @Override
-public @ReceiverDependentMutable Map<K, Collection<V>> asMap() { return super.asMap(); }
+public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap() { return super.asMap(); }
 }

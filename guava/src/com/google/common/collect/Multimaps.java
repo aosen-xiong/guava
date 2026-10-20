@@ -1560,7 +1560,7 @@ public final class Multimaps {
     }
 
     @Override
-    @ReceiverDependentMutable Map<K, Collection<V2>> createAsMap() {
+    @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V2>> createAsMap() {
       return Maps.transformEntries(fromMultimap.asMap(), (key, value) -> transform(key, value));
     }
 
@@ -1917,7 +1917,7 @@ public final class Multimaps {
   /** A skeleton implementation of {@link Multimap#asMap()}. */
   @ReceiverDependentMutable
   static final class AsMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      extends Maps.ViewCachingAbstractMap<K, @Readonly Collection<V>> {
+      extends Maps.ViewCachingAbstractMap<K, @ReceiverDependentMutable Collection<V>> {
     @Weak private final Multimap<K, V> multimap;
 
     AsMap(@ReceiverDependentMutable Multimap<K, V> multimap) {
@@ -1941,7 +1941,7 @@ public final class Multimaps {
     @WeakOuter
     @ReceiverDependentMutable
     @CFComment("PICO: outer receiver dependency")
-    class EntrySet extends Maps.EntrySet<K, @Readonly Collection<V>> {
+    class EntrySet extends Maps.EntrySet<K, @ReceiverDependentMutable Collection<V>> {
       @Override
       @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map(@ReceiverDependentMutable AsMap<K, V>.@Readonly EntrySet this) {
         return AsMap.this;

@@ -1047,12 +1047,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   @ReceiverDependentMutable
   private class SortedKeySet extends KeySet implements SortedSet<K> {
 
-    SortedKeySet(SortedMap<K, Collection<V>> subMap) {
+    SortedKeySet(@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> subMap) {
       super(subMap);
     }
 
-    SortedMap<K, Collection<V>> sortedMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable SortedKeySet this) {
-      return (SortedMap<K, Collection<V>>) super.map();
+    @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> sortedMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable SortedKeySet this) {
+      return (@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>>) super.map();
     }
 
     @Override
@@ -1092,13 +1092,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   @WeakOuter
   @ReceiverDependentMutable
   private final class NavigableKeySet extends SortedKeySet implements NavigableSet<K> {
-    NavigableKeySet(NavigableMap<K, Collection<V>> subMap) {
+    NavigableKeySet(@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> subMap) {
       super(subMap);
     }
 
     @Override
-    NavigableMap<K, Collection<V>> sortedMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable NavigableKeySet this) {
-      return (NavigableMap<K, Collection<V>>) super.sortedMap();
+    @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> sortedMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable NavigableKeySet this) {
+      return (@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>>) super.sortedMap();
     }
 
     @Override
@@ -1371,7 +1371,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @WeakOuter
   @ReceiverDependentMutable
-  private class AsMap extends ViewCachingAbstractMap<K, Collection<V>> {
+  private class AsMap extends ViewCachingAbstractMap<K, @ReceiverDependentMutable Collection<V>> {
     /**
      * Usually the same as map, but smaller for the headMap(), tailMap(), or subMap() of a
      * SortedAsMap.
@@ -1384,7 +1384,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
     @Override
     protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> createEntrySet(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable AsMap this) {
-      return new AsMapEntries();
+      return new @ReceiverDependentMutable AsMapEntries();
     }
 
     // The following methods are included for performance.
@@ -1527,8 +1527,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @WeakOuter
   @ReceiverDependentMutable
-  private class SortedAsMap extends AsMap implements SortedMap<K, Collection<V>> {
-    SortedAsMap(@ReceiverDependentMutable SortedMap<K, Collection<V>> submap) {
+  private class SortedAsMap extends AsMap implements SortedMap<K, @ReceiverDependentMutable Collection<V>> {
+    SortedAsMap(@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> submap) {
       super(submap);
     }
 
@@ -1587,15 +1587,15 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   @ReceiverDependentMutable
-  private final class NavigableAsMap extends SortedAsMap implements NavigableMap<K, Collection<V>> {
+  private final class NavigableAsMap extends SortedAsMap implements NavigableMap<K, @ReceiverDependentMutable Collection<V>> {
 
-    NavigableAsMap(NavigableMap<K, @ReceiverDependentMutable Collection<V>> submap) {
+    NavigableAsMap(@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> submap) {
       super(submap);
     }
 
     @Override
-    NavigableMap<K, @PolyMutable Collection<V>> sortedMap(@PolyMutable NavigableAsMap this) {
-      return (NavigableMap<K, @PolyMutable Collection<V>>) super.sortedMap();
+    @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> sortedMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable NavigableAsMap this) {
+      return (@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>>) super.sortedMap();
     }
 
     @Override

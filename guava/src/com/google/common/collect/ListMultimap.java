@@ -91,7 +91,7 @@ public interface ListMultimap<K extends @Nullable @Immutable Object, V extends @
    * Multimaps#asMap(ListMultimap)} instead.
    */
   @Override
-  @ReceiverDependentMutable Map<K, Collection<V>> asMap(@ReceiverDependentMutable ListMultimap<K,V> this);
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable ListMultimap<K,V> this);
 
   /**
    * Compares the specified object to this multimap for equality.
