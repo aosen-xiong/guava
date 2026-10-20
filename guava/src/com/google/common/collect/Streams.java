@@ -771,7 +771,7 @@ public final class Streams {
   private abstract static class MapWithIndexSpliterator<
           F extends @Mutable Spliterator<?>,
           R extends @Nullable @Immutable Object,
-          S extends @Readonly MapWithIndexSpliterator<F, R, S>>
+          S extends @Mutable MapWithIndexSpliterator<F, R, S>>
       implements Spliterator<R> {
     final F fromSpliterator;
     long index;
