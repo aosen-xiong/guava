@@ -139,7 +139,7 @@ public final class Maps {
   }
 
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<K> keyIterator(
+  static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<K> keyIterator(
       @PolyMutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
     return new @PolyMutable TransformedIterator<@PolyMutable Entry<K, V>, K>(entryIterator) {
       @Override
@@ -151,7 +151,7 @@ public final class Maps {
   }
 
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<V> valueIterator(
+  static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<V> valueIterator(
       @PolyMutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
     return new @PolyMutable TransformedIterator<@PolyMutable Entry<K, V>, V>(entryIterator) {
       @Override
@@ -1512,7 +1512,7 @@ public final class Maps {
    * @param entry the entry for which to return an unmodifiable view
    * @return an unmodifiable view of the entry
    */
-  static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @Readonly Entry<K, V> unmodifiableEntry(
+  static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @Readonly Entry<K, V> unmodifiableEntry(
       final @Readonly Entry<? extends K, ? extends V> entry) {
     checkNotNull(entry);
     return new @Mutable AbstractMapEntry<K, V>() {
