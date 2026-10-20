@@ -178,7 +178,7 @@ public final class Multisets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       return Iterators.<E>unmodifiableIterator(delegate.iterator());
     }
 
@@ -351,7 +351,7 @@ public final class Multisets {
     }
 
     @Override
-    public @ReceiverDependentMutable UnmodifiableIterator<E> iterator(@ReceiverDependentMutable FilteredMultiset<E> this) {
+    public @Mutable UnmodifiableIterator<E> iterator(@ReceiverDependentMutable FilteredMultiset<E> this) {
       return Iterators.filter(unfiltered.iterator(), predicate);
     }
 
@@ -997,9 +997,9 @@ public final class Multisets {
   }
 
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
-  static <E extends @Nullable @Readonly Object> @PolyMutable Iterator<E> elementIterator(
-      @PolyMutable Iterator<@Readonly Entry<E>> entryIterator) {
-    return new @PolyMutable TransformedIterator<@Readonly Entry<E>, E>(entryIterator) {
+  static <E extends @Nullable @Readonly Object> @Mutable Iterator<E> elementIterator(
+      @Mutable Iterator<@Readonly Entry<E>> entryIterator) {
+    return new @Mutable TransformedIterator<@Readonly Entry<E>, E>(entryIterator) {
       @Override
       @ParametricNullness
       E transform(@Readonly Entry<E> entry) {
@@ -1033,7 +1033,7 @@ public final class Multisets {
     }
 
     @Override
-    public abstract @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable ElementSet<E> this);
+    public abstract @Mutable Iterator<E> iterator(@ReceiverDependentMutable ElementSet<E> this);
 
     @Override
     public boolean remove(@Mutable ElementSet<E> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
@@ -1092,21 +1092,21 @@ public final class Multisets {
     return new MultisetIteratorImpl<E>(multiset, multiset.entrySet().iterator());
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   static final class MultisetIteratorImpl<E extends @Nullable @Readonly Object> implements Iterator<E> {
-    private final Multiset<E> multiset;
-    private final Iterator<@Readonly Entry<E>> entryIterator;
-    @CheckForNull private @Assignable @Readonly Entry<E> currentEntry;
+    private final @Readonly Multiset<E> multiset;
+    private final @Mutable Iterator<@Readonly Entry<E>> entryIterator;
+    @CheckForNull private @Readonly Entry<E> currentEntry;
 
     /** Count of subsequent elements equal to current element */
-    private @Assignable int laterCount;
+    private int laterCount;
 
     /** Count of all elements equal to current element */
-    private @Assignable int totalCount;
+    private int totalCount;
 
-    private @Assignable boolean canRemove;
+    private boolean canRemove;
 
-    MultisetIteratorImpl(@ReceiverDependentMutable Multiset<E> multiset, @ReceiverDependentMutable Iterator<@Readonly Entry<E>> entryIterator) {
+    MultisetIteratorImpl(@Readonly Multiset<E> multiset, @Mutable Iterator<@Readonly Entry<E>> entryIterator) {
       this.multiset = multiset;
       this.entryIterator = entryIterator;
     }
@@ -1118,7 +1118,7 @@ public final class Multisets {
 
     @Override
     @ParametricNullness
-    public E next(@Readonly MultisetIteratorImpl<E> this) {
+    public E next(@Mutable MultisetIteratorImpl<E> this) {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
@@ -1136,6 +1136,7 @@ public final class Multisets {
     }
 
     @Override
+    @SuppressWarnings("mutability:method.invocation.invalid") // Iterator<E> cannot name the collection it was created from, so the cursor holds it @Readonly and remove() through an iterator over a non-mutable multiset is not rejected: see the note on java.util.Iterator.remove
     public void remove(@Mutable MultisetIteratorImpl<E> this) {
       checkRemove(canRemove);
       if (totalCount == 1) {

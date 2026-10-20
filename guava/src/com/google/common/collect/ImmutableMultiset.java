@@ -217,7 +217,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E extends @Immutable Object> ImmutableMultiset<E> copyOf(@Readonly Iterator<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableMultiset<E> copyOf(@Mutable Iterator<? extends E> elements) {
     Multiset<E> multiset = LinkedHashMultiset.create();
     Iterators.addAll(multiset, elements);
     return copyFromEntries(multiset.entrySet());
@@ -241,9 +241,9 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
   ImmutableMultiset() {}
 
   @Override
-  public @Immutable UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     final Iterator<@Immutable Entry<E>> entryIterator = entrySet().iterator();
-    return new @Immutable UnmodifiableIterator<E>() {
+    return new @Mutable UnmodifiableIterator<E>() {
       @Assignable int remaining;
       @Assignable @CheckForNull E element;
 
@@ -600,7 +600,7 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Mutable Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

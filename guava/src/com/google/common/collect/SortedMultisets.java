@@ -32,6 +32,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Provides static utility methods for creating and working with {@link SortedMultiset} instances.
@@ -60,7 +61,7 @@ final class SortedMultisets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable ElementSet<E> this) {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable ElementSet<E> this) {
       return Multisets.elementIterator(multiset().entrySet().iterator());
     }
 
@@ -136,7 +137,7 @@ final class SortedMultisets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> descendingIterator() {
+    public @Mutable Iterator<E> descendingIterator() {
       return descendingSet().iterator();
     }
 

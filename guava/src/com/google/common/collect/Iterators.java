@@ -87,7 +87,7 @@ public final class Iterators {
    *
    * <p>The {@link Iterable} equivalent of this method is {@link ImmutableSet#of()}.
    */
-  static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> emptyIterator() {
+  static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> emptyIterator() {
     return emptyListIterator();
   }
 
@@ -98,7 +98,7 @@ public final class Iterators {
    */
   // Casting to any type is safe since there are no actual elements.
   @SuppressWarnings({"unchecked", "mutability:return.type.incompatible"}) // stateless: no elements and every mutator throws, so any qualifier the caller needs is sound
-  static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableListIterator<T> emptyListIterator() {
+  static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableListIterator<T> emptyListIterator() {
     return (@Readonly UnmodifiableListIterator<T>) ArrayItr.EMPTY;
   }
 
@@ -131,14 +131,14 @@ public final class Iterators {
    */
   // Casting to any type is safe since there are no actual elements.
   @SuppressWarnings("unchecked")
-  static <T extends @Nullable @Readonly Object> @Readonly Iterator<T> emptyModifiableIterator() {
-    return (@Readonly Iterator<T>) EmptyModifiableIterator.INSTANCE;
+  static <T extends @Nullable @Readonly Object> @Mutable Iterator<T> emptyModifiableIterator() {
+    return (@Mutable Iterator<T>) EmptyModifiableIterator.INSTANCE;
   }
 
   /** Returns an unmodifiable view of {@code iterator}. */
   @SuppressWarnings("mutability:return.type.incompatible") // the wrapper only forwards hasNext() and next() to iterator, so it has iterator's mutability; an anonymous class cannot be created @PolyMutable
-  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> unmodifiableIterator(
-          @PolyMutable Iterator<? extends T> iterator) {
+  public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> unmodifiableIterator(
+          @Mutable Iterator<? extends T> iterator) {
     checkNotNull(iterator);
     if (iterator instanceof UnmodifiableIterator) {
       @SuppressWarnings("unchecked") // Since it's unmodifiable, the covariant cast is safe
@@ -166,8 +166,8 @@ public final class Iterators {
    * @since 10.0
    */
   @Deprecated
-  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> unmodifiableIterator(
-          @PolyMutable UnmodifiableIterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> unmodifiableIterator(
+          @Mutable UnmodifiableIterator<T> iterator) {
     return checkNotNull(iterator);
   }
 
@@ -175,7 +175,7 @@ public final class Iterators {
    * Returns the number of elements remaining in {@code iterator}. The iterator will be left
    * exhausted: its {@code hasNext()} method will return {@code false}.
    */
-  public static int size(@Readonly Iterator<?> iterator) {
+  public static int size(@Mutable Iterator<?> iterator) {
     long count = 0L;
     while (iterator.hasNext()) {
       iterator.next();
@@ -186,7 +186,7 @@ public final class Iterators {
 
   /** Returns {@code true} if {@code iterator} contains {@code element}. */
   @Pure
-  public static boolean contains(@Readonly Iterator<?> iterator, @CheckForNull @UnknownSignedness @Readonly Object element) {
+  public static boolean contains(@Mutable Iterator<?> iterator, @CheckForNull @UnknownSignedness @Readonly Object element) {
     if (element == null) {
       while (iterator.hasNext()) {
         if (iterator.next() == null) {
@@ -278,7 +278,7 @@ public final class Iterators {
    * <p>Note that this will modify the supplied iterators, since they will have been advanced some
    * number of elements forward.
    */
-  public static boolean elementsEqual(@Readonly Iterator<?> iterator1, @Readonly Iterator<?> iterator2) {
+  public static boolean elementsEqual(@Mutable Iterator<?> iterator1, @Mutable Iterator<?> iterator2) {
     while (iterator1.hasNext()) {
       if (!iterator2.hasNext()) {
         return false;
@@ -297,7 +297,7 @@ public final class Iterators {
    * The iterator will be left exhausted: its {@code hasNext()} method will return {@code false}.
    */
   @Pure
-  public static String toString(@Readonly Iterator<?> iterator) {
+  public static String toString(@Mutable Iterator<?> iterator) {
     StringBuilder sb = new StringBuilder().append('[');
     boolean first = true;
     while (iterator.hasNext()) {
@@ -318,7 +318,7 @@ public final class Iterators {
    *     iterator is unspecified.
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getOnlyElement(@Readonly Iterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> T getOnlyElement(@Mutable Iterator<T> iterator) {
     T first = iterator.next();
     if (!iterator.hasNext()) {
       return first;
@@ -345,7 +345,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getOnlyElement(
-          @Readonly Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
+          @Mutable Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
     return iterator.hasNext() ? getOnlyElement(iterator) : defaultValue;
   }
 
@@ -372,7 +372,7 @@ public final class Iterators {
    */
   @CanIgnoreReturnValue
   public static <T extends @Nullable @Readonly Object> boolean addAll(
-      Collection<T> addTo, @Readonly Iterator<? extends T> iterator) {
+      Collection<T> addTo, @Mutable Iterator<? extends T> iterator) {
     checkNotNull(addTo);
     checkNotNull(iterator);
     boolean wasModified = false;
@@ -388,7 +388,7 @@ public final class Iterators {
    *
    * @see Collections#frequency
    */
-  public static int frequency(@Readonly Iterator<?> iterator, @CheckForNull @Readonly Object element) {
+  public static int frequency(@Mutable Iterator<?> iterator, @CheckForNull @Readonly Object element) {
     int count = 0;
     while (contains(iterator, element)) {
       // Since it lives in the same class, we know contains gets to the element and then stops,
@@ -475,7 +475,7 @@ public final class Iterators {
    *
    * <p>This is mainly just to avoid the intermediate ArrayDeque in ConsumingQueueIterator.
    */
-  private static <I extends @Readonly Iterator<?>> Iterator<I> consumingForArray(@Nullable I... elements) {
+  private static <I extends @Mutable Iterator<?>> Iterator<I> consumingForArray(@Nullable I... elements) {
     return new @Mutable UnmodifiableIterator<I>() {
       int index = 0;
 
@@ -578,7 +578,7 @@ public final class Iterators {
    * of the input iterators is null.
    */
   public static <T extends @Nullable @Readonly Object> Iterator<T> concat(
-      Iterator<? extends @Readonly Iterator<? extends T>> inputs) {
+      @Mutable Iterator<? extends @Mutable Iterator<? extends T>> inputs) {
     return new ConcatenatedIterator<>(inputs);
   }
 
@@ -675,11 +675,11 @@ public final class Iterators {
    * {@code retainIfTrue}.
    */
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
-  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> filter(
-      @PolyMutable Iterator<T> unfiltered, @Readonly Predicate<? super T> retainIfTrue) {
+  public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> filter(
+      @Mutable Iterator<T> unfiltered, @Readonly Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
-    return new @PolyMutable AbstractIterator<T>() {
+    return new @Mutable AbstractIterator<T>() {
       @Override
       @CheckForNull
       protected T computeNext() {
@@ -700,8 +700,8 @@ public final class Iterators {
    */
   @SuppressWarnings("unchecked") // can cast to <T> because non-Ts are removed
   @GwtIncompatible // Class.isInstance
-  public static <T> @Readonly UnmodifiableIterator<T> filter(@Readonly Iterator<?> unfiltered, Class<T> desiredType) {
-    return (@Readonly UnmodifiableIterator<T>) filter(unfiltered, instanceOf(desiredType));
+  public static <T> @Mutable UnmodifiableIterator<T> filter(@Mutable Iterator<?> unfiltered, Class<T> desiredType) {
+    return (@Mutable UnmodifiableIterator<T>) filter(unfiltered, instanceOf(desiredType));
   }
 
   /**
@@ -709,7 +709,7 @@ public final class Iterators {
    * predicate.
    */
   public static <T extends @Nullable @Readonly Object> boolean any(
-      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
+      @Mutable Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     return indexOf(iterator, predicate) != -1;
   }
 
@@ -718,7 +718,7 @@ public final class Iterators {
    * predicate. If {@code iterator} is empty, {@code true} is returned.
    */
   public static <T extends @Nullable @Readonly Object> boolean all(
-      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
+      @Mutable Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate);
     while (iterator.hasNext()) {
       T element = iterator.next();
@@ -740,7 +740,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T find(
-      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
+      @Mutable Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(iterator);
     checkNotNull(predicate);
     while (iterator.hasNext()) {
@@ -763,7 +763,7 @@ public final class Iterators {
   // For discussion of this signature, see the corresponding overload of *Iterables*.find.
   @CheckForNull
   public static <T extends @Nullable @Readonly Object> T find(
-      @Readonly Iterator<? extends T> iterator,
+      @Mutable Iterator<? extends T> iterator,
       @Readonly Predicate<? super T> predicate,
       @CheckForNull T defaultValue) {
     checkNotNull(iterator);
@@ -788,7 +788,7 @@ public final class Iterators {
    *
    * @since 11.0
    */
-  public static <T> Optional<T> tryFind(@Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
+  public static <T> Optional<T> tryFind(@Mutable Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(iterator);
     checkNotNull(predicate);
     while (iterator.hasNext()) {
@@ -815,7 +815,7 @@ public final class Iterators {
    * @since 2.0
    */
   public static <T extends @Nullable @Readonly Object> int indexOf(
-      @Readonly Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
+      @Mutable Iterator<T> iterator, @Readonly Predicate<? super T> predicate) {
     checkNotNull(predicate, "predicate");
     for (int i = 0; iterator.hasNext(); i++) {
       T current = iterator.next();
@@ -835,10 +835,10 @@ public final class Iterators {
    * element.
    */
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
-  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @PolyMutable Iterator<T> transform(
-      @PolyMutable Iterator<F> fromIterator, @Readonly Function<? super F, ? extends T> function) {
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @Mutable Iterator<T> transform(
+      @Mutable Iterator<F> fromIterator, @Readonly Function<? super F, ? extends T> function) {
     checkNotNull(function);
-    return new @PolyMutable TransformedIterator<F, T>(fromIterator) {
+    return new @Mutable TransformedIterator<F, T>(fromIterator) {
       @ParametricNullness
       @Override
       T transform(@ParametricNullness F from) {
@@ -857,7 +857,7 @@ public final class Iterators {
    *     the number of elements remaining in {@code iterator}
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T get(@Readonly Iterator<T> iterator, int position) {
+  public static <T extends @Nullable @Readonly Object> T get(@Mutable Iterator<T> iterator, int position) {
     checkNonnegative(position);
     int skipped = advance(iterator, position);
     if (!iterator.hasNext()) {
@@ -885,7 +885,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T get(
-      @Readonly Iterator<? extends T> iterator, int position, @ParametricNullness T defaultValue) {
+      @Mutable Iterator<? extends T> iterator, int position, @ParametricNullness T defaultValue) {
     checkNonnegative(position);
     advance(iterator, position);
     return getNext(iterator, defaultValue);
@@ -907,7 +907,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getNext(
-      @Readonly Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
+      @Mutable Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
     return iterator.hasNext() ? iterator.next() : defaultValue;
   }
 
@@ -918,7 +918,7 @@ public final class Iterators {
    * @throws NoSuchElementException if the iterator is empty
    */
   @ParametricNullness
-  public static <T extends @Nullable @Readonly Object> T getLast(@Readonly Iterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> T getLast(@Mutable Iterator<T> iterator) {
     while (true) {
       T current = iterator.next();
       if (!iterator.hasNext()) {
@@ -937,7 +937,7 @@ public final class Iterators {
    */
   @ParametricNullness
   public static <T extends @Nullable @Readonly Object> T getLast(
-      @Readonly Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
+      @Mutable Iterator<? extends T> iterator, @ParametricNullness T defaultValue) {
     return iterator.hasNext() ? getLast(iterator) : defaultValue;
   }
 
@@ -949,7 +949,7 @@ public final class Iterators {
    * @since 13.0 (since 3.0 as {@code Iterators.skip})
    */
   @CanIgnoreReturnValue
-  public static int advance(@Readonly Iterator<?> iterator, int numberToAdvance) {
+  public static int advance(@Mutable Iterator<?> iterator, int numberToAdvance) {
     checkNotNull(iterator);
     checkArgument(numberToAdvance >= 0, "numberToAdvance must be nonnegative");
 
@@ -970,8 +970,8 @@ public final class Iterators {
    * @throws IllegalArgumentException if {@code limitSize} is negative
    * @since 3.0
    */
-  public static <T extends @Nullable @Readonly Object> @PolyMutable Iterator<T> limit(
-      @PolyMutable Iterator<T> iterator, int limitSize) {
+  public static <T extends @Nullable @Readonly Object> @Mutable Iterator<T> limit(
+      @Mutable Iterator<T> iterator, int limitSize) {
     checkNotNull(iterator);
     checkArgument(limitSize >= 0, "limit is negative");
     return new @Mutable Iterator<T>() {
@@ -1072,7 +1072,7 @@ public final class Iterators {
    * {@link ImmutableList#copyOf(Object[])}}, or {@link ImmutableList#of}.
    */
   @SafeVarargs
-  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> forArray(T @PolyMutable ... array) {
+  public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> forArray(T @PolyMutable ... array) {
     return forArrayWithPosition(array, 0);
   }
 
@@ -1084,7 +1084,7 @@ public final class Iterators {
    * Arrays.asList(array).listIterator(position)}.
    */
   @SuppressWarnings("mutability:return.type.incompatible") // a fresh iterator over array whose mutators throw, so any qualifier the caller needs is sound
-  static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableListIterator<T> forArrayWithPosition(
+  static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableListIterator<T> forArrayWithPosition(
       T @PolyMutable [] array, int position) {
     if (array.length == 0) {
       Preconditions.checkPositionIndex(position, array.length); // otherwise checked in ArrayItr
@@ -1093,7 +1093,7 @@ public final class Iterators {
     return new ArrayItr<>(array, position);
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   private static final class ArrayItr<T extends @Nullable @Readonly Object>
       extends AbstractIndexedListIterator<T> {
     static final UnmodifiableListIterator<Object> EMPTY = new ArrayItr<>(new Object[0], 0);
@@ -1118,7 +1118,7 @@ public final class Iterators {
    * <p>The {@link Iterable} equivalent of this method is {@link Collections#singleton}.
    */
   @SuppressWarnings("mutability:return.type.incompatible") // a fresh iterator over one element whose remove() throws, so any qualifier the caller needs is sound
-  public static <T extends @Nullable @Readonly Object> @PolyMutable UnmodifiableIterator<T> singletonIterator(
+  public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> singletonIterator(
       @ParametricNullness T value) {
     return new SingletonIterator<>(value);
   }
@@ -1202,14 +1202,14 @@ public final class Iterators {
   }
 
   /** Implementation of PeekingIterator that avoids peeking unless necessary. */
-  @ReceiverDependentMutable
+  @Mutable
   private static class PeekingImpl<E extends @Nullable @Readonly Object> implements PeekingIterator<E> {
 
-    private final Iterator<? extends E> iterator;
+    private final @Mutable Iterator<? extends E> iterator;
     private @Assignable boolean hasPeeked;
     @CheckForNull private @Assignable E peekedElement;
 
-    public PeekingImpl(@ReceiverDependentMutable Iterator<? extends E> iterator) {
+    public PeekingImpl(@Mutable Iterator<? extends E> iterator) {
       this.iterator = checkNotNull(iterator);
     }
 
@@ -1220,7 +1220,7 @@ public final class Iterators {
 
     @Override
     @ParametricNullness
-    public E next(@Readonly PeekingImpl<E> this) {
+    public E next(@Mutable PeekingImpl<E> this) {
       if (!hasPeeked) {
         return iterator.next();
       }
@@ -1304,8 +1304,8 @@ public final class Iterators {
    * @since 10.0
    */
   @Deprecated
-  public static <T extends @Nullable @Readonly Object> @PolyMutable PeekingIterator<T> peekingIterator(
-      @PolyMutable PeekingIterator<T> iterator) {
+  public static <T extends @Nullable @Readonly Object> @Mutable PeekingIterator<T> peekingIterator(
+      @Mutable PeekingIterator<T> iterator) {
     return checkNotNull(iterator);
   }
 
@@ -1339,7 +1339,7 @@ public final class Iterators {
    * number of elements.)
    */
   @CFComment("AOSEN: Is this a design issue?")
-  @ReceiverDependentMutable
+  @Mutable
   private static class MergingIterator<T extends @Nullable @Readonly Object> extends UnmodifiableIterator<T> {
     final @Mutable Queue<PeekingIterator<T>> queue;
 
@@ -1367,7 +1367,7 @@ public final class Iterators {
 
     @Override
     @ParametricNullness
-    public T next(@Readonly MergingIterator<T> this) {
+    public T next(@Mutable MergingIterator<T> this) {
       PeekingIterator<T> nextIter = queue.remove();
       T next = nextIter.next();
       if (nextIter.hasNext()) {
@@ -1377,13 +1377,13 @@ public final class Iterators {
     }
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   private static class ConcatenatedIterator<T extends @Nullable @Readonly Object> implements Iterator<T> {
     /* The last iterator to return an element.  Calls to remove() go to this iterator. */
-    @CheckForNull private @Assignable Iterator<? extends T> toRemove;
+    @CheckForNull private @Mutable Iterator<? extends T> toRemove;
 
     /* The iterator currently returning elements. */
-    private @Readonly @Assignable Iterator<? extends T> iterator;
+    private @Mutable @Assignable Iterator<? extends T> iterator;
 
     /*
      * We track the "meta iterators," the iterators-of-iterators, below.  Usually, topMetaIterator
@@ -1392,19 +1392,19 @@ public final class Iterators {
      * operation O(1).
      */
 
-    @CheckForNull private @Assignable Iterator<? extends Iterator<? extends T>> topMetaIterator;
+    @CheckForNull private @Assignable @Mutable Iterator<? extends @Mutable Iterator<? extends T>> topMetaIterator;
 
     // Only becomes nonnull if we encounter nested concatenations.
-    @CheckForNull private @Assignable @Mutable Deque<Iterator<? extends Iterator<? extends T>>> metaIterators;
+    @CheckForNull private @Assignable @Mutable Deque<@Mutable Iterator<? extends @Mutable Iterator<? extends T>>> metaIterators;
 
-    ConcatenatedIterator(@ReceiverDependentMutable Iterator<? extends Iterator<? extends T>> metaIterator) {
+    ConcatenatedIterator(@Mutable Iterator<? extends @Mutable Iterator<? extends T>> metaIterator) {
       iterator = emptyIterator();
       topMetaIterator = checkNotNull(metaIterator);
     }
 
     // Returns a nonempty meta-iterator or, if all meta-iterators are empty, null.
     @CheckForNull
-    private @PolyMutable Iterator<? extends Iterator<? extends T>> getTopMetaIterator(@PolyMutable ConcatenatedIterator<T> this) {
+    private @Mutable Iterator<? extends @Mutable Iterator<? extends T>> getTopMetaIterator(@PolyMutable ConcatenatedIterator<T> this) {
       while (topMetaIterator == null || !topMetaIterator.hasNext()) {
         if (metaIterators != null && !metaIterators.isEmpty()) {
           topMetaIterator = metaIterators.removeFirst();
@@ -1455,7 +1455,7 @@ public final class Iterators {
 
     @Override
     @ParametricNullness
-    public T next(@Readonly ConcatenatedIterator<T> this) {
+    public T next(@Mutable ConcatenatedIterator<T> this) {
       if (hasNext()) {
         toRemove = iterator;
         return iterator.next();

@@ -31,6 +31,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * {@code values()} implementation for {@link ImmutableMap}.
@@ -55,8 +56,8 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<V> iterator() {
-    return new @Immutable UnmodifiableIterator<V>() {
+  public @Mutable UnmodifiableIterator<V> iterator() {
+    return new @Mutable UnmodifiableIterator<V>() {
       final UnmodifiableIterator<@Immutable Entry<K, V>> entryItr = map.entrySet().iterator();
 
       @Override

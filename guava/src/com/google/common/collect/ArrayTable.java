@@ -569,8 +569,8 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
-  @ReceiverDependentMutable Iterator<Cell<R, C, @Nullable V>> cellIterator(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
-    return new @ReceiverDependentMutable AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
+  @Mutable Iterator<Cell<R, C, @Nullable V>> cellIterator(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
+    return new @Mutable AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
       @Override
       protected Cell<R, C, @Nullable V> get(final int index) {
         return getCell(index);
@@ -820,7 +820,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
-  @ReceiverDependentMutable Iterator<@Nullable V> valuesIterator() {
+  @Mutable Iterator<@Nullable V> valuesIterator() {
     return new @Mutable AbstractIndexedListIterator<@Nullable V>(size()) {
       @Override
       @CheckForNull

@@ -30,6 +30,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link ImmutableList} backed by a simple array.
@@ -92,10 +93,10 @@ class RegularImmutableList<E> extends ImmutableList<E> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public @Immutable UnmodifiableListIterator<E> listIterator(int index) {
+  public @Mutable UnmodifiableListIterator<E> listIterator(int index) {
     // for performance
     // The fake cast to E is safe because the creation methods only allow E's
-    return (@Immutable UnmodifiableListIterator<E>) Iterators.forArrayWithPosition(array, index);
+    return (UnmodifiableListIterator<E>) Iterators.forArrayWithPosition(array, index);
   }
 
   @Override

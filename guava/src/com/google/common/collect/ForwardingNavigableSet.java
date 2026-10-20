@@ -192,7 +192,7 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
   }
 
   @Override
-  public @ReceiverDependentMutable Iterator<E> descendingIterator() {
+  public @Mutable Iterator<E> descendingIterator() {
     return delegate().descendingIterator();
   }
 

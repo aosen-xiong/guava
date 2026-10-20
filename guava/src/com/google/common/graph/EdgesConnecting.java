@@ -28,6 +28,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A class to represent the set of edges connecting an (implicit) origin node to a target node.
@@ -50,7 +51,7 @@ final class EdgesConnecting<E extends @Immutable Object> extends AbstractSet<E> 
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     E connectingEdge = getConnectingEdge();
     return (connectingEdge == null)
         ? ImmutableSet.<E>of().iterator()

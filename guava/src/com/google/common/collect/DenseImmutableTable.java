@@ -30,6 +30,7 @@ import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /** A {@code RegularImmutableTable} optimized for dense data. */
 @GwtCompatible
@@ -136,8 +137,8 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     }
 
     @Override
-    @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
-      return new @Immutable AbstractIterator<@Immutable Entry<K, V>>() {
+    @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
+      return new @Mutable AbstractIterator<@Immutable Entry<K, V>>() {
         private @Assignable int index = -1;
         private final int maxIndex = keyToIndex().size();
 

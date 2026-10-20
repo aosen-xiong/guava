@@ -41,11 +41,11 @@ import org.checkerframework.checker.mutability.qual.Assignable;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @CFComment("AOSEN: Is this a design issue?")
-@ReceiverDependentMutable
+@Mutable
 abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
     extends UnmodifiableListIterator<E> {
   private final int size;
-  private @Assignable int position;
+  private int position;
 
   /** Returns the element with the specified index. This method is called by {@link #next()}. */
   @ParametricNullness
@@ -85,7 +85,7 @@ abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
 
   @Override
   @ParametricNullness
-  public final E next(@Readonly AbstractIndexedListIterator<E> this) {
+  public final E next(@Mutable AbstractIndexedListIterator<E> this) {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
@@ -104,7 +104,7 @@ abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
 
   @Override
   @ParametricNullness
-  public final E previous(@Readonly AbstractIndexedListIterator<E> this) {
+  public final E previous(@Mutable AbstractIndexedListIterator<E> this) {
     if (!hasPrevious()) {
       throw new NoSuchElementException();
     }

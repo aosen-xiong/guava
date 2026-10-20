@@ -558,7 +558,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable TreeMultiset<E> this) {
+  public @Mutable Iterator<E> iterator(@ReceiverDependentMutable TreeMultiset<E> this) {
     return Multisets.iteratorImpl(this);
   }
 

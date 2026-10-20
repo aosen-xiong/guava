@@ -1302,7 +1302,7 @@ public final class Multimaps {
     }
 
     @Override
-    @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable MapMultimap<K, V> this) {
+    @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable MapMultimap<K, V> this) {
       return map.entrySet().iterator();
     }
 
@@ -1580,7 +1580,7 @@ public final class Multimaps {
     }
 
     @Override
-    @ReceiverDependentMutable Iterator<@PolyMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
+    @Mutable Iterator<@PolyMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return Iterators.transform(
           fromMultimap.entries().iterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));
     }
@@ -1827,7 +1827,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<K> iterator(@ReceiverDependentMutable Keys<K, V> this) {
+    public @Mutable Iterator<K> iterator(@ReceiverDependentMutable Keys<K, V> this) {
       return Maps.keyIterator(multimap.entries().iterator());
     }
 

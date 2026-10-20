@@ -205,8 +205,8 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   @Override
-  public @ReceiverDependentMutable Iterator<E> iterator() {
-    return new @ReceiverDependentMutable MapBasedMultisetIterator();
+  public @Mutable Iterator<E> iterator() {
+    return new @Mutable MapBasedMultisetIterator();
   }
 
   /*
@@ -214,12 +214,12 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
    * retrieve the Map.Entry<E, Count> entry, which can then be used for
    * a more efficient remove() call.
    */
-  @ReceiverDependentMutable
+  @Mutable
   private class MapBasedMultisetIterator implements Iterator<E> {
     final Iterator<Map.Entry<E, Count>> entryIterator;
-    @CheckForNull @Assignable Map.Entry<E, Count> currentEntry;
-    @Assignable int occurrencesLeft;
-    @Assignable boolean canRemove;
+    @CheckForNull Map.Entry<E, Count> currentEntry;
+    int occurrencesLeft;
+    boolean canRemove;
 
     MapBasedMultisetIterator() {
       this.entryIterator = backingMap.entrySet().iterator();

@@ -240,7 +240,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<E> copyOf(@Readonly Iterator<? extends E> elements) {
+  public static <E> ImmutableSet<E> copyOf(@Mutable Iterator<? extends E> elements) {
     // We special-case for 0 or 1 elements, but anything further is madness.
     if (!elements.hasNext()) {
       return of();
@@ -316,7 +316,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   // This declaration is needed to make Set.iterator() and
   // ImmutableCollection.iterator() consistent.
   @Override
-  public abstract @Immutable UnmodifiableIterator<E> iterator();
+  public abstract @Mutable UnmodifiableIterator<E> iterator();
 
   @GwtCompatible
   @Immutable
@@ -352,7 +352,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     abstract E get(int index);
 
     @Override
-    public @Immutable UnmodifiableIterator<E> iterator() {
+    public @Mutable UnmodifiableIterator<E> iterator() {
       return asList().iterator();
     }
 
@@ -562,7 +562,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
 
     @Override
     @CanIgnoreReturnValue
-    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Mutable Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

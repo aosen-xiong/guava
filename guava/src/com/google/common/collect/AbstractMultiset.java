@@ -200,7 +200,7 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<@Readonly Entry<E>> iterator(@ReceiverDependentMutable AbstractMultiset<E>.EntrySet this) {
+    public @Mutable Iterator<@Readonly Entry<E>> iterator(@ReceiverDependentMutable AbstractMultiset<E>.EntrySet this) {
       return entryIterator();
     }
 

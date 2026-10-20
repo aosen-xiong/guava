@@ -24,6 +24,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Skeletal implementation of {@link ImmutableSortedSet#descendingSet()}.
@@ -53,7 +54,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return forward.descendingIterator();
   }
 
@@ -81,7 +82,7 @@ final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Override
   @GwtIncompatible("NavigableSet")
-  public @Immutable UnmodifiableIterator<E> descendingIterator() {
+  public @Mutable UnmodifiableIterator<E> descendingIterator() {
     return forward.iterator();
   }
 

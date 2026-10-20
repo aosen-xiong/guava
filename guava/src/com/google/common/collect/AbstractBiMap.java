@@ -294,7 +294,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<K> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable KeySet this) {
+    public @Mutable Iterator<K> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable KeySet this) {
       return Maps.keyIterator(entrySet().iterator());
     }
   }
@@ -323,7 +323,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable ValueSet this) {
+    public @Mutable Iterator<V> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return Maps.valueIterator(entrySet().iterator());
     }
 

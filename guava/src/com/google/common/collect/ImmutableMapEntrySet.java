@@ -31,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * {@code entrySet()} implementation for {@link ImmutableMap}.
@@ -68,7 +69,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
     }
 
     @Override
-    public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
+    public @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
       return entries.iterator();
     }
 

@@ -34,6 +34,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link ImmutableSet} backed by a non-empty {@link java.util.EnumSet}.
@@ -78,7 +79,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return Iterators.unmodifiableIterator(delegate.iterator());
   }
 

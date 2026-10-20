@@ -389,8 +389,8 @@ public abstract class Traverser<N> {
       return new Traversal<N>(graph) {
         @Override
         @CheckForNull
-        N visitNext(Deque<@Readonly Iterator<? extends N>> horizon) {
-          Iterator<? extends N> top = horizon.getFirst();
+        N visitNext(Deque<@Mutable Iterator<? extends N>> horizon) {
+          @Mutable Iterator<? extends N> top = horizon.getFirst();
           while (top.hasNext()) {
             N element = top.next();
             // requireNonNull is safe because horizon contains only graph nodes.
@@ -416,8 +416,8 @@ public abstract class Traverser<N> {
       return new Traversal<N>(tree) {
         @CheckForNull
         @Override
-        N visitNext(Deque<@Readonly Iterator<? extends N>> horizon) {
-          Iterator<? extends N> top = horizon.getFirst();
+        N visitNext(Deque<@Mutable Iterator<? extends N>> horizon) {
+          @Mutable Iterator<? extends N> top = horizon.getFirst();
           if (top.hasNext()) {
             return checkNotNull(top.next());
           }
@@ -427,11 +427,11 @@ public abstract class Traverser<N> {
       };
     }
 
-    final Iterator<N> breadthFirst(@Readonly Iterator<? extends N> startNodes) {
+    final Iterator<N> breadthFirst(@Mutable Iterator<? extends N> startNodes) {
       return topDown(startNodes, InsertionOrder.BACK);
     }
 
-    final Iterator<N> preOrder(@Readonly Iterator<? extends N> startNodes) {
+    final Iterator<N> preOrder(@Mutable Iterator<? extends N> startNodes) {
       return topDown(startNodes, InsertionOrder.FRONT);
     }
 
@@ -441,8 +441,8 @@ public abstract class Traverser<N> {
      * determined by the {@code InsertionOrder} parameter: nieces are placed at the FRONT before
      * aunts for pre-order; while in BFS they are placed at the BACK after aunts.
      */
-    private Iterator<N> topDown(@Readonly Iterator<? extends N> startNodes, InsertionOrder order) {
-      Deque<@Readonly Iterator<? extends N>> horizon = new ArrayDeque<>();
+    private Iterator<N> topDown(@Mutable Iterator<? extends N> startNodes, InsertionOrder order) {
+      Deque<@Mutable Iterator<? extends N>> horizon = new ArrayDeque<>();
       horizon.add(startNodes);
       return new @Mutable AbstractIterator<N>() {
         @Override
@@ -451,7 +451,7 @@ public abstract class Traverser<N> {
           do {
             N next = visitNext(horizon);
             if (next != null) {
-              Iterator<? extends N> successors = successorFunction.successors(next).iterator();
+              @Mutable Iterator<? extends N> successors = successorFunction.successors(next).iterator();
               if (successors.hasNext()) {
                 // BFS: horizon.addLast(successors)
                 // Pre-order: horizon.addFirst(successors)
@@ -465,16 +465,16 @@ public abstract class Traverser<N> {
       };
     }
 
-    final Iterator<N> postOrder(@Readonly Iterator<? extends N> startNodes) {
+    final Iterator<N> postOrder(@Mutable Iterator<? extends N> startNodes) {
       Deque<N> ancestorStack = new ArrayDeque<>();
-      Deque<@Readonly Iterator<? extends N>> horizon = new ArrayDeque<>();
+      Deque<@Mutable Iterator<? extends N>> horizon = new ArrayDeque<>();
       horizon.add(startNodes);
       return new @Mutable AbstractIterator<N>() {
         @Override
         @CheckForNull
         protected N computeNext() {
           for (N next = visitNext(horizon); next != null; next = visitNext(horizon)) {
-            Iterator<? extends N> successors = successorFunction.successors(next).iterator();
+            @Mutable Iterator<? extends N> successors = successorFunction.successors(next).iterator();
             if (!successors.hasNext()) {
               return next;
             }
@@ -501,7 +501,7 @@ public abstract class Traverser<N> {
      * additional values interleaved with those shown above.)
      */
     @CheckForNull
-    abstract N visitNext(Deque<@Readonly Iterator<? extends N>> horizon);
+    abstract N visitNext(Deque<@Mutable Iterator<? extends N>> horizon);
   }
 
   /** Poor man's method reference for {@code Deque::addFirst} and {@code Deque::addLast}. */

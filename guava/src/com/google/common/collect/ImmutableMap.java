@@ -753,7 +753,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
 
   @Immutable
   abstract static class IteratorBasedImmutableMap<K extends @Immutable Object, V> extends ImmutableMap<K, V> {
-    abstract @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator();
+    abstract @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator();
 
     Spliterator<@Immutable Entry<K, V>> entrySpliterator() {
       return Spliterators.spliterator(
@@ -777,7 +777,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
         }
 
         @Override
-        public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
+        public @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
           return entryIterator();
         }
 
@@ -1091,9 +1091,9 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    */
   abstract ImmutableSet<K> createKeySet();
 
-  @Immutable UnmodifiableIterator<K> keyIterator() {
+  @Mutable UnmodifiableIterator<K> keyIterator() {
     final UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator = entrySet().iterator();
-    return new @Immutable UnmodifiableIterator<K>() {
+    return new @Mutable UnmodifiableIterator<K>() {
       @Override
       public boolean hasNext() {
         return entryIterator.hasNext();
@@ -1194,9 +1194,9 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     }
 
     @Override
-    @Immutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>> entryIterator() {
+    @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>> entryIterator() {
       final Iterator<@Immutable Entry<K, V>> backingIterator = ImmutableMap.this.entrySet().iterator();
-      return new @Immutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>>() {
+      return new @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>>() {
         @Override
         public boolean hasNext() {
           return backingIterator.hasNext();

@@ -45,6 +45,7 @@ import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A readable source of bytes, such as a file. Unlike an {@link InputStream}, a {@code ByteSource}
@@ -410,7 +411,7 @@ public abstract class ByteSource {
    * @throws NullPointerException if any of {@code sources} is {@code null}
    * @since 15.0
    */
-  public static ByteSource concat(@Readonly Iterator<? extends ByteSource> sources) {
+  public static ByteSource concat(@Mutable Iterator<? extends ByteSource> sources) {
     return concat(ImmutableList.copyOf(sources));
   }
 

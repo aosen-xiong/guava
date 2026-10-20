@@ -195,7 +195,7 @@ public final class Collections2 {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable FilteredCollection<E> this) {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable FilteredCollection<E> this) {
       return Iterators.filter(unfiltered.iterator(), predicate);
     }
 
@@ -313,7 +313,7 @@ public final class Collections2 {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable TransformedCollection<F, T> this) {
+    public @Mutable Iterator<T> iterator(@ReceiverDependentMutable TransformedCollection<F, T> this) {
       return Iterators.transform(fromCollection.iterator(), function);
     }
 
@@ -535,9 +535,9 @@ public final class Collections2 {
     }
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   private static final class OrderedPermutationIterator<E> extends AbstractIterator<List<E>> {
-    @CheckForNull @Assignable @Mutable List<E> nextPermutation;
+    @CheckForNull @Mutable List<E> nextPermutation;
     final @Mutable Comparator<? super E> comparator;
 
     OrderedPermutationIterator(@Readonly List<E> list, Comparator<? super E> comparator) {
@@ -663,12 +663,12 @@ public final class Collections2 {
     }
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   private static class PermutationIterator<E> extends AbstractIterator<List<E>> {
     final @Mutable List<E> list;
     final int[] c;
     final int[] o;
-    @Assignable int j;
+    int j;
 
     PermutationIterator(@Readonly List<E> list) {
       this.list = new ArrayList<E>(list);

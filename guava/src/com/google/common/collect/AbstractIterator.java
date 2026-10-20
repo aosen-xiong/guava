@@ -72,7 +72,7 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @CFComment("AOSEN: Is this a design issue?")
-@ReceiverDependentMutable
+@Mutable
 public abstract class AbstractIterator<T extends @Nullable @Readonly Object> extends UnmodifiableIterator<T> {
   private @Assignable State state = State.NOT_READY;
 

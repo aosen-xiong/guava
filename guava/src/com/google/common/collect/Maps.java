@@ -139,9 +139,9 @@ public final class Maps {
   }
 
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
-  static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<K> keyIterator(
-      @PolyMutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
-    return new @PolyMutable TransformedIterator<@PolyMutable Entry<K, V>, K>(entryIterator) {
+  static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @Mutable Iterator<K> keyIterator(
+      @Mutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
+    return new @Mutable TransformedIterator<@PolyMutable Entry<K, V>, K>(entryIterator) {
       @Override
       @ParametricNullness
       K transform(@Readonly Entry<K, V> entry) {
@@ -151,9 +151,9 @@ public final class Maps {
   }
 
   @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
-  static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @PolyMutable Iterator<V> valueIterator(
-      @PolyMutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
-    return new @PolyMutable TransformedIterator<@PolyMutable Entry<K, V>, V>(entryIterator) {
+  static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @Mutable Iterator<V> valueIterator(
+      @Mutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
+    return new @Mutable TransformedIterator<@PolyMutable Entry<K, V>, V>(entryIterator) {
       @Override
       @ParametricNullness
       V transform(@Readonly Entry<K, V> entry) {
@@ -974,7 +974,7 @@ public final class Maps {
 
         @Override
         @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
-        public @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable EntrySetImpl this) {
+        public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable EntrySetImpl this) {
           return asMapEntryIterator(backingSet(), function);
         }
       }
@@ -1531,8 +1531,8 @@ public final class Maps {
   }
 
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly  Object>
-    @Readonly UnmodifiableIterator<@Readonly Entry<K, V>> unmodifiableEntryIterator(
-          final @Readonly Iterator<@Readonly Entry<K, V>> entryIterator) {
+    @Mutable UnmodifiableIterator<@Readonly Entry<K, V>> unmodifiableEntryIterator(
+          final @Mutable Iterator<@Readonly Entry<K, V>> entryIterator) {
     return new @Mutable UnmodifiableIterator<@Readonly Entry<K, V>>() {
       @Override
       public boolean hasNext() {
@@ -1562,7 +1562,7 @@ public final class Maps {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<@Readonly Entry<K, V>> iterator() {
+    public @Mutable Iterator<@Readonly Entry<K, V>> iterator() {
       return unmodifiableEntryIterator(entries.iterator());
     }
 
@@ -3185,8 +3185,8 @@ public final class Maps {
       }
 
       @Override
-      public @ReceiverDependentMutable Iterator<@Readonly Entry<K, V>> iterator(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
-        return new @ReceiverDependentMutable TransformedIterator<Entry<K, V>, Entry<K, V>>(filteredEntrySet.iterator()) {
+      public @Mutable Iterator<@Readonly Entry<K, V>> iterator(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
+        return new @Mutable TransformedIterator<Entry<K, V>, Entry<K, V>>(filteredEntrySet.iterator()) {
           @Override
           Entry<K, V> transform(final Entry<K, V> entry) {
             return new @Mutable ForwardingMapEntry<K, V>() {
@@ -3441,12 +3441,12 @@ public final class Maps {
     }
 
     @Override
-    @Readonly Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
+    @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return Iterators.filter(unfiltered.entrySet().iterator(), entryPredicate);
     }
 
     @Override
-    @Readonly Iterator<@ReceiverDependentMutable Entry<K, V>> descendingEntryIterator(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
+    @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> descendingEntryIterator(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
       return Iterators.filter(unfiltered.descendingMap().entrySet().iterator(), entryPredicate);
     }
 
@@ -3982,7 +3982,7 @@ public final class Maps {
 
         @Override
         @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
-        public @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator() {
+        public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator() {
           return entryIterator();
         }
 
@@ -4146,7 +4146,7 @@ public final class Maps {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<K> iterator(@ReceiverDependentMutable KeySet<K, V> this) {
+    public @Mutable Iterator<K> iterator(@ReceiverDependentMutable KeySet<K, V> this) {
       return keyIterator(map().entrySet().iterator());
     }
 
@@ -4298,7 +4298,7 @@ public final class Maps {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<K> descendingIterator(@ReceiverDependentMutable NavigableKeySet<K, V> this) {
+    public @Mutable Iterator<K> descendingIterator(@ReceiverDependentMutable NavigableKeySet<K, V> this) {
       return descendingSet().iterator();
     }
 
@@ -4352,7 +4352,7 @@ public final class Maps {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable Values<K, V> this) {
+    public @Mutable Iterator<V> iterator(@ReceiverDependentMutable Values<K, V> this) {
       return valueIterator(map().entrySet().iterator());
     }
 
@@ -4649,7 +4649,7 @@ public final class Maps {
 
         @Override
         @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
-        public @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable EntrySetImpl this) {
+        public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable EntrySetImpl this) {
           return entryIterator();
         }
       }

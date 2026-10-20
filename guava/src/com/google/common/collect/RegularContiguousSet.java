@@ -32,6 +32,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An implementation of {@link ContiguousSet} that contains one or more elements.
@@ -94,7 +95,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<C> iterator() {
+  public @Mutable UnmodifiableIterator<C> iterator() {
     return new AbstractSequentialIterator<C>(first()) {
       final C last = last();
 
@@ -108,7 +109,7 @@ final class RegularContiguousSet<C extends @Immutable Comparable> extends Contig
 
   @GwtIncompatible // NavigableSet
   @Override
-  public @Immutable UnmodifiableIterator<C> descendingIterator() {
+  public @Mutable UnmodifiableIterator<C> descendingIterator() {
     return new AbstractSequentialIterator<C>(last()) {
       final C first = first();
 

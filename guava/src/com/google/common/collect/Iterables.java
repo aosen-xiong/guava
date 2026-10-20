@@ -589,7 +589,7 @@ public final class Iterables {
     checkNotNull(retainIfTrue);
     return new FluentIterable<T>() {
       @Override
-      public @Readonly Iterator<T> iterator() {
+      public @Mutable Iterator<T> iterator() {
         return Iterators.filter(unfiltered.iterator(), retainIfTrue);
       }
 

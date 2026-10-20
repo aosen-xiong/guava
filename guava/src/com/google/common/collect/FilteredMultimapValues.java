@@ -51,7 +51,7 @@ final class FilteredMultimapValues<K extends @Nullable @Immutable Object, V exte
   }
 
   @Override
-  public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable FilteredMultimapValues<K, V> this) {
+  public @Mutable Iterator<V> iterator(@ReceiverDependentMutable FilteredMultimapValues<K, V> this) {
     return Maps.valueIterator(multimap.entries().iterator());
   }
 

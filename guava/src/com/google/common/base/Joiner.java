@@ -116,7 +116,7 @@ public class Joiner {
    * @since 11.0
    */
   @CanIgnoreReturnValue
-  public <A extends Appendable> A appendTo(A appendable, @Readonly Iterator<? extends @Nullable @Readonly Object> parts)
+  public <A extends Appendable> A appendTo(A appendable, @Mutable Iterator<? extends @Nullable @Readonly Object> parts)
       throws IOException {
     checkNotNull(appendable);
     if (parts.hasNext()) {
@@ -172,7 +172,7 @@ public class Joiner {
    */
   @CanIgnoreReturnValue
   public final StringBuilder appendTo(
-      StringBuilder builder, @Readonly Iterator<? extends @Nullable @Readonly Object> parts) {
+      StringBuilder builder, @Mutable Iterator<? extends @Nullable @Readonly Object> parts) {
     try {
       appendTo((Appendable) builder, parts);
     } catch (IOException impossible) {
@@ -221,7 +221,7 @@ public class Joiner {
    *
    * @since 11.0
    */
-  public final String join(@Readonly Iterator<? extends @Nullable @Readonly Object> parts) {
+  public final String join(@Mutable Iterator<? extends @Nullable @Readonly Object> parts) {
     return appendTo(new StringBuilder(), parts).toString();
   }
 
@@ -276,7 +276,7 @@ public class Joiner {
     return new Joiner(this) {
       @Override
       public <A extends Appendable> A appendTo(
-          A appendable, @Readonly Iterator<? extends @Nullable @Readonly Object> parts) throws IOException {
+          A appendable, @Mutable Iterator<? extends @Nullable @Readonly Object> parts) throws IOException {
         checkNotNull(appendable, "appendable");
         checkNotNull(parts, "parts");
         while (parts.hasNext()) {
@@ -391,7 +391,7 @@ public class Joiner {
      * @since 11.0
      */
     @CanIgnoreReturnValue
-    public <A extends Appendable> A appendTo(A appendable, @Readonly Iterator<? extends @Readonly Entry<?, ?>> parts)
+    public <A extends Appendable> A appendTo(A appendable, @Mutable Iterator<? extends @Readonly Entry<?, ?>> parts)
         throws IOException {
       checkNotNull(appendable);
       if (parts.hasNext()) {
@@ -430,7 +430,7 @@ public class Joiner {
      * @since 11.0
      */
     @CanIgnoreReturnValue
-    public StringBuilder appendTo(StringBuilder builder, @Readonly Iterator<? extends @Readonly Entry<?, ?>> entries) {
+    public StringBuilder appendTo(StringBuilder builder, @Mutable Iterator<? extends @Readonly Entry<?, ?>> entries) {
       try {
         appendTo((Appendable) builder, entries);
       } catch (IOException impossible) {
@@ -463,7 +463,7 @@ public class Joiner {
      *
      * @since 11.0
      */
-    public String join(@Readonly Iterator<? extends @Readonly Entry<?, ?>> entries) {
+    public String join(@Mutable Iterator<? extends @Readonly Entry<?, ?>> entries) {
       return appendTo(new StringBuilder(), entries).toString();
     }
 

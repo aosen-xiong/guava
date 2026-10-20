@@ -201,7 +201,7 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable SynchronizedCollection<E> this) {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable SynchronizedCollection<E> this) {
       return delegate().iterator(); // manually synchronized
     }
 
@@ -457,12 +457,12 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable SynchronizedList<E> this) {
+    public @Mutable ListIterator<E> listIterator(@ReceiverDependentMutable SynchronizedList<E> this) {
       return delegate().listIterator(); // manually synchronized
     }
 
     @Override
-    public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable SynchronizedList<E> this, int index) {
+    public @Mutable ListIterator<E> listIterator(@ReceiverDependentMutable SynchronizedList<E> this, int index) {
       return delegate().listIterator(index); // manually synchronized
     }
 
@@ -1037,9 +1037,9 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<Map.Entry<K, Collection<V>>> iterator(@ReceiverDependentMutable SynchronizedAsMapEntries<K, V> this) {
+    public @Mutable Iterator<Map.Entry<K, Collection<V>>> iterator(@ReceiverDependentMutable SynchronizedAsMapEntries<K, V> this) {
       // Must be manually synchronized.
-      return new @ReceiverDependentMutable TransformedIterator<Map.Entry<K, Collection<V>>, Map.Entry<K, Collection<V>>>(
+      return new @Mutable TransformedIterator<Map.Entry<K, Collection<V>>, Map.Entry<K, Collection<V>>>(
           super.iterator()) {
         @Override
         Map.Entry<K, Collection<V>> transform(final Map.Entry<K, Collection<V>> entry) {
@@ -1551,9 +1551,9 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<Collection<V>> iterator(@ReceiverDependentMutable SynchronizedAsMapValues<V> this) {
+    public @Mutable Iterator<Collection<V>> iterator(@ReceiverDependentMutable SynchronizedAsMapValues<V> this) {
       // Must be manually synchronized.
-      return new @ReceiverDependentMutable TransformedIterator<Collection<V>, Collection<V>>(super.iterator()) {
+      return new @Mutable TransformedIterator<Collection<V>, Collection<V>>(super.iterator()) {
         @Override
         Collection<V> transform(Collection<V> from) {
           return typePreservingCollection(from, mutex);
@@ -1616,7 +1616,7 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable SynchronizedNavigableSet<E> this) {
+    public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable SynchronizedNavigableSet<E> this) {
       return delegate().descendingIterator(); // manually synchronized
     }
 
@@ -2193,7 +2193,7 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> descendingIterator() {
+    public @Mutable Iterator<E> descendingIterator() {
       synchronized (mutex) {
         return delegate().descendingIterator();
       }

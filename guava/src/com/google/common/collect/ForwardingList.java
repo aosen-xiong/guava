@@ -104,12 +104,12 @@ public abstract class ForwardingList<E extends @Nullable @Readonly Object> exten
   }
 
   @Override
-  public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable ForwardingList<E> this) {
+  public @Mutable ListIterator<E> listIterator(@ReceiverDependentMutable ForwardingList<E> this) {
     return delegate().listIterator();
   }
 
   @Override
-  public @ReceiverDependentMutable ListIterator<E> listIterator(@ReceiverDependentMutable ForwardingList<E> this, int index) {
+  public @Mutable ListIterator<E> listIterator(@ReceiverDependentMutable ForwardingList<E> this, int index) {
     return delegate().listIterator(index);
   }
 

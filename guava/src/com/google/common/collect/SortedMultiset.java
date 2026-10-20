@@ -26,6 +26,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A {@link Multiset} which maintains the ordering of its elements, according to either their
@@ -108,7 +109,7 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * comparator.
    */
   @Override
-  @ReceiverDependentMutable Iterator<E> iterator();
+  @Mutable Iterator<E> iterator();
 
   /**
    * Returns a descending view of this multiset. Modifications made to either map will be reflected

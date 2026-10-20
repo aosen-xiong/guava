@@ -819,7 +819,7 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
     @Immutable
     class EntrySet extends ImmutableMapEntrySet<K, V> {
       @Override
-      public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
+      public @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
         return asList().iterator();
       }
 

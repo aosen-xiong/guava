@@ -21,6 +21,7 @@ import java.util.Queue;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An Iterator implementation which draws elements from a queue, removing them from the queue as it

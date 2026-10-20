@@ -30,6 +30,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link ImmutableSet} with two or more elements.
@@ -88,8 +89,8 @@ final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   // (In the backport, we don't need this suppression, but we keep it to minimize diffs.)
   @SuppressWarnings("unchecked")
   @Override
-  public @Immutable UnmodifiableIterator<E> iterator() {
-    return (@Immutable UnmodifiableIterator<E>) Iterators.forArray(elements);
+  public @Mutable UnmodifiableIterator<E> iterator() {
+    return (UnmodifiableIterator<E>) Iterators.forArray(elements);
   }
 
   @Override

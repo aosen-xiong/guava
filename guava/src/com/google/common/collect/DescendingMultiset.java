@@ -33,6 +33,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A skeleton implementation of a descending multiset. Only needs {@code forwardMultiset()} and
@@ -157,7 +158,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   }
 
   @Override
-  public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable DescendingMultiset<E> this) {
+  public @Mutable Iterator<E> iterator(@ReceiverDependentMutable DescendingMultiset<E> this) {
     return Multisets.iteratorImpl(this);
   }
 

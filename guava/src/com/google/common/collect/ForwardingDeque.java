@@ -70,7 +70,7 @@ public abstract class ForwardingDeque<E extends @Nullable @Readonly Object> exte
   }
 
   @Override
-  public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable ForwardingDeque<E> this) {
+  public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable ForwardingDeque<E> this) {
     return delegate().descendingIterator();
   }
 

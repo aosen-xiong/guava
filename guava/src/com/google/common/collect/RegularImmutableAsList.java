@@ -25,6 +25,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An {@link ImmutableAsList} implementation specialized for when the delegate collection is already
@@ -61,8 +62,8 @@ class RegularImmutableAsList<E> extends ImmutableAsList<E> {
 
   @SuppressWarnings("unchecked") // safe covariant cast!
   @Override
-  public @Immutable UnmodifiableListIterator<E> listIterator(int index) {
-    return (@Immutable UnmodifiableListIterator<E>) delegateList.listIterator(index);
+  public @Mutable UnmodifiableListIterator<E> listIterator(int index) {
+    return (UnmodifiableListIterator<E>) delegateList.listIterator(index);
   }
 
   @GwtIncompatible // not present in emulated superclass

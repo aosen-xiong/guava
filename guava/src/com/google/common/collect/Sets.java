@@ -717,7 +717,7 @@ public final class Sets {
      * @since 20.0 (present with return type {@link Iterator} since 2.0)
      */
     @Override
-    public abstract @ReceiverDependentMutable UnmodifiableIterator<E> iterator();
+    public abstract @Mutable UnmodifiableIterator<E> iterator();
   }
 
   /**
@@ -755,10 +755,10 @@ public final class Sets {
       }
 
       @Override
-      public @Readonly UnmodifiableIterator<E> iterator() {
-        return new @Immutable AbstractIterator<E>() {
-          final @Readonly Iterator<? extends E> itr1 = set1.iterator();
-          final @Readonly Iterator<? extends E> itr2 = set2.iterator();
+      public @Mutable UnmodifiableIterator<E> iterator() {
+        return new @Mutable AbstractIterator<E>() {
+          final @Mutable Iterator<? extends E> itr1 = set1.iterator();
+          final @Mutable Iterator<? extends E> itr2 = set2.iterator();
 
           @Override
           @CheckForNull
@@ -846,8 +846,8 @@ public final class Sets {
     return new @Mutable SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
-        return new @Immutable AbstractIterator<E>() {
-          final @Readonly Iterator<E> itr = set1.iterator();
+        return new @Mutable AbstractIterator<E>() {
+          final @Mutable Iterator<E> itr = set1.iterator();
 
           @Override
           @CheckForNull
@@ -920,7 +920,7 @@ public final class Sets {
       @Override
       public UnmodifiableIterator<E> iterator() {
         return new @Mutable AbstractIterator<E>() {
-          final @Readonly Iterator<E> itr = set1.iterator();
+          final @Mutable Iterator<E> itr = set1.iterator();
 
           @Override
           @CheckForNull
@@ -1282,7 +1282,7 @@ public final class Sets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
+    public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
       return Iterators.filter(unfiltered().descendingIterator(), predicate);
     }
 
@@ -1581,8 +1581,8 @@ public final class Sets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable SubSet<E> this) {
-      return new @ReceiverDependentMutable UnmodifiableIterator<E>() {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable SubSet<E> this) {
+      return new @Mutable UnmodifiableIterator<E>() {
         final ImmutableList<E> elements = inputSet.keySet().asList();
         @Assignable int remainingSetBits = mask;
 
@@ -1636,8 +1636,8 @@ public final class Sets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<Set<E>> iterator(@ReceiverDependentMutable PowerSet<E> this) {
-      return new @ReceiverDependentMutable AbstractIndexedListIterator<Set<E>>(size()) {
+    public @Mutable Iterator<Set<E>> iterator(@ReceiverDependentMutable PowerSet<E> this) {
+      return new @Mutable AbstractIndexedListIterator<Set<E>>(size()) {
         @Override
         protected Set<E> get(final int setBits) {
           return new SubSet<E>(inputSet, setBits);
@@ -1944,7 +1944,7 @@ public final class Sets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this) {
+    public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this) {
       return Iterators.unmodifiableIterator(delegate.descendingIterator());
     }
 
@@ -2026,7 +2026,7 @@ public final class Sets {
   }
 
   /** Remove each element in an iterable from a set. */
-  static boolean removeAllImpl(Set<?> set, @Readonly Iterator<?> iterator) {
+  static boolean removeAllImpl(Set<?> set, @Mutable Iterator<?> iterator) {
     boolean changed = false;
     while (iterator.hasNext()) {
       changed |= set.remove(iterator.next());
@@ -2109,7 +2109,7 @@ public final class Sets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> descendingIterator(@ReceiverDependentMutable DescendingSet<E> this) {
+    public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward.iterator();
     }
 
@@ -2177,7 +2177,7 @@ public final class Sets {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<E> iterator(@ReceiverDependentMutable DescendingSet<E> this) {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward.descendingIterator();
     }
 

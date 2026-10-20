@@ -196,7 +196,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   /** Returns an unmodifiable iterator across the elements in this collection. */
   @Override
-  public abstract @Immutable UnmodifiableIterator<E> iterator();
+  public abstract @Mutable UnmodifiableIterator<E> iterator();
 
   @Override
   public Spliterator<E> spliterator() {
@@ -505,7 +505,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Mutable Iterator<? extends E> elements) {
       while (elements.hasNext()) {
         add(elements.next());
       }

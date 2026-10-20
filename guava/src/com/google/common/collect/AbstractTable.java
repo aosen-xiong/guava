@@ -138,7 +138,7 @@ abstract class AbstractTable<
     return new @ReceiverDependentMutable CellSet();
   }
 
-  abstract @ReceiverDependentMutable Iterator<Table.Cell<R, C, V>> cellIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this);
+  abstract @Mutable Iterator<Table.Cell<R, C, V>> cellIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this);
 
   abstract Spliterator<Table.Cell<R, C, V>> cellSpliterator(@Readonly AbstractTable<R, C, V> this);
 
@@ -175,7 +175,7 @@ abstract class AbstractTable<
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<Table.Cell<R, C, V>> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable CellSet this) {
+    public @Mutable Iterator<Table.Cell<R, C, V>> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable CellSet this) {
       return cellIterator();
     }
 
@@ -203,8 +203,8 @@ abstract class AbstractTable<
     return new @ReceiverDependentMutable Values();
   }
 
-  @ReceiverDependentMutable Iterator<V> valuesIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
-    return new @ReceiverDependentMutable TransformedIterator<Cell<R, C, V>, V>(cellSet().iterator()) {
+  @Mutable Iterator<V> valuesIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
+    return new @Mutable TransformedIterator<Cell<R, C, V>, V>(cellSet().iterator()) {
       @Override
       @ParametricNullness
       V transform(Cell<R, C, V> cell) {
@@ -221,7 +221,7 @@ abstract class AbstractTable<
   @ReceiverDependentMutable
   class Values extends AbstractCollection<V> {
     @Override
-    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable Values this) {
+    public @Mutable Iterator<V> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable Values this) {
       return valuesIterator();
     }
 

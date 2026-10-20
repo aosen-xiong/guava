@@ -55,6 +55,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A {@link List} whose contents will never change, with many other important properties detailed at
@@ -280,7 +281,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if {@code elements} contains a null element
    */
-  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Readonly Iterator<? extends E> elements) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Mutable Iterator<? extends E> elements) {
     // We special-case for 0 or 1 elements, but going further is madness.
     if (!elements.hasNext()) {
       return of();
@@ -405,18 +406,18 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   // This declaration is needed to make List.iterator() and
   // ImmutableCollection.iterator() consistent.
   @Override
-  public @Immutable UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return listIterator();
   }
 
   @Override
-  public @Immutable UnmodifiableListIterator<E> listIterator() {
+  public @Mutable UnmodifiableListIterator<E> listIterator() {
     return listIterator(0);
   }
 
   @Override
-  public @Immutable UnmodifiableListIterator<E> listIterator(int index) {
-    return new @Immutable AbstractIndexedListIterator<E>(size(), index) {
+  public @Mutable UnmodifiableListIterator<E> listIterator(int index) {
+    return new @Mutable AbstractIndexedListIterator<E>(size(), index) {
       @Override
       protected E get(int index) {
         return ImmutableList.this.get(index);
@@ -920,7 +921,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(@Readonly Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Mutable Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

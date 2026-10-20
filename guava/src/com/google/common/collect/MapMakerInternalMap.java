@@ -2580,16 +2580,16 @@ class MapMakerInternalMap<
 
   // Iterator Support
 
-  @ReceiverDependentMutable
+  @Mutable
   abstract class HashIterator<T> implements Iterator<T> {
 
     @Assignable int nextSegmentIndex;
     @Assignable int nextTableIndex;
     @CheckForNull @Assignable Segment<K, V, E, S> currentSegment;
     @CheckForNull @Assignable AtomicReferenceArray<E> currentTable;
-    @CheckForNull @Assignable E nextEntry;
+    @CheckForNull E nextEntry;
     @CheckForNull @Assignable WriteThroughEntry nextExternal;
-    @CheckForNull @Assignable WriteThroughEntry lastReturned;
+    @CheckForNull WriteThroughEntry lastReturned;
 
     HashIterator() {
       nextSegmentIndex = segments.length - 1;
@@ -2689,7 +2689,7 @@ class MapMakerInternalMap<
     }
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   final class KeyIterator extends HashIterator<K> {
 
     @Override
@@ -2698,7 +2698,7 @@ class MapMakerInternalMap<
     }
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   final class ValueIterator extends HashIterator<V> {
 
     @Override
@@ -2755,7 +2755,7 @@ class MapMakerInternalMap<
     }
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   final class EntryIterator extends HashIterator<Entry<K, V>> {
 
     @Override
@@ -2769,8 +2769,8 @@ class MapMakerInternalMap<
   final class KeySet extends SafeToArraySet<K> {
 
     @Override
-    public @ReceiverDependentMutable Iterator<K> iterator() {
-      return new @ReceiverDependentMutable KeyIterator();
+    public @Mutable Iterator<K> iterator() {
+      return new @Mutable KeyIterator();
     }
 
     @Override
@@ -2804,8 +2804,8 @@ class MapMakerInternalMap<
   final class Values extends AbstractCollection<V> {
 
     @Override
-    public @ReceiverDependentMutable Iterator<V> iterator() {
-      return new @ReceiverDependentMutable ValueIterator();
+    public @Mutable Iterator<V> iterator() {
+      return new @Mutable ValueIterator();
     }
 
     @Override
@@ -2848,8 +2848,8 @@ class MapMakerInternalMap<
   final class EntrySet extends SafeToArraySet<Entry<K, V>> {
 
     @Override
-    public @ReceiverDependentMutable Iterator<Entry<K, V>> iterator(@ReceiverDependentMutable MapMakerInternalMap<K, V, E, S>.@ReceiverDependentMutable EntrySet this) {
-      return new @ReceiverDependentMutable EntryIterator();
+    public @Mutable Iterator<Entry<K, V>> iterator(@ReceiverDependentMutable MapMakerInternalMap<K, V, E, S>.@ReceiverDependentMutable EntrySet this) {
+      return new @Mutable EntryIterator();
     }
 
     @Override

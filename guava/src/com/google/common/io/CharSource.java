@@ -462,7 +462,7 @@ public abstract class CharSource {
    * @throws NullPointerException if any of {@code sources} is {@code null}
    * @since 15.0
    */
-  public static CharSource concat(@Readonly Iterator<? extends CharSource> sources) {
+  public static CharSource concat(@Mutable Iterator<? extends CharSource> sources) {
     return concat(ImmutableList.copyOf(sources));
   }
 

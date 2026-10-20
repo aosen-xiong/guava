@@ -152,7 +152,7 @@ public final class Lists {
    */
   @GwtCompatible(serializable = true)
   public static <E extends @Nullable @Readonly Object> ArrayList<E> newArrayList(
-      @Readonly Iterator<? extends E> elements) {
+      @Mutable Iterator<? extends E> elements) {
     ArrayList<E> list = newArrayList();
     Iterators.addAll(list, elements);
     return list;
@@ -589,8 +589,8 @@ public final class Lists {
     }
 
     @Override
-    public @ReceiverDependentMutable ListIterator<T> listIterator(final int index) {
-      return new @ReceiverDependentMutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
+    public @Mutable ListIterator<T> listIterator(final int index) {
+      return new @Mutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
         @Override
         @ParametricNullness
         T transform(@ParametricNullness F from) {
@@ -643,13 +643,13 @@ public final class Lists {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this) {
+    public @Mutable Iterator<T> iterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this) {
       return listIterator();
     }
 
     @Override
-    public @ReceiverDependentMutable ListIterator<T> listIterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this, int index) {
-      return new @ReceiverDependentMutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
+    public @Mutable ListIterator<T> listIterator(@ReceiverDependentMutable TransformingRandomAccessList<F, T> this, int index) {
+      return new @Mutable TransformedListIterator<F, T>(fromList.listIterator(index)) {
         @Override
         T transform(F from) {
           return function.apply(from);
@@ -938,7 +938,7 @@ public final class Lists {
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<T> iterator(@ReceiverDependentMutable ReverseList<T> this) {
+    public @Mutable Iterator<T> iterator(@ReceiverDependentMutable ReverseList<T> this) {
       return listIterator();
     }
 

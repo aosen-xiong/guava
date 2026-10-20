@@ -29,6 +29,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * {@code keySet()} implementation for {@link ImmutableMap}.
@@ -52,7 +53,7 @@ final class ImmutableMapKeySet<K extends @Immutable Object, V> extends IndexedIm
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<K> iterator() {
+  public @Mutable UnmodifiableIterator<K> iterator() {
     return map.keyIterator();
   }
 

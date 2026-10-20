@@ -249,11 +249,11 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   }
 
   @Override
-  @ReceiverDependentMutable Iterator<Cell<R, C, V>> cellIterator(@ReceiverDependentMutable StandardTable<R, C, V> this) {
-    return new @ReceiverDependentMutable CellIterator();
+  @Mutable Iterator<Cell<R, C, V>> cellIterator(@ReceiverDependentMutable StandardTable<R, C, V> this) {
+    return new @Mutable CellIterator();
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   private class CellIterator implements Iterator<Cell<R, C, V>> {
     final Iterator<Entry<R, Map<C, V>>> rowIterator = backingMap.entrySet().iterator();
     @CheckForNull Entry<R, Map<C, V>> rowEntry;
@@ -409,7 +409,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    @Readonly Iterator<Entry<C, V>> entryIterator() {
+    @Mutable Iterator<Entry<C, V>> entryIterator() {
       updateBackingRowMapField();
       if (backingRowMap == null) {
         return Iterators.emptyModifiableIterator();
@@ -715,7 +715,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   @ReceiverDependentMutable
   private class ColumnKeySet extends TableSet<C> {
     @Override
-    public @ReceiverDependentMutable Iterator<C> iterator(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnKeySet this) {
+    public @Mutable Iterator<C> iterator(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnKeySet this) {
       return createColumnKeyIterator();
     }
 
@@ -790,7 +790,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     return new ColumnKeyIterator();
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   private class ColumnKeyIterator extends AbstractIterator<C> {
     // Use the same map type to support TreeMaps with comparators that aren't
     // consistent with equals().

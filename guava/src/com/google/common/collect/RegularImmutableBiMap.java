@@ -278,7 +278,7 @@ class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Ob
       }
 
       @Override
-      public @Immutable UnmodifiableIterator<@Immutable Entry<V, K>> iterator() {
+      public @Mutable UnmodifiableIterator<@Immutable Entry<V, K>> iterator() {
         return asList().iterator();
       }
 

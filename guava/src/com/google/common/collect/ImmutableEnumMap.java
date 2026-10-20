@@ -32,6 +32,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link ImmutableMap} backed by a non-empty {@link java.util.EnumMap}.
@@ -64,7 +65,7 @@ final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutabl
   }
 
   @Override
-  @Immutable UnmodifiableIterator<K> keyIterator() {
+  @Mutable UnmodifiableIterator<K> keyIterator() {
     return Iterators.unmodifiableIterator(delegate.keySet().iterator());
   }
 
@@ -102,7 +103,7 @@ final class ImmutableEnumMap<K extends Enum<K>, V> extends IteratorBasedImmutabl
 
   @Override
   @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible"}) // the delegate is a private EnumMap that is never modified after construction, and Maps.unmodifiableEntry wraps each of its entries so it cannot be modified either: the entries are immutable
-  @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
+  @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
     return Maps.unmodifiableEntryIterator(delegate.entrySet().iterator());
   }
 

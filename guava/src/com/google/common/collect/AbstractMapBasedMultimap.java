@@ -455,16 +455,16 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     /** Collection iterator for {@code WrappedCollection}. */
-    @ReceiverDependentMutable
+    @Mutable
     class WrappedIterator implements Iterator<V> {
-      final Iterator<V> delegateIterator;
+      final @Mutable Iterator<V> delegateIterator;
       final Collection<V> originalDelegate = delegate;
 
       WrappedIterator() {
         delegateIterator = iteratorOrListIterator(delegate);
       }
 
-      WrappedIterator(@ReceiverDependentMutable Iterator<V> delegateIterator) {
+      WrappedIterator(@Mutable Iterator<V> delegateIterator) {
         this.delegateIterator = delegateIterator;
       }
 
@@ -498,7 +498,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
         removeIfEmpty();
       }
 
-      Iterator<V> getDelegateIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedCollection.@ReceiverDependentMutable WrappedIterator this) {
+      @Mutable Iterator<V> getDelegateIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedCollection.@Mutable WrappedIterator this) {
         validateIterator();
         return delegateIterator;
       }
@@ -764,8 +764,8 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<V> descendingIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedNavigableSet this) {
-      return new @ReceiverDependentMutable WrappedIterator(getSortedSetDelegate().descendingIterator());
+    public @Mutable Iterator<V> descendingIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedNavigableSet this) {
+      return new @Mutable WrappedIterator(getSortedSetDelegate().descendingIterator());
     }
 
     @Override
@@ -867,15 +867,15 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public @ReceiverDependentMutable ListIterator<V> listIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedList this) {
+    public @Mutable ListIterator<V> listIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedList this) {
       refreshIfEmpty();
-      return new @ReceiverDependentMutable WrappedListIterator();
+      return new @Mutable WrappedListIterator();
     }
 
     @Override
-    public @ReceiverDependentMutable ListIterator<V> listIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedList this, int index) {
+    public @Mutable ListIterator<V> listIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedList this, int index) {
       refreshIfEmpty();
-      return new @ReceiverDependentMutable WrappedListIterator(index);
+      return new @Mutable WrappedListIterator(index);
     }
 
     @Override
@@ -888,7 +888,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     /** ListIterator decorator. */
-    @ReceiverDependentMutable
+    @Mutable
     private class WrappedListIterator extends WrappedIterator implements ListIterator<V> {
       WrappedListIterator() {}
 
@@ -896,7 +896,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
         super(getListDelegate().listIterator(index));
       }
 
-      private ListIterator<V> getDelegateListIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedList.@ReceiverDependentMutable WrappedListIterator this) {
+      private @Mutable ListIterator<V> getDelegateListIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedList.@Mutable WrappedListIterator this) {
         return (ListIterator<V>) getDelegateIterator();
       }
 
@@ -1143,7 +1143,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<K> descendingIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable NavigableKeySet this) {
+    public @Mutable Iterator<K> descendingIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable NavigableKeySet this) {
       return descendingSet().iterator();
     }
 
@@ -1195,12 +1195,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   private abstract class Itr<T extends @Nullable @Readonly Object> implements Iterator<T> {
     final Iterator<Entry<K, Collection<V>>> keyIterator;
-    @CheckForNull @Assignable K key;
-    @CheckForNull @Assignable Collection<V> collection;
-    @Assignable Iterator<V> valueIterator;
+    @CheckForNull K key;
+    @CheckForNull Collection<V> collection;
+    Iterator<V> valueIterator;
 
     Itr() {
       keyIterator = map.entrySet().iterator();
@@ -1264,7 +1264,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
 
   @Override
   @CFComment("PICO: follow super's polymutable")
-  @ReceiverDependentMutable Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
+  @Mutable Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return new Itr<V>() {
       @Override
       @ParametricNullness

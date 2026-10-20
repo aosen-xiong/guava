@@ -572,7 +572,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     }
 
     @Override
-    public @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
+    public @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
       return multimap.entryIterator();
     }
 
@@ -610,8 +610,8 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   }
 
   @Override
-  @Immutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
-    return new @Immutable UnmodifiableIterator<@Immutable Entry<K, V>>() {
+  @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator() {
+    return new @Mutable UnmodifiableIterator<@Immutable Entry<K, V>>() {
       final Iterator<? extends @Immutable Entry<K, ? extends ImmutableCollection<V>>> asMapItr =
           map.entrySet().iterator();
       @Assignable @CheckForNull K currentKey = null;
@@ -755,8 +755,8 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   }
 
   @Override
-  @Immutable UnmodifiableIterator<V> valueIterator() {
-    return new @Immutable UnmodifiableIterator<V>() {
+  @Mutable UnmodifiableIterator<V> valueIterator() {
+    return new @Mutable UnmodifiableIterator<V>() {
       Iterator<? extends ImmutableCollection<V>> valueCollectionItr = map.values().iterator();
       @Assignable Iterator<V> valueItr = Iterators.emptyIterator();
 
@@ -789,7 +789,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     }
 
     @Override
-    public @Immutable UnmodifiableIterator<V> iterator() {
+    public @Mutable UnmodifiableIterator<V> iterator() {
       return multimap.valueIterator();
     }
 

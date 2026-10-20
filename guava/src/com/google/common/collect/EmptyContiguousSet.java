@@ -26,6 +26,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An empty contiguous set.
@@ -99,13 +100,13 @@ final class EmptyContiguousSet<C extends @Immutable Comparable> extends Contiguo
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<C> iterator() {
+  public @Mutable UnmodifiableIterator<C> iterator() {
     return Iterators.emptyIterator();
   }
 
   @GwtIncompatible // NavigableSet
   @Override
-  public @Immutable UnmodifiableIterator<C> descendingIterator() {
+  public @Mutable UnmodifiableIterator<C> descendingIterator() {
     return Iterators.emptyIterator();
   }
 

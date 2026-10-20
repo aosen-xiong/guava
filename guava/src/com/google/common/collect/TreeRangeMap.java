@@ -372,7 +372,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     }
 
     @Override
-    @ReceiverDependentMutable Iterator<Entry<Range<K>, V>> entryIterator() {
+    @Mutable Iterator<Entry<Range<K>, V>> entryIterator() {
       return entryIterable.iterator();
     }
   }

@@ -337,12 +337,12 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   /** An {@code Iterator} over all nodes. */
-  @ReceiverDependentMutable
+  @Mutable
   private class NodeIterator implements ListIterator<Entry<K, V>> {
-    @Assignable int nextIndex;
-    @CheckForNull @Assignable Node<K, V> next;
-    @CheckForNull @Assignable Node<K, V> current;
-    @CheckForNull @Assignable Node<K, V> previous;
+    int nextIndex;
+    @CheckForNull Node<K, V> next;
+    @CheckForNull Node<K, V> current;
+    @CheckForNull Node<K, V> previous;
     int expectedModCount = modCount;
 
     NodeIterator(int index) {
@@ -496,9 +496,9 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   private class ValueForKeyIterator implements ListIterator<V> {
     @ParametricNullness final K key;
     int nextIndex;
-    @CheckForNull @Assignable Node<K, V> next;
-    @CheckForNull @Assignable Node<K, V> current;
-    @CheckForNull @Assignable Node<K, V> previous;
+    @CheckForNull Node<K, V> next;
+    @CheckForNull Node<K, V> current;
+    @CheckForNull Node<K, V> previous;
 
     /** Constructs a new iterator over all values for the specified key. */
     ValueForKeyIterator(@ParametricNullness K key) {
@@ -806,7 +806,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
       }
 
       @Override
-      public @ReceiverDependentMutable ListIterator<V> listIterator(@ReceiverDependentMutable ValuesImpl this, int index) {
+      public @Mutable ListIterator<V> listIterator(@ReceiverDependentMutable ValuesImpl this, int index) {
         final NodeIterator nodeItr = new NodeIterator(index);
         return new TransformedListIterator<Entry<K, V>, V>(nodeItr) {
           @Override
@@ -873,7 +873,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+  @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     throw new AssertionError("should never be called");
   }
 

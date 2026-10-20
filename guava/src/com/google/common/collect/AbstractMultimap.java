@@ -149,7 +149,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
     }
 
     @Override
-    public @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable AbstractMultimap<K,V>.Entries this) {
+    public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable AbstractMultimap<K,V>.Entries this) {
       return entryIterator();
     }
 
@@ -175,7 +175,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
     }
   }
 
-  abstract @ReceiverDependentMutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this);
+  abstract @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this);
 
   Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Spliterators.spliterator(
@@ -222,7 +222,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
   @ReceiverDependentMutable
   class Values extends AbstractCollection<V> {
     @Override
-    public @ReceiverDependentMutable Iterator<V> iterator(@ReceiverDependentMutable AbstractMultimap<K, V>.@ReceiverDependentMutable Values this) {
+    public @Mutable Iterator<V> iterator(@ReceiverDependentMutable AbstractMultimap<K, V>.@ReceiverDependentMutable Values this) {
       return valueIterator();
     }
 
@@ -250,7 +250,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @SuppressWarnings("mutability:return.type.incompatible") // Maps.valueIterator wraps the entries' iterator and forwards remove() to it, so it has this multimap's mutability
-  @ReceiverDependentMutable Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
+  @Mutable Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Maps.valueIterator(entries().iterator());
   }
 

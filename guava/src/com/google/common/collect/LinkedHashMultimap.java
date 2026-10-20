@@ -617,7 +617,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
   }
 
   @Override
-  @ReceiverDependentMutable Iterator<V> valueIterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
+  @Mutable Iterator<V> valueIterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return Maps.valueIterator(entryIterator());
   }
 

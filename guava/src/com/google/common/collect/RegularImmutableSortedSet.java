@@ -38,6 +38,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An immutable sorted set with one or more elements. TODO(jlevy): Consider separate class for a
@@ -79,13 +80,13 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  public @Immutable UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return elements.iterator();
   }
 
   @GwtIncompatible // NavigableSet
   @Override
-  public @Immutable UnmodifiableIterator<E> descendingIterator() {
+  public @Mutable UnmodifiableIterator<E> descendingIterator() {
     return elements.reverse().iterator();
   }
 
