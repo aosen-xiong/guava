@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Executor;
 import java.util.logging.Level;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A list of listeners for implementing a concurrency friendly observable object.
@@ -101,7 +102,7 @@ final class ListenerCallQueue<L> {
     enqueueHelper(event, label);
   }
 
-  private void enqueueHelper(Event<L> event, Object label) {
+  private void enqueueHelper(Event<L> event, @Readonly Object label) {
     checkNotNull(event, "event");
     checkNotNull(label, "label");
     synchronized (listeners) {
@@ -138,7 +139,7 @@ final class ListenerCallQueue<L> {
     final Queue<ListenerCallQueue.Event<L>> waitQueue = Queues.newArrayDeque();
 
     @GuardedBy("this")
-    final Queue<Object> labelQueue = Queues.newArrayDeque();
+    final Queue<@Readonly Object> labelQueue = Queues.newArrayDeque();
 
     @GuardedBy("this")
     boolean isThreadScheduled;
@@ -149,7 +150,7 @@ final class ListenerCallQueue<L> {
     }
 
     /** Enqueues an event to be run. */
-    synchronized void add(ListenerCallQueue.Event<L> event, Object label) {
+    synchronized void add(ListenerCallQueue.Event<L> event, @Readonly Object label) {
       waitQueue.add(event);
       labelQueue.add(label);
     }
@@ -194,7 +195,7 @@ final class ListenerCallQueue<L> {
       try {
         while (true) {
           ListenerCallQueue.Event<L> nextToRun;
-          Object nextLabel;
+          @Readonly Object nextLabel;
           synchronized (PerListenerQueue.this) {
             Preconditions.checkState(isThreadScheduled);
             nextToRun = waitQueue.poll();
