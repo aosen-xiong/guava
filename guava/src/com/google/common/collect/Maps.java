@@ -1525,9 +1525,9 @@ public final class Maps {
   }
 
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly  Object>
-    @Readonly UnmodifiableIterator<Entry<K, V>> unmodifiableEntryIterator(
-          final @Readonly Iterator<Entry<K, V>> entryIterator) {
-    return new @Mutable UnmodifiableIterator<Entry<K, V>>() {
+    @Readonly UnmodifiableIterator<@Readonly Entry<K, V>> unmodifiableEntryIterator(
+          final @Readonly Iterator<@Readonly Entry<K, V>> entryIterator) {
+    return new @Mutable UnmodifiableIterator<@Readonly Entry<K, V>>() {
       @Override
       public boolean hasNext() {
         return entryIterator.hasNext();
@@ -1543,8 +1543,8 @@ public final class Maps {
   /** The implementation of {@link Multimaps#unmodifiableEntries}. */
   @ReceiverDependentMutable
   static class UnmodifiableEntries<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      extends ForwardingCollection<Entry<K, V>> {
-    private final Collection<Entry<K, V>> entries;
+      extends ForwardingCollection<@Readonly Entry<K, V>> {
+    private final Collection<@Readonly Entry<K, V>> entries;
 
     UnmodifiableEntries(@ReceiverDependentMutable Collection<@Readonly Entry<K, V>> entries) {
       this.entries = entries;
@@ -1593,8 +1593,8 @@ public final class Maps {
   /** The implementation of {@link Maps#unmodifiableEntrySet(Set)}. */
   @ReceiverDependentMutable
   static class UnmodifiableEntrySet<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      extends UnmodifiableEntries<K, V> implements Set<Entry<K, V>> {
-    UnmodifiableEntrySet(Set<Entry<K, V>> entries) {
+      extends UnmodifiableEntries<K, V> implements Set<@Readonly Entry<K, V>> {
+    UnmodifiableEntrySet(@ReceiverDependentMutable Set<@Readonly Entry<K, V>> entries) {
       super(entries);
     }
 
