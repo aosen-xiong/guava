@@ -200,7 +200,7 @@ public final class Collections2 {
     }
 
     @Override
-    public Spliterator<E> spliterator(@Readonly FilteredCollection<E> this) {
+    public Spliterator<E> spliterator(@ReceiverDependentMutable FilteredCollection<E> this) {
       return CollectSpliterators.filter(unfiltered.spliterator(), predicate);
     }
 
@@ -319,7 +319,7 @@ public final class Collections2 {
 
     @Pure
     @Override
-    public Spliterator<T> spliterator(@Readonly TransformedCollection<F, T> this) {
+    public Spliterator<T> spliterator(@ReceiverDependentMutable TransformedCollection<F, T> this) {
       return CollectSpliterators.map(fromCollection.spliterator(), function);
     }
 

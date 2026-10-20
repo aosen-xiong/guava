@@ -501,7 +501,7 @@ public interface Multiset<E extends @Readonly @Nullable Object> extends Collecti
   }
 
   @Override
-  default Spliterator<E> spliterator(@Readonly Multiset<E> this) {
+  default Spliterator<E> spliterator(@ReceiverDependentMutable Multiset<E> this) {
     return Multisets.spliteratorImpl(this);
   }
 }

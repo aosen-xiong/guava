@@ -228,7 +228,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
 
     @Pure
     @Override
-    public Spliterator<V> spliterator(@Readonly Values this) {
+    public Spliterator<V> spliterator(@ReceiverDependentMutable Values this) {
       return valueSpliterator();
     }
 

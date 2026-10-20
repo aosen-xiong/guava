@@ -226,7 +226,7 @@ abstract class AbstractTable<
     }
 
     @Override
-    public Spliterator<V> spliterator(@Readonly Values this) {
+    public Spliterator<V> spliterator(@ReceiverDependentMutable Values this) {
       return valuesSpliterator();
     }
 

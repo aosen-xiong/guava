@@ -206,7 +206,7 @@ final class Synchronized {
     }
 
     @Override
-    public Spliterator<E> spliterator(@Readonly SynchronizedCollection<E> this) {
+    public Spliterator<E> spliterator(@ReceiverDependentMutable SynchronizedCollection<E> this) {
       synchronized (mutex) {
         return delegate().spliterator();
       }
