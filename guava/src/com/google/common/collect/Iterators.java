@@ -1220,7 +1220,7 @@ public final class Iterators {
 
     @Override
     @ParametricNullness
-    public E next(@Mutable PeekingImpl<E> this) {
+    public E next(@Readonly PeekingImpl<E> this) {
       if (!hasPeeked) {
         return iterator.next();
       }
@@ -1367,7 +1367,7 @@ public final class Iterators {
 
     @Override
     @ParametricNullness
-    public T next(@Mutable MergingIterator<T> this) {
+    public T next(@Readonly MergingIterator<T> this) {
       PeekingIterator<T> nextIter = queue.remove();
       T next = nextIter.next();
       if (nextIter.hasNext()) {
@@ -1380,7 +1380,7 @@ public final class Iterators {
   @ReceiverDependentMutable
   private static class ConcatenatedIterator<T extends @Nullable @Readonly Object> implements Iterator<T> {
     /* The last iterator to return an element.  Calls to remove() go to this iterator. */
-    @CheckForNull private Iterator<? extends T> toRemove;
+    @CheckForNull private @Assignable Iterator<? extends T> toRemove;
 
     /* The iterator currently returning elements. */
     private @Readonly @Assignable Iterator<? extends T> iterator;
@@ -1455,7 +1455,7 @@ public final class Iterators {
 
     @Override
     @ParametricNullness
-    public T next(@Mutable ConcatenatedIterator<T> this) {
+    public T next(@Readonly ConcatenatedIterator<T> this) {
       if (hasNext()) {
         toRemove = iterator;
         return iterator.next();

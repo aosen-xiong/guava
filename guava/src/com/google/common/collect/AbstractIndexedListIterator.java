@@ -28,6 +28,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * This class provides a skeletal implementation of the {@link ListIterator} interface across a
@@ -44,7 +45,7 @@ import org.checkerframework.framework.qual.CFComment;
 abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
     extends UnmodifiableListIterator<E> {
   private final int size;
-  private int position;
+  private @Assignable int position;
 
   /** Returns the element with the specified index. This method is called by {@link #next()}. */
   @ParametricNullness
@@ -84,7 +85,7 @@ abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
 
   @Override
   @ParametricNullness
-  public final E next(@Mutable AbstractIndexedListIterator<E> this) {
+  public final E next(@Readonly AbstractIndexedListIterator<E> this) {
     if (!hasNext()) {
       throw new NoSuchElementException();
     }
@@ -103,7 +104,7 @@ abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
 
   @Override
   @ParametricNullness
-  public final E previous(@Mutable AbstractIndexedListIterator<E> this) {
+  public final E previous(@Readonly AbstractIndexedListIterator<E> this) {
     if (!hasPrevious()) {
       throw new NoSuchElementException();
     }

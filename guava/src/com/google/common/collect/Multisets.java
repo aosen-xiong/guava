@@ -1096,15 +1096,15 @@ public final class Multisets {
   static final class MultisetIteratorImpl<E extends @Nullable @Readonly Object> implements Iterator<E> {
     private final Multiset<E> multiset;
     private final Iterator<@Readonly Entry<E>> entryIterator;
-    @CheckForNull private @Readonly Entry<E> currentEntry;
+    @CheckForNull private @Assignable @Readonly Entry<E> currentEntry;
 
     /** Count of subsequent elements equal to current element */
-    private int laterCount;
+    private @Assignable int laterCount;
 
     /** Count of all elements equal to current element */
-    private int totalCount;
+    private @Assignable int totalCount;
 
-    private boolean canRemove;
+    private @Assignable boolean canRemove;
 
     MultisetIteratorImpl(@ReceiverDependentMutable Multiset<E> multiset, @ReceiverDependentMutable Iterator<@Readonly Entry<E>> entryIterator) {
       this.multiset = multiset;
@@ -1118,7 +1118,7 @@ public final class Multisets {
 
     @Override
     @ParametricNullness
-    public E next(@Mutable MultisetIteratorImpl<E> this) {
+    public E next(@Readonly MultisetIteratorImpl<E> this) {
       if (!hasNext()) {
         throw new NoSuchElementException();
       }
