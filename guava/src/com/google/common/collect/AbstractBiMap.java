@@ -258,7 +258,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   @Override
   public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<K> result = keySet;
-    return (result == null) ? keySet = new KeySet() : result;
+    return (result == null) ? keySet = new @ReceiverDependentMutable KeySet() : result;
   }
 
   @WeakOuter
@@ -309,7 +309,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
      * iteration order so that it is consistent with the forward map.
      */
     Set<V> result = valueSet;
-    return (result == null) ? valueSet = new ValueSet() : result;
+    return (result == null) ? valueSet = new @ReceiverDependentMutable ValueSet() : result;
   }
 
   @WeakOuter
@@ -352,7 +352,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   @Override
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<Entry<K, V>> result = entrySet;
-    return (result == null) ? entrySet = new EntrySet() : result;
+    return (result == null) ? entrySet = new @ReceiverDependentMutable EntrySet() : result;
   }
 
   @ReceiverDependentMutable

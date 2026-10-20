@@ -708,7 +708,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   @Override
   public @ReceiverDependentMutable Set<C> columnKeySet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     Set<C> result = columnKeySet;
-    return (result == null) ? columnKeySet = new ColumnKeySet() : result;
+    return (result == null) ? columnKeySet = new @ReceiverDependentMutable ColumnKeySet() : result;
   }
 
   @WeakOuter

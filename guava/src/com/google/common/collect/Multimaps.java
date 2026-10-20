@@ -1931,7 +1931,7 @@ public final class Multimaps {
 
     @Override
     protected @ReceiverDependentMutable Set<Entry<K, @ReceiverDependentMutable Collection<V>>> createEntrySet(@ReceiverDependentMutable AsMap<K, V> this) {
-      return new EntrySet();
+      return new @ReceiverDependentMutable EntrySet();
     }
 
     void removeValuesForKey(@Mutable AsMap<K, V> this, @CheckForNull @Readonly Object key) {

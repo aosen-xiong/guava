@@ -2558,7 +2558,7 @@ class MapMakerInternalMap<
   @Override
   public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet() {
     Set<K> ks = keySet;
-    return (ks != null) ? ks : (keySet = new KeySet());
+    return (ks != null) ? ks : (keySet = new @ReceiverDependentMutable KeySet());
   }
 
   @LazyInit @CheckForNull transient @Assignable Collection<V> values;
@@ -2566,7 +2566,7 @@ class MapMakerInternalMap<
   @Override
   public @ReceiverDependentMutable Collection<V> values() {
     Collection<V> vs = values;
-    return (vs != null) ? vs : (values = new Values());
+    return (vs != null) ? vs : (values = new @ReceiverDependentMutable Values());
   }
 
   @LazyInit @CheckForNull transient @Assignable Set<Entry<K, V>> entrySet;
@@ -2574,7 +2574,7 @@ class MapMakerInternalMap<
   @Override
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet() {
     Set<Entry<K, V>> es = entrySet;
-    return (es != null) ? es : (entrySet = new EntrySet());
+    return (es != null) ? es : (entrySet = new @ReceiverDependentMutable EntrySet());
   }
 
   // Iterator Support

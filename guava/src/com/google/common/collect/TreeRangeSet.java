@@ -289,7 +289,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   @Override
   public @ReceiverDependentMutable RangeSet<C> complement(@ReceiverDependentMutable TreeRangeSet<C> this) {
     RangeSet<C> result = complement;
-    return (result == null) ? complement = new Complement() : result;
+    return (result == null) ? complement = new @ReceiverDependentMutable Complement() : result;
   }
 
   @VisibleForTesting

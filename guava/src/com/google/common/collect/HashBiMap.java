@@ -619,7 +619,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   @Override
   public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable HashBiMap<K,V> this) {
     BiMap<V, K> result = inverse;
-    return (result == null) ? inverse = new Inverse() : result;
+    return (result == null) ? inverse = new @ReceiverDependentMutable Inverse() : result;
   }
 
   @ReceiverDependentMutable

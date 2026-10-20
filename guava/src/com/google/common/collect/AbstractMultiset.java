@@ -211,7 +211,7 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
   }
 
   @ReceiverDependentMutable Set<@Readonly Entry<E>> createEntrySet(@ReceiverDependentMutable AbstractMultiset<E> this) {
-    return new EntrySet();
+    return new @ReceiverDependentMutable EntrySet();
   }
 
   abstract Iterator<@Readonly Entry<E>> entryIterator(@ReceiverDependentMutable AbstractMultiset<E> this);

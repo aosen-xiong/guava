@@ -3166,7 +3166,7 @@ public final class Maps {
 
     @Override
     protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable FilteredEntryMap<K, V> this) {
-      return new EntrySet();
+      return new @ReceiverDependentMutable EntrySet();
     }
 
     @WeakOuter
@@ -3300,7 +3300,7 @@ public final class Maps {
 
     @Override
     @ReceiverDependentMutable SortedSet<K> createKeySet(@ReceiverDependentMutable FilteredEntrySortedMap<K, V> this) {
-      return new SortedKeySet();
+      return new @ReceiverDependentMutable SortedKeySet();
     }
 
     @WeakOuter

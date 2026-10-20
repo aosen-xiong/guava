@@ -797,6 +797,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   @Override
   @ReceiverDependentMutable List<V> createValues(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class ValuesImpl extends AbstractSequentialList<V> {
       @Override
       public @NonNegative int size() {
@@ -820,7 +821,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
         };
       }
     }
-    return new ValuesImpl();
+    return new @ReceiverDependentMutable ValuesImpl();
   }
 
   /**
