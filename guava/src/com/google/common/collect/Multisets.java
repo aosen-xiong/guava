@@ -112,7 +112,7 @@ public final class Multisets {
    * @param multiset the multiset for which an unmodifiable view is to be generated
    * @return an unmodifiable view of the multiset
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing multiset and the view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the backing multiset and the view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <E extends @Nullable @Readonly Object> @PolyMutable Multiset<E> unmodifiableMultiset(
       @PolyMutable Multiset<? extends E> multiset) {
     if (multiset instanceof UnmodifiableMultiset || multiset instanceof ImmutableMultiset) {
@@ -251,7 +251,7 @@ public final class Multisets {
    * @return an unmodifiable view of the multiset
    * @since 11.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <E extends @Nullable @Readonly Object> @PolyMutable SortedMultiset<E> unmodifiableSortedMultiset(
       @PolyMutable SortedMultiset<E> sortedMultiset) {
     // it's in its own file so it can be emulated for GWT

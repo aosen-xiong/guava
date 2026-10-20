@@ -99,7 +99,7 @@ public final class Collections2 {
    */
   // TODO(kevinb): how can we omit that Iterables link when building gwt
   // javadoc?
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <E extends @Nullable @Readonly Object> @PolyMutable Collection<E> filter(
       @PolyMutable Collection<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredCollection) {

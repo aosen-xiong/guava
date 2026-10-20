@@ -2551,7 +2551,7 @@ public final class Maps {
    * {@link Predicate#apply}. Do not provide a predicate such as {@code
    * Predicates.instanceOf(ArrayList.class)}, which is inconsistent with equals.
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> filterKeys(
       @PolyMutable Map<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     checkNotNull(keyPredicate);
@@ -2815,7 +2815,7 @@ public final class Maps {
    * <p><b>Warning:</b> {@code entryPredicate} must be <i>consistent with equals</i>, as documented
    * at {@link Predicate#apply}.
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable Map<K, V> filterEntries(
       @PolyMutable Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
     checkNotNull(entryPredicate);
@@ -2850,7 +2850,7 @@ public final class Maps {
    *
    * @since 11.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       @PolyMutable SortedMap<K, V> filterEntries(
           @PolyMutable SortedMap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> entryPredicate) {
@@ -2886,7 +2886,7 @@ public final class Maps {
    *
    * @since 14.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       @PolyMutable NavigableMap<K, V> filterEntries(

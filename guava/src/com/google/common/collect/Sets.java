@@ -1066,7 +1066,7 @@ public final class Sets {
    * you to migrate to streams.
    */
   // TODO(kevinb): how to omit that last sentence when building GWT javadoc?
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <E extends @Nullable @Readonly Object> @PolyMutable Set<E> filter(
           @PolyMutable Set<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof SortedSet) {
@@ -1107,7 +1107,7 @@ public final class Sets {
    *
    * @since 11.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <E extends @Nullable @Readonly Object> @PolyMutable SortedSet<E> filter(
       @PolyMutable SortedSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
@@ -1145,7 +1145,7 @@ public final class Sets {
    *
    * @since 14.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   @GwtIncompatible // NavigableSet
   public static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> filter(
       @PolyMutable NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
