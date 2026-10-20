@@ -231,7 +231,7 @@ public final class Multimaps {
       extends AbstractMapBasedMultimap<K, V> {
     transient Supplier<? extends @ReceiverDependentMutable Collection<V>> factory;
 
-    CustomMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, Supplier<? extends @ReceiverDependentMutable Collection<V>> factory) {
+    CustomMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, @ReceiverDependentMutable Supplier<? extends @ReceiverDependentMutable Collection<V>> factory) {
       super(map);
       this.factory = checkNotNull(factory);
     }
@@ -352,7 +352,7 @@ public final class Multimaps {
       extends AbstractListMultimap<K, V> {
     transient Supplier<? extends @ReceiverDependentMutable List<V>> factory;
 
-    CustomListMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, Supplier<? extends @ReceiverDependentMutable List<V>> factory) {
+    CustomListMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, @ReceiverDependentMutable Supplier<? extends @ReceiverDependentMutable List<V>> factory) {
       super(map);
       this.factory = checkNotNull(factory);
     }
@@ -438,7 +438,7 @@ public final class Multimaps {
       extends AbstractSetMultimap<K, V> {
     transient Supplier<? extends @ReceiverDependentMutable Set<V>> factory;
 
-    CustomSetMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, Supplier<? extends @ReceiverDependentMutable Set<V>> factory) {
+    CustomSetMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, @ReceiverDependentMutable Supplier<? extends @ReceiverDependentMutable Set<V>> factory) {
       super(map);
       this.factory = checkNotNull(factory);
     }
@@ -549,7 +549,7 @@ public final class Multimaps {
     transient Supplier<? extends @ReceiverDependentMutable SortedSet<V>> factory;
     @CheckForNull transient @Readonly Comparator<? super V> valueComparator;
 
-    CustomSortedSetMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, Supplier<? extends @ReceiverDependentMutable SortedSet<V>> factory) {
+    CustomSortedSetMultimap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map, @ReceiverDependentMutable Supplier<? extends @ReceiverDependentMutable SortedSet<V>> factory) {
       super(map);
       this.factory = checkNotNull(factory);
       valueComparator = factory.get().comparator();

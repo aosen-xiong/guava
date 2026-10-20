@@ -955,13 +955,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     return new @ReceiverDependentMutable KeySet(map);
   }
 
-  final @PolyMutable Set<K> createMaybeNavigableKeySet(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  final @ReceiverDependentMutable Set<K> createMaybeNavigableKeySet(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     if (map instanceof NavigableMap) {
-      return new @PolyMutable NavigableKeySet((@PolyMutable NavigableMap<K, @PolyMutable Collection<V>>) map);
+      return new @ReceiverDependentMutable NavigableKeySet((@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>>) map);
     } else if (map instanceof SortedMap) {
-      return new @PolyMutable SortedKeySet((@PolyMutable SortedMap<K, @PolyMutable Collection<V>>) map);
+      return new @ReceiverDependentMutable SortedKeySet((@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>>) map);
     } else {
-      return new @PolyMutable KeySet(map);
+      return new @ReceiverDependentMutable KeySet(map);
     }
   }
 
@@ -1359,13 +1359,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     return new @ReceiverDependentMutable AsMap(map);
   }
 
-  final Map<K, @PolyMutable Collection<V>> createMaybeNavigableAsMap(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  final @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createMaybeNavigableAsMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     if (map instanceof NavigableMap) {
-      return new NavigableAsMap((NavigableMap<K, Collection<V>>) map);
+      return new @ReceiverDependentMutable NavigableAsMap((@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>>) map);
     } else if (map instanceof SortedMap) {
-      return new SortedAsMap((SortedMap<K, Collection<V>>) map);
+      return new @ReceiverDependentMutable SortedAsMap((@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>>) map);
     } else {
-      return new AsMap(map);
+      return new @ReceiverDependentMutable AsMap(map);
     }
   }
 
