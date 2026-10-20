@@ -235,7 +235,7 @@ public final class ClosingFuture<V extends @Nullable @Readonly Object> {
      */
     @CanIgnoreReturnValue
     @ParametricNullness
-    public <C extends @Nullable @Immutable Object & @Nullable AutoCloseable> C eventuallyClose(
+    public <C extends @Nullable Object & @Nullable AutoCloseable> C eventuallyClose(
         @ParametricNullness C closeable, Executor closingExecutor) {
       checkNotNull(closingExecutor);
       if (closeable != null) {
@@ -437,7 +437,7 @@ public final class ClosingFuture<V extends @Nullable @Readonly Object> {
    *     ClosingFuture#from}.
    */
   @Deprecated
-  public static <C extends @Nullable @Immutable Object & @Nullable AutoCloseable>
+  public static <C extends @Nullable Object & @Nullable AutoCloseable>
       ClosingFuture<C> eventuallyClosing(
           ListenableFuture<C> future, final Executor closingExecutor) {
     checkNotNull(closingExecutor);
