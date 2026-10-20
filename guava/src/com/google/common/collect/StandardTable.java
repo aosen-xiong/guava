@@ -436,7 +436,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    Spliterator<Entry<C, V>> entrySpliterator() {
+    Spliterator<@ReceiverDependentMutable Entry<C, V>> entrySpliterator() {
       updateBackingRowMapField();
       if (backingRowMap == null) {
         return Spliterators.emptySpliterator();

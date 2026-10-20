@@ -2572,7 +2572,7 @@ class MapMakerInternalMap<
   @LazyInit @CheckForNull transient @Assignable Set<Entry<K, V>> entrySet;
 
   @Override
-  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet() {
     Set<Entry<K, V>> es = entrySet;
     return (es != null) ? es : (entrySet = new EntrySet());
   }

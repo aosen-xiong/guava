@@ -338,7 +338,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @SideEffectFree
   @Override
-  public @ReceiverDependentMutable Set<Entry<K, V>> entries(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.entries();
   }
 

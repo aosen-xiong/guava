@@ -814,7 +814,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySetView;
 
   @Override
-  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (entrySetView == null) ? entrySetView = createEntrySet() : entrySetView;
   }
 

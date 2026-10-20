@@ -256,7 +256,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Iterator<Entry<K, V>> entryIterator() {
+    Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator() {
       return new @Mutable AbstractIndexedListIterator<Entry<K, V>>(size()) {
         @Override
         protected Entry<K, V> get(final int index) {
@@ -266,7 +266,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Spliterator<Entry<K, V>> entrySpliterator() {
+    Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator() {
       return CollectSpliterators.indexed(size(), Spliterator.ORDERED, this::getEntry);
     }
 

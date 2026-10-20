@@ -3979,7 +3979,7 @@ public final class Maps {
         }
 
         @Override
-        public Spliterator<Entry<K, V>> spliterator() {
+        public Spliterator<@ReceiverDependentMutable Entry<K, V>> spliterator() {
           return entrySpliterator();
         }
 

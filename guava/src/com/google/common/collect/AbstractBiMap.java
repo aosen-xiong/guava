@@ -350,7 +350,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @SideEffectFree
   @Override
-  public @ReceiverDependentMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<Entry<K, V>> result = entrySet;
     return (result == null) ? entrySet = new EntrySet() : result;
   }

@@ -130,7 +130,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  Collection<Entry<K, V>> createEntries() {
+  Collection<@ReceiverDependentMutable Entry<K, V>> createEntries() {
     return filterCollection(unfiltered.entries(), predicate);
   }
 

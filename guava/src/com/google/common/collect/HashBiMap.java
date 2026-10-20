@@ -542,7 +542,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  Iterator<Entry<K, V>> entryIterator() {
+  Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator() {
     return new Itr<Entry<K, V>>() {
       @Override
       Entry<K, V> output(BiEntry<K, V> entry) {
@@ -723,7 +723,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    Iterator<Entry<V, K>> entryIterator() {
+    Iterator<@ReceiverDependentMutable Entry<V, K>> entryIterator() {
       return new Itr<Entry<V, K>>() {
         @Override
         Entry<V, K> output(BiEntry<K, V> entry) {
@@ -837,5 +837,5 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
 @Override
 @SideEffectFree
-public Set<Map.Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
+public Set<Map.@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
 }
