@@ -1395,7 +1395,7 @@ public final class Iterators {
     @CheckForNull private @Assignable Iterator<? extends Iterator<? extends T>> topMetaIterator;
 
     // Only becomes nonnull if we encounter nested concatenations.
-    @CheckForNull private @Assignable Deque<Iterator<? extends Iterator<? extends T>>> metaIterators;
+    @CheckForNull private @Assignable @Mutable Deque<Iterator<? extends Iterator<? extends T>>> metaIterators;
 
     ConcatenatedIterator(@ReceiverDependentMutable Iterator<? extends Iterator<? extends T>> metaIterator) {
       iterator = emptyIterator();

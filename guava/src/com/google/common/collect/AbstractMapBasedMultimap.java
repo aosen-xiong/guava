@@ -566,7 +566,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public boolean remove(@Mutable WrappedCollection this, @Mutable  @CheckForNull @UnknownSignedness @Readonly Object o) {
+    public boolean remove(@Mutable WrappedCollection this, @CheckForNull @UnknownSignedness @Readonly Object o) {
       refreshIfEmpty();
       boolean changed = delegate.remove(o);
       if (changed) {

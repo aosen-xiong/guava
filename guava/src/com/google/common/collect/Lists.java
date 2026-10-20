@@ -856,7 +856,7 @@ public final class Lists {
   public static <T extends @Nullable @Readonly Object> @PolyMutable List<T> reverse(@PolyMutable List<T> list) {
     if (list instanceof ImmutableList) {
       // Avoid nullness warnings.
-      List<?> reversed = ((@PolyMutable ImmutableList<?>) list).reverse();
+      List<?> reversed = ((ImmutableList<?>) list).reverse();
       @SuppressWarnings("unchecked")
       List<T> result = (List<T>) reversed;
       return result;
