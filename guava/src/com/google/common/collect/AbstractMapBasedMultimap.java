@@ -1275,8 +1275,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   @Override
-  @CFComment("PICO: follow super's polymutable")
-  Spliterator<V> valueSpliterator(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  Spliterator<V> valueSpliterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return CollectSpliterators.flatMap(
         map.values().spliterator(), Collection::spliterator, Spliterator.SIZED, size());
   }

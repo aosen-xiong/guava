@@ -622,7 +622,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
   }
 
   @Override
-  Spliterator<V> valueSpliterator(@PolyMutable LinkedHashMultimap<K, V> this) {
+  Spliterator<V> valueSpliterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return CollectSpliterators.map(entrySpliterator(), Entry::getValue);
   }
 

@@ -1152,7 +1152,7 @@ public final class Multisets {
     }
   }
 
-  static <E extends @Nullable @Readonly Object> Spliterator<E> spliteratorImpl(Multiset<E> multiset) {
+  static <E extends @Nullable @Readonly Object> Spliterator<E> spliteratorImpl(@Readonly Multiset<E> multiset) {
     Spliterator<@Readonly Entry<E>> entrySpliterator = multiset.entrySet().spliterator();
     return CollectSpliterators.flatMap(
         entrySpliterator,

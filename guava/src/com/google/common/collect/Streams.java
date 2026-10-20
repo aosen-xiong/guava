@@ -53,6 +53,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Static utility methods related to {@code Stream} instances.
@@ -768,7 +769,7 @@ public final class Streams {
   }
 
   private abstract static class MapWithIndexSpliterator<
-          F extends @Readonly Spliterator<?>,
+          F extends @Mutable Spliterator<?>,
           R extends @Nullable @Immutable Object,
           S extends @Readonly MapWithIndexSpliterator<F, R, S>>
       implements Spliterator<R> {
