@@ -500,7 +500,7 @@ public final class Maps {
    * @return the difference between the two maps
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      MapDifference<K, V> difference(
+      @Immutable MapDifference<K, V> difference(
           @Readonly Map<? extends K, ? extends V> left, @Readonly Map<? extends K, ? extends V> right) {
     if (left instanceof SortedMap) {
       @SuppressWarnings("unchecked")
@@ -525,7 +525,7 @@ public final class Maps {
    * @since 10.0
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      MapDifference<K, V> difference(
+      @Immutable MapDifference<K, V> difference(
           @Readonly Map<? extends K, ? extends V> left,
           @Readonly Map<? extends K, ? extends V> right,
           Equivalence<? super @NonNull V> valueEquivalence) {
@@ -557,7 +557,7 @@ public final class Maps {
    * @since 11.0
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      SortedMapDifference<K, V> difference(
+      @Immutable SortedMapDifference<K, V> difference(
           @Readonly SortedMap<K, ? extends V> left, @Readonly Map<? extends K, ? extends V> right) {
     checkNotNull(left);
     checkNotNull(right);
