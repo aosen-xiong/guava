@@ -991,7 +991,6 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
         }
 
         @Override
-        @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
         public void remove() {
           checkState(entry != null, "no calls to next() since the last call to remove()");
           Collection<V> collection = entry.getValue();

@@ -427,7 +427,6 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
         }
 
         @Override
-        @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
         public void remove() {
           iterator.remove();
           maintainEmptyInvariant();

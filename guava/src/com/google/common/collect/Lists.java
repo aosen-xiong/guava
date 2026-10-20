@@ -951,7 +951,6 @@ public final class Lists {
         boolean canRemoveOrSet;
 
         @Override
-        @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
         public void add(@ParametricNullness T e) {
           forwardIterator.add(e);
           forwardIterator.previous();
@@ -999,7 +998,6 @@ public final class Lists {
         }
 
         @Override
-        @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
         public void remove() {
           checkRemove(canRemoveOrSet);
           forwardIterator.remove();
@@ -1007,7 +1005,6 @@ public final class Lists {
         }
 
         @Override
-        @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
         public void set(@ParametricNullness T e) {
           checkState(canRemoveOrSet);
           forwardIterator.set(e);
