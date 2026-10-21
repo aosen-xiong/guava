@@ -38,10 +38,10 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 final class ByFunctionOrdering<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
     extends Ordering<F> implements Serializable {
-  final Function<F, ? extends T> function;
+  final @Readonly Function<F, ? extends T> function;
   final Ordering<T> ordering;
 
-  ByFunctionOrdering(Function<F, ? extends T> function, Ordering<T> ordering) {
+  ByFunctionOrdering(@Readonly Function<F, ? extends T> function, Ordering<T> ordering) {
     this.function = checkNotNull(function);
     this.ordering = checkNotNull(ordering);
   }

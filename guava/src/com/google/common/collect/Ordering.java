@@ -466,7 +466,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * (you can omit the comparator if it is the natural order).
    */
   @GwtCompatible(serializable = true)
-  public <F extends @Nullable @Readonly Object> Ordering<F> onResultOf(Function<F, ? extends T> function) {
+  public <F extends @Nullable @Readonly Object> Ordering<F> onResultOf(@Readonly Function<F, ? extends T> function) {
     return new ByFunctionOrdering<>(function, this);
   }
 

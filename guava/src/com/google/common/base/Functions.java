@@ -94,8 +94,8 @@ public final class Functions {
    */
   // implementation is "fully variant"; E has become a "pass-through" type
   @SuppressWarnings("unchecked")
-  public static <E extends @Nullable @Readonly Object> Function<E, E> identity() {
-    return (Function<E, E>) IdentityFunction.INSTANCE;
+  public static <E extends @Nullable @Readonly Object> @Immutable Function<E, E> identity() {
+    return (@Immutable Function<E, E>) IdentityFunction.INSTANCE;
   }
 
   // enum singleton pattern

@@ -228,7 +228,7 @@ public final class Predicates {
    * @return the composition of the provided function and predicate
    */
   public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object> Predicate<A> compose(
-      @Readonly Predicate<B> predicate, Function<A, ? extends B> function) {
+      @Readonly Predicate<B> predicate, @Readonly Function<A, ? extends B> function) {
     return new CompositionPredicate<>(predicate, function);
   }
 
@@ -631,9 +631,9 @@ public final class Predicates {
   private static class CompositionPredicate<A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object>
       implements Predicate<A>, Serializable {
     final @Readonly Predicate<B> p;
-    final Function<A, ? extends B> f;
+    final @Readonly Function<A, ? extends B> f;
 
-    private CompositionPredicate(@Readonly Predicate<B> p, Function<A, ? extends B> f) {
+    private CompositionPredicate(@Readonly Predicate<B> p, @Readonly Function<A, ? extends B> f) {
       this.p = checkNotNull(p);
       this.f = checkNotNull(f);
     }

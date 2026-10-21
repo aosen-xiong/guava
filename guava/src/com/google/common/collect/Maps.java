@@ -129,13 +129,13 @@ public final class Maps {
   }
 
   @SuppressWarnings("unchecked")
-  static <K extends @Nullable @Immutable Object> Function<@Readonly Entry<K, ?>, K> keyFunction() {
-    return (Function) EntryFunction.KEY;
+  static <K extends @Nullable @Immutable Object> @Immutable Function<@Readonly Entry<K, ?>, K> keyFunction() {
+    return (@Immutable Function) EntryFunction.KEY;
   }
 
   @SuppressWarnings("unchecked")
-  static <V extends @Nullable @Readonly Object> Function<@Readonly Entry<?, V>, V> valueFunction() {
-    return (Function) EntryFunction.VALUE;
+  static <V extends @Nullable @Readonly Object> @Immutable Function<@Readonly Entry<?, V>, V> valueFunction() {
+    return (@Immutable Function) EntryFunction.VALUE;
   }
 
   static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @Mutable Iterator<K> keyIterator(
