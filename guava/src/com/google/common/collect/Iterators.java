@@ -1337,11 +1337,12 @@ public final class Iterators {
    * iterators. (Retrieving all elements takes approximately O(N*log(M)) time, where N is the total
    * number of elements.)
    */
-  @CFComment("AOSEN: Is this a design issue?")
+  @CFComment("the heap deliberately holds mutable cursors ordered by their current heads, see the constructor")
   @Mutable
   private static class MergingIterator<T extends @Nullable @Readonly Object> extends UnmodifiableIterator<T> {
     final @Mutable Queue<PeekingIterator<T>> queue;
 
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // PriorityQueue sorts @Immutable elements, but this heap holds @Mutable cursors ordered by their current heads. next() removes a cursor before advancing it and re-inserts it, so the heap order is never broken
     public MergingIterator(
         Iterable<? extends Iterator<? extends T>> iterators, @Readonly Comparator<? super T> itemComparator) {
       // A comparator that's used by the heap, allowing the heap
