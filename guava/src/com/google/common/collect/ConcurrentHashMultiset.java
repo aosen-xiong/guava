@@ -464,11 +464,11 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   // Views
 
   @Override
-  Set<E> createElementSet() {
-    Set<E> delegate = countMap.keySet();
-    return new @Mutable ForwardingSet<E>() {
+  @ReceiverDependentMutable Set<E> createElementSet(@ReceiverDependentMutable ConcurrentHashMultiset<E> this) {
+    @ReceiverDependentMutable Set<E> delegate = countMap.keySet();
+    return new @ReceiverDependentMutable ForwardingSet<E>() {
       @Override
-      protected Set<E> delegate() {
+      protected @ReceiverDependentMutable Set<E> delegate() {
         return delegate;
       }
 
@@ -483,11 +483,13 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
       }
 
       @Override
+      @SuppressWarnings("mutability:argument.type.incompatible") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
       public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return object != null && Collections2.safeRemove(delegate, object);
       }
 
       @Override
+      @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
       public boolean removeAll(@Readonly Collection<?> c) {
         return standardRemoveAll(c);
       }
