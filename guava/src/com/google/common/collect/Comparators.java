@@ -208,7 +208,7 @@ public final class Comparators {
    * @throws ClassCastException if the parameters are not <i>mutually comparable</i>.
    * @since 30.0
    */
-  public static <T extends @Immutable Comparable<? super T>> T min(T a, T b) {
+  public static <T extends @Readonly Comparable<? super T>> T min(T a, T b) {
     return (a.compareTo(b) <= 0) ? a : b;
   }
 
@@ -246,7 +246,7 @@ public final class Comparators {
    * @throws ClassCastException if the parameters are not <i>mutually comparable</i>.
    * @since 30.0
    */
-  public static <T extends @Immutable Comparable<? super T>> T max(T a, T b) {
+  public static <T extends @Readonly Comparable<? super T>> T max(T a, T b) {
     return (a.compareTo(b) >= 0) ? a : b;
   }
 

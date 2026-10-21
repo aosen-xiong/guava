@@ -286,7 +286,7 @@ public final class Sets {
    * @return a new, empty thread-safe {@code Set}
    * @since 15.0
    */
-  public static <E> Set<E> newConcurrentHashSet() {
+  public static <E extends @Immutable Object> Set<E> newConcurrentHashSet() {
     return Platform.newConcurrentHashSet();
   }
 
@@ -303,7 +303,7 @@ public final class Sets {
    * @throws NullPointerException if {@code elements} or any of its contents is null
    * @since 15.0
    */
-  public static <E> Set<E> newConcurrentHashSet(Iterable<? extends E> elements) {
+  public static <E extends @Immutable Object> Set<E> newConcurrentHashSet(Iterable<? extends E> elements) {
     Set<E> set = newConcurrentHashSet();
     Iterables.addAll(set, elements);
     return set;
@@ -445,7 +445,7 @@ public final class Sets {
    *
    * @since 8.0
    */
-  public static <E extends @Nullable @Immutable Object> Set<E> newIdentityHashSet() {
+  public static <E extends @Nullable @Readonly Object> Set<E> newIdentityHashSet() {
     return Collections.newSetFromMap(Maps.<E, Boolean>newIdentityHashMap());
   }
 

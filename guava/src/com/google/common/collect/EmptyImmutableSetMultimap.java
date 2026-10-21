@@ -31,7 +31,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
 @Immutable
-class EmptyImmutableSetMultimap extends ImmutableSetMultimap<@Immutable Object, @Readonly Object> {
+class EmptyImmutableSetMultimap extends ImmutableSetMultimap<@Immutable Object, @Immutable Object> {
   static final EmptyImmutableSetMultimap INSTANCE = new EmptyImmutableSetMultimap();
 
   private EmptyImmutableSetMultimap() {

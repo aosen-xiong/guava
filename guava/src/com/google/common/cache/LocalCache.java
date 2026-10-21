@@ -2064,7 +2064,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     // loading
 
     @CanIgnoreReturnValue
-    V get(@Readonly K key, int hash, CacheLoader<? super K, V> loader) throws ExecutionException {
+    V get(K key, int hash, CacheLoader<? super K, V> loader) throws ExecutionException {
       checkNotNull(key);
       checkNotNull(loader);
       try {
@@ -4023,7 +4023,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
   }
 
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
-  V get(@Readonly K key, CacheLoader<? super K, V> loader) throws ExecutionException {
+  V get(K key, CacheLoader<? super K, V> loader) throws ExecutionException {
     int hash = hash(checkNotNull(key));
     return segmentFor(hash).get(key, hash, loader);
   }
@@ -4887,7 +4887,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
 
     @Override
-    public V get(@Readonly K key) throws ExecutionException {
+    public V get(K key) throws ExecutionException {
       return autoDelegate.get(key);
     }
 
@@ -4936,7 +4936,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     }
 
     @Override
-    public V get(@Readonly K key, final Callable<? extends V> valueLoader) throws ExecutionException {
+    public V get(K key, final Callable<? extends V> valueLoader) throws ExecutionException {
       checkNotNull(valueLoader);
       return localCache.get(
           key,
@@ -5028,7 +5028,7 @@ class LocalCache<K extends @Immutable Object, V> extends AbstractMap<K, V> imple
     // LoadingCache methods
 
     @Override
-    public V get(@Readonly K key) throws ExecutionException {
+    public V get(K key) throws ExecutionException {
       return localCache.getOrLoad(key);
     }
 

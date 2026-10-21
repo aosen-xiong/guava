@@ -1099,7 +1099,7 @@ public final class ClosingFuture<V extends @Nullable @Readonly Object> {
         executor);
   }
 
-  private static <C extends @Nullable @Immutable Object, V extends C> void provideValueAndCloser(
+  private static <C extends @Nullable @Readonly Object, V extends C> void provideValueAndCloser(
       ValueAndCloserConsumer<C> consumer, ClosingFuture<V> closingFuture) {
     consumer.accept(new ValueAndCloser<C>(closingFuture));
   }

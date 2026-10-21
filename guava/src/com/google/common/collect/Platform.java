@@ -59,7 +59,7 @@ final class Platform {
   }
 
   /** Returns the platform preferred implementation of a thread-safe hash set. */
-  static <E> Set<E> newConcurrentHashSet() {
+  static <E extends @Immutable Object> Set<E> newConcurrentHashSet() {
     return ConcurrentHashMap.newKeySet();
   }
 

@@ -389,7 +389,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * <p>The returned converter is serializable if {@code this} converter and {@code secondConverter}
    * are.
    */
-  public final <C extends @Immutable Object> @ReceiverDependentMutable Converter<A, C> andThen(@ReceiverDependentMutable Converter<A, B> this, @ReceiverDependentMutable Converter<B, C> secondConverter) {
+  public final <C> @ReceiverDependentMutable Converter<A, C> andThen(@ReceiverDependentMutable Converter<A, B> this, @ReceiverDependentMutable Converter<B, C> secondConverter) {
     return doAndThen(secondConverter);
   }
 

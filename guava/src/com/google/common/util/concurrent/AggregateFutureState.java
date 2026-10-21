@@ -81,6 +81,7 @@ abstract class AggregateFutureState<OutputT extends @Nullable @Readonly Object>
     this.remaining = remainingFutures;
   }
 
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // key type uses identity equals/hashCode: the seen-exceptions set holds Throwables, which do not override equals or hashCode
   final Set<Throwable> getOrInitSeenExceptions() {
     /*
      * The initialization of seenExceptions has to be more complicated than we'd like. The simple

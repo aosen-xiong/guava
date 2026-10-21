@@ -172,7 +172,7 @@ public final class Maps {
    * @since 14.0
    */
   @GwtCompatible(serializable = true)
-  public static <K extends Enum<K>, V extends @Immutable Object> ImmutableMap<K, V> immutableEnumMap(
+  public static <K extends Enum<K>, V> ImmutableMap<K, V> immutableEnumMap(
       @Readonly Map<K, ? extends V> map) {
     if (map instanceof ImmutableEnumMap) {
       @SuppressWarnings("unchecked") // safe covariant cast
@@ -477,7 +477,7 @@ public final class Maps {
    *
    * @return a new, empty {@code IdentityHashMap}
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object>
       IdentityHashMap<K, V> newIdentityHashMap() {
     return new IdentityHashMap<>();
   }
