@@ -131,7 +131,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   private final transient GeneralRange<E> range;
   private final transient AvlNode<E> header;
 
-  TreeMultiset(Reference<AvlNode<E>> rootReference, GeneralRange<E> range, AvlNode<E> endLink) {
+  TreeMultiset(Reference<AvlNode<E>> rootReference, GeneralRange<E> range, @ReceiverDependentMutable AvlNode<E> endLink) {
     super(range.comparator());
     this.rootReference = rootReference;
     this.range = range;
