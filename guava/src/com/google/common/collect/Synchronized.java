@@ -1030,22 +1030,23 @@ final class Synchronized {
   @ReceiverDependentMutable
   static final class SynchronizedAsMapEntries<
           K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      extends SynchronizedSet<Map.Entry<K, Collection<V>>> {
+      extends SynchronizedSet<Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> {
     SynchronizedAsMapEntries(
-            @ReceiverDependentMutable Set<Map.Entry<K, Collection<V>>> delegate, @CheckForNull @Readonly Object mutex) {
+            @ReceiverDependentMutable Set<Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
     }
 
     @Override
-    public @Mutable Iterator<Map.Entry<K, Collection<V>>> iterator(@ReceiverDependentMutable SynchronizedAsMapEntries<K, V> this) {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible", "mutability:override.return.invalid", "mutability:override.param.invalid"}) // the entries and value collections have the enclosing map's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public @Mutable Iterator<Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> iterator(@ReceiverDependentMutable SynchronizedAsMapEntries<K, V> this) {
       // Must be manually synchronized.
-      return new @Mutable TransformedIterator<Map.Entry<K, Collection<V>>, Map.Entry<K, Collection<V>>>(
+      return new @Mutable TransformedIterator<Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>, Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>>(
           super.iterator()) {
         @Override
-        Map.Entry<K, Collection<V>> transform(final Map.Entry<K, Collection<V>> entry) {
+        Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>> transform(final Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>> entry) {
           return new @Mutable ForwardingMapEntry<K, Collection<V>>() {
             @Override
-            protected Map.Entry<K, Collection<V>> delegate() {
+            protected Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>> delegate() {
               return entry;
             }
 
@@ -1082,7 +1083,7 @@ final class Synchronized {
 
     @Pure
     @Override
-    public boolean contains(@Readonly SynchronizedAsMapEntries<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
+    public boolean contains(@ReceiverDependentMutable SynchronizedAsMapEntries<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
       synchronized (mutex) {
         return Maps.containsEntryImpl(delegate(), o);
       }
@@ -1494,17 +1495,17 @@ final class Synchronized {
 
   @ReceiverDependentMutable
   static final class SynchronizedAsMap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      extends SynchronizedMap<K, Collection<V>> {
-    @CheckForNull transient @Assignable Set<Map.Entry<K, Collection<V>>> asMapEntrySet;
-    @CheckForNull transient @Assignable Collection<Collection<V>> asMapValues;
+      extends SynchronizedMap<K, @ReceiverDependentMutable Collection<V>> {
+    @CheckForNull transient @Assignable Set<Map.@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> asMapEntrySet;
+    @CheckForNull transient @Assignable Collection<@ReceiverDependentMutable Collection<V>> asMapValues;
 
-    SynchronizedAsMap(@ReceiverDependentMutable Map<K, Collection<V>> delegate, @CheckForNull @Readonly Object mutex) {
+    SynchronizedAsMap(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
     }
 
     @Override
     @CheckForNull
-    public Collection<V> get(@Readonly SynchronizedAsMap<K, V> this,  @CheckForNull @UnknownSignedness @Readonly Object key) {
+    public @ReceiverDependentMutable Collection<V> get(@ReceiverDependentMutable SynchronizedAsMap<K, V> this,  @CheckForNull @UnknownSignedness @Readonly Object key) {
       synchronized (mutex) {
         Collection<V> collection = super.get(key);
         return (collection == null) ? null : typePreservingCollection(collection, mutex);
@@ -1513,7 +1514,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @ReceiverDependentMutable Set<Map.Entry<@KeyFor({"this"}) K, Collection<V>>> entrySet(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
+    public @ReceiverDependentMutable Set<Map.@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, @ReceiverDependentMutable Collection<V>>> entrySet(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
       synchronized (mutex) {
         if (asMapEntrySet == null) {
           asMapEntrySet = new @ReceiverDependentMutable SynchronizedAsMapEntries<>(delegate().entrySet(), mutex);
@@ -1524,7 +1525,7 @@ final class Synchronized {
 
     @SideEffectFree
     @Override
-    public @ReceiverDependentMutable Collection<Collection<V>> values(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
+    public @ReceiverDependentMutable Collection<@ReceiverDependentMutable Collection<V>> values(@ReceiverDependentMutable SynchronizedAsMap<K, V> this) {
       synchronized (mutex) {
         if (asMapValues == null) {
           asMapValues = new @ReceiverDependentMutable SynchronizedAsMapValues<V>(delegate().values(), mutex);
@@ -1545,15 +1546,16 @@ final class Synchronized {
 
   @ReceiverDependentMutable
   static final class SynchronizedAsMapValues<V extends @Nullable @Readonly Object>
-      extends SynchronizedCollection<Collection<V>> {
-    SynchronizedAsMapValues(@ReceiverDependentMutable Collection<Collection<V>> delegate, @CheckForNull @Readonly Object mutex) {
+      extends SynchronizedCollection<@ReceiverDependentMutable Collection<V>> {
+    SynchronizedAsMapValues(@ReceiverDependentMutable Collection<@ReceiverDependentMutable Collection<V>> delegate, @CheckForNull @Readonly Object mutex) {
       super(delegate, mutex);
     }
 
     @Override
-    public @Mutable Iterator<Collection<V>> iterator(@ReceiverDependentMutable SynchronizedAsMapValues<V> this) {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible", "mutability:override.return.invalid", "mutability:override.param.invalid"}) // the entries and value collections have the enclosing map's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public @Mutable Iterator<@ReceiverDependentMutable Collection<V>> iterator(@ReceiverDependentMutable SynchronizedAsMapValues<V> this) {
       // Must be manually synchronized.
-      return new @Mutable TransformedIterator<Collection<V>, Collection<V>>(super.iterator()) {
+      return new @Mutable TransformedIterator<@ReceiverDependentMutable Collection<V>, @ReceiverDependentMutable Collection<V>>(super.iterator()) {
         @Override
         Collection<V> transform(Collection<V> from) {
           return typePreservingCollection(from, mutex);
