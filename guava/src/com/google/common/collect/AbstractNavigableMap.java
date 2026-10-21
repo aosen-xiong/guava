@@ -53,13 +53,13 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   @CheckForNull
-  public @Immutable Entry<K, V> firstEntry() {
+  public @Readonly Entry<K, V> firstEntry() {
     return Iterators.<@Nullable Entry<K, V>>getNext(entryIterator(), null);
   }
 
   @Override
   @CheckForNull
-  public @Immutable Entry<K, V> lastEntry() {
+  public @Readonly Entry<K, V> lastEntry() {
     return Iterators.<@Nullable Entry<K, V>>getNext(descendingEntryIterator(), null);
   }
 

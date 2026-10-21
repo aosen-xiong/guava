@@ -2475,13 +2475,13 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V2> pollFirstEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @Readonly Entry<K, V2> pollFirstEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
       return transformEntry(fromMap().pollFirstEntry());
     }
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V2> pollLastEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
+    public @Readonly Entry<K, V2> pollLastEntry(@Mutable TransformedEntriesNavigableMap<K, V1, V2> this) {
       return transformEntry(fromMap().pollLastEntry());
     }
 
@@ -3498,13 +3498,13 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public Entry<K, V> pollFirstEntry(@Mutable FilteredEntryNavigableMap<K, V> this) {
+    public @Readonly Entry<K, V> pollFirstEntry(@Mutable FilteredEntryNavigableMap<K, V> this) {
       return Iterables.removeFirstMatching(unfiltered.entrySet(), entryPredicate);
     }
 
     @Override
     @CheckForNull
-    public Entry<K, V> pollLastEntry(@Mutable FilteredEntryNavigableMap<K, V> this) {
+    public @Readonly Entry<K, V> pollLastEntry(@Mutable FilteredEntryNavigableMap<K, V> this) {
       return Iterables.removeFirstMatching(unfiltered.descendingMap().entrySet(), entryPredicate);
     }
 
@@ -3629,7 +3629,7 @@ public final class Maps {
 
   @CheckForNull
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Entry<K, V> unmodifiableOrNull(@CheckForNull @Readonly Entry<K, ? extends V> entry) {
+      @Readonly Entry<K, V> unmodifiableOrNull(@CheckForNull @Readonly Entry<K, ? extends V> entry) {
     return (entry == null) ? null : Maps.unmodifiableEntry(entry);
   }
 
@@ -3656,7 +3656,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V> lowerEntry(@ParametricNullness K key) {
+    public @Readonly Entry<K, V> lowerEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.lowerEntry(key));
     }
 
@@ -3668,7 +3668,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V> floorEntry(@ParametricNullness K key) {
+    public @Readonly Entry<K, V> floorEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.floorEntry(key));
     }
 
@@ -3680,7 +3680,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V> ceilingEntry(@ParametricNullness K key) {
+    public @Readonly Entry<K, V> ceilingEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.ceilingEntry(key));
     }
 
@@ -3692,7 +3692,7 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V> higherEntry(@ParametricNullness K key) {
+    public @Readonly Entry<K, V> higherEntry(@ParametricNullness K key) {
       return unmodifiableOrNull(delegate.higherEntry(key));
     }
 
@@ -3704,13 +3704,13 @@ public final class Maps {
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V> firstEntry() {
+    public @Readonly Entry<K, V> firstEntry() {
       return unmodifiableOrNull(delegate.firstEntry());
     }
 
     @Override
     @CheckForNull
-    public @Immutable Entry<K, V> lastEntry() {
+    public @Readonly Entry<K, V> lastEntry() {
       return unmodifiableOrNull(delegate.lastEntry());
     }
 

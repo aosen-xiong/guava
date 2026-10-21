@@ -591,7 +591,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     @Override
     public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object instanceof Entry) {
-        Entry<?, ?> entry = (@Immutable Entry<?, ?>) object;
+        Entry<?, ?> entry = (@Readonly Entry<?, ?>) object;
         return multimap.containsEntry(entry.getKey(), entry.getValue());
       }
       return false;
