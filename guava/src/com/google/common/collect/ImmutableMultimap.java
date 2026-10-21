@@ -400,7 +400,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   // DoNotCall wants this to be final, but we want to override it to return more specific types.
   // Inheritance is closed, and all subtypes are @DoNotCall, so this is safe to suppress.
   @SuppressWarnings("DoNotCall")
-  public ImmutableCollection<V> replaceValues(K key, Iterable<? extends V> values) {
+  public ImmutableCollection<V> replaceValues(K key, @Readonly Iterable<? extends V> values) {
     throw new UnsupportedOperationException();
   }
 
@@ -457,7 +457,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean putAll(K key, Iterable<? extends V> values) {
+  public final boolean putAll(K key, @Readonly Iterable<? extends V> values) {
     throw new UnsupportedOperationException();
   }
 

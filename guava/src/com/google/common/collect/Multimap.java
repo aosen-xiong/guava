@@ -261,7 +261,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    * @return {@code true} if the multimap changed
    */
   @CanIgnoreReturnValue
-  boolean putAll(@Mutable Multimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  boolean putAll(@Mutable Multimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values);
 
   /**
    * Stores all key-value pairs of {@code multimap} in this multimap, in the order returned by
@@ -282,7 +282,7 @@ public interface Multimap<K extends @Nullable @Immutable Object, V extends @Null
    *     no effect on the multimap.
    */
   @CanIgnoreReturnValue
-  @Readonly Collection<V> replaceValues(@Mutable Multimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  @Readonly Collection<V> replaceValues(@Mutable Multimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values);
 
   /**
    * Removes all values associated with the key {@code key}.

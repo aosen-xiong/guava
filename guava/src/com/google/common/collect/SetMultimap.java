@@ -95,7 +95,7 @@ public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @I
    */
   @CanIgnoreReturnValue
   @Override
-  @Readonly Set<V> replaceValues(@Mutable SetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  @Readonly Set<V> replaceValues(@Mutable SetMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values);
 
   /**
    * {@inheritDoc}

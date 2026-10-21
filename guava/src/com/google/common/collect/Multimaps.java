@@ -774,7 +774,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean putAll(@ParametricNullness K key, Iterable<? extends V> values) {
+    public boolean putAll(@ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -794,7 +794,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly Collection<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+    public @Readonly Collection<V> replaceValues(@ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -835,7 +835,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly List<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+    public @Readonly List<V> replaceValues(@ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -876,7 +876,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly Set<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+    public @Readonly Set<V> replaceValues(@ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -907,7 +907,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly SortedSet<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+    public @Readonly SortedSet<V> replaceValues(@ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -1240,7 +1240,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean putAll(@ParametricNullness K key, Iterable<? extends V> values) {
+    public boolean putAll(@ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -1250,7 +1250,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly Set<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
+    public @Readonly Set<V> replaceValues(@ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -1612,7 +1612,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean putAll(@ParametricNullness K key, Iterable<? extends V2> values) {
+    public boolean putAll(@ParametricNullness K key, @Readonly Iterable<? extends V2> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -1634,7 +1634,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly Collection<V2> replaceValues(@ParametricNullness K key, Iterable<? extends V2> values) {
+    public @Readonly Collection<V2> replaceValues(@ParametricNullness K key, @Readonly Iterable<? extends V2> values) {
       throw new UnsupportedOperationException();
     }
 
@@ -1677,7 +1677,7 @@ public final class Multimaps {
     }
 
     @Override
-    public @Readonly List<V2> replaceValues(@ParametricNullness K key, Iterable<? extends V2> values) {
+    public @Readonly List<V2> replaceValues(@ParametricNullness K key, @Readonly Iterable<? extends V2> values) {
       throw new UnsupportedOperationException();
     }
   }

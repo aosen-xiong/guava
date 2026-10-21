@@ -455,7 +455,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final ImmutableList<V> replaceValues(K key, Iterable<? extends V> values) {
+  public final ImmutableList<V> replaceValues(K key, @Readonly Iterable<? extends V> values) {
     throw new UnsupportedOperationException();
   }
 

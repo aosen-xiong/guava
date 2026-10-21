@@ -321,7 +321,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @CanIgnoreReturnValue
   @Override
-  public @Readonly Set<V> replaceValues(@Mutable LinkedHashMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Set<V> replaceValues(@Mutable LinkedHashMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return super.replaceValues(key, values);
   }
 

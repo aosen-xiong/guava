@@ -672,7 +672,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @CanIgnoreReturnValue
   @Override
-  public @Readonly List<V> replaceValues(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly List<V> replaceValues(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     @Readonly List<V> oldValues = getCopy(key);
     ListIterator<V> keyValues = new ValueForKeyIterator(key);
     Iterator<? extends V> newValues = values.iterator();

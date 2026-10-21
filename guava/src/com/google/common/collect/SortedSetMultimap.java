@@ -96,7 +96,7 @@ public interface SortedSetMultimap<K extends @Nullable @Immutable Object, V exte
    */
   @CanIgnoreReturnValue
   @Override
-  @Readonly SortedSet<V> replaceValues(@Mutable SortedSetMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  @Readonly SortedSet<V> replaceValues(@Mutable SortedSetMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values);
 
   /**
    * Returns a map view that associates each key with the corresponding values in the multimap.

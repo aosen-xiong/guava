@@ -81,7 +81,7 @@ public interface ListMultimap<K extends @Nullable @Immutable Object, V extends @
    */
   @CanIgnoreReturnValue
   @Override
-  @Readonly List<V> replaceValues(@Mutable ListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  @Readonly List<V> replaceValues(@Mutable ListMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values);
 
   /**
    * {@inheritDoc}

@@ -86,7 +86,7 @@ public final class Predicates {
    * Returns a predicate that evaluates to {@code true} if the given predicate evaluates to {@code
    * false}.
    */
-  public static <T extends @Nullable @Readonly Object> Predicate<T> not(Predicate<T> predicate) {
+  public static <T extends @Nullable @Readonly Object> Predicate<T> not(@Readonly Predicate<T> predicate) {
     return new NotPredicate<>(predicate);
   }
 
@@ -154,7 +154,7 @@ public final class Predicates {
    * as soon as a true predicate is found.
    */
   public static <T extends @Nullable @Readonly Object> Predicate<T> or(
-      Predicate<? super T> first, Predicate<? super T> second) {
+      @Readonly Predicate<? super T> first, @Readonly Predicate<? super T> second) {
     return new OrPredicate<>(Predicates.<T>asList(checkNotNull(first), checkNotNull(second)));
   }
 
@@ -319,9 +319,9 @@ public final class Predicates {
   /** @see Predicates#not(Predicate) */
   private static class NotPredicate<T extends @Nullable @Readonly Object>
       implements Predicate<T>, Serializable {
-    final Predicate<T> predicate;
+    final @Readonly Predicate<T> predicate;
 
-    NotPredicate(Predicate<T> predicate) {
+    NotPredicate(@Readonly Predicate<T> predicate) {
       this.predicate = checkNotNull(predicate);
     }
 

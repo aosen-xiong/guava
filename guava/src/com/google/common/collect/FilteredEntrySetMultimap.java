@@ -61,7 +61,7 @@ final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V ex
   }
 
   @Override
-  public @Readonly Set<V> replaceValues(@Mutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Set<V> replaceValues(@Mutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return (@Readonly Set<V>) super.replaceValues(key, values);
   }
 

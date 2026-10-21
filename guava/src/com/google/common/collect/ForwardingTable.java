@@ -114,7 +114,7 @@ public abstract class ForwardingTable<
   }
 
   @Override
-  public void putAll(@Mutable ForwardingTable<R, C, V> this, Table<? extends R, ? extends C, ? extends V> table) {
+  public void putAll(@Mutable ForwardingTable<R, C, V> this, @Readonly Table<? extends R, ? extends C, ? extends V> table) {
     delegate().putAll(table);
   }
 

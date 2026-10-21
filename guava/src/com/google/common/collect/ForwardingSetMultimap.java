@@ -66,7 +66,7 @@ public abstract class ForwardingSetMultimap<K extends @Nullable @Immutable Objec
 
   @CanIgnoreReturnValue
   @Override
-  public @Readonly Set<V> replaceValues(@Mutable ForwardingSetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Set<V> replaceValues(@Mutable ForwardingSetMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 }

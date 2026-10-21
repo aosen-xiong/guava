@@ -124,7 +124,7 @@ abstract class AbstractSortedSetMultimap<K extends @Nullable @Immutable Object, 
    */
   @CanIgnoreReturnValue
   @Override
-  public @Readonly SortedSet<V> replaceValues(@Mutable AbstractSortedSetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly SortedSet<V> replaceValues(@Mutable AbstractSortedSetMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return (@Readonly SortedSet<V>) super.replaceValues(key, values);
   }
 

@@ -83,7 +83,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
 
   @CanIgnoreReturnValue
   @Override
-  public boolean removeAll(@Mutable ForwardingCollection<E> this, Collection<?> collection) {
+  public boolean removeAll(@Mutable ForwardingCollection<E> this, @Readonly Collection<?> collection) {
     return delegate().removeAll(collection);
   }
 

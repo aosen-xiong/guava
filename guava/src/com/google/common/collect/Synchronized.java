@@ -720,7 +720,7 @@ final class Synchronized {
     }
 
     @Override
-    public boolean putAll(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+    public boolean putAll(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().putAll(key, values);
       }
@@ -734,7 +734,7 @@ final class Synchronized {
     }
 
     @Override
-    public @Readonly Collection<V> replaceValues(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+    public @Readonly Collection<V> replaceValues(@Mutable SynchronizedMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -880,7 +880,7 @@ final class Synchronized {
     }
 
     @Override
-    public @Readonly List<V> replaceValues(@Mutable SynchronizedListMultimap<K, V> this,  K key, Iterable<? extends V> values) {
+    public @Readonly List<V> replaceValues(@Mutable SynchronizedListMultimap<K, V> this,  K key, @Readonly Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -927,7 +927,7 @@ final class Synchronized {
     }
 
     @Override
-    public @Readonly Set<V> replaceValues(@Mutable SynchronizedSetMultimap<K, V> this, K key, Iterable<? extends V> values) {
+    public @Readonly Set<V> replaceValues(@Mutable SynchronizedSetMultimap<K, V> this, K key, @Readonly Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }
@@ -985,7 +985,7 @@ final class Synchronized {
     }
 
     @Override
-    public @Readonly SortedSet<V> replaceValues(@Mutable SynchronizedSortedSetMultimap<K, V> this, K key, Iterable<? extends V> values) {
+    public @Readonly SortedSet<V> replaceValues(@Mutable SynchronizedSortedSetMultimap<K, V> this, K key, @Readonly Iterable<? extends V> values) {
       synchronized (mutex) {
         return delegate().replaceValues(key, values); // copy not synchronized
       }

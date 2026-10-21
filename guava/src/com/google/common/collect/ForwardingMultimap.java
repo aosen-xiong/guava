@@ -123,7 +123,7 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
 
   @CanIgnoreReturnValue
   @Override
-  public boolean putAll(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public boolean putAll(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return delegate().putAll(key, values);
   }
 
@@ -147,7 +147,7 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
 
   @CanIgnoreReturnValue
   @Override
-  public @Readonly Collection<V> replaceValues(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Collection<V> replaceValues(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 

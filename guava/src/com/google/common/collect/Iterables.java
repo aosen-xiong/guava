@@ -167,7 +167,7 @@ public final class Iterables {
    * @return {@code true} if any element was removed from {@code iterable}
    */
   @CanIgnoreReturnValue
-  public static boolean removeAll(Iterable<?> removeFrom, @Mutable Collection<?> elementsToRemove) {
+  public static boolean removeAll(Iterable<?> removeFrom, @Readonly Collection<?> elementsToRemove) {
     return (removeFrom instanceof Collection)
         ? ((Collection<?>) removeFrom).removeAll(checkNotNull(elementsToRemove))
         : Iterators.removeAll(removeFrom.iterator(), elementsToRemove);
@@ -184,7 +184,7 @@ public final class Iterables {
    * @return {@code true} if any element was removed from {@code iterable}
    */
   @CanIgnoreReturnValue
-  public static boolean retainAll(Iterable<?> removeFrom, Collection<?> elementsToRetain) {
+  public static boolean retainAll(Iterable<?> removeFrom, @Readonly Collection<?> elementsToRetain) {
     return (removeFrom instanceof Collection)
         ? ((Collection<?>) removeFrom).retainAll(checkNotNull(elementsToRetain))
         : Iterators.retainAll(removeFrom.iterator(), elementsToRetain);
@@ -298,7 +298,7 @@ public final class Iterables {
    */
   @GwtIncompatible // Array.newInstance(Class, int)
   public static <T extends @Nullable @Readonly Object> T[] toArray(
-      Iterable<? extends T> iterable, Class<@NonNull T> type) {
+      @Readonly Iterable<? extends T> iterable, Class<@NonNull T> type) {
     return toArray(iterable, ObjectArrays.newArray(type, 0));
   }
 
@@ -355,7 +355,7 @@ public final class Iterables {
    * @see java.util.Collections#frequency(Collection, Object) Collections.frequency(Collection,
    *     Object)
    */
-  public static int frequency(@Readonly Iterable<?> iterable, @CheckForNull Object element) {
+  public static int frequency(@Readonly Iterable<?> iterable, @CheckForNull @Readonly Object element) {
     if ((iterable instanceof Multiset)) {
       return ((Multiset<?>) iterable).count(element);
     } else if ((iterable instanceof Set)) {
@@ -746,7 +746,7 @@ public final class Iterables {
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#map}
    */
   public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Iterable<T> transform(
-      final Iterable<F> fromIterable, final Function<? super F, ? extends T> function) {
+      final Iterable<F> fromIterable, final @Readonly Function<? super F, ? extends T> function) {
     checkNotNull(fromIterable);
     checkNotNull(function);
     return new FluentIterable<T>() {
@@ -1075,7 +1075,7 @@ public final class Iterables {
    */
   public static <T extends @Nullable @Readonly Object> Iterable<T> mergeSorted(
       final Iterable<? extends Iterable<? extends T>> iterables,
-      final Comparator<? super T> comparator) {
+      final @Readonly Comparator<? super T> comparator) {
     checkNotNull(iterables, "iterables");
     checkNotNull(comparator, "comparator");
     Iterable<T> iterable =

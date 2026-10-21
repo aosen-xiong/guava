@@ -96,7 +96,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
 
   @CanIgnoreReturnValue
   @Override
-  public boolean putAll(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public boolean putAll(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     checkNotNull(values);
     // make sure we only call values.iterator() once
     // and we only call get(key) if values is nonempty
@@ -121,7 +121,7 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
 
   @CanIgnoreReturnValue
   @Override
-  public @Readonly Collection<V> replaceValues(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Collection<V> replaceValues(@Mutable AbstractMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     checkNotNull(values);
     Collection<V> result = removeAll(key);
     putAll(key, values);

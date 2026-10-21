@@ -62,7 +62,7 @@ public abstract class ForwardingSortedSetMultimap<
   }
 
   @Override
-  public @Readonly SortedSet<V> replaceValues(@Mutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly SortedSet<V> replaceValues(@Mutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 

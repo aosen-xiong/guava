@@ -110,7 +110,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
    */
   @CanIgnoreReturnValue
   @Override
-  public @Readonly List<V> replaceValues(@Mutable AbstractListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly List<V> replaceValues(@Mutable AbstractListMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return (@Readonly List<V>) super.replaceValues(key, values);
   }
 

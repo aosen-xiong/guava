@@ -233,7 +233,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    * <p>The returned collection is immutable.
    */
   @Override
-  public @Readonly Collection<V> replaceValues(@Mutable AbstractMapBasedMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Collection<V> replaceValues(@Mutable AbstractMapBasedMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     Iterator<? extends V> iterator = values.iterator();
     if (!iterator.hasNext()) {
       return removeAll(key);
