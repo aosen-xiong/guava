@@ -688,7 +688,7 @@ public final class Multimaps {
    * @since 10.0
    */
   @Deprecated
-  public static <K extends @Immutable Object, V> @Readonly Multimap<K, V> unmodifiableMultimap(ImmutableMultimap<K, @Immutable V> delegate) {
+  public static <K extends @Immutable Object, V> @Immutable Multimap<K, V> unmodifiableMultimap(ImmutableMultimap<K, @Immutable V> delegate) {
     return checkNotNull(delegate);
   }
 
@@ -962,7 +962,7 @@ public final class Multimaps {
    * @since 10.0
    */
   @Deprecated
-  public static <K extends @Immutable Object, V extends @Immutable Object> @Readonly SetMultimap<K, V> unmodifiableSetMultimap(
+  public static <K extends @Immutable Object, V extends @Immutable Object> @Immutable SetMultimap<K, V> unmodifiableSetMultimap(
       ImmutableSetMultimap<K, @Immutable V> delegate) {
     return checkNotNull(delegate);
   }
@@ -1043,7 +1043,7 @@ public final class Multimaps {
    * @since 10.0
    */
   @Deprecated
-  public static <K extends @Immutable Object, V> ListMultimap<K, V> unmodifiableListMultimap(
+  public static <K extends @Immutable Object, V> @Immutable ListMultimap<K, V> unmodifiableListMultimap(
       ImmutableListMultimap<K, @Immutable V> delegate) {
     return checkNotNull(delegate);
   }

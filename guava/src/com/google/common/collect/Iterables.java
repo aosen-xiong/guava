@@ -538,13 +538,13 @@ public final class Iterables {
    *     into partitions
    * @throws IllegalArgumentException if {@code size} is nonpositive
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<List<T>> partition(
+  public static <T extends @Nullable @Readonly Object> Iterable<@Readonly List<T>> partition(
       final Iterable<T> iterable, final int size) {
     checkNotNull(iterable);
     checkArgument(size > 0);
-    return new FluentIterable<List<T>>() {
+    return new FluentIterable<@Readonly List<T>>() {
       @Override
-      public Iterator<List<T>> iterator() {
+      public Iterator<@Readonly List<T>> iterator() {
         return Iterators.partition(iterable.iterator(), size);
       }
     };
@@ -565,13 +565,13 @@ public final class Iterables {
    *     into partitions (the final iterable may have trailing null elements)
    * @throws IllegalArgumentException if {@code size} is nonpositive
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<List<@Nullable T>> paddedPartition(
+  public static <T extends @Nullable @Readonly Object> Iterable<@Readonly List<@Nullable T>> paddedPartition(
       final Iterable<T> iterable, final int size) {
     checkNotNull(iterable);
     checkArgument(size > 0);
-    return new FluentIterable<List<@Nullable T>>() {
+    return new FluentIterable<@Readonly List<@Nullable T>>() {
       @Override
-      public Iterator<List<@Nullable T>> iterator() {
+      public Iterator<@Readonly List<@Nullable T>> iterator() {
         return Iterators.paddedPartition(iterable.iterator(), size);
       }
     };

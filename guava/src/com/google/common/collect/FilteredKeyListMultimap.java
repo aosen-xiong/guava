@@ -56,7 +56,7 @@ final class FilteredKeyListMultimap<K extends @Nullable @Immutable Object, V ext
   }
 
   @Override
-  public List<V> replaceValues(@Mutable FilteredKeyListMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
-    return (List<V>) super.replaceValues(key, values);
+  public @Readonly List<V> replaceValues(@Mutable FilteredKeyListMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+    return (@Readonly List<V>) super.replaceValues(key, values);
   }
 }

@@ -672,8 +672,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> replaceValues(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
-    List<V> oldValues = getCopy(key);
+  public @Readonly List<V> replaceValues(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+    @Readonly List<V> oldValues = getCopy(key);
     ListIterator<V> keyValues = new ValueForKeyIterator(key);
     Iterator<? extends V> newValues = values.iterator();
 
@@ -697,7 +697,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     return oldValues;
   }
 
-  private List<V> getCopy(@ParametricNullness K key) {
+  private @Readonly List<V> getCopy(@ParametricNullness K key) {
     return unmodifiableList(Lists.newArrayList(new ValueForKeyIterator(key)));
   }
 
@@ -708,7 +708,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> removeAll(@Mutable LinkedListMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+  public @Readonly List<V> removeAll(@Mutable LinkedListMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     /*
      * Safe because all we do is remove values for the key, not add them. (If we wanted to make sure
      * to call getCopy and removeAllNodes only with a true K, then we could check containsKey first.

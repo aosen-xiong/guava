@@ -608,7 +608,7 @@ public final class Iterators {
    *     partitions
    * @throws IllegalArgumentException if {@code size} is nonpositive
    */
-  public static <T extends @Nullable @Readonly Object> UnmodifiableIterator<List<T>> partition(
+  public static <T extends @Nullable @Readonly Object> UnmodifiableIterator<@Readonly List<T>> partition(
       Iterator<T> iterator, int size) {
     return partitionImpl(iterator, size, false);
   }
@@ -628,22 +628,22 @@ public final class Iterators {
    * @throws IllegalArgumentException if {@code size} is nonpositive
    */
   public static <T extends @Nullable @Readonly Object>
-      UnmodifiableIterator<List<@Nullable T>> paddedPartition(Iterator<T> iterator, int size) {
+      UnmodifiableIterator<@Readonly List<@Nullable T>> paddedPartition(Iterator<T> iterator, int size) {
     return partitionImpl(iterator, size, true);
   }
 
-  private static <T extends @Nullable @Readonly Object> UnmodifiableIterator<List<@Nullable T>> partitionImpl(
+  private static <T extends @Nullable @Readonly Object> UnmodifiableIterator<@Readonly List<@Nullable T>> partitionImpl(
       Iterator<T> iterator, int size, boolean pad) {
     checkNotNull(iterator);
     checkArgument(size > 0);
-    return new @Mutable UnmodifiableIterator<List<@Nullable T>>() {
+    return new @Mutable UnmodifiableIterator<@Readonly List<@Nullable T>>() {
       @Override
       public boolean hasNext() {
         return iterator.hasNext();
       }
 
       @Override
-      public List<@Nullable T> next() {
+      public @Readonly List<@Nullable T> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
