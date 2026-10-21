@@ -526,11 +526,12 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    Set<Entry<R, V>> createEntrySet() {
-      return new EntrySet();
+    @ReceiverDependentMutable Set<Entry<R, V>> createEntrySet(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable Column this) {
+      return new @ReceiverDependentMutable EntrySet();
     }
 
     @WeakOuter
+    @ReceiverDependentMutable
     private class EntrySet extends ImprovedAbstractSet<Entry<R, V>> {
       @Override
       public Iterator<Entry<R, V>> iterator() {

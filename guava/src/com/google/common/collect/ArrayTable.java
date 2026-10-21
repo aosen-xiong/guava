@@ -633,10 +633,11 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     if (columnIndex == null) {
       return emptyMap();
     } else {
-      return new Column(columnIndex);
+      return new @ReceiverDependentMutable Column(columnIndex);
     }
   }
 
+  @ReceiverDependentMutable
   private class Column extends ArrayMap<R, @Nullable V> {
     final int columnIndex;
 
@@ -679,10 +680,11 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @Override
   public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, @Nullable V>> columnMap(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     ColumnMap map = columnMap;
-    return (map == null) ? columnMap = new ColumnMap() : map;
+    return (map == null) ? columnMap = new @ReceiverDependentMutable ColumnMap() : map;
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   private class ColumnMap extends ArrayMap<C, Map<R, @Nullable V>> {
     private ColumnMap() {
       super(columnKeyToIndex);
@@ -695,7 +697,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     @Override
     Map<R, @Nullable V> getValue(int index) {
-      return new Column(index);
+      return new @ReceiverDependentMutable Column(index);
     }
 
     @Override
@@ -728,10 +730,11 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     if (rowIndex == null) {
       return emptyMap();
     } else {
-      return new Row(rowIndex);
+      return new @ReceiverDependentMutable Row(rowIndex);
     }
   }
 
+  @ReceiverDependentMutable
   private class Row extends ArrayMap<C, @Nullable V> {
     final int rowIndex;
 
@@ -791,7 +794,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     @Override
     Map<C, @Nullable V> getValue(int index) {
-      return new Row(index);
+      return new @ReceiverDependentMutable Row(index);
     }
 
     @Override

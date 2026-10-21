@@ -184,8 +184,10 @@ public abstract class ForwardingNavigableSet<E extends @Nullable @Readonly Objec
    *
    * @since 12.0
    */
+  @ReceiverDependentMutable
   protected class StandardDescendingSet extends Sets.DescendingSet<E> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardDescendingSet() {
       super(ForwardingNavigableSet.this);
     }

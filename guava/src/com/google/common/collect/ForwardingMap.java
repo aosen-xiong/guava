@@ -222,8 +222,10 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected class StandardKeySet extends Maps.KeySet<K, V> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardKeySet() {
       super(ForwardingMap.this);
     }
@@ -249,8 +251,10 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected class StandardValues extends Maps.Values<K, V> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardValues() {
       super(ForwardingMap.this);
     }

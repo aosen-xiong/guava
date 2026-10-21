@@ -373,8 +373,10 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    *
    * @since 12.0
    */
+  @ReceiverDependentMutable
   protected class StandardNavigableKeySet extends Maps.NavigableKeySet<K, V> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardNavigableKeySet() {
       super(ForwardingNavigableMap.this);
     }

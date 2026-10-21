@@ -885,8 +885,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   }
 
   @Override
-  public @Readonly RangeSet<C> subRangeSet(Range<C> view) {
-    return view.equals(Range.<C>all()) ? this : new SubRangeSet(view);
+  public @ReceiverDependentMutable RangeSet<C> subRangeSet(@ReceiverDependentMutable TreeRangeSet<C> this, Range<C> view) {
+    return view.equals(Range.<C>all()) ? this : new @ReceiverDependentMutable SubRangeSet(view);
   }
 
   @ReceiverDependentMutable

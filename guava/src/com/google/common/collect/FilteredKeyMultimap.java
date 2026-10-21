@@ -119,6 +119,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
   }
 
+  @ReceiverDependentMutable
   static class AddRejectingSet<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingSet<V> {
     @ParametricNullness final K key;
@@ -139,11 +140,12 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    protected @Immutable Set<V> delegate() {
+    protected @ReceiverDependentMutable Set<V> delegate() {
       return Collections.emptySet();
     }
   }
 
+  @ReceiverDependentMutable
   static class AddRejectingList<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingList<V> {
     @ParametricNullness final K key;
@@ -179,7 +181,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    protected @Immutable List<V> delegate() {
+    protected @ReceiverDependentMutable List<V> delegate() {
       return Collections.emptyList();
     }
   }
@@ -190,11 +192,12 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  Collection<Entry<K, V>> createEntries() {
-    return new Entries();
+  @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable FilteredKeyMultimap<K, V> this) {
+    return new @ReceiverDependentMutable Entries();
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class Entries extends ForwardingCollection<Entry<K, V>> {
     @Override
     protected Collection<Entry<K, V>> delegate() {

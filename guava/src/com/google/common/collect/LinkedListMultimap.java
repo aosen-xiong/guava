@@ -759,8 +759,9 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  Set<K> createKeySet() {
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class KeySetImpl extends Sets.ImprovedAbstractSet<K> {
       @Override
       public @NonNegative int size() {
@@ -783,7 +784,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
         return !LinkedListMultimap.this.removeAll(o).isEmpty();
       }
     }
-    return new KeySetImpl();
+    return new @ReceiverDependentMutable KeySetImpl();
   }
 
   @Override
@@ -801,8 +802,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @SideEffectFree
   @Override
-  public List<V> values() {
-    return (List<V>) super.values();
+  public @ReceiverDependentMutable List<V> values(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+    return (@ReceiverDependentMutable List<V>) super.values();
   }
 
   @Override
@@ -853,13 +854,14 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @SideEffectFree
   @Override
-  public List<Entry<K, V>> entries() {
-    return (List<Entry<K, V>>) super.entries();
+  public @ReceiverDependentMutable List<Entry<K, V>> entries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+    return (@ReceiverDependentMutable List<Entry<K, V>>) super.entries();
   }
 
   @Override
-  List<Entry<K, V>> createEntries() {
+  @ReceiverDependentMutable List<Entry<K, V>> createEntries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class EntriesImpl extends AbstractSequentialList<Entry<K, V>> {
       @Override
       public @NonNegative int size() {
@@ -879,7 +881,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
         }
       }
     }
-    return new EntriesImpl();
+    return new @ReceiverDependentMutable EntriesImpl();
   }
 
   @Override

@@ -353,7 +353,9 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class Keys extends Multimaps.Keys<K, V> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     Keys() {
       super(FilteredEntryMultimap.this);
     }
@@ -385,8 +387,8 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
     }
 
     @Override
-    public Set<Multiset.@Readonly Entry<K>> entrySet() {
-      return new Multisets.@Mutable EntrySet<K>() {
+    public @ReceiverDependentMutable Set<Multiset.@Readonly Entry<K>> entrySet(@ReceiverDependentMutable Keys this) {
+      return new Multisets.@ReceiverDependentMutable EntrySet<K>() {
 
         @Override
         Multiset<K> multiset() {

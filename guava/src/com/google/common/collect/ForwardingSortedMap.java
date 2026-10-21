@@ -112,8 +112,10 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
    *
    * @since 15.0
    */
+  @ReceiverDependentMutable
   protected class StandardKeySet extends Maps.SortedKeySet<K, V> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardKeySet() {
       super(ForwardingSortedMap.this);
     }

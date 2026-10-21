@@ -80,7 +80,8 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
   @ReceiverDependentMutable
   protected class StandardElementSet extends SortedMultisets.NavigableElementSet<E> {
     /** Constructor for use by subclasses. */
-    public @Mutable StandardElementSet() {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
+    public StandardElementSet() {
       super(ForwardingSortedMultiset.this);
     }
   }
