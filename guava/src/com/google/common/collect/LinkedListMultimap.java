@@ -216,6 +216,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     this(12);
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // PICO constructor fix: the constructor stores a fresh @Mutable map into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do
   private LinkedListMultimap(int expectedKeys) {
     keyToKeyList = Platform.newHashMapWithExpectedSize(expectedKeys);
   }
