@@ -710,12 +710,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return (keySetView == null) ? keySetView = createKeySet() : keySetView;
   }
 
-  @PolyMutable Set<K> createKeySet(@PolyMutable CompactHashMap<K, V> this) {
-    return new KeySetView();
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
+    return new @ReceiverDependentMutable KeySetView();
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class KeySetView extends Maps.KeySet<K, V> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     KeySetView() {
       super(CompactHashMap.this);
     }
@@ -813,30 +815,33 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
   }
 
-  @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySetView;
+  @LazyInit @CheckForNull private transient @Assignable Set<@ReceiverDependentMutable Entry<K, V>> entrySetView;
 
   @Override
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (entrySetView == null) ? entrySetView = createEntrySet() : entrySetView;
   }
 
-  @PolyMutable Set<Entry<K, V>> createEntrySet(@PolyMutable CompactHashMap<K, V> this) {
-    return new EntrySetView();
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
+    return new @ReceiverDependentMutable EntrySetView();
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class EntrySetView extends Maps.EntrySet<K, V> {
     @Override
-    Map<K, V> map() {
+    @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable CompactHashMap<K, V>.@ReceiverDependentMutable EntrySetView this) {
       return CompactHashMap.this;
     }
 
     @Override
-    public Iterator<Entry<K, V>> iterator() {
+    @SuppressWarnings("mutability:return.type.incompatible") // the entries have the enclosing map's mutability, but the shared entry iterator is a fresh @Mutable cursor whose entries the checker cannot relate to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator() {
       return entrySetIterator();
     }
 
     @Override
+    @SuppressWarnings({"mutability:override.return.invalid", "mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the spliterator reads the map's entries without a receiver to relate them to, so it can only promise @Mutable entries, as jdk#4's HashMap.EntrySet.spliterator
     public Spliterator<Entry<K, V>> spliterator() {
       Map<K, V> delegate = delegateOrNull();
       return (delegate != null)
@@ -905,10 +910,11 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     };
   }
 
+  @ReceiverDependentMutable
   final class MapEntry extends AbstractMapEntry<K, V> {
     @ParametricNullness private final K key;
 
-    private int lastKnownIndex;
+    private @Assignable int lastKnownIndex; // a lookup cache refreshed by the read methods
 
     MapEntry(int index) {
       this.key = key(index);
@@ -954,7 +960,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
     @Override
     @ParametricNullness
-    public V setValue(@ParametricNullness V value) {
+    public V setValue(@Mutable CompactHashMap<K, V>.@Mutable MapEntry this, @ParametricNullness V value) {
       Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return uncheckedCastNullableTToT(delegate.put(key, value)); // See discussion in getValue().
@@ -1003,8 +1009,8 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return (valuesView == null) ? valuesView = createValues() : valuesView;
   }
 
-  @PolyMutable Collection<V> createValues(@PolyMutable CompactHashMap<K, V> this) {
-    return new ValuesView();
+  @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable CompactHashMap<K, V> this) {
+    return new @ReceiverDependentMutable ValuesView();
   }
 
   @WeakOuter

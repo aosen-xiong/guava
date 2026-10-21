@@ -239,20 +239,23 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
-  Set<Entry<K, V>> createEntrySet() {
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable CompactLinkedHashMap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class EntrySetImpl extends EntrySetView {
       @Override
+      @SuppressWarnings({"mutability:override.return.invalid", "mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the spliterator reads the map's entries without a receiver to relate them to, so it can only promise @Mutable entries, as jdk#4's HashMap.EntrySet.spliterator
       public Spliterator<Entry<K, V>> spliterator() {
         return Spliterators.spliterator(this, Spliterator.ORDERED | Spliterator.DISTINCT);
       }
     }
-    return new EntrySetImpl();
+    return new @ReceiverDependentMutable EntrySetImpl();
   }
 
   @Override
-  Set<K> createKeySet() {
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable CompactLinkedHashMap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class KeySetImpl extends KeySetView {
       @CFComment("signedness: is same as K, which this method doesn't know")
       @Override
@@ -271,12 +274,13 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
         return Spliterators.spliterator(this, Spliterator.ORDERED | Spliterator.DISTINCT);
       }
     }
-    return new KeySetImpl();
+    return new @ReceiverDependentMutable KeySetImpl();
   }
 
   @Override
-  Collection<V> createValues() {
+  @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable CompactLinkedHashMap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class ValuesImpl extends ValuesView {
       @CFComment("signedness: is same as V, which this method doesn't know")
       @Override
@@ -295,7 +299,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
         return Spliterators.spliterator(this, Spliterator.ORDERED);
       }
     }
-    return new ValuesImpl();
+    return new @ReceiverDependentMutable ValuesImpl();
   }
 
   @Override
