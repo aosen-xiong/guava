@@ -2583,12 +2583,12 @@ class MapMakerInternalMap<
   @Mutable
   abstract class HashIterator<T> implements Iterator<T> {
 
-    @Assignable int nextSegmentIndex;
-    @Assignable int nextTableIndex;
-    @CheckForNull @Assignable Segment<K, V, E, S> currentSegment;
-    @CheckForNull @Assignable AtomicReferenceArray<E> currentTable;
+    int nextSegmentIndex;
+    int nextTableIndex;
+    @CheckForNull Segment<K, V, E, S> currentSegment;
+    @CheckForNull AtomicReferenceArray<E> currentTable;
     @CheckForNull E nextEntry;
-    @CheckForNull @Assignable WriteThroughEntry nextExternal;
+    @CheckForNull WriteThroughEntry nextExternal;
     @CheckForNull WriteThroughEntry lastReturned;
 
     HashIterator() {

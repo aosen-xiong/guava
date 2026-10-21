@@ -682,8 +682,8 @@ public final class Iterables {
   // The signature we really want here is...
   //
   // <T extends @Nullable Object> @JointlyNullable T find(
-  @Readonly //     Iterable<? extends T> iterable,
-  //     @Readonly Predicate<? super T> predicate,
+  //     Iterable<? extends T> iterable,
+  //     Predicate<? super T> predicate,
   //     @JointlyNullable T defaultValue);
   //
   // ...where "@JointlyNullable" is similar to @PolyNull but slightly different:
