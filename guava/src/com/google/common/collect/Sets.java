@@ -2020,8 +2020,8 @@ public final class Sets {
    * @since 13.0
    */
   @GwtIncompatible // NavigableSet
-  public static <E extends @Nullable @Readonly Object> NavigableSet<E> synchronizedNavigableSet(
-      NavigableSet<E> navigableSet) {
+  public static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> synchronizedNavigableSet(
+      @PolyMutable NavigableSet<E> navigableSet) {
     return Synchronized.navigableSet(navigableSet);
   }
 

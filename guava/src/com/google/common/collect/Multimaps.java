@@ -657,7 +657,7 @@ public final class Multimaps {
    * @return a synchronized view of the specified multimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Multimap<K, V> synchronizedMultimap(Multimap<K, V> multimap) {
+      @PolyMutable Multimap<K, V> synchronizedMultimap(@PolyMutable Multimap<K, V> multimap) {
     return Synchronized.multimap(multimap, null);
   }
 
@@ -931,7 +931,7 @@ public final class Multimaps {
    * @return a synchronized view of the specified multimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
-      SetMultimap<K, V> synchronizedSetMultimap(SetMultimap<K, V> multimap) {
+      @PolyMutable SetMultimap<K, V> synchronizedSetMultimap(@PolyMutable SetMultimap<K, V> multimap) {
     return Synchronized.setMultimap(multimap, null);
   }
 
@@ -979,7 +979,7 @@ public final class Multimaps {
    * @return a synchronized view of the specified multimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
-      SortedSetMultimap<K, V> synchronizedSortedSetMultimap(SortedSetMultimap<K, V> multimap) {
+      @PolyMutable SortedSetMultimap<K, V> synchronizedSortedSetMultimap(@PolyMutable SortedSetMultimap<K, V> multimap) {
     return Synchronized.sortedSetMultimap(multimap, null);
   }
 
@@ -1012,7 +1012,7 @@ public final class Multimaps {
    * @return a synchronized view of the specified multimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      ListMultimap<K, V> synchronizedListMultimap(ListMultimap<K, V> multimap) {
+      @PolyMutable ListMultimap<K, V> synchronizedListMultimap(@PolyMutable ListMultimap<K, V> multimap) {
     return Synchronized.listMultimap(multimap, null);
   }
 
@@ -1149,9 +1149,10 @@ public final class Multimaps {
    *
    * @param map the backing map for the returned multimap view
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> SetMultimap<K, V> forMap(
-      Map<K, V> map) {
-    return new MapMultimap<>(map);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the argument and the created view are the same instantiation
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable SetMultimap<K, V> forMap(
+      @PolyMutable Map<K, V> map) {
+    return new @PolyMutable MapMultimap<>(map);
   }
 
   /** @see Multimaps#forMap */

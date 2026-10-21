@@ -1627,8 +1627,9 @@ public final class Maps {
    *
    * @since 16.0
    */
-  public static <A extends @Immutable Object, B extends @Immutable Object> Converter<A, B> asConverter(final BiMap<A, B> bimap) {
-    return new BiMapConverter<>(bimap);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the argument and the created view are the same instantiation
+  public static <A extends @Immutable Object, B extends @Immutable Object> @PolyMutable Converter<A, B> asConverter(final @PolyMutable BiMap<A, B> bimap) {
+    return new @PolyMutable BiMapConverter<>(bimap);
   }
 
   @ReceiverDependentMutable
@@ -1709,7 +1710,7 @@ public final class Maps {
    * @return a synchronized view of the specified bimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
-      BiMap<K, V> synchronizedBiMap(BiMap<K, V> bimap) {
+      @PolyMutable BiMap<K, V> synchronizedBiMap(@PolyMutable BiMap<K, V> bimap) {
     return Synchronized.biMap(bimap, null);
   }
 
@@ -3903,7 +3904,7 @@ public final class Maps {
    */
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      NavigableMap<K, V> synchronizedNavigableMap(NavigableMap<K, V> navigableMap) {
+      @PolyMutable NavigableMap<K, V> synchronizedNavigableMap(@PolyMutable NavigableMap<K, V> navigableMap) {
     return Synchronized.navigableMap(navigableMap);
   }
 
