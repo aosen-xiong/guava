@@ -89,7 +89,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
 
   @SuppressWarnings("unchecked")
   public static <K extends @Immutable Comparable<?>, V> ImmutableRangeMap<K, V> copyOf(
-      RangeMap<K, ? extends V> rangeMap) {
+      @Readonly RangeMap<K, ? extends V> rangeMap) {
     if (rangeMap instanceof ImmutableRangeMap) {
       return (ImmutableRangeMap<K, V>) rangeMap;
     }
@@ -137,7 +137,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
 
     /** Copies all associations from the specified range map into this builder. */
     @CanIgnoreReturnValue
-    public Builder<K, V> putAll(RangeMap<K, ? extends V> rangeMap) {
+    public Builder<K, V> putAll(@Readonly RangeMap<K, ? extends V> rangeMap) {
       for (Entry<Range<K>, ? extends V> entry : rangeMap.asMapOfRanges().entrySet()) {
         put(entry.getKey(), entry.getValue());
       }

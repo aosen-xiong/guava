@@ -131,7 +131,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    * @param multimap the multimap whose contents are copied to this multimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
-      LinkedHashMultimap<K, V> create(Multimap<? extends K, ? extends V> multimap) {
+      LinkedHashMultimap<K, V> create(@Readonly Multimap<? extends K, ? extends V> multimap) {
     LinkedHashMultimap<K, V> result = create(multimap.keySet().size(), DEFAULT_VALUE_SET_CAPACITY);
     result.putAll(multimap);
     return result;

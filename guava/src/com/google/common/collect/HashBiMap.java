@@ -99,7 +99,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
    * initial capacity sufficient to hold the mappings in the specified map.
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> HashBiMap<K, V> create(
-      Map<? extends K, ? extends V> map) {
+      @Readonly Map<? extends K, ? extends V> map) {
     HashBiMap<K, V> bimap = create(map.size());
     bimap.putAll(map);
     return bimap;

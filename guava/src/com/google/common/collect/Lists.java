@@ -247,7 +247,7 @@ public final class Lists {
    */
   @GwtCompatible(serializable = true)
   public static <E extends @Nullable @Readonly Object> LinkedList<E> newLinkedList(
-      Iterable<? extends E> elements) {
+      @Readonly Iterable<? extends E> elements) {
     LinkedList<E> list = newLinkedList();
     Iterables.addAll(list, elements);
     return list;
@@ -278,7 +278,7 @@ public final class Lists {
   @J2ktIncompatible
   @GwtIncompatible // CopyOnWriteArrayList
   public static <E extends @Nullable @Readonly Object> CopyOnWriteArrayList<E> newCopyOnWriteArrayList(
-      Iterable<? extends E> elements) {
+      @Readonly Iterable<? extends E> elements) {
     // We copy elements to an ArrayList first, rather than incurring the
     // quadratic cost of adding them to the COWAL directly.
     Collection<? extends E> elementsCollection =

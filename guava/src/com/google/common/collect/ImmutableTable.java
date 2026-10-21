@@ -129,7 +129,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * undocumented and subject to change.
    */
   public static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> copyOf(
-      Table<? extends R, ? extends C, ? extends V> table) {
+      @Readonly Table<? extends R, ? extends C, ? extends V> table) {
     if (table instanceof ImmutableTable) {
       @SuppressWarnings("unchecked")
       ImmutableTable<R, C, V> parameterizedTable = (ImmutableTable<R, C, V>) table;
@@ -140,7 +140,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   }
 
   static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> copyOf(
-      Iterable<? extends Cell<? extends R, ? extends C, ? extends V>> cells) {
+      @Readonly Iterable<? extends Cell<? extends R, ? extends C, ? extends V>> cells) {
     ImmutableTable.Builder<R, C, V> builder = ImmutableTable.builder();
     for (Cell<? extends R, ? extends C, ? extends V> cell : cells) {
       builder.put(cell);
@@ -255,7 +255,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
      * @throws NullPointerException if any key or value in {@code table} is null
      */
     @CanIgnoreReturnValue
-    public Builder<R, C, V> putAll(Table<? extends R, ? extends C, ? extends V> table) {
+    public Builder<R, C, V> putAll(@Readonly Table<? extends R, ? extends C, ? extends V> table) {
       for (Cell<? extends R, ? extends C, ? extends V> cell : table.cellSet()) {
         put(cell);
       }

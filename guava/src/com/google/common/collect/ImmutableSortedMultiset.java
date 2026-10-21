@@ -192,7 +192,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> copyOf(E[] elements) {
+  public static <E extends @Immutable Comparable<? super E>> ImmutableSortedMultiset<E> copyOf(E @Readonly [] elements) {
     return copyOf(Ordering.natural(), Arrays.asList(elements));
   }
 
@@ -298,7 +298,7 @@ public abstract class ImmutableSortedMultiset<E extends @Immutable Object> exten
    *
    * @throws NullPointerException if {@code sortedMultiset} or any of its elements is null
    */
-  public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOfSorted(SortedMultiset<E> sortedMultiset) {
+  public static <E extends @Immutable Object> ImmutableSortedMultiset<E> copyOfSorted(@Readonly SortedMultiset<E> sortedMultiset) {
     return copyOfSortedEntries(
         sortedMultiset.comparator(), Lists.newArrayList(sortedMultiset.entrySet()));
   }

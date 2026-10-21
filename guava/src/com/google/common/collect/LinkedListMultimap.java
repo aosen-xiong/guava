@@ -208,7 +208,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    * @param multimap the multimap whose contents are copied to this multimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      LinkedListMultimap<K, V> create(Multimap<? extends K, ? extends V> multimap) {
+      LinkedListMultimap<K, V> create(@Readonly Multimap<? extends K, ? extends V> multimap) {
     return new LinkedListMultimap<>(multimap);
   }
 
@@ -222,7 +222,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
-  private LinkedListMultimap(Multimap<? extends K, ? extends V> multimap) {
+  private LinkedListMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     this(multimap.keySet().size());
     putAll(multimap);
   }

@@ -379,12 +379,12 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
    * @throws NullPointerException if any key or value in {@code multimap} is null
    */
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableSetMultimap<K, V> copyOf(
-      Multimap<? extends K, ? extends V> multimap) {
+      @Readonly Multimap<? extends K, ? extends V> multimap) {
     return copyOf(multimap, null);
   }
 
   private static <K extends @Immutable Object, V extends @Immutable Object> ImmutableSetMultimap<K, V> copyOf(
-      Multimap<? extends K, ? extends V> multimap,
+      @Readonly Multimap<? extends K, ? extends V> multimap,
       @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     checkNotNull(multimap); // eager for GWT
     if (multimap.isEmpty() && valueComparator == null) {

@@ -112,7 +112,7 @@ public final class ImmutableRangeSet<C extends @Immutable Comparable> extends Ab
   }
 
   /** Returns an immutable copy of the specified {@code RangeSet}. */
-  public static <C extends @Immutable Comparable> ImmutableRangeSet<C> copyOf(RangeSet<C> rangeSet) {
+  public static <C extends @Immutable Comparable> ImmutableRangeSet<C> copyOf(@Readonly RangeSet<C> rangeSet) {
     checkNotNull(rangeSet);
     if (rangeSet.isEmpty()) {
       return of();

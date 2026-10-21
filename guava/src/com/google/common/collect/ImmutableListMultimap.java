@@ -329,7 +329,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
    * @throws NullPointerException if any key or value in {@code multimap} is null
    */
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> copyOf(
-      Multimap<? extends K, ? extends V> multimap) {
+      @Readonly Multimap<? extends K, ? extends V> multimap) {
     if (multimap.isEmpty()) {
       return of();
     }
