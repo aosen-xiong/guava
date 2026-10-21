@@ -133,7 +133,7 @@ public final class ObjectArrays {
    * @throws ArrayStoreException if the runtime type of the specified array is not a supertype of
    *     the runtime type of every element in the specified collection
    */
-  static <T extends @Nullable @Readonly Object> T @Mutable [] toArrayImpl(@Readonly Collection<?> c, T @Readonly [] array) {
+  static <T extends @Nullable @Readonly Object> T @Mutable [] toArrayImpl(@Readonly Collection<?> c, T @Mutable [] array) {
     int size = c.size();
     if (array.length < size) {
       array = newArray(array, size);

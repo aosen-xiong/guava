@@ -2216,7 +2216,7 @@ public final class Sets {
    * @since 20.0
    */
   @GwtIncompatible // NavigableSet
-  public static <K extends @Immutable Comparable<? super K>> NavigableSet<K> subSet(
+  public static <K extends @Immutable Comparable<? super K>> @PolyMutable NavigableSet<K> subSet(
           @PolyMutable NavigableSet<K> set, Range<K> range) {
     if (set.comparator() != null
         && set.comparator() != Ordering.natural()

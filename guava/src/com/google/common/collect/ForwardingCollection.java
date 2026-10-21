@@ -272,7 +272,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
    *
    * @since 7.0
    */
-  protected <T extends @Nullable @Readonly Object> T[] standardToArray(T @ReceiverDependentMutable [] array) {
+  protected <T extends @Nullable @Readonly Object> T[] standardToArray(T @Mutable [] array) {
     return ObjectArrays.toArrayImpl(this, array);
   }
 }

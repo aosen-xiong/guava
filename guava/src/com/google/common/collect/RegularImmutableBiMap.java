@@ -77,7 +77,7 @@ class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Ob
   }
 
   @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
-  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntryArray(int n, @Nullable @Immutable Entry<K, V> @Immutable [] entryArray) {
+  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntryArray(int n, @Nullable @Immutable Entry<K, V>[] entryArray) {
     checkPositionIndex(n, entryArray.length);
     int tableSize = Hashing.closedTableSize(n, MAX_LOAD_FACTOR);
     int mask = tableSize - 1;

@@ -1062,7 +1062,7 @@ public final class Lists {
 
   /** An implementation of {@link List#addAll(int, Collection)}. */
   static <E extends @Nullable @Readonly Object> boolean addAllImpl(
-          @Readonly List<E> list, int index, Iterable<? extends E> elements) {
+          @Mutable List<E> list, int index, Iterable<? extends E> elements) {
     boolean changed = false;
     ListIterator<E> listIterator = list.listIterator(index);
     for (E e : elements) {
