@@ -543,13 +543,15 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the entries write through to the map and have its mutability, but inside the anonymous iterator receiver-dependent means the @Mutable cursor, and the local entry class cannot name the map's qualifier: https://github.com/eisop/checker-framework/issues/2322
   Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator() {
-    return new Itr<Entry<K, V>>() {
+    return new Itr<@ReceiverDependentMutable Entry<K, V>>() {
       @Override
-      Entry<K, V> output(BiEntry<K, V> entry) {
-        return new MapEntry(entry);
+      @ReceiverDependentMutable Entry<K, V> output(BiEntry<K, V> entry) {
+        return new @ReceiverDependentMutable MapEntry(entry);
       }
 
+      @ReceiverDependentMutable
       class MapEntry extends AbstractMapEntry<K, V> {
         private BiEntry<K, V> delegate;
 
@@ -571,7 +573,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
         @Override
         @ParametricNullness
-        public V setValue(@ParametricNullness V value) {
+        public V setValue(@Mutable MapEntry this, @ParametricNullness V value) {
           V oldValue = delegate.value;
           int valueHash = smearedHash(value);
           if (valueHash == delegate.valueHash && Objects.equal(value, oldValue)) {
@@ -724,13 +726,15 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the entries write through to the map and have its mutability, but inside the anonymous iterator receiver-dependent means the @Mutable cursor, and the local entry class cannot name the map's qualifier: https://github.com/eisop/checker-framework/issues/2322
     Iterator<@ReceiverDependentMutable Entry<V, K>> entryIterator() {
-      return new Itr<Entry<V, K>>() {
+      return new Itr<@ReceiverDependentMutable Entry<V, K>>() {
         @Override
-        Entry<V, K> output(BiEntry<K, V> entry) {
-          return new InverseEntry(entry);
+        @ReceiverDependentMutable Entry<V, K> output(BiEntry<K, V> entry) {
+          return new @ReceiverDependentMutable InverseEntry(entry);
         }
 
+        @ReceiverDependentMutable
         class InverseEntry extends AbstractMapEntry<V, K> {
           private BiEntry<K, V> delegate;
 
@@ -752,7 +756,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
           @Override
           @ParametricNullness
-          public K setValue(@ParametricNullness K key) {
+          public K setValue(@Mutable InverseEntry this, @ParametricNullness K key) {
             K oldKey = delegate.key;
             int keyHash = smearedHash(key);
             if (keyHash == delegate.keyHash && Objects.equal(key, oldKey)) {
