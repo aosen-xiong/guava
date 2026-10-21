@@ -61,12 +61,12 @@ class StandardRowSortedTable<R extends @Immutable Object, C extends @Immutable O
    */
 
   StandardRowSortedTable(
-      SortedMap<R, Map<C, V>> backingMap, Supplier<? extends Map<C, V>> factory) {
+      @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> backingMap, @ReceiverDependentMutable Supplier<? extends Map<C, V>> factory) {
     super(backingMap, factory);
   }
 
-  private SortedMap<R, Map<C, V>> sortedBackingMap() {
-    return (SortedMap<R, Map<C, V>>) backingMap;
+  private @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> sortedBackingMap(@ReceiverDependentMutable StandardRowSortedTable<R, C, V> this) {
+    return (@ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>>) backingMap;
   }
 
   /**
@@ -77,7 +77,7 @@ class StandardRowSortedTable<R extends @Immutable Object, C extends @Immutable O
    */
   @Override
   public @ReceiverDependentMutable SortedSet<R> rowKeySet(@ReceiverDependentMutable StandardRowSortedTable<R, C, V> this) {
-    return (SortedSet<R>) rowMap().keySet();
+    return (@ReceiverDependentMutable SortedSet<R>) rowMap().keySet();
   }
 
   /**
@@ -92,20 +92,21 @@ class StandardRowSortedTable<R extends @Immutable Object, C extends @Immutable O
   }
 
   @Override
-  SortedMap<R, Map<C, V>> createRowMap() {
-    return new RowSortedMap();
+  @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> createRowMap(@ReceiverDependentMutable StandardRowSortedTable<R, C, V> this) {
+    return new @ReceiverDependentMutable RowSortedMap();
   }
 
   @WeakOuter
-  private class RowSortedMap extends RowMap implements SortedMap<R, Map<C, V>> {
+  @ReceiverDependentMutable
+  private class RowSortedMap extends RowMap implements SortedMap<R, @ReceiverDependentMutable Map<C, V>> {
     @Override
-    public SortedSet<@KeyFor({"this"}) R> keySet() {
-      return (SortedSet<R>) super.keySet();
+    public @ReceiverDependentMutable SortedSet<@KeyFor({"this"}) R> keySet(@ReceiverDependentMutable StandardRowSortedTable<R, C, V>.@ReceiverDependentMutable RowSortedMap this) {
+      return (@ReceiverDependentMutable SortedSet<R>) super.keySet();
     }
 
     @Override
-    SortedSet<R> createKeySet() {
-      return new Maps.SortedKeySet<>(this);
+    @ReceiverDependentMutable SortedSet<R> createKeySet(@ReceiverDependentMutable StandardRowSortedTable<R, C, V>.@ReceiverDependentMutable RowSortedMap this) {
+      return new Maps.@ReceiverDependentMutable SortedKeySet<>(this);
     }
 
     @Override
@@ -125,24 +126,24 @@ class StandardRowSortedTable<R extends @Immutable Object, C extends @Immutable O
     }
 
     @Override
-    public SortedMap<R, Map<C, V>> headMap(R toKey) {
+    public @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> headMap(@ReceiverDependentMutable StandardRowSortedTable<R, C, V>.@ReceiverDependentMutable RowSortedMap this, R toKey) {
       checkNotNull(toKey);
-      return new StandardRowSortedTable<R, C, V>(sortedBackingMap().headMap(toKey), factory)
+      return new @ReceiverDependentMutable StandardRowSortedTable<R, C, V>(sortedBackingMap().headMap(toKey), factory)
           .rowMap();
     }
 
     @Override
-    public SortedMap<R, Map<C, V>> subMap(R fromKey, R toKey) {
+    public @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> subMap(@ReceiverDependentMutable StandardRowSortedTable<R, C, V>.@ReceiverDependentMutable RowSortedMap this, R fromKey, R toKey) {
       checkNotNull(fromKey);
       checkNotNull(toKey);
-      return new StandardRowSortedTable<R, C, V>(sortedBackingMap().subMap(fromKey, toKey), factory)
+      return new @ReceiverDependentMutable StandardRowSortedTable<R, C, V>(sortedBackingMap().subMap(fromKey, toKey), factory)
           .rowMap();
     }
 
     @Override
-    public SortedMap<R, Map<C, V>> tailMap(R fromKey) {
+    public @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> tailMap(@ReceiverDependentMutable StandardRowSortedTable<R, C, V>.@ReceiverDependentMutable RowSortedMap this, R fromKey) {
       checkNotNull(fromKey);
-      return new StandardRowSortedTable<R, C, V>(sortedBackingMap().tailMap(fromKey), factory)
+      return new @ReceiverDependentMutable StandardRowSortedTable<R, C, V>(sortedBackingMap().tailMap(fromKey), factory)
           .rowMap();
     }
   }

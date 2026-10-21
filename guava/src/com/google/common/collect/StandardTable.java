@@ -80,10 +80,10 @@ import org.checkerframework.framework.qual.CFComment;
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
 class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V> extends AbstractTable<R, C, V> implements Serializable {
-  @GwtTransient final Map<R, Map<C, V>> backingMap;
+  @GwtTransient final Map<R, @ReceiverDependentMutable Map<C, V>> backingMap;
   @GwtTransient final Supplier<? extends Map<C, V>> factory;
 
-  StandardTable(@ReceiverDependentMutable  Map<R, Map<C, V>> backingMap, @ReceiverDependentMutable Supplier<? extends Map<C, V>> factory) {
+  StandardTable(@ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> backingMap, @ReceiverDependentMutable Supplier<? extends Map<C, V>> factory) {
     this.backingMap = backingMap;
     this.factory = factory;
   }
@@ -828,21 +828,21 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     return super.values();
   }
 
-  @LazyInit @CheckForNull private transient @Assignable Map<R, Map<C, V>> rowMap;
+  @LazyInit @CheckForNull private transient @Assignable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap;
 
   @Override
   public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable StandardTable<R, C, V> this) {
-    Map<R, Map<C, V>> result = rowMap;
+    Map<R, @ReceiverDependentMutable Map<C, V>> result = rowMap;
     return (result == null) ? rowMap = createRowMap() : result;
   }
 
-  Map<R, Map<C, V>> createRowMap() {
-    return new RowMap();
+  @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> createRowMap(@ReceiverDependentMutable StandardTable<R, C, V> this) {
+    return new @ReceiverDependentMutable RowMap();
   }
 
   @WeakOuter
   @ReceiverDependentMutable
-  class RowMap extends ViewCachingAbstractMap<R, Map<C, V>> {
+  class RowMap extends ViewCachingAbstractMap<R, @ReceiverDependentMutable Map<C, V>> {
     @Override
     public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
       return containsRow(key);
@@ -852,7 +852,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     @SuppressWarnings("unchecked")
     @Override
     @CheckForNull
-    public Map<C, V> get(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public @ReceiverDependentMutable Map<C, V> get(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable RowMap this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       // requireNonNull is safe because of the containsRow check.
       return containsRow(key) ? row((R) requireNonNull(key)) : null;
     }
@@ -864,14 +864,16 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    protected Set<Entry<R, Map<C, V>>> createEntrySet() {
-      return new EntrySet();
+    protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<R, @ReceiverDependentMutable Map<C, V>>> createEntrySet(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable RowMap this) {
+      return new @ReceiverDependentMutable EntrySet();
     }
 
     @WeakOuter
-    private final class EntrySet extends TableSet<Entry<R, Map<C, V>>> {
+    @ReceiverDependentMutable
+    private final class EntrySet extends TableSet<@ReceiverDependentMutable Entry<R, @ReceiverDependentMutable Map<C, V>>> {
       @Override
-      public Iterator<Entry<R, Map<C, V>>> iterator() {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner or anonymous class is @Mutable, so the entry iterator cannot state that its entries and rows have the enclosing table's mutability: https://github.com/eisop/checker-framework/issues/2322
+      public @Mutable Iterator<@ReceiverDependentMutable Entry<R, @ReceiverDependentMutable Map<C, V>>> iterator(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable RowMap.@ReceiverDependentMutable EntrySet this) {
         return Maps.asMapEntryIterator(
             backingMap.keySet(),
             new Function<R, Map<C, V>>() {
@@ -899,7 +901,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object obj) {
+      public boolean remove(@Mutable EntrySet this, @CheckForNull @UnknownSignedness @Readonly Object obj) {
         if (obj instanceof Entry) {
           Entry<?, ?> entry = (Entry<?, ?>) obj;
           return entry.getKey() != null
@@ -916,18 +918,18 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   @Override
   public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> columnMap(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     ColumnMap result = columnMap;
-    return (result == null) ? columnMap = new ColumnMap() : result;
+    return (result == null) ? columnMap = new @ReceiverDependentMutable ColumnMap() : result;
   }
 
   @WeakOuter
   @ReceiverDependentMutable
-  private class ColumnMap extends ViewCachingAbstractMap<C, Map<R, V>> {
+  private class ColumnMap extends ViewCachingAbstractMap<C, @ReceiverDependentMutable Map<R, V>> {
     // The cast to C occurs only when the key is in the map, implying that it
     // has the correct type.
     @SuppressWarnings("unchecked")
     @Override
     @CheckForNull
-    public Map<R, V> get(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public @ReceiverDependentMutable Map<R, V> get(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnMap this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       // requireNonNull is safe because of the containsColumn check.
       return containsColumn(key) ? column((C) requireNonNull(key)) : null;
     }
@@ -944,8 +946,8 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public Set<Entry<C, Map<R, V>>> createEntrySet() {
-      return new ColumnMapEntrySet();
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<C, @ReceiverDependentMutable Map<R, V>>> createEntrySet(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnMap this) {
+      return new @ReceiverDependentMutable ColumnMapEntrySet();
     }
 
     @Override
@@ -954,14 +956,16 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    @ReceiverDependentMutable Collection<Map<R, V>> createValues(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnMap this) {
+    @ReceiverDependentMutable Collection<@ReceiverDependentMutable Map<R, V>> createValues(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnMap this) {
       return new @ReceiverDependentMutable ColumnMapValues();
     }
 
     @WeakOuter
-    private final class ColumnMapEntrySet extends TableSet<Entry<C, Map<R, V>>> {
+    @ReceiverDependentMutable
+    private final class ColumnMapEntrySet extends TableSet<@ReceiverDependentMutable Entry<C, @ReceiverDependentMutable Map<R, V>>> {
       @Override
-      public Iterator<Entry<C, Map<R, V>>> iterator() {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner or anonymous class is @Mutable, so the entry iterator cannot state that its entries and rows have the enclosing table's mutability: https://github.com/eisop/checker-framework/issues/2322
+      public @Mutable Iterator<@ReceiverDependentMutable Entry<C, @ReceiverDependentMutable Map<R, V>>> iterator(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable ColumnMap.@ReceiverDependentMutable ColumnMapEntrySet this) {
         return Maps.asMapEntryIterator(
             columnKeySet(),
             new Function<C, Map<R, V>>() {
@@ -990,7 +994,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object obj) {
+      public boolean remove(@Mutable ColumnMapEntrySet this, @CheckForNull @UnknownSignedness @Readonly Object obj) {
         /*
          * `o instanceof Entry` is guaranteed by `contains`, but we check it here to satisfy our
          * nullness checker.
@@ -1004,7 +1008,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean removeAll(@Readonly Collection<?> c) {
+      public boolean removeAll(@Mutable ColumnMapEntrySet this, @Readonly Collection<?> c) {
         /*
          * We can't inherit the normal implementation (which calls
          * Sets.removeAllImpl(Set, *Collection*)) because, under some
@@ -1016,7 +1020,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
       }
 
       @Override
-      public boolean retainAll(@Readonly Collection<?> c) {
+      public boolean retainAll(@Mutable ColumnMapEntrySet this, @Readonly Collection<?> c) {
         checkNotNull(c);
         boolean changed = false;
         for (C columnKey : Lists.newArrayList(columnKeySet().iterator())) {
@@ -1031,7 +1035,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @WeakOuter
     @ReceiverDependentMutable
-    private class ColumnMapValues extends Maps.Values<C, Map<R, V>> {
+    private class ColumnMapValues extends Maps.Values<C, @ReceiverDependentMutable Map<R, V>> {
       @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
       ColumnMapValues() {
         super(ColumnMap.this);
