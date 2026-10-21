@@ -62,7 +62,7 @@ public interface Cache<K extends @Immutable Object, V> {
    */
   @CheckForNull
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this?
-  V getIfPresent(@CompatibleWith("K") Object key);
+  V getIfPresent(@CompatibleWith("K") @Readonly Object key);
 
   /**
    * Returns the value associated with {@code key} in this cache, obtaining that value from {@code

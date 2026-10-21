@@ -38,7 +38,6 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-@SuppressWarnings("mutability")
 public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> extends ForwardingCache<K, V>
     implements LoadingCache<K, V> {
 
@@ -46,23 +45,23 @@ public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> ext
   protected ForwardingLoadingCache() {}
 
   @Override
-  protected abstract LoadingCache<K, V> delegate();
+  protected abstract @ReceiverDependentMutable LoadingCache<K, V> delegate(@ReceiverDependentMutable ForwardingLoadingCache<K, V> this);
 
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
   @Override
-  public V get(K key) throws ExecutionException {
+  public V get(@Mutable ForwardingLoadingCache<K, V> this, K key) throws ExecutionException {
     return delegate().get(key);
   }
 
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
   @Override
-  public V getUnchecked(K key) {
+  public V getUnchecked(@Mutable ForwardingLoadingCache<K, V> this, K key) {
     return delegate().getUnchecked(key);
   }
 
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
   @Override
-  public ImmutableMap<K, V> getAll(Iterable<? extends K> keys) throws ExecutionException {
+  public ImmutableMap<K, V> getAll(@Mutable ForwardingLoadingCache<K, V> this, Iterable<? extends K> keys) throws ExecutionException {
     return delegate().getAll(keys);
   }
 
@@ -92,7 +91,7 @@ public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> ext
     }
 
     @Override
-    protected final LoadingCache<K, V> delegate() {
+    protected final @ReceiverDependentMutable LoadingCache<K, V> delegate(@ReceiverDependentMutable SimpleForwardingLoadingCache<K, V> this) {
       return delegate;
     }
   }
