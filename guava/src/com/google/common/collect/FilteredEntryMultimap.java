@@ -38,6 +38,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -93,10 +94,10 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
     }
   }
 
-  static <E extends @Nullable @Readonly Object> Collection<E> filterCollection(
-      Collection<E> collection, Predicate<? super E> predicate) {
+  static <E extends @Nullable @Readonly Object> @PolyMutable Collection<E> filterCollection(
+      @PolyMutable Collection<E> collection, @Readonly Predicate<? super E> predicate) {
     if (collection instanceof Set) {
-      return Sets.filter((Set<E>) collection, predicate);
+      return Sets.filter((@PolyMutable Set<E>) collection, predicate);
     } else {
       return Collections2.filter(collection, predicate);
     }
@@ -145,8 +146,8 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  Map<K, Collection<V>> createAsMap() {
-    return new AsMap();
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable FilteredEntryMultimap<K, V> this) {
+    return new @ReceiverDependentMutable AsMap();
   }
 
   @Override
@@ -174,20 +175,22 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @WeakOuter
-  class AsMap extends ViewCachingAbstractMap<K, Collection<V>> {
+  @ReceiverDependentMutable
+  class AsMap extends ViewCachingAbstractMap<K, @ReceiverDependentMutable Collection<V>> {
     @Override
     public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
       return get(key) != null;
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable AsMap this) {
       FilteredEntryMultimap.this.clear();
     }
 
     @Override
     @CheckForNull
-    public Collection<V> get(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in an inner class is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
+    public @ReceiverDependentMutable Collection<V> get(@ReceiverDependentMutable AsMap this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       Collection<V> result = unfiltered.asMap().get(key);
       if (result == null) {
         return null;
@@ -200,7 +203,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
 
     @Override
     @CheckForNull
-    public @Immutable Collection<V> remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public @Readonly Collection<V> remove(@Mutable AsMap this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       Collection<V> collection = unfiltered.asMap().get(key);
       if (collection == null) {
         return null;
@@ -226,37 +229,41 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
     }
 
     @Override
-    Set<K> createKeySet() {
+    @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable AsMap this) {
       @WeakOuter
-      class KeySetImpl extends Maps.KeySet<K, Collection<V>> {
+      @ReceiverDependentMutable
+      class KeySetImpl extends Maps.KeySet<K, @ReceiverDependentMutable Collection<V>> {
+        @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
         KeySetImpl() {
           super(AsMap.this);
         }
 
         @Override
-        public boolean removeAll(@Readonly Collection<?> c) {
+        public boolean removeAll(@Mutable KeySetImpl this, @Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<K>keyPredicateOnEntries(in(c)));
         }
 
         @Override
-        public boolean retainAll(@Readonly Collection<?> c) {
+        public boolean retainAll(@Mutable KeySetImpl this, @Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<K>keyPredicateOnEntries(not(in(c))));
         }
 
         @Override
-        public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
+        public boolean remove(@Mutable KeySetImpl this, @CheckForNull @UnknownSignedness @Readonly Object o) {
           return AsMap.this.remove(o) != null;
         }
       }
-      return new KeySetImpl();
+      return new @ReceiverDependentMutable KeySetImpl();
     }
 
     @Override
-    Set<Entry<K, Collection<V>>> createEntrySet() {
+    @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> createEntrySet(@ReceiverDependentMutable AsMap this) {
       @WeakOuter
-      class EntrySetImpl extends Maps.EntrySet<K, Collection<V>> {
+      @ReceiverDependentMutable
+      class EntrySetImpl extends Maps.EntrySet<K, @ReceiverDependentMutable Collection<V>> {
         @Override
-        Map<K, Collection<V>> map() {
+        @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+        @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map(@ReceiverDependentMutable EntrySetImpl this) {
           return AsMap.this;
         }
 
@@ -284,12 +291,12 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(@Readonly Collection<?> c) {
+        public boolean removeAll(@Mutable EntrySetImpl this, @Readonly Collection<?> c) {
           return removeEntriesIf(in(c));
         }
 
         @Override
-        public boolean retainAll(@Readonly Collection<?> c) {
+        public boolean retainAll(@Mutable EntrySetImpl this, @Readonly Collection<?> c) {
           return removeEntriesIf(not(in(c)));
         }
 
@@ -298,19 +305,21 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
           return Iterators.size(iterator());
         }
       }
-      return new EntrySetImpl();
+      return new @ReceiverDependentMutable EntrySetImpl();
     }
 
     @Override
-    Collection<Collection<V>> createValues() {
+    @ReceiverDependentMutable Collection<@ReceiverDependentMutable Collection<V>> createValues(@ReceiverDependentMutable AsMap this) {
       @WeakOuter
-      class ValuesImpl extends Maps.Values<K, Collection<V>> {
+      @ReceiverDependentMutable
+      class ValuesImpl extends Maps.Values<K, @ReceiverDependentMutable Collection<V>> {
+        @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
         ValuesImpl() {
           super(AsMap.this);
         }
 
         @Override
-        public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
+        public boolean remove(@Mutable ValuesImpl this, @CheckForNull @UnknownSignedness @Readonly Object o) {
           if (o instanceof Collection) {
             Collection<?> c = (Collection<?>) o;
             Iterator<Entry<K, Collection<V>>> entryIterator =
@@ -334,16 +343,16 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public boolean removeAll(@Readonly Collection<?> c) {
+        public boolean removeAll(@Mutable ValuesImpl this, @Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<Collection<V>>valuePredicateOnEntries(in(c)));
         }
 
         @Override
-        public boolean retainAll(@Readonly Collection<?> c) {
+        public boolean retainAll(@Mutable ValuesImpl this, @Readonly Collection<?> c) {
           return removeEntriesIf(Maps.<Collection<V>>valuePredicateOnEntries(not(in(c))));
         }
       }
-      return new ValuesImpl();
+      return new @ReceiverDependentMutable ValuesImpl();
     }
   }
 
