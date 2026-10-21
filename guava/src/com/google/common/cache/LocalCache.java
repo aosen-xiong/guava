@@ -111,7 +111,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @SuppressWarnings({
   "GoodTime", // lots of violations (nanosecond math)
   "nullness", // too much trouble for the payoff
-        "mutability" // not yet annotated for mutability: suppressed class-wide until it is (174 errors)
+        "mutability" // partially annotated for mutability (key bounds, lookup parameters, some receivers): the rest is suppressed class-wide until it is finished (174 errors)
 })
 @GwtCompatible(emulated = true)
 // TODO(cpovirk): Annotate for nullness.
