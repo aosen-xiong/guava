@@ -1989,7 +1989,7 @@ public final class Multimaps {
     }
 
     @Override
-    public boolean containsKey(@Mutable AsMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
+    public boolean containsKey(@Readonly AsMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       return multimap.containsKey(key);
     }
 
