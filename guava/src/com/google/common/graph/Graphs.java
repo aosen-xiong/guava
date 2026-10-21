@@ -35,6 +35,8 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * Static utility methods for {@link Graph}, {@link ValueGraph}, and {@link Network} instances.
@@ -211,48 +213,51 @@ public final class Graphs extends GraphsBridgeMethods {
    * Returns a view of {@code graph} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code graph} will be reflected in the view.
    */
-  public static <N extends @Immutable Object> Graph<N> transpose(Graph<N> graph) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the argument and the created view are the same instantiation, and unwrapping a transposed view returns its backing graph, the same instantiation
+  public static <N extends @Immutable Object> @PolyMutable Graph<N> transpose(@PolyMutable Graph<N> graph) {
     if (!graph.isDirected()) {
       return graph; // the transpose of an undirected graph is an identical graph
     }
 
     if (graph instanceof TransposedGraph) {
-      return ((TransposedGraph<N>) graph).graph;
+      return ((@PolyMutable TransposedGraph<N>) graph).graph;
     }
 
-    return new TransposedGraph<N>(graph);
+    return new @PolyMutable TransposedGraph<N>(graph);
   }
 
   /**
    * Returns a view of {@code graph} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code graph} will be reflected in the view.
    */
-  public static <N extends @Immutable Object, V> ValueGraph<N, V> transpose(ValueGraph<N, V> graph) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the argument and the created view are the same instantiation, and unwrapping a transposed view returns its backing graph, the same instantiation
+  public static <N extends @Immutable Object, V> @PolyMutable ValueGraph<N, V> transpose(@PolyMutable ValueGraph<N, V> graph) {
     if (!graph.isDirected()) {
       return graph; // the transpose of an undirected graph is an identical graph
     }
 
     if (graph instanceof TransposedValueGraph) {
-      return ((TransposedValueGraph<N, V>) graph).graph;
+      return ((@PolyMutable TransposedValueGraph<N, V>) graph).graph;
     }
 
-    return new TransposedValueGraph<>(graph);
+    return new @PolyMutable TransposedValueGraph<>(graph);
   }
 
   /**
    * Returns a view of {@code network} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code network} will be reflected in the view.
    */
-  public static <N extends @Immutable Object, E extends @Immutable Object> Network<N, E> transpose(Network<N, E> network) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the argument and the created view are the same instantiation, and unwrapping a transposed view returns its backing graph, the same instantiation
+  public static <N extends @Immutable Object, E extends @Immutable Object> @PolyMutable Network<N, E> transpose(@PolyMutable Network<N, E> network) {
     if (!network.isDirected()) {
       return network; // the transpose of an undirected network is an identical network
     }
 
     if (network instanceof TransposedNetwork) {
-      return ((TransposedNetwork<N, E>) network).network;
+      return ((@PolyMutable TransposedNetwork<N, E>) network).network;
     }
 
-    return new TransposedNetwork<>(network);
+    return new @PolyMutable TransposedNetwork<>(network);
   }
 
   static <N> EndpointPair<N> transpose(EndpointPair<N> endpoints) {
@@ -264,15 +269,16 @@ public final class Graphs extends GraphsBridgeMethods {
 
   // NOTE: this should work as long as the delegate graph's implementation of edges() (like that of
   // AbstractGraph) derives its behavior from calling successors().
+  @ReceiverDependentMutable
   private static class TransposedGraph<N extends @Immutable Object> extends ForwardingGraph<N> {
     private final Graph<N> graph;
 
-    TransposedGraph(Graph<N> graph) {
+    TransposedGraph(@ReceiverDependentMutable Graph<N> graph) {
       this.graph = graph;
     }
 
     @Override
-    Graph<N> delegate() {
+    @ReceiverDependentMutable Graph<N> delegate() {
       return graph;
     }
 
@@ -321,15 +327,16 @@ public final class Graphs extends GraphsBridgeMethods {
 
   // NOTE: this should work as long as the delegate graph's implementation of edges() (like that of
   // AbstractValueGraph) derives its behavior from calling successors().
+  @ReceiverDependentMutable
   private static class TransposedValueGraph<N extends @Immutable Object, V> extends ForwardingValueGraph<N, V> {
     private final ValueGraph<N, V> graph;
 
-    TransposedValueGraph(ValueGraph<N, V> graph) {
+    TransposedValueGraph(@ReceiverDependentMutable ValueGraph<N, V> graph) {
       this.graph = graph;
     }
 
     @Override
-    ValueGraph<N, V> delegate() {
+    @ReceiverDependentMutable ValueGraph<N, V> delegate() {
       return graph;
     }
 
@@ -386,15 +393,16 @@ public final class Graphs extends GraphsBridgeMethods {
     }
   }
 
+  @ReceiverDependentMutable
   private static class TransposedNetwork<N extends @Immutable Object, E extends @Immutable Object> extends ForwardingNetwork<N, E> {
     private final Network<N, E> network;
 
-    TransposedNetwork(Network<N, E> network) {
+    TransposedNetwork(@ReceiverDependentMutable Network<N, E> network) {
       this.network = network;
     }
 
     @Override
-    Network<N, E> delegate() {
+    @ReceiverDependentMutable Network<N, E> delegate() {
       return network;
     }
 
