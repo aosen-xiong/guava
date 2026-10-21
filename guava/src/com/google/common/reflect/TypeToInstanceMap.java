@@ -22,6 +22,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A map, each entry of which maps a {@link TypeToken} to an instance of that type. In addition to
@@ -79,7 +80,7 @@ public interface TypeToInstanceMap<B extends @Nullable @Readonly Object>
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  <T extends B> T putInstance(Class<@NonNull T> type, @ParametricNullness T value);
+  <T extends B> T putInstance(@Mutable TypeToInstanceMap<B> this, Class<@NonNull T> type, @ParametricNullness T value);
 
   /**
    * Maps the specified type to the specified value. Does <i>not</i> associate this value with any
@@ -90,5 +91,5 @@ public interface TypeToInstanceMap<B extends @Nullable @Readonly Object>
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  <T extends B> T putInstance(TypeToken<@NonNull T> type, @ParametricNullness T value);
+  <T extends B> T putInstance(@Mutable TypeToInstanceMap<B> this, TypeToken<@NonNull T> type, @ParametricNullness T value);
 }

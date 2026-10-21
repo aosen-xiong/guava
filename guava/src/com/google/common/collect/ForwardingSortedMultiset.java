@@ -166,7 +166,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> pollFirstEntry() {
+  public @Readonly Entry<E> pollFirstEntry(@Mutable ForwardingSortedMultiset<E> this) {
     return delegate().pollFirstEntry();
   }
 
@@ -190,7 +190,7 @@ public abstract class ForwardingSortedMultiset<E extends @Nullable @Readonly Obj
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> pollLastEntry() {
+  public @Readonly Entry<E> pollLastEntry(@Mutable ForwardingSortedMultiset<E> this) {
     return delegate().pollLastEntry();
   }
 

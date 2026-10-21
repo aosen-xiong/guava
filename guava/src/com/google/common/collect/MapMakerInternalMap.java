@@ -1289,7 +1289,7 @@ class MapMakerInternalMap<
     void maybeClearReferenceQueues() {}
 
     /** Sets the value of the given {@code entry}. */
-    void setValue(E entry, V value) {
+    void setValue(@Mutable Segment<K, V, E, S> this, E entry, V value) {
       this.map.entryHelper.setValue(self(), entry, value);
     }
 
@@ -1356,7 +1356,7 @@ class MapMakerInternalMap<
     /**
      * Unsafely sets the given index of this segment's internal hash table to be the given entry.
      */
-    void setTableEntryForTesting(int i, InternalEntry<K, V, ?> entry) {
+    void setTableEntryForTesting(@Mutable Segment<K, V, E, S> this, int i, InternalEntry<K, V, ?> entry) {
       table.set(i, castForTesting(entry));
     }
 
@@ -1366,7 +1366,7 @@ class MapMakerInternalMap<
     }
 
     /** Unsafely sets the value of the given entry. */
-    void setValueForTesting(InternalEntry<K, V, ?> entry, V value) {
+    void setValueForTesting(@Mutable Segment<K, V, E, S> this, InternalEntry<K, V, ?> entry, V value) {
       this.map.entryHelper.setValue(self(), castForTesting(entry), value);
     }
 
@@ -2480,7 +2480,7 @@ class MapMakerInternalMap<
   @CheckForNull
   @CanIgnoreReturnValue
   @Override
-  public V put(K key, V value) {
+  public V put(@Mutable MapMakerInternalMap<K, V, E, S> this, K key, V value) {
     checkNotNull(key);
     checkNotNull(value);
     int hash = hash(key);
@@ -2490,7 +2490,7 @@ class MapMakerInternalMap<
   @CheckForNull
   @CanIgnoreReturnValue
   @Override
-  public V putIfAbsent(K key, V value) {
+  public V putIfAbsent(@Mutable MapMakerInternalMap<K, V, E, S> this, K key, V value) {
     checkNotNull(key);
     checkNotNull(value);
     int hash = hash(key);
@@ -2498,7 +2498,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public void putAll(@Readonly Map<? extends K, ? extends V> m) {
+  public void putAll(@Mutable MapMakerInternalMap<K, V, E, S> this, @Readonly Map<? extends K, ? extends V> m) {
     for (Entry<? extends K, ? extends V> e : m.entrySet()) {
       put(e.getKey(), e.getValue());
     }
@@ -2507,7 +2507,7 @@ class MapMakerInternalMap<
   @CheckForNull
   @CanIgnoreReturnValue
   @Override
-  public V remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+  public V remove(@Mutable MapMakerInternalMap<K, V, E, S> this, @CheckForNull @UnknownSignedness @Readonly Object key) {
     if (key == null) {
       return null;
     }
@@ -2517,7 +2517,7 @@ class MapMakerInternalMap<
 
   @CanIgnoreReturnValue
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
+  public boolean remove(@Mutable MapMakerInternalMap<K, V, E, S> this, @CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
     if (key == null || value == null) {
       return false;
     }
@@ -2527,7 +2527,7 @@ class MapMakerInternalMap<
 
   @CanIgnoreReturnValue
   @Override
-  public boolean replace(K key, @CheckForNull V oldValue, V newValue) {
+  public boolean replace(@Mutable MapMakerInternalMap<K, V, E, S> this, K key, @CheckForNull V oldValue, V newValue) {
     checkNotNull(key);
     checkNotNull(newValue);
     if (oldValue == null) {
@@ -2540,7 +2540,7 @@ class MapMakerInternalMap<
   @CheckForNull
   @CanIgnoreReturnValue
   @Override
-  public V replace(K key, V value) {
+  public V replace(@Mutable MapMakerInternalMap<K, V, E, S> this, K key, V value) {
     checkNotNull(key);
     checkNotNull(value);
     int hash = hash(key);
@@ -2548,7 +2548,7 @@ class MapMakerInternalMap<
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable MapMakerInternalMap<K, V, E, S> this) {
     for (Segment<K, V, E, S> segment : segments) {
       segment.clear();
     }
@@ -2789,12 +2789,12 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean remove(@UnknownSignedness @Readonly Object o) {
+    public boolean remove(@Mutable MapMakerInternalMap<K, V, E, S>.@Mutable KeySet this, @UnknownSignedness @Readonly Object o) {
       return MapMakerInternalMap.this.remove(o) != null;
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable MapMakerInternalMap<K, V, E, S>.@Mutable KeySet this) {
       MapMakerInternalMap.this.clear();
     }
   }
@@ -2824,7 +2824,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable MapMakerInternalMap<K, V, E, S>.@Mutable Values this) {
       MapMakerInternalMap.this.clear();
     }
 
@@ -2868,7 +2868,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public boolean remove(@UnknownSignedness @Readonly Object o) {
+    public boolean remove(@Mutable MapMakerInternalMap<K, V, E, S>.@Mutable EntrySet this, @UnknownSignedness @Readonly Object o) {
       if (!(o instanceof Entry)) {
         return false;
       }
@@ -2888,7 +2888,7 @@ class MapMakerInternalMap<
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable MapMakerInternalMap<K, V, E, S>.@Mutable EntrySet this) {
       MapMakerInternalMap.this.clear();
     }
   }

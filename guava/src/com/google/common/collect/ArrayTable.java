@@ -156,6 +156,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   private final ImmutableMap<C, Integer> columnKeyToIndex;
   private final @Nullable V[][] array;
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private ArrayTable(Iterable<? extends R> rowKeys, Iterable<? extends C> columnKeys) {
     this.rowList = ImmutableList.copyOf(rowKeys);
     this.columnList = ImmutableList.copyOf(columnKeys);
@@ -291,7 +292,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     @Override
     @CheckForNull
-    public V put(K key, @ParametricNullness V value) {
+    public V put(@Mutable ArrayMap<K, V> this, K key, @ParametricNullness V value) {
       Integer index = keyIndex.get(key);
       if (index == null) {
         throw new IllegalArgumentException(
@@ -363,7 +364,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  public V set(int rowIndex, int columnIndex, @CheckForNull V value) {
+  public V set(@Mutable ArrayTable<R, C, V> this, int rowIndex, int columnIndex, @CheckForNull V value) {
     // In GWT array access never throws IndexOutOfBoundsException.
     checkElementIndex(rowIndex, rowList.size());
     checkElementIndex(columnIndex, columnList.size());
@@ -406,7 +407,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   /** Associates the value {@code null} with every pair of allowed row and column keys. */
-  public void eraseAll() {
+  public void eraseAll(@Mutable ArrayTable<R, C, V> this) {
     for (@Nullable V[] row : array) {
       Arrays.fill(row, null);
     }
@@ -476,7 +477,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V put(R rowKey, C columnKey, @CheckForNull V value) {
+  public V put(@Mutable ArrayTable<R, C, V> this, R rowKey, C columnKey, @CheckForNull V value) {
     checkNotNull(rowKey);
     checkNotNull(columnKey);
     Integer rowIndex = rowKeyToIndex.get(rowKey);
@@ -536,7 +537,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  public V erase(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V erase(@Mutable ArrayTable<R, C, V> this, @CheckForNull Object rowKey, @CheckForNull Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     if (rowIndex == null || columnIndex == null) {

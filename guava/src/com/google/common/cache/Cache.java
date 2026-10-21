@@ -111,7 +111,7 @@ public interface Cache<K extends @Immutable Object, V> {
    * @since 11.0
    */
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
-  V get(K key, Callable<? extends V> loader) throws ExecutionException;
+  V get(@Mutable Cache<K, V> this, K key, Callable<? extends V> loader) throws ExecutionException;
 
   /**
    * Returns a map of the values associated with {@code keys} in this cache. The returned map will

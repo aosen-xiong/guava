@@ -484,7 +484,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @Override
     @CheckForNull
-    public V put(R key, V value) {
+    public V put(@Mutable StandardTable<R, C, V>.@Mutable Column this, R key, V value) {
       return StandardTable.this.put(key, columnKey, value);
     }
 
@@ -507,7 +507,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     /** Removes all {@code Column} mappings whose row key and value satisfy the given predicate. */
     @CanIgnoreReturnValue
-    boolean removeFromColumnIf(Predicate<? super Entry<R, V>> predicate) {
+    boolean removeFromColumnIf(@Mutable StandardTable<R, C, V>.@Mutable Column this, Predicate<? super Entry<R, V>> predicate) {
       boolean changed = false;
       Iterator<Entry<R, Map<C, V>>> iterator = backingMap.entrySet().iterator();
       while (iterator.hasNext()) {
@@ -724,7 +724,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object obj) {
+    public boolean remove(@Mutable StandardTable<R, C, V>.@Mutable ColumnKeySet this, @CheckForNull @UnknownSignedness @Readonly Object obj) {
       if (obj == null) {
         return false;
       }
@@ -743,7 +743,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public boolean removeAll(@Readonly Collection<?> c) {
+    public boolean removeAll(@Mutable StandardTable<R, C, V>.@Mutable ColumnKeySet this, @Readonly Collection<?> c) {
       checkNotNull(c);
       boolean changed = false;
       Iterator<Map<C, V>> iterator = backingMap.values().iterator();
@@ -762,7 +762,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    public boolean retainAll(@Readonly Collection<?> c) {
+    public boolean retainAll(@Mutable StandardTable<R, C, V>.@Mutable ColumnKeySet this, @Readonly Collection<?> c) {
       checkNotNull(c);
       boolean changed = false;
       Iterator<Map<C, V>> iterator = backingMap.values().iterator();
@@ -858,7 +858,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @Override
     @CheckForNull
-    public Map<C, V> remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public Map<C, V> remove(@Mutable StandardTable<R, C, V>.@Mutable RowMap this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       return (key == null) ? null : backingMap.remove(key);
     }
 
@@ -938,7 +938,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     @Override
     @CheckForNull
-    public Map<R, V> remove(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public Map<R, V> remove(@Mutable StandardTable<R, C, V>.@Mutable ColumnMap this, @CheckForNull @UnknownSignedness @Readonly Object key) {
       return containsColumn(key) ? removeColumn(key) : null;
     }
 

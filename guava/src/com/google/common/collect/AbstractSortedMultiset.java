@@ -27,6 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * This class provides a skeletal implementation of the {@link SortedMultiset} interface.
@@ -85,7 +86,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> pollFirstEntry() {
+  public @Readonly Entry<E> pollFirstEntry(@Mutable AbstractSortedMultiset<E> this) {
     Iterator<@Readonly Entry<E>> entryIterator = entryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();
@@ -98,7 +99,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> pollLastEntry() {
+  public @Readonly Entry<E> pollLastEntry(@Mutable AbstractSortedMultiset<E> this) {
     Iterator<@Readonly Entry<E>> entryIterator = descendingEntryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();

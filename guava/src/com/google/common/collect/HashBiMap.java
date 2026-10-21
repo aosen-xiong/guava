@@ -696,7 +696,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
+      public boolean remove(@Mutable HashBiMap<K, V>.@Mutable Inverse.@Mutable InverseKeySet this, @CheckForNull @UnknownSignedness @Readonly Object o) {
         BiEntry<K, V> entry = seekByValue(o, smearedHash(o));
         if (entry == null) {
           return false;

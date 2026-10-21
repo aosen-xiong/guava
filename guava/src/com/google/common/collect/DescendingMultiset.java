@@ -72,13 +72,13 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> pollFirstEntry() {
+  public @Readonly Entry<E> pollFirstEntry(@Mutable DescendingMultiset<E> this) {
     return forwardMultiset().pollLastEntry();
   }
 
   @Override
   @CheckForNull
-  public @Readonly Entry<E> pollLastEntry() {
+  public @Readonly Entry<E> pollLastEntry(@Mutable DescendingMultiset<E> this) {
     return forwardMultiset().pollFirstEntry();
   }
 

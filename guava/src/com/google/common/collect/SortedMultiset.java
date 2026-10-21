@@ -76,14 +76,14 @@ public interface SortedMultiset<E extends @Nullable @Readonly Object>
    * {@code null} if this multiset is empty.
    */
   @CheckForNull
-  @Readonly Entry<E> pollFirstEntry();
+  @Readonly Entry<E> pollFirstEntry(@Mutable SortedMultiset<E> this);
 
   /**
    * Returns and removes the entry associated with the greatest element in this multiset, or returns
    * {@code null} if this multiset is empty.
    */
   @CheckForNull
-  @Readonly Entry<E> pollLastEntry();
+  @Readonly Entry<E> pollLastEntry(@Mutable SortedMultiset<E> this);
 
   /**
    * Returns a {@link NavigableSet} view of the distinct elements in this multiset.

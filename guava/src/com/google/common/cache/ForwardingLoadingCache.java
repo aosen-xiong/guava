@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A cache which forwards all its method calls to another cache. Subclasses should override one or
@@ -71,7 +72,7 @@ public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> ext
   }
 
   @Override
-  public void refresh(K key) {
+  public void refresh(@Mutable ForwardingLoadingCache<K, V> this, K key) {
     delegate().refresh(key);
   }
 

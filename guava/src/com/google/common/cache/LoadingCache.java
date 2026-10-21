@@ -78,7 +78,7 @@ public interface LoadingCache<K extends @Immutable Object, V> extends Cache<K, V
    * @throws ExecutionError if an error was thrown while loading the value
    */
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this?
-  V get(K key) throws ExecutionException;
+  V get(@Mutable LoadingCache<K, V> this, K key) throws ExecutionException;
 
   /**
    * Returns the value associated with {@code key} in this cache, first loading that value if
@@ -105,7 +105,7 @@ public interface LoadingCache<K extends @Immutable Object, V> extends Cache<K, V
    * @throws ExecutionError if an error was thrown while loading the value
    */
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this?
-  V getUnchecked(K key);
+  V getUnchecked(@Mutable LoadingCache<K, V> this, K key);
 
   /**
    * Returns a map of the values associated with {@code keys}, creating or retrieving those values
@@ -132,7 +132,7 @@ public interface LoadingCache<K extends @Immutable Object, V> extends Cache<K, V
    * @since 11.0
    */
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
-  ImmutableMap<K, V> getAll(Iterable<? extends K> keys) throws ExecutionException;
+  ImmutableMap<K, V> getAll(@Mutable LoadingCache<K, V> this, Iterable<? extends K> keys) throws ExecutionException;
 
   /**
    * @deprecated Provided to satisfy the {@code Function} interface; use {@link #get} or {@link
@@ -143,7 +143,9 @@ public interface LoadingCache<K extends @Immutable Object, V> extends Cache<K, V
    */
   @Deprecated
   @Override
-  V apply(@Readonly LoadingCache<K, V> this, K key);
+  // mutability: apply loads and caches like get(), but it overrides Function.apply, whose receiver-dependent
+  // receiver cannot be narrowed to @Mutable here. The implementations state the load.
+  V apply(K key);
 
   /**
    * Loads a new value for {@code key}, possibly asynchronously. While the new value is loading the

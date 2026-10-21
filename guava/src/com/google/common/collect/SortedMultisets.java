@@ -143,13 +143,13 @@ final class SortedMultisets {
 
     @Override
     @CheckForNull
-    public E pollFirst() {
+    public E pollFirst(@Mutable NavigableElementSet<E> this) {
       return getElementOrNull(multiset().pollFirstEntry());
     }
 
     @Override
     @CheckForNull
-    public E pollLast() {
+    public E pollLast(@Mutable NavigableElementSet<E> this) {
       return getElementOrNull(multiset().pollLastEntry());
     }
 

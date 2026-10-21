@@ -678,12 +678,12 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public void add(Range<C> rangeToAdd) {
+    public void add(@Mutable TreeRangeSet<C>.@Mutable Complement this, Range<C> rangeToAdd) {
       TreeRangeSet.this.remove(rangeToAdd);
     }
 
     @Override
-    public void remove(Range<C> rangeToRemove) {
+    public void remove(@Mutable TreeRangeSet<C>.@Mutable Complement this, Range<C> rangeToRemove) {
       TreeRangeSet.this.add(rangeToRemove);
     }
 
@@ -920,7 +920,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public void add(Range<C> rangeToAdd) {
+    public void add(@Mutable TreeRangeSet<C>.@Mutable SubRangeSet this, Range<C> rangeToAdd) {
       checkArgument(
           restriction.encloses(rangeToAdd),
           "Cannot add range %s to subRangeSet(%s)",
@@ -930,7 +930,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public void remove(Range<C> rangeToRemove) {
+    public void remove(@Mutable TreeRangeSet<C>.@Mutable SubRangeSet this, Range<C> rangeToRemove) {
       if (rangeToRemove.isConnected(restriction)) {
         TreeRangeSet.this.remove(rangeToRemove.intersection(restriction));
       }
@@ -942,7 +942,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable TreeRangeSet<C>.@Mutable SubRangeSet this) {
       TreeRangeSet.this.remove(restriction);
     }
 

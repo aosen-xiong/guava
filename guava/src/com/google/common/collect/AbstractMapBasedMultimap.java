@@ -1022,7 +1022,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable AbstractMapBasedMultimap<K, V>.@Mutable KeySet this) {
       Iterators.clear(iterator());
     }
 
@@ -1484,7 +1484,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
+      public boolean remove(@Mutable AbstractMapBasedMultimap<K, V>.@Mutable AsMap.@Mutable AsMapEntries this, @CheckForNull @UnknownSignedness @Readonly Object o) {
         if (!contains(o)) {
           return false;
         }
