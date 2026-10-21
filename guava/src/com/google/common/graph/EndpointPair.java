@@ -42,6 +42,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @Immutable(containerOf = {"N"})
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public abstract class EndpointPair<N> implements Iterable<N> {
   private final N nodeU;
   private final N nodeV;
@@ -146,6 +147,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
   @Override
   public abstract int hashCode(@UnknownSignedness EndpointPair<N> this);
 
+  @org.checkerframework.checker.mutability.qual.Immutable
   private static final class Ordered<N> extends EndpointPair<N> {
     private Ordered(N source, N target) {
       super(source, target);
@@ -194,6 +196,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
     }
   }
 
+  @org.checkerframework.checker.mutability.qual.Immutable
   private static final class Unordered<N> extends EndpointPair<N> {
     private Unordered(N nodeU, N nodeV) {
       super(nodeU, nodeV);
