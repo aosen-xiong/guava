@@ -67,7 +67,7 @@ public interface RangeMap<K extends @Immutable Comparable, V> {
    * the range map, or {@code null} otherwise.
    */
   @CheckForNull
-  @ReceiverDependentMutable Entry<Range<K>, V> getEntry(@ReceiverDependentMutable RangeMap<K, V> this, K key);
+  @Immutable Entry<Range<K>, V> getEntry(@ReceiverDependentMutable RangeMap<K, V> this, K key); // a snapshot: every implementation builds an immutable entry
 
   /**
    * Returns the minimal range {@linkplain Range#encloses(Range) enclosing} the ranges in this

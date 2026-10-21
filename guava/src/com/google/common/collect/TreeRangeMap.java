@@ -383,19 +383,19 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     if (subRange.equals(Range.all())) {
       return this;
     } else {
-      return new SubRangeMap(subRange);
+      return new @ReceiverDependentMutable SubRangeMap(subRange);
     }
   }
 
   @SuppressWarnings("unchecked")
-  private RangeMap<K, V> emptySubRangeMap() {
-    return (RangeMap<K, V>) (RangeMap<?, ?>) EMPTY_SUB_RANGE_MAP;
+  private @Immutable RangeMap<K, V> emptySubRangeMap() {
+    return (@Immutable RangeMap<K, V>) (@Immutable RangeMap<?, ?>) EMPTY_SUB_RANGE_MAP;
   }
 
   @SuppressWarnings("ConstantCaseForConstants") // This RangeMap is immutable.
   @Immutable
   private static final RangeMap<@Immutable Comparable<?>, Object> EMPTY_SUB_RANGE_MAP =
-      new @Mutable RangeMap<@Immutable Comparable<?>, Object>() {
+      new @Immutable RangeMap<@Immutable Comparable<?>, Object>() {
         @Override
         @CheckForNull
         public Object get(@Readonly Comparable<?> key) {
@@ -404,7 +404,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
         @Override
         @CheckForNull
-        public Entry<Range<@Immutable Comparable<?>>, Object> getEntry(@Readonly Comparable<?> key) {
+        public @Immutable Entry<Range<@Immutable Comparable<?>>, Object> getEntry(@Readonly Comparable<?> key) {
           return null;
         }
 
@@ -465,12 +465,13 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
         }
 
         @Override
-        public RangeMap<@Immutable Comparable<?>, Object> subRangeMap(Range<@Immutable Comparable<?>> range) {
+        public @Immutable RangeMap<@Immutable Comparable<?>, Object> subRangeMap(Range<@Immutable Comparable<?>> range) {
           checkNotNull(range);
           return this;
         }
       };
 
+  @ReceiverDependentMutable
   private class SubRangeMap implements RangeMap<K, V> {
 
     private final Range<K> subRange;
@@ -584,7 +585,8 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     }
 
     @Override
-    public RangeMap<K, V> subRangeMap(Range<K> range) {
+    @SuppressWarnings("mutability:return.type.incompatible") // an empty sub-range map rejects every put and has nothing to remove, so the shared @Immutable instance stands in for a view of any mutability
+    public @ReceiverDependentMutable RangeMap<K, V> subRangeMap(@ReceiverDependentMutable SubRangeMap this, Range<K> range) {
       if (!range.isConnected(subRange)) {
         return emptySubRangeMap();
       } else {
@@ -593,13 +595,13 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     }
 
     @Override
-    public Map<Range<K>, V> asMapOfRanges() {
-      return new SubRangeMapAsMap();
+    public @ReceiverDependentMutable Map<Range<K>, V> asMapOfRanges(@ReceiverDependentMutable SubRangeMap this) {
+      return new @ReceiverDependentMutable SubRangeMapAsMap();
     }
 
     @Override
-    public Map<Range<K>, V> asDescendingMapOfRanges() {
-      return new SubRangeMapAsMap() {
+    public @ReceiverDependentMutable Map<Range<K>, V> asDescendingMapOfRanges(@ReceiverDependentMutable SubRangeMap this) {
+      return new @ReceiverDependentMutable SubRangeMapAsMap() {
 
         @Override
         Iterator<@Immutable Entry<Range<K>, V>> entryIterator() {
