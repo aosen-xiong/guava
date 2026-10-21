@@ -138,7 +138,6 @@ public final class Maps {
     return (Function) EntryFunction.VALUE;
   }
 
-  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
   static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @Mutable Iterator<K> keyIterator(
       @Mutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
     return new @Mutable TransformedIterator<@PolyMutable Entry<K, V>, K>(entryIterator) {
@@ -150,7 +149,6 @@ public final class Maps {
     };
   }
 
-  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
   static <K extends @Nullable @Readonly Object, V extends @Nullable @Readonly Object> @Mutable Iterator<V> valueIterator(
       @Mutable Iterator<@PolyMutable Entry<K, V>> entryIterator) {
     return new @Mutable TransformedIterator<@PolyMutable Entry<K, V>, V>(entryIterator) {

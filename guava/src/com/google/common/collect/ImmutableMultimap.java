@@ -614,8 +614,8 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
     return new @Mutable UnmodifiableIterator<@Immutable Entry<K, V>>() {
       final Iterator<? extends @Immutable Entry<K, ? extends ImmutableCollection<V>>> asMapItr =
           map.entrySet().iterator();
-      @Assignable @CheckForNull K currentKey = null;
-      @Assignable Iterator<V> valueItr = Iterators.emptyIterator();
+      @CheckForNull K currentKey = null;
+      Iterator<V> valueItr = Iterators.emptyIterator();
 
       @Override
       public boolean hasNext() {
@@ -758,7 +758,7 @@ public abstract class ImmutableMultimap<K extends @Immutable Object, V extends @
   @Mutable UnmodifiableIterator<V> valueIterator() {
     return new @Mutable UnmodifiableIterator<V>() {
       Iterator<? extends ImmutableCollection<V>> valueCollectionItr = map.values().iterator();
-      @Assignable Iterator<V> valueItr = Iterators.emptyIterator();
+      Iterator<V> valueItr = Iterators.emptyIterator();
 
       @Override
       public boolean hasNext() {

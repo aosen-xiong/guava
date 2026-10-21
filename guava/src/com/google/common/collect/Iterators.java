@@ -136,7 +136,6 @@ public final class Iterators {
   }
 
   /** Returns an unmodifiable view of {@code iterator}. */
-  @SuppressWarnings("mutability:return.type.incompatible") // the wrapper only forwards hasNext() and next() to iterator, so it has iterator's mutability; an anonymous class cannot be created @PolyMutable
   public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> unmodifiableIterator(
           @Mutable Iterator<? extends T> iterator) {
     checkNotNull(iterator);
@@ -674,7 +673,6 @@ public final class Iterators {
    * Returns a view of {@code unfiltered} containing all elements that satisfy the input predicate
    * {@code retainIfTrue}.
    */
-  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
   public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> filter(
       @Mutable Iterator<T> unfiltered, @Readonly Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
@@ -834,7 +832,6 @@ public final class Iterators {
    * successful {@code remove()} call, {@code fromIterator} no longer contains the corresponding
    * element.
    */
-  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
   public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @Mutable Iterator<T> transform(
       @Mutable Iterator<F> fromIterator, @Readonly Function<? super F, ? extends T> function) {
     checkNotNull(function);
@@ -1082,7 +1079,6 @@ public final class Iterators {
    * <p>The {@code Iterable} equivalent of this method is {@code
    * Arrays.asList(array).listIterator(position)}.
    */
-  @SuppressWarnings("mutability:return.type.incompatible") // a fresh iterator over array whose mutators throw, so any qualifier the caller needs is sound
   static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableListIterator<T> forArrayWithPosition(
       T @PolyMutable [] array, int position) {
     if (array.length == 0) {
@@ -1116,7 +1112,6 @@ public final class Iterators {
    *
    * <p>The {@link Iterable} equivalent of this method is {@link Collections#singleton}.
    */
-  @SuppressWarnings("mutability:return.type.incompatible") // a fresh iterator over one element whose remove() throws, so any qualifier the caller needs is sound
   public static <T extends @Nullable @Readonly Object> @Mutable UnmodifiableIterator<T> singletonIterator(
       @ParametricNullness T value) {
     return new SingletonIterator<>(value);

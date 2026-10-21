@@ -40,7 +40,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @Mutable
-@CFComment("PICO: unmodifiable is NOT immutable. remove() is unsupported, but next() advances the cursor, so the iterator's state changes. Concrete subclasses hold that cursor (AbstractIndexedListIterator.position), and they are already @ReceiverDependentMutable. Hence RDM here, not @Immutable.")
+@CFComment("PICO: unmodifiable is not immutable. remove() is unsupported, but next() advances the cursor, so this is a @Mutable cursor like every iterator")
 public abstract class UnmodifiableIterator<E extends @Nullable @Readonly Object> implements Iterator<E> {
   /** Constructor for use by subclasses. */
   protected UnmodifiableIterator() {}

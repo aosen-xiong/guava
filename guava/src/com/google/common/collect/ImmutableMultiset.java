@@ -244,8 +244,8 @@ public abstract class ImmutableMultiset<E extends @Immutable Object> extends Imm
   public @Mutable UnmodifiableIterator<E> iterator() {
     final Iterator<@Immutable Entry<E>> entryIterator = entrySet().iterator();
     return new @Mutable UnmodifiableIterator<E>() {
-      @Assignable int remaining;
-      @Assignable @CheckForNull E element;
+      int remaining;
+      @CheckForNull E element;
 
       @Override
       public boolean hasNext() {
