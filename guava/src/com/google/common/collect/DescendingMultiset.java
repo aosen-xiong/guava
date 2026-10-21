@@ -104,7 +104,6 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
   }
 
   @Override
-  @SuppressWarnings("mutability:override.return.invalid") // the forward multiset has this view's mutability; receiver-dependent is at least as strict as ForwardingObject's @PolyMutable delegate() for every receiver
   protected @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable DescendingMultiset<E> this) {
     return forwardMultiset();
   }

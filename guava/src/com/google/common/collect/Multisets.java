@@ -996,7 +996,6 @@ public final class Multisets {
     }
   }
 
-  @SuppressWarnings({"mutability:constructor.return.invalid", "mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: an anonymous class cannot be created poly, and the iterator has its source iterator's mutability, as in Collections.unmodifiableCollection
   static <E extends @Nullable @Readonly Object> @Mutable Iterator<E> elementIterator(
       @Mutable Iterator<@Readonly Entry<E>> entryIterator) {
     return new @Mutable TransformedIterator<@Readonly Entry<E>, E>(entryIterator) {

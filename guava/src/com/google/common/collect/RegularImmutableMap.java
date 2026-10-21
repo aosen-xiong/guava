@@ -114,7 +114,6 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     }
   }
 
-  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private static <K extends @Immutable Object, V> ImmutableMap<K, V> fromEntryArrayCheckingBucketOverflow(
       int n, @Nullable @Immutable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys)
       throws BucketOverflowException {
@@ -197,7 +196,6 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    *     been included in the new entry array.
    * @return an array of {@code newN} entries where no key appears more than once.
    */
-  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V> @Immutable Entry<K, V>[] removeDuplicates(
       @Immutable Entry<K, V>[] entries, int n, int newN, IdentityHashMap<@Immutable Entry<K, V>, Boolean> duplicates) {
     @Immutable Entry<K, V>[] newEntries = createEntryArray(newN);
@@ -327,7 +325,6 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   }
 
   @Override
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     return new ImmutableMapEntrySet.RegularEntrySet<>(this, entries);
   }

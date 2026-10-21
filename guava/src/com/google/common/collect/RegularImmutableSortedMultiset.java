@@ -52,7 +52,7 @@ final class RegularImmutableSortedMultiset<E extends @Immutable Object> extends 
   private final transient int offset;
   private final transient int length;
 
-  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
+  @SuppressWarnings("mutability:assignment.type.incompatible") // every empty instance shares the static ZERO_CUMULATIVE_COUNTS array, which nothing ever writes
   RegularImmutableSortedMultiset(@Readonly Comparator<? super E> comparator) {
     this.elementSet = ImmutableSortedSet.emptySet(comparator);
     this.cumulativeCounts = ZERO_CUMULATIVE_COUNTS;
@@ -60,7 +60,7 @@ final class RegularImmutableSortedMultiset<E extends @Immutable Object> extends 
     this.length = 0;
   }
 
-  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
+  @SuppressWarnings("mutability:assignment.type.incompatible") // callers pass a freshly built counts array or, for a sub-multiset, the parent's, which is never written after construction
   RegularImmutableSortedMultiset(
       RegularImmutableSortedSet<E> elementSet, long @Readonly [] cumulativeCounts, int offset, int length) {
     this.elementSet = elementSet;

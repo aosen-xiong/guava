@@ -50,7 +50,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Immutable
 @org.checkerframework.checker.mutability.qual.Immutable
 @ElementTypesAreNonnullByDefault
-@SuppressWarnings("mutability")
+@SuppressWarnings("mutability") // not yet annotated for mutability: suppressed class-wide until it is
 public final class ElementOrder<T> {
   private final Type type;
 

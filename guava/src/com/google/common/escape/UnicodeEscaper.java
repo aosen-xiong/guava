@@ -165,7 +165,6 @@ public abstract class UnicodeEscaper extends Escaper {
    * @throws NullPointerException if {@code string} is null
    * @throws IllegalArgumentException if invalid surrogate characters are encountered
    */
-  @SuppressWarnings("mutability:argument.type.incompatible") // cast from @Unique @Mutable to @Immutable
   protected final String escapeSlow(String s, @IndexOrHigh("#1") int index) {
     int end = s.length();
 

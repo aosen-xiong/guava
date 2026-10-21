@@ -106,7 +106,6 @@ public final class MoreCollectors {
       extras = emptyList();
     }
 
-    @SuppressWarnings("mutability") // Replaced as mutable list
     IllegalArgumentException multiples(boolean overflow) {
       StringBuilder sb =
           new StringBuilder().append("expected one element but was: <").append(element);
@@ -120,7 +119,6 @@ public final class MoreCollectors {
       throw new IllegalArgumentException(sb.toString());
     }
 
-    @SuppressWarnings("mutability") // Replaced as mutable list
     void add(Object o) {
       checkNotNull(o);
       if (element == null) {
@@ -136,7 +134,6 @@ public final class MoreCollectors {
       }
     }
 
-    @SuppressWarnings("mutability") // Replaced as mutable list
     ToOptionalState combine(ToOptionalState other) {
       if (element == null) {
         return other;

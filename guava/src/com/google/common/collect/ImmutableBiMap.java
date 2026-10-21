@@ -285,7 +285,6 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
    * @since 31.0
    */
   @SafeVarargs
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     @SuppressWarnings("unchecked") // we will only ever read these
     @Immutable Entry<K, V>[] entries2 = (@Immutable Entry<K, V>[]) entries;
@@ -564,7 +563,6 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
    * @throws NullPointerException if any key, value, or entry is null
    * @since 19.0
    */
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant

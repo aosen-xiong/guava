@@ -344,7 +344,6 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * @since 31.0
    */
   @SafeVarargs
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V> ImmutableMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     @SuppressWarnings("unchecked") // we will only ever read these
     @Immutable Entry<K, V>[] entries2 = (@Immutable Entry<K, V>[]) entries;
@@ -718,7 +717,6 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * @throws IllegalArgumentException if two entries have the same key
    * @since 19.0
    */
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(
       @Readonly Iterable<? extends @Readonly Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant

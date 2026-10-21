@@ -441,14 +441,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
-    @SuppressWarnings("mutability:method.invocation.invalid") // refreshIfEmpty mutates 'this'
     public Iterator<V> iterator(@Readonly WrappedCollection this) {
       refreshIfEmpty();
       return new WrappedIterator();
     }
 
     @Override
-    @SuppressWarnings("mutability:method.invocation.invalid") // refreshIfEmpty mutates 'this'
     public Spliterator<V> spliterator(@ReceiverDependentMutable WrappedCollection this) {
       refreshIfEmpty();
       return delegate.spliterator();
