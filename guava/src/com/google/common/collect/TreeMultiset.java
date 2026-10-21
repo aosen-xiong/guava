@@ -138,6 +138,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     this.header = endLink;
   }
 
+  @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:argument.type.incompatible"}) // PICO constructor fix: the constructor stores a fresh @Mutable header node into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do, and links that node to itself
   TreeMultiset(@Readonly Comparator<? super E> comparator) {
     super(comparator);
     this.range = GeneralRange.all(comparator);

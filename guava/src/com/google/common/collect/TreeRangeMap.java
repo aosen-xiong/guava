@@ -69,6 +69,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     return new TreeRangeMap<>();
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // PICO constructor fix: the constructor stores a fresh @Mutable map into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do
   private TreeRangeMap() {
     this.entriesByLowerBound = Maps.newTreeMap();
   }
