@@ -160,6 +160,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     Node<K, V> tail;
     int count;
 
+    @SuppressWarnings("mutability:illegal.field.write") // PICO constructor fix: a KeyList is created only by addNode of a @Mutable multimap, for the node that call has just linked, and the constructor resets that node's sibling links while the KeyList is being initialized
     KeyList(@ReceiverDependentMutable Node<K, V> firstNode) {
       this.head = firstNode;
       this.tail = firstNode;
@@ -171,7 +172,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @CheckForNull private transient Node<K, V> head; // the head for all keys
   @CheckForNull private transient Node<K, V> tail; // the tail for all keys
-  private transient Map<K, KeyList<K, V>> keyToKeyList;
+  private transient Map<K, @ReceiverDependentMutable KeyList<K, V>> keyToKeyList;
   private transient int size;
 
   /*
