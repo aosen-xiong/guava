@@ -93,6 +93,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 @DoNotMock("Use Optional.of(value) or Optional.absent()")
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
+@Immutable // "An immutable object that may contain a non-null reference" (class Javadoc)
 public abstract class Optional<T> implements Serializable {
   /**
    * Returns an {@code Optional} instance with no contained reference.

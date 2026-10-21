@@ -23,6 +23,7 @@ import com.google.common.primitives.Longs;
 import java.util.Comparator;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A utility for performing a chained comparison statement. <b>Note:</b> Java 8+ users should
@@ -93,6 +94,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@Immutable // "ComparisonChain instances are immutable" (class Javadoc)
 public abstract class ComparisonChain {
   private ComparisonChain() {}
 
@@ -159,6 +161,7 @@ public abstract class ComparisonChain {
 
   private static final ComparisonChain GREATER = new InactiveComparisonChain(1);
 
+  @Immutable
   private static final class InactiveComparisonChain extends ComparisonChain {
     final int result;
 

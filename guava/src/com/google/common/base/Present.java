@@ -28,6 +28,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 /** Implementation of an {@link Optional} containing a reference. */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class Present<T> extends Optional<T> {
   private final T reference;
 

@@ -30,6 +30,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class Absent<T> extends Optional<T> {
   static final Absent<Object> INSTANCE = new Absent<>();
 
