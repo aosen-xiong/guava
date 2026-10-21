@@ -87,8 +87,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ReceiverDependentMutable
 public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractSortedKeySortedSetMultimap<K, V> {
-  private transient @Mutable Comparator<? super K> keyComparator;
-  private transient @Mutable Comparator<? super V> valueComparator;
+  private transient @Readonly Comparator<? super K> keyComparator;
+  private transient @Readonly Comparator<? super V> valueComparator;
 
   /**
    * Creates an empty {@code TreeMultimap} ordered by the natural ordering of its keys and values.
@@ -168,7 +168,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @deprecated Use {@code ((NavigableSet<K>) multimap.keySet()).comparator()} instead.
    */
   @Deprecated
-  public @Nullable Comparator<? super K> keyComparator(@Readonly TreeMultimap<K, V> this) {
+  public @Nullable @Readonly Comparator<? super K> keyComparator(@Readonly TreeMultimap<K, V> this) {
     return keyComparator;
   }
 

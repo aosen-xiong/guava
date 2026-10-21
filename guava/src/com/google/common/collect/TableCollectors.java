@@ -138,10 +138,9 @@ final class TableCollectors {
         });
   }
 
-  @Immutable
   private static final class ImmutableTableCollectorState<R extends @Immutable Object, C extends @Immutable Object, V> {
-    final @Mutable List<MutableCell<R, C, V>> insertionOrder = new ArrayList<>();
-    final @Mutable Table<R, C, MutableCell<R, C, V>> table = HashBasedTable.create();
+    final List<MutableCell<R, C, V>> insertionOrder = new ArrayList<>();
+    final Table<R, C, MutableCell<R, C, V>> table = HashBasedTable.create();
 
     void put(R row, C column, V value, BinaryOperator<V> merger) {
       MutableCell<R, C, V> oldCell = table.get(row, column);

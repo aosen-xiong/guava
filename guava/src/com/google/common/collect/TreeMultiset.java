@@ -613,11 +613,11 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     @CheckForNull private final E elem;
 
     // elemCount is 0 iff this node has been deleted.
-    private @Assignable int elemCount;
+    private int elemCount;
 
-    private @Assignable int distinctElements;
-    private @Assignable long totalCount;
-    private @Assignable int height;
+    private int distinctElements;
+    private long totalCount;
+    private int height;
     @CheckForNull private AvlNode<E> left;
     @CheckForNull private AvlNode<E> right;
     /*
@@ -956,17 +956,17 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       }
     }
 
-    private void recomputeMultiset() {
+    private void recomputeMultiset(@Mutable AvlNode<E> this) {
       this.distinctElements =
           1 + TreeMultiset.distinctElements(left) + TreeMultiset.distinctElements(right);
       this.totalCount = elemCount + totalCount(left) + totalCount(right);
     }
 
-    private void recomputeHeight() {
+    private void recomputeHeight(@Mutable AvlNode<E> this) {
       this.height = 1 + Math.max(height(left), height(right));
     }
 
-    private void recompute() {
+    private void recompute(@Mutable AvlNode<E> this) {
       recomputeMultiset();
       recomputeHeight();
     }

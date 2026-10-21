@@ -243,12 +243,13 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * its bottom {@value CompactHashing#HASH_TABLE_BITS_MAX_BITS} bits, with a modification count in
    * the remaining bits that is used to detect concurrent modification during iteration.
    */
-  private transient @Assignable int metadata;
+  private transient int metadata;
 
   /** The number of elements contained in the set. */
-  private transient @Assignable int size;
+  private transient int size;
 
   /** Constructs a new empty instance of {@code CompactHashMap}. */
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   CompactHashMap() {
     init(CompactHashing.DEFAULT_SIZE);
   }
@@ -258,12 +259,13 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    *
    * @param expectedSize the initial capacity of this {@code CompactHashMap}.
    */
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   CompactHashMap(int expectedSize) {
     init(expectedSize);
   }
 
   /** Pseudoconstructor for serialization support. */
-  void init(int expectedSize) {
+  void init(@Mutable CompactHashMap<K, V> this, int expectedSize) {
     Preconditions.checkArgument(expectedSize >= 0, "Expected size must be >= 0");
 
     // Save expectedSize for use in allocArrays()
@@ -323,7 +325,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   /** Stores the hash table mask as the number of bits needed to represent an index. */
-  private void setHashTableMask(int mask) {
+  private void setHashTableMask(@Mutable CompactHashMap<K, V> this, int mask) {
     int hashTableBits = Integer.SIZE - Integer.numberOfLeadingZeros(mask);
     metadata =
         CompactHashing.maskCombine(metadata, hashTableBits, CompactHashing.HASH_TABLE_BITS_MASK);
@@ -334,7 +336,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return (1 << (metadata & CompactHashing.HASH_TABLE_BITS_MASK)) - 1;
   }
 
-  void incrementModCount() {
+  void incrementModCount(@Mutable CompactHashMap<K, V> this) {
     metadata += CompactHashing.MODIFICATION_COUNT_INCREMENT;
   }
 

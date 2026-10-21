@@ -466,7 +466,7 @@ public final class Collections2 {
   @Immutable
   private static final class OrderedPermutationCollection<E> extends AbstractCollection<List<E>> {
     final ImmutableList<E> inputList;
-    final @Mutable Comparator<? super E> comparator;
+    final @Readonly Comparator<? super E> comparator;
     final int size;
 
     OrderedPermutationCollection(Iterable<E> input, Comparator<? super E> comparator) {
@@ -538,9 +538,9 @@ public final class Collections2 {
   @Mutable
   private static final class OrderedPermutationIterator<E> extends AbstractIterator<List<E>> {
     @CheckForNull @Mutable List<E> nextPermutation;
-    final @Mutable Comparator<? super E> comparator;
+    final @Readonly Comparator<? super E> comparator;
 
-    OrderedPermutationIterator(@Readonly List<E> list, Comparator<? super E> comparator) {
+    OrderedPermutationIterator(@Readonly List<E> list, @Readonly Comparator<? super E> comparator) {
       this.nextPermutation = Lists.newArrayList(list);
       this.comparator = comparator;
     }
