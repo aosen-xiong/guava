@@ -173,7 +173,7 @@ public final class Multisets {
       return (es == null)
           // Safe because the returned set is made unmodifiable and Entry
           // itself is readonly
-          ? entrySet = (Set) Collections.unmodifiableSet(delegate.entrySet())
+          ? entrySet = (@ReceiverDependentMutable Set) Collections.unmodifiableSet(delegate.entrySet())
           : es;
     }
 
@@ -369,9 +369,9 @@ public final class Multisets {
     @ReceiverDependentMutable Set<@Readonly Entry<E>> createEntrySet() {
       return Sets.filter(
           unfiltered.entrySet(),
-          new Predicate<Entry<E>>() {
+          new Predicate<@Readonly Entry<E>>() {
             @Override
-            public boolean apply(Entry<E> entry) {
+            public boolean apply(@Readonly Entry<E> entry) {
               return predicate.apply(entry.getElement());
             }
           });

@@ -508,7 +508,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
 
     /** Removes all {@code Column} mappings whose row key and value satisfy the given predicate. */
     @CanIgnoreReturnValue
-    boolean removeFromColumnIf(@Mutable StandardTable<R, C, V>.@Mutable Column this, Predicate<? super Entry<R, V>> predicate) {
+    boolean removeFromColumnIf(@Mutable StandardTable<R, C, V>.@Mutable Column this, Predicate<? super @Readonly Entry<R, V>> predicate) {
       boolean changed = false;
       Iterator<Entry<R, Map<C, V>>> iterator = backingMap.entrySet().iterator();
       while (iterator.hasNext()) {

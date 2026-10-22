@@ -1228,7 +1228,7 @@ public final class Lists {
   }
 
   /** Used to avoid http://bugs.sun.com/view_bug.do?bug_id=6558557 */
-  static <T extends @Nullable @Readonly Object> List<T> cast(Iterable<T> iterable) {
-    return (List<T>) iterable;
+  static <T extends @Nullable @Readonly Object> @Readonly List<T> cast(@Readonly Iterable<T> iterable) {
+    return (@Readonly List<T>) iterable;
   }
 }

@@ -346,7 +346,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
 
     @SuppressWarnings("unchecked") // it's safe to upcast iterables
     AsMapOfRanges(@ReceiverDependentMutable Iterable<RangeMapEntry<K, V>> entryIterable) {
-      this.entryIterable = (Iterable) entryIterable;
+      this.entryIterable = (@ReceiverDependentMutable Iterable) entryIterable;
     }
 
     @Override

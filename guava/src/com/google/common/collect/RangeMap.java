@@ -109,7 +109,7 @@ public interface RangeMap<K extends @Immutable Comparable, V> {
   void putCoalescing(@Mutable RangeMap<K, V> this, Range<K> range, V value);
 
   /** Puts all the associations from {@code rangeMap} into this range map (optional operation). */
-  void putAll(RangeMap<K, ? extends V> rangeMap);
+  void putAll(@Mutable RangeMap<K, V> this, RangeMap<K, ? extends V> rangeMap);
 
   /** Removes all associations from this range map (optional operation). */
   void clear(@Mutable RangeMap<K, V> this);

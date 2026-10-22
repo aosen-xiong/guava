@@ -345,7 +345,7 @@ public final class Streams {
    * This may harm parallel performance.
    */
   @Beta
-  public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object, R extends @Nullable @Immutable Object>
+  public static <A extends @Nullable @Readonly Object, B extends @Nullable @Readonly Object, R extends @Nullable @Readonly Object>
       Stream<R> zip(
           Stream<A> streamA, Stream<B> streamB, BiFunction<? super A, ? super B, R> function) {
     checkNotNull(streamA);

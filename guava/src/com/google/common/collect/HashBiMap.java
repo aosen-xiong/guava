@@ -502,7 +502,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @Override
   public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable HashBiMap<K,V> this) {
-    return new @PolyMutable KeySet();
+    return new @ReceiverDependentMutable KeySet();
   }
 
   @ReceiverDependentMutable

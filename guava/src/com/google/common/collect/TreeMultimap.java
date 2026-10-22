@@ -246,5 +246,5 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
 public boolean equals(@Readonly TreeMultimap<K, V> this, @Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
-public SortedSet<V> removeAll(@Nullable @Readonly Object arg0) { return super.removeAll(arg0); }
+public @Readonly SortedSet<V> removeAll(@Mutable TreeMultimap<K, V> this, @Nullable @Readonly Object arg0) { return super.removeAll(arg0); }
 }

@@ -890,7 +890,7 @@ public final class Iterables {
   }
 
   @ParametricNullness
-  private static <T extends @Nullable @Readonly Object> T getLastInNonemptyList(List<T> list) {
+  private static <T extends @Nullable @Readonly Object> T getLastInNonemptyList(@Readonly List<T> list) {
     return list.get(list.size() - 1);
   }
 
