@@ -78,7 +78,7 @@ final class TopKSelector<
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
   public static <T extends @Nullable @Readonly Object> TopKSelector<T> least(
-      int k, Comparator<? super T> comparator) {
+      int k, @Readonly Comparator<? super T> comparator) {
     return new TopKSelector<T>(comparator, k);
   }
 
@@ -100,12 +100,12 @@ final class TopKSelector<
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
   public static <T extends @Nullable @Readonly Object> TopKSelector<T> greatest(
-      int k, Comparator<? super T> comparator) {
+      int k, @Readonly Comparator<? super T> comparator) {
     return new TopKSelector<T>(Ordering.from(comparator).reverse(), k);
   }
 
   private final int k;
-  private final Comparator<? super T> comparator;
+  private final @Readonly Comparator<? super T> comparator;
 
   /*
    * We are currently considering the elements in buffer in the range [0, bufferSize) as candidates
@@ -122,7 +122,7 @@ final class TopKSelector<
   @CheckForNull private T threshold;
 
   @SuppressWarnings("unchecked") // TODO(cpovirk): Consider storing Object[] instead of T[].
-  private TopKSelector(Comparator<? super T> comparator, int k) {
+  private TopKSelector(@Readonly Comparator<? super T> comparator, int k) {
     this.comparator = checkNotNull(comparator, "comparator");
     this.k = k;
     checkArgument(k >= 0, "k (%s) must be >= 0", k);

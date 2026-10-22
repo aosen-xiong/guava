@@ -35,7 +35,7 @@ class EmptyImmutableListMultimap extends ImmutableListMultimap<@Immutable Object
   static final EmptyImmutableListMultimap INSTANCE = new EmptyImmutableListMultimap();
 
   private EmptyImmutableListMultimap() {
-    super(ImmutableMap.<@Immutable Object, ImmutableList<@Readonly Object>>of(), 0);
+    super(ImmutableMap.<@Immutable Object, ImmutableList<@Immutable Object>>of(), 0);
   }
 
   /*
@@ -45,7 +45,7 @@ class EmptyImmutableListMultimap extends ImmutableListMultimap<@Immutable Object
    * changes).
    */
   @Override
-  public ImmutableMap<@Immutable Object, Collection<Object>> asMap() {
+  public ImmutableMap<@Immutable Object, @Immutable Collection<@Immutable Object>> asMap() {
     return super.asMap();
   }
 

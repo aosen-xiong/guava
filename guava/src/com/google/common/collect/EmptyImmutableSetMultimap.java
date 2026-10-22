@@ -35,7 +35,7 @@ class EmptyImmutableSetMultimap extends ImmutableSetMultimap<@Immutable Object, 
   static final EmptyImmutableSetMultimap INSTANCE = new EmptyImmutableSetMultimap();
 
   private EmptyImmutableSetMultimap() {
-    super(ImmutableMap.<@Immutable Object, ImmutableSet<Object>>of(), 0, null);
+    super(ImmutableMap.<@Immutable Object, ImmutableSet<@Immutable Object>>of(), 0, null);
   }
 
   /*
@@ -45,7 +45,7 @@ class EmptyImmutableSetMultimap extends ImmutableSetMultimap<@Immutable Object, 
    * changes).
    */
   @Override
-  public ImmutableMap<@Immutable Object, Collection<Object>> asMap() {
+  public ImmutableMap<@Immutable Object, @Immutable Collection<@Immutable Object>> asMap() {
     return super.asMap();
   }
 

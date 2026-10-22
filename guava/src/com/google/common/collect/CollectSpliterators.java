@@ -58,8 +58,9 @@ final class CollectSpliterators {
     if (comparator != null) {
       checkArgument((extraCharacteristics & Spliterator.SORTED) != 0);
     }
+    @Mutable
     class WithCharacteristics implements Spliterator<T> {
-      private final Spliterator.OfInt delegate;
+      private final Spliterator.@Mutable OfInt delegate;
 
       WithCharacteristics(Spliterator.OfInt delegate) {
         this.delegate = delegate;

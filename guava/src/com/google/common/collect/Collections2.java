@@ -159,7 +159,7 @@ public final class Collections2 {
     }
 
     @Override
-    public boolean addAll(@Mutable FilteredCollection<E> this, Collection<? extends E> collection) {
+    public boolean addAll(@Mutable FilteredCollection<E> this, @Readonly Collection<? extends E> collection) {
       for (E element : collection) {
         checkArgument(predicate.apply(element));
       }
@@ -407,7 +407,7 @@ public final class Collections2 {
    * @throws NullPointerException if the specified iterable is null or has any null elements.
    * @since 12.0
    */
-  public static <E extends @Immutable Comparable<? super E>> Collection<List<E>> orderedPermutations(
+  public static <E extends @Immutable Comparable<? super E>> @Immutable Collection<@Immutable List<E>> orderedPermutations(
       Iterable<E> elements) {
     return orderedPermutations(elements, Ordering.natural());
   }
@@ -458,13 +458,13 @@ public final class Collections2 {
    *     the specified comparator is null.
    * @since 12.0
    */
-  public static <E> @Immutable Collection<List<E>> orderedPermutations(
+  public static <E> @Immutable Collection<@Immutable List<E>> orderedPermutations(
       Iterable<E> elements, Comparator<? super E> comparator) {
     return new OrderedPermutationCollection<E>(elements, comparator);
   }
 
   @Immutable
-  private static final class OrderedPermutationCollection<E> extends AbstractCollection<List<E>> {
+  private static final class OrderedPermutationCollection<E> extends AbstractCollection<@Immutable List<E>> {
     final ImmutableList<E> inputList;
     final @Readonly Comparator<? super E> comparator;
     final int size;
@@ -516,7 +516,7 @@ public final class Collections2 {
     }
 
     @Override
-    public Iterator<List<E>> iterator() {
+    public @Mutable Iterator<@Immutable List<E>> iterator() {
       return new OrderedPermutationIterator<E>(inputList, comparator);
     }
 
@@ -536,7 +536,7 @@ public final class Collections2 {
   }
 
   @Mutable
-  private static final class OrderedPermutationIterator<E> extends AbstractIterator<List<E>> {
+  private static final class OrderedPermutationIterator<E> extends AbstractIterator<@Immutable List<E>> {
     @CheckForNull @Mutable List<E> nextPermutation;
     final @Readonly Comparator<? super E> comparator;
 
@@ -547,7 +547,7 @@ public final class Collections2 {
 
     @Override
     @CheckForNull
-    protected List<E> computeNext() {
+    protected @Immutable List<E> computeNext() {
       if (nextPermutation == null) {
         return endOfData();
       }
@@ -621,12 +621,12 @@ public final class Collections2 {
    * @throws NullPointerException if the specified collection is null or has any null elements.
    * @since 12.0
    */
-  public static <E> @Immutable Collection<List<E>> permutations(Collection<E> elements) {
+  public static <E> @Immutable Collection<@Immutable List<E>> permutations(Collection<E> elements) {
     return new PermutationCollection<E>(ImmutableList.copyOf(elements));
   }
 
   @Immutable
-  private static final class PermutationCollection<E> extends AbstractCollection<List<E>> {
+  private static final class PermutationCollection<E> extends AbstractCollection<@Immutable List<E>> {
     final ImmutableList<E> inputList;
 
     PermutationCollection(ImmutableList<E> input) {
@@ -644,7 +644,7 @@ public final class Collections2 {
     }
 
     @Override
-    public Iterator<List<E>> iterator() {
+    public @Mutable Iterator<@Immutable List<E>> iterator() {
       return new PermutationIterator<E>(inputList);
     }
 
@@ -664,7 +664,7 @@ public final class Collections2 {
   }
 
   @Mutable
-  private static class PermutationIterator<E> extends AbstractIterator<List<E>> {
+  private static class PermutationIterator<E> extends AbstractIterator<@Immutable List<E>> {
     final @Mutable List<E> list;
     final int[] c;
     final int[] o;
@@ -682,7 +682,7 @@ public final class Collections2 {
 
     @Override
     @CheckForNull
-    protected List<E> computeNext() {
+    protected @Immutable List<E> computeNext() {
       if (j <= 0) {
         return endOfData();
       }

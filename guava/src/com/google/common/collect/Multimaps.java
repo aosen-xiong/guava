@@ -1885,7 +1885,7 @@ public final class Multimaps {
   @ReceiverDependentMutable
   abstract static class Entries<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends AbstractCollection<Map.@ReceiverDependentMutable Entry<K, V>> {
-    abstract @PolyMutable Multimap<K, V> multimap(@PolyMutable Entries<K, V> this);
+    abstract @ReceiverDependentMutable Multimap<K, V> multimap(@ReceiverDependentMutable Entries<K, V> this);
 
     @Override
     public @NonNegative int size(@Readonly Entries<K, V> this) {

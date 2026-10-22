@@ -343,7 +343,7 @@ final class CollectCollectors {
     }
 
     ImmutableMap<K, V> toImmutableMap() {
-      return (map == null) ? ImmutableMap.<K, V>of() : ImmutableEnumMap.<K,@Immutable V>asImmutable(map);
+      return (map == null) ? ImmutableMap.<K, V>of() : ImmutableEnumMap.<K, V>asImmutable(map);
     }
   }
 
