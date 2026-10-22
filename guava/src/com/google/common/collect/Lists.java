@@ -1138,17 +1138,19 @@ public final class Lists {
   }
 
   /** Returns an implementation of {@link List#listIterator(int)}. */
-  static <E extends @Nullable @Readonly Object> ListIterator<E> listIteratorImpl(List<E> list, int index) {
-    return new AbstractListWrapper<>(list).listIterator(index);
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing list and the wrapper whose list iterator this returns are the same instantiation, as in Collections.unmodifiableCollection
+  static <E extends @Nullable @Readonly Object> ListIterator<E> listIteratorImpl(@PolyMutable List<E> list, int index) {
+    return new @PolyMutable AbstractListWrapper<>(list).listIterator(index);
   }
 
   /** An implementation of {@link List#subList(int, int)}. */
-  static <E extends @Nullable @Readonly Object> List<E> subListImpl(
-      final List<E> list, int fromIndex, int toIndex) {
-    List<E> wrapper;
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:constructor.return.invalid", "mutability:return.type.incompatible"}) // one poly: an anonymous class cannot be created poly, and the wrapper and its sublist view have the backing list's mutability, as in Collections.unmodifiableCollection. The checker types the receiver-dependent subList read through the poly wrapper @MutabilityLost
+  static <E extends @Nullable @Readonly Object> @PolyMutable List<E> subListImpl(
+      final @PolyMutable List<E> list, int fromIndex, int toIndex) {
+    @PolyMutable List<E> wrapper;
     if (list instanceof RandomAccess) {
       wrapper =
-          new RandomAccessListWrapper<E>(list) {
+          new @PolyMutable RandomAccessListWrapper<E>(list) {
             @Override
             public ListIterator<E> listIterator(int index) {
               return backingList.listIterator(index);
@@ -1158,7 +1160,7 @@ public final class Lists {
           };
     } else {
       wrapper =
-          new AbstractListWrapper<E>(list) {
+          new @PolyMutable AbstractListWrapper<E>(list) {
             @Override
             public ListIterator<E> listIterator(int index) {
               return backingList.listIterator(index);

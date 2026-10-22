@@ -230,7 +230,7 @@ public abstract class ForwardingList<E extends @Nullable @Readonly Object> exten
    *
    * @since 7.0
    */
-  protected List<E> standardSubList(int fromIndex, int toIndex) {
+  protected @ReceiverDependentMutable List<E> standardSubList(@ReceiverDependentMutable ForwardingList<E> this, int fromIndex, int toIndex) {
     return Lists.subListImpl(this, fromIndex, toIndex);
   }
 
