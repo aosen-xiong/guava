@@ -1443,7 +1443,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
 
     abstract Class<?> getRawType(K type);
 
-    abstract Iterable<? extends K> getInterfaces(K type);
+    abstract @Readonly Iterable<? extends K> getInterfaces(K type);
 
     @CheckForNull
     abstract K getSuperclass(K type);
@@ -1462,7 +1462,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       }
 
       @Override
-      Iterable<? extends K> getInterfaces(K type) {
+      @Readonly Iterable<? extends K> getInterfaces(K type) {
         return delegate.getInterfaces(type);
       }
 
