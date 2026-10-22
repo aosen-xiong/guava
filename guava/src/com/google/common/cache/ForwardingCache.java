@@ -111,7 +111,7 @@ public abstract class ForwardingCache<K extends @Immutable Object, V> extends Fo
   }
 
   @Override
-  public ConcurrentMap<K, V> asMap() {
+  public @ReceiverDependentMutable ConcurrentMap<K, V> asMap() {
     return delegate().asMap();
   }
 

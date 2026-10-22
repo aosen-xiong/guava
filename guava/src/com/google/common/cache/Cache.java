@@ -184,7 +184,7 @@ public interface Cache<K extends @Immutable Object, V> {
    * concurrent use, but if the cache is modified (including by eviction) after the iterator is
    * created, it is undefined which of the changes (if any) will be reflected in that iterator.
    */
-  ConcurrentMap<K, V> asMap();
+  @ReceiverDependentMutable ConcurrentMap<K, V> asMap();
 
   /**
    * Performs any pending maintenance operations needed by the cache. Exactly which activities are

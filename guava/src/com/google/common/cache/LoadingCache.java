@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -174,5 +173,5 @@ public interface LoadingCache<K extends @Immutable Object, V> extends Cache<K, V
    * cause entries to be automatically loaded.</b>
    */
   @Override
-  @PolyMutable ConcurrentMap<K, V> asMap(@PolyMutable LoadingCache<K, V> this);
+  @ReceiverDependentMutable ConcurrentMap<K, V> asMap();
 }
