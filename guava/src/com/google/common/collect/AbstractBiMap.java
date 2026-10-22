@@ -540,7 +540,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     @GwtIncompatible // java.io.ObjectInputStream
     @J2ktIncompatible
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable Inverse<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
       stream.defaultReadObject();
       setInverse((AbstractBiMap<V, K>) requireNonNull(stream.readObject()));
     }

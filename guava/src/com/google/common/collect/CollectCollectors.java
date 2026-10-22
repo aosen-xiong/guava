@@ -40,6 +40,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /** Collectors utilities for {@code common.collect} internals. */
 @GwtCompatible
@@ -168,7 +169,7 @@ final class CollectCollectors {
         (Multiset<E> multiset) -> ImmutableMultiset.copyFromEntries(multiset.entrySet()));
   }
 
-  static <T extends @Nullable @Readonly Object, E extends @Nullable @Readonly Object, M extends @Readonly Multiset<E>>
+  static <T extends @Nullable @Readonly Object, E extends @Nullable @Readonly Object, M extends @Mutable Multiset<E>>
       Collector<T, ?, M> toMultiset(
           Function<? super T, E> elementFunction,
           ToIntFunction<? super T> countFunction,

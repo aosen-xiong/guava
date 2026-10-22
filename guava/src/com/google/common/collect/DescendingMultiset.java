@@ -135,16 +135,18 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
     return (result == null) ? entrySet = createEntrySet() : result;
   }
 
-  Set<@Readonly Entry<E>> createEntrySet() {
+  @ReceiverDependentMutable Set<@Readonly Entry<E>> createEntrySet(@ReceiverDependentMutable DescendingMultiset<E> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class EntrySetImpl extends Multisets.EntrySet<E> {
       @Override
-      Multiset<E> multiset() {
+      @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+      @ReceiverDependentMutable Multiset<E> multiset() {
         return DescendingMultiset.this;
       }
 
       @Override
-      public Iterator<Entry<E>> iterator() {
+      public Iterator<@Readonly Entry<E>> iterator() {
         return entryIterator();
       }
 
@@ -153,7 +155,7 @@ abstract class DescendingMultiset<E extends @Nullable @Readonly Object> extends 
         return forwardMultiset().entrySet().size();
       }
     }
-    return new EntrySetImpl();
+    return new @ReceiverDependentMutable EntrySetImpl();
   }
 
   @Override

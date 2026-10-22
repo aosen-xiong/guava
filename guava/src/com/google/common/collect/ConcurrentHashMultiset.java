@@ -419,7 +419,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    */
   @CanIgnoreReturnValue
   @Override
-  public boolean setCount(@Mutable ConcurrentHashMultiset<E> this, @Immutable E element, int expectedOldCount, int newCount) {
+  public boolean setCount(@Mutable ConcurrentHashMultiset<E> this, E element, int expectedOldCount, int newCount) {
     checkNotNull(element);
     checkNonnegative(expectedOldCount, "oldCount");
     checkNonnegative(newCount, "newCount");
@@ -505,7 +505,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   /** @deprecated Internal method, use {@link #entrySet()}. */
   @Deprecated
   @Override
-  public @ReceiverDependentMutable Set<Multiset.Entry<E>> createEntrySet(@ReceiverDependentMutable ConcurrentHashMultiset<E> this) {
+  public @ReceiverDependentMutable Set<Multiset.@Readonly Entry<E>> createEntrySet(@ReceiverDependentMutable ConcurrentHashMultiset<E> this) {
     return new @ReceiverDependentMutable EntrySet();
   }
 
@@ -545,16 +545,16 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
           }
         };
 
-    return new @Mutable ForwardingIterator<Entry<E>>() {
-      @CheckForNull private Entry<E> last;
+    return new @Mutable ForwardingIterator<@Readonly Entry<E>>() {
+      @CheckForNull private @Readonly Entry<E> last;
 
       @Override
-      protected Iterator<Entry<E>> delegate() {
+      protected Iterator<@Readonly Entry<E>> delegate() {
         return readOnlyIterator;
       }
 
       @Override
-      public Entry<E> next() {
+      public @Readonly Entry<E> next() {
         last = super.next();
         return last;
       }
@@ -634,7 +634,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   }
 
   @J2ktIncompatible // serialization
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable ConcurrentHashMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     @SuppressWarnings("unchecked") // reading data stored by writeObject
     ConcurrentMap<E, Integer> deserializedCountMap =

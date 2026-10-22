@@ -56,13 +56,13 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
   }
 
   @Override
-  public NavigableSet<E> elementSet() {
-    return (NavigableSet<E>) super.elementSet();
+  public @ReceiverDependentMutable NavigableSet<E> elementSet(@ReceiverDependentMutable AbstractSortedMultiset<E> this) {
+    return (@ReceiverDependentMutable NavigableSet<E>) super.elementSet();
   }
 
   @Override
-  NavigableSet<E> createElementSet() {
-    return new SortedMultisets.NavigableElementSet<>(this);
+  @ReceiverDependentMutable NavigableSet<E> createElementSet(@ReceiverDependentMutable AbstractSortedMultiset<E> this) {
+    return new SortedMultisets.@ReceiverDependentMutable NavigableElementSet<>(this);
   }
 
   @Override

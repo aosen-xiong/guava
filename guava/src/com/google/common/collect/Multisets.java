@@ -94,7 +94,7 @@ public final class Multisets {
    *
    * @since 22.0
    */
-  public static <T extends @Nullable @Readonly Object, E extends @Nullable @Readonly Object, M extends @Readonly Multiset<E>>
+  public static <T extends @Nullable @Readonly Object, E extends @Nullable @Readonly Object, M extends @Mutable Multiset<E>>
       Collector<T, ?, M> toMultiset(
           Function<? super T, E> elementFunction,
           ToIntFunction<? super T> countFunction,

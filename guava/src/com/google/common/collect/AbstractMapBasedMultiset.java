@@ -80,7 +80,7 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
   }
 
   /** Used during deserialization only. The backing map must be empty. */
-  void setBackingMap(@Mutable AbstractMapBasedMultiset<E> this, @ReceiverDependentMutable Map<E, Count> backingMap) {
+  void setBackingMap(@Mutable AbstractMapBasedMultiset<E> this, @Mutable Map<E, Count> backingMap) {
     this.backingMap = backingMap;
   }
 
@@ -101,9 +101,9 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
 
   @Override
   Iterator<E> elementIterator() {
-    final Iterator<Map.Entry<E, Count>> backingEntries = backingMap.entrySet().iterator();
+    final Iterator<Map.@ReceiverDependentMutable Entry<E, Count>> backingEntries = backingMap.entrySet().iterator();
     return new @Mutable Iterator<E>() {
-      @CheckForNull Map.Entry<E, Count> toRemove;
+      @CheckForNull Map.@Readonly Entry<E, Count> toRemove;
 
       @Override
       public boolean hasNext() {
@@ -130,9 +130,9 @@ abstract class AbstractMapBasedMultiset<E extends @Nullable @Immutable Object> e
 
   @Override
   Iterator<@Readonly Entry<E>> entryIterator() {
-    final Iterator<Map.Entry<E, Count>> backingEntries = backingMap.entrySet().iterator();
+    final Iterator<Map.@ReceiverDependentMutable Entry<E, Count>> backingEntries = backingMap.entrySet().iterator();
     return new @Mutable Iterator<Multiset.Entry<E>>() {
-      @CheckForNull Map.Entry<E, Count> toRemove;
+      @CheckForNull Map.@Readonly Entry<E, Count> toRemove;
 
       @Override
       public boolean hasNext() {
