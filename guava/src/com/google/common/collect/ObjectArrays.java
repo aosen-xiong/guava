@@ -158,7 +158,7 @@ public final class ObjectArrays {
    * <i>only</i> if the caller knows that the collection does not contain any null elements.
    */
   static <T extends @Nullable @Readonly Object> T[] toArrayImpl(
-      @Nullable @Readonly Object[] src, int offset, int len, T[] dst) {
+      @Nullable @Readonly Object @Readonly [] src, int offset, int len, T[] dst) {
     checkPositionIndexes(offset, offset + len, src.length);
     if (dst.length < len) {
       dst = newArray(dst, len);

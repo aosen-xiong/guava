@@ -182,11 +182,11 @@ class CompactLinkedHashSet<E extends @Nullable @Immutable Object> extends Compac
     return requireSuccessors()[entry] - 1;
   }
 
-  private void setSuccessor(int entry, int succ) {
+  private void setSuccessor(@Mutable CompactLinkedHashSet<E> this, int entry, int succ) {
     requireSuccessors()[entry] = succ + 1;
   }
 
-  private void setPredecessor(int entry, int pred) {
+  private void setPredecessor(@Mutable CompactLinkedHashSet<E> this, int entry, int pred) {
     requirePredecessors()[entry] = pred + 1;
   }
 
@@ -278,11 +278,11 @@ class CompactLinkedHashSet<E extends @Nullable @Immutable Object> extends Compac
    * CompactHashMap.
    */
 
-  private int[] requirePredecessors() {
+  private int @ReceiverDependentMutable [] requirePredecessors() {
     return requireNonNull(predecessor);
   }
 
-  private int[] requireSuccessors() {
+  private int @ReceiverDependentMutable [] requireSuccessors() {
     return requireNonNull(successor);
   }
 

@@ -165,12 +165,12 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
     return ((int) link(entry)) - 1;
   }
 
-  private void setSuccessor(int entry, int succ) {
+  private void setSuccessor(@Mutable CompactLinkedHashMap<K, V> this, int entry, int succ) {
     long succMask = (~0L) >>> 32;
     setLink(entry, (link(entry) & ~succMask) | ((succ + 1) & succMask));
   }
 
-  private void setPredecessor(int entry, int pred) {
+  private void setPredecessor(@Mutable CompactLinkedHashMap<K, V> this, int entry, int pred) {
     long predMask = ~0L << 32;
     setLink(entry, (link(entry) & ~predMask) | ((long) (pred + 1) << 32));
   }
@@ -320,7 +320,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
    * CompactHashMap.
    */
 
-  private long[] requireLinks() {
+  private long @ReceiverDependentMutable [] requireLinks() {
     return requireNonNull(links);
   }
 
@@ -328,7 +328,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
     return requireLinks()[i];
   }
 
-  private void setLink(int i, long value) {
+  private void setLink(@Mutable CompactLinkedHashMap<K, V> this, int i, long value) {
     requireLinks()[i] = value;
   }
 

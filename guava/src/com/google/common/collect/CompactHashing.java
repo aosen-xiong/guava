@@ -104,7 +104,7 @@ final class CompactHashing {
    * short[]}, or {@code int[]}. When it is a {@code byte[]} or {@code short[]}, the returned value
    * is unsigned, so the range of possible returned values is 0–255 or 0–65535, respectively.
    */
-  static int tableGet(Object table, int index) {
+  static int tableGet(@Readonly Object table, int index) {
     if (table instanceof byte[]) {
       return ((byte[]) table)[index] & BYTE_MASK; // unsigned read
     } else if (table instanceof short[]) {

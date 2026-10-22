@@ -1179,11 +1179,11 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * methods. But that is a bit too painful....
    */
 
-  private Object requireTable() {
+  private @ReceiverDependentMutable Object requireTable() {
     return requireNonNull(table);
   }
 
-  private int[] requireEntries() {
+  private int @ReceiverDependentMutable [] requireEntries() {
     return requireNonNull(entries);
   }
 
@@ -1225,7 +1225,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     requireValues()[i] = value;
   }
 
-  private void setEntry(int i, int value) {
+  private void setEntry(@Mutable CompactHashMap<K, V> this, int i, int value) {
     requireEntries()[i] = value;
   }
 }

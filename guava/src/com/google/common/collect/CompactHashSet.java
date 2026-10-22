@@ -370,7 +370,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
   /**
    * Creates a fresh entry with the specified object at the specified position in the entry arrays.
    */
-  void insertEntry(int entryIndex, @ParametricNullness E object, int hash, int mask) {
+  void insertEntry(@Mutable CompactHashSet<E> this, int entryIndex, @ParametricNullness E object, int hash, int mask) {
     setEntry(entryIndex, CompactHashing.maskCombine(hash, UNSET, mask));
     setElement(entryIndex, object);
   }
@@ -496,7 +496,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
   /**
    * Moves the last entry in the entry array into {@code dstIndex}, and nulls out its old position.
    */
-  void moveLastEntry(int dstIndex, int mask) {
+  void moveLastEntry(@Mutable CompactHashSet<E> this, int dstIndex, int mask) {
     Object table = requireTable();
     int[] entries = requireEntries();
     @Nullable @Readonly Object[] elements = requireElements();
@@ -741,15 +741,15 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
    * CompactHashMap.
    */
 
-  private Object requireTable() {
+  private @ReceiverDependentMutable Object requireTable() {
     return requireNonNull(table);
   }
 
-  private int[] requireEntries() {
+  private int @ReceiverDependentMutable [] requireEntries() {
     return requireNonNull(entries);
   }
 
-  private @Nullable @Readonly Object[] requireElements() {
+  private @Nullable @Readonly Object @ReceiverDependentMutable [] requireElements() {
     return requireNonNull(elements);
   }
 
@@ -762,11 +762,11 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
     return requireEntries()[i];
   }
 
-  private void setElement(int i, E value) {
+  private void setElement(@Mutable CompactHashSet<E> this, int i, E value) {
     requireElements()[i] = value;
   }
 
-  private void setEntry(int i, int value) {
+  private void setEntry(@Mutable CompactHashSet<E> this, int i, int value) {
     requireEntries()[i] = value;
   }
 }
