@@ -149,7 +149,7 @@ abstract class WrappingExecutorService implements ExecutorService {
 
   @Override
   @CanIgnoreReturnValue
-  public final List<Runnable> shutdownNow() {
+  public final @Readonly List<Runnable> shutdownNow() {
     return delegate.shutdownNow();
   }
 

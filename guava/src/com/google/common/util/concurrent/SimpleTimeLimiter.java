@@ -88,9 +88,9 @@ public final class SimpleTimeLimiter implements TimeLimiter {
         new InvocationHandler() {
           @Override
           @CheckForNull
-          public Object invoke(Object obj, Method method, @CheckForNull @Nullable Object[] args)
+          public @Readonly Object invoke(Object obj, Method method, @CheckForNull @Nullable Object[] args)
               throws Throwable {
-            Callable<@Nullable Object> callable =
+            Callable<@Nullable @Readonly Object> callable =
                 () -> {
                   try {
                     return method.invoke(target, args);

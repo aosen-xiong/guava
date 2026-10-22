@@ -634,7 +634,7 @@ public final class MoreExecutors {
     }
 
     @Override
-    public final List<Runnable> shutdownNow() {
+    public final @Readonly List<Runnable> shutdownNow() {
       return delegate.shutdownNow();
     }
 

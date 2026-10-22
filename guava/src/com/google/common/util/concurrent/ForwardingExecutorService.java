@@ -103,7 +103,7 @@ public abstract class ForwardingExecutorService extends ForwardingObject
 
   @Override
   @CanIgnoreReturnValue
-  public List<Runnable> shutdownNow() {
+  public @Readonly List<Runnable> shutdownNow() {
     return delegate().shutdownNow();
   }
 

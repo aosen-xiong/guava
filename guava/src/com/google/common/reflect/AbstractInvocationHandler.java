@@ -98,7 +98,7 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
    * an empty array is passed in.
    */
   @CheckForNull
-  protected abstract Object handleInvocation(Object proxy, Method method, @Nullable Object[] args)
+  protected abstract Object handleInvocation(Object proxy, Method method, @Nullable @Readonly Object[] args)
       throws Throwable;
 
   /**
@@ -136,7 +136,7 @@ public abstract class AbstractInvocationHandler implements InvocationHandler {
     return super.toString();
   }
 
-  private static boolean isProxyOfSameInterfaces(Object arg, Class<?> proxyClass) {
+  private static boolean isProxyOfSameInterfaces(@Readonly Object arg, Class<?> proxyClass) {
     return proxyClass.isInstance(arg)
         // Equal proxy instances should mostly be instance of proxyClass
         // Under some edge cases (such as the proxy of JDK types serialized and then deserialized)

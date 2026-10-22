@@ -274,7 +274,7 @@ final class FuturesGetChecked {
   @CheckForNull
   private static <X> X newFromConstructor(Constructor<X> constructor, Throwable cause) {
     Class<?>[] paramTypes = constructor.getParameterTypes();
-    Object[] params = new Object[paramTypes.length];
+    @Readonly Object[] params = new @Readonly Object[paramTypes.length];
     for (int i = 0; i < paramTypes.length; i++) {
       Class<?> paramType = paramTypes[i];
       if (paramType.equals(String.class)) {
