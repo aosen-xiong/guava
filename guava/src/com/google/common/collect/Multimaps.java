@@ -688,7 +688,7 @@ public final class Multimaps {
    * @since 10.0
    */
   @Deprecated
-  public static <K extends @Immutable Object, V> @Immutable Multimap<K, V> unmodifiableMultimap(ImmutableMultimap<K, @Immutable V> delegate) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> @Immutable Multimap<K, V> unmodifiableMultimap(ImmutableMultimap<K, V> delegate) {
     return checkNotNull(delegate);
   }
 
@@ -963,7 +963,7 @@ public final class Multimaps {
    */
   @Deprecated
   public static <K extends @Immutable Object, V extends @Immutable Object> @Immutable SetMultimap<K, V> unmodifiableSetMultimap(
-      ImmutableSetMultimap<K, @Immutable V> delegate) {
+      ImmutableSetMultimap<K, V> delegate) {
     return checkNotNull(delegate);
   }
 
@@ -1043,8 +1043,8 @@ public final class Multimaps {
    * @since 10.0
    */
   @Deprecated
-  public static <K extends @Immutable Object, V> @Immutable ListMultimap<K, V> unmodifiableListMultimap(
-      ImmutableListMultimap<K, @Immutable V> delegate) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> @Immutable ListMultimap<K, V> unmodifiableListMultimap(
+      ImmutableListMultimap<K, V> delegate) {
     return checkNotNull(delegate);
   }
 
@@ -1551,10 +1551,10 @@ public final class Multimaps {
       this.transformer = checkNotNull(transformer);
     }
 
-    Collection<V2> transform(@ParametricNullness K key, Collection<V1> values) {
+    @PolyMutable Collection<V2> transform(@ParametricNullness K key, @PolyMutable Collection<V1> values) {
       Function<? super V1, V2> function = Maps.asValueToValueFunction(transformer, key);
       if (values instanceof List) {
-        return Lists.transform((List<V1>) values, function);
+        return Lists.transform((@PolyMutable List<V1>) values, function);
       } else {
         return Collections2.transform(values, function);
       }
@@ -1581,7 +1581,7 @@ public final class Multimaps {
     }
 
     @Override
-    @Mutable Iterator<@PolyMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
+    @Mutable Iterator<@ReceiverDependentMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return Iterators.transform(
           fromMultimap.entries().iterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));
     }
@@ -1662,7 +1662,7 @@ public final class Multimaps {
 
     @Override
     @PolyMutable List<V2> transform(@ParametricNullness K key, @PolyMutable Collection<V1> values) {
-      return Lists.transform((List<V1>) values, Maps.asValueToValueFunction(transformer, key));
+      return Lists.transform((@PolyMutable List<V1>) values, Maps.asValueToValueFunction(transformer, key));
     }
 
     @Override
@@ -1758,10 +1758,10 @@ public final class Multimaps {
    *     keyFunction} produces {@code null} for any key
    * @since 10.0
    */
-  public static <K extends @Immutable Object, V> ImmutableListMultimap<K, @Immutable V> index(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> index(
       Iterator<V> values, Function<? super V, K> keyFunction) {
     checkNotNull(keyFunction);
-    ImmutableListMultimap.Builder<K, @Immutable V> builder = ImmutableListMultimap.builder();
+    ImmutableListMultimap.Builder<K, V> builder = ImmutableListMultimap.builder();
     while (values.hasNext()) {
       V value = values.next();
       checkNotNull(value, values);
@@ -1931,7 +1931,7 @@ public final class Multimaps {
     }
 
     @Override
-    protected @ReceiverDependentMutable Set<Entry<K, @ReceiverDependentMutable Collection<V>>> createEntrySet(@ReceiverDependentMutable AsMap<K, V> this) {
+    protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> createEntrySet(@ReceiverDependentMutable AsMap<K, V> this) {
       return new @ReceiverDependentMutable EntrySet();
     }
 
