@@ -58,7 +58,8 @@ final class FuturesGetChecked {
   @VisibleForTesting
   @ParametricNullness
   static <V extends @Nullable @Readonly Object, X extends Exception> V getChecked(
-      GetCheckedTypeValidator validator, Future<V> future, Class<X> exceptionClass) throws X {
+      @Immutable GetCheckedTypeValidator validator, Future<V> future, Class<X> exceptionClass)
+      throws X {
     validator.validateClass(exceptionClass);
     try {
       return future.get();
@@ -97,7 +98,7 @@ final class FuturesGetChecked {
     void validateClass(Class<? extends Exception> exceptionClass);
   }
 
-  private static GetCheckedTypeValidator bestGetCheckedTypeValidator() {
+  private static @Immutable GetCheckedTypeValidator bestGetCheckedTypeValidator() {
     return GetCheckedTypeValidatorHolder.BEST_VALIDATOR;
   }
 
@@ -123,7 +124,7 @@ final class FuturesGetChecked {
     static final String CLASS_VALUE_VALIDATOR_NAME =
         GetCheckedTypeValidatorHolder.class.getName() + "$ClassValueValidator";
 
-    static final GetCheckedTypeValidator BEST_VALIDATOR = getBestValidator();
+    static final @Immutable GetCheckedTypeValidator BEST_VALIDATOR = getBestValidator();
 
     @J2ObjCIncompatible // ClassValue
     enum ClassValueValidator implements GetCheckedTypeValidator {
@@ -193,12 +194,12 @@ final class FuturesGetChecked {
      * Returns the ClassValue-using validator, or falls back to the "weak Set" implementation if
      * unable to do so.
      */
-    static GetCheckedTypeValidator getBestValidator() {
+    static @Immutable GetCheckedTypeValidator getBestValidator() {
       try {
         @SuppressWarnings("rawtypes") // class literals
         Class<? extends Enum> theClass =
             Class.forName(CLASS_VALUE_VALIDATOR_NAME).asSubclass(Enum.class);
-        return (GetCheckedTypeValidator) theClass.getEnumConstants()[0];
+        return (@Immutable GetCheckedTypeValidator) theClass.getEnumConstants()[0];
       } catch (ClassNotFoundException
           | RuntimeException
           | Error t) { // ensure we really catch *everything*
