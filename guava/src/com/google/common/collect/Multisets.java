@@ -1073,7 +1073,7 @@ public final class Multisets {
           // Safe as long as we never add a new entry, which we won't.
           // (Presumably it can still throw CCE/NPE but only if the underlying Multiset does.)
           @SuppressWarnings({"unchecked", "nullness"})
-          Multiset<@Nullable Object> multiset = (Multiset<@Nullable Object>) multiset();
+          Multiset<@Nullable @Readonly Object> multiset = (Multiset<@Nullable @Readonly Object>) multiset();
           return multiset.setCount(element, entryCount, 0);
         }
       }

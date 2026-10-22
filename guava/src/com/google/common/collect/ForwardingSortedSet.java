@@ -123,7 +123,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
     try {
       // any ClassCastExceptions and NullPointerExceptions are caught
       @SuppressWarnings({"unchecked", "nullness"})
-      SortedSet<@Nullable Object> self = (SortedSet<@Nullable Object>) this;
+      SortedSet<@Nullable @Readonly Object> self = (SortedSet<@Nullable @Readonly Object>) this;
       Object ceiling = self.tailSet(object).first();
       return unsafeCompare(comparator(), ceiling, object) == 0;
     } catch (ClassCastException | NoSuchElementException | NullPointerException e) {
@@ -143,7 +143,7 @@ public abstract class ForwardingSortedSet<E extends @Nullable @Readonly Object> 
     try {
       // any ClassCastExceptions and NullPointerExceptions are caught
       @SuppressWarnings({"unchecked", "nullness"})
-      SortedSet<@Nullable Object> self = (SortedSet<@Nullable Object>) this;
+      SortedSet<@Nullable @Readonly Object> self = (SortedSet<@Nullable @Readonly Object>) this;
       Iterator<?> iterator = self.tailSet(object).iterator();
       if (iterator.hasNext()) {
         Object ceiling = iterator.next();

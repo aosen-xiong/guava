@@ -213,7 +213,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     int compare(@Readonly Object a, @Readonly Object b) {
       // pretend we can compare anything
       @SuppressWarnings("unchecked")
-      Comparator<Object> cmp = (Comparator<Object>) comparator();
+      Comparator<@Readonly Object> cmp = (Comparator<@Readonly Object>) comparator();
       return cmp.compare(a, b);
     }
 

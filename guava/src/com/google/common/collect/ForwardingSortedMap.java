@@ -144,7 +144,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
     try {
       // any CCE or NPE will be caught
       @SuppressWarnings({"unchecked", "nullness"})
-      SortedMap<@Nullable @Immutable Object, V> self = (@Readonly SortedMap<@Nullable @Immutable Object, V>) this;
+      SortedMap<@Nullable @Readonly Object, V> self = (@Readonly SortedMap<@Nullable @Readonly Object, V>) this;
       Object ceilingKey = self.tailMap(key).firstKey();
       return unsafeCompare(comparator(), ceilingKey, key) == 0;
     } catch (ClassCastException | NoSuchElementException | NullPointerException e) {
