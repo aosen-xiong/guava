@@ -270,7 +270,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
     if (!(obj instanceof Network)) {
       return false;
     }
-    Network<?, ?> other = (Network<?, ?>) obj;
+    Network<@Immutable ?, @Immutable ?> other = (Network<@Immutable ?, @Immutable ?>) obj;
 
     return isDirected() == other.isDirected()
         && nodes().equals(other.nodes())
