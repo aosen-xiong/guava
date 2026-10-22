@@ -1703,16 +1703,16 @@ public final class Sets {
    * @throws NullPointerException if {@code set} is or contains {@code null}
    * @since 23.0
    */
-  public static <E extends @Immutable Object> Set<Set<E>> combinations(Set<E> set, final int size) {
+  public static <E extends @Immutable Object> @Readonly Set<@Readonly Set<E>> combinations(@Readonly Set<E> set, final int size) {
     final ImmutableMap<E, Integer> index = Maps.indexMap(set);
     checkNonnegative(size, "size");
     checkArgument(size <= index.size(), "size (%s) must be <= set.size() (%s)", size, index.size());
     if (size == 0) {
-      return ImmutableSet.<Set<E>>of(ImmutableSet.<E>of());
+      return ImmutableSet.<@Readonly Set<E>>of(ImmutableSet.<E>of());
     } else if (size == index.size()) {
-      return ImmutableSet.<Set<E>>of(index.keySet());
+      return ImmutableSet.<@Readonly Set<E>>of(index.keySet());
     }
-    return new @Mutable AbstractSet<Set<E>>() {
+    return new @Mutable AbstractSet<@Readonly Set<E>>() {
       @Override
       public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
         if (o instanceof Set) {
@@ -1723,13 +1723,13 @@ public final class Sets {
       }
 
       @Override
-      public Iterator<Set<E>> iterator() {
-        return new @Mutable AbstractIterator<Set<E>>() {
+      public @Mutable Iterator<@Readonly Set<E>> iterator() {
+        return new @Mutable AbstractIterator<@Readonly Set<E>>() {
           final BitSet bits = new BitSet(index.size());
 
           @Override
           @CheckForNull
-          protected Set<E> computeNext() {
+          protected @Readonly Set<E> computeNext() {
             if (bits.isEmpty()) {
               bits.set(0, size);
             } else {
