@@ -694,7 +694,7 @@ public final class Multimaps {
 
   @ReceiverDependentMutable
   private static class UnmodifiableMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      extends ForwardingMultimap<K, @Immutable V> implements Serializable {
+      extends ForwardingMultimap<K, V> implements Serializable {
     final @ReceiverDependentMutable Multimap<K, V> delegate;
     @LazyInit @CheckForNull transient @Assignable @ReceiverDependentMutable Collection<@Readonly Entry<K, V>> entries;
     @LazyInit @CheckForNull transient @Assignable @ReceiverDependentMutable Multiset<K> keys;
