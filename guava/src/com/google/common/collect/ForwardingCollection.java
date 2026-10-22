@@ -260,8 +260,8 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
    *
    * @since 7.0
    */
-  protected @Nullable @PolyMutable Object @ReceiverDependentMutable [] standardToArray(ForwardingCollection<@PolyMutable E> this) {
-    @Nullable @PolyMutable Object @ReceiverDependentMutable [] newArray = new @Nullable @PolyMutable Object @ReceiverDependentMutable [size()];
+  protected @Nullable @PolyMutable Object @Mutable [] standardToArray(ForwardingCollection<@PolyMutable E> this) {
+    @Nullable @PolyMutable Object @Mutable [] newArray = new @Nullable @PolyMutable Object @Mutable [size()];
     return toArray(newArray);
   }
 

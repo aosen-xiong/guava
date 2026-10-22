@@ -214,8 +214,8 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * forward to this implementation.
    */
   @CheckForNull
-  protected Entry<K, V> standardFirstEntry() {
-    return Iterables.<@Nullable Entry<K, V>>getFirst(entrySet(), null);
+  protected @Readonly Entry<K, V> standardFirstEntry() {
+    return Iterables.<@Nullable @Readonly Entry<K, V>>getFirst(entrySet(), null);
   }
 
   /**
@@ -244,8 +244,8 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * override {@code lastEntry} to forward to this implementation.
    */
   @CheckForNull
-  protected Entry<K, V> standardLastEntry() {
-    return Iterables.<@Nullable Entry<K, V>>getFirst(descendingMap().entrySet(), null);
+  protected @Readonly Entry<K, V> standardLastEntry() {
+    return Iterables.<@Nullable @Readonly Entry<K, V>>getFirst(descendingMap().entrySet(), null);
   }
 
   /**
@@ -404,8 +404,8 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * wish to override {@code subMap} to forward to this implementation.
    */
   @Override
-  protected @PolyMutable SortedMap<K, V> standardSubMap(
-          @PolyMutable ForwardingNavigableMap<K, V> this,
+  protected @ReceiverDependentMutable SortedMap<K, V> standardSubMap(
+          @ReceiverDependentMutable ForwardingNavigableMap<K, V> this,
       @ParametricNullness K fromKey, @ParametricNullness K toKey) {
     return subMap(fromKey, true, toKey, false);
   }
@@ -435,7 +435,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * boolean)}. If you override {@code headMap(K, boolean)}, you may wish to override {@code
    * headMap} to forward to this implementation.
    */
-  protected @PolyMutable SortedMap<K, V> standardHeadMap(@PolyMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K toKey) {
+  protected @ReceiverDependentMutable SortedMap<K, V> standardHeadMap(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K toKey) {
     return headMap(toKey, false);
   }
 
@@ -444,7 +444,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
    * boolean)}. If you override {@code tailMap(K, boolean)}, you may wish to override {@code
    * tailMap} to forward to this implementation.
    */
-  protected @PolyMutable SortedMap<K, V> standardTailMap(@PolyMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K fromKey) {
+  protected @ReceiverDependentMutable SortedMap<K, V> standardTailMap(@ReceiverDependentMutable ForwardingNavigableMap<K, V> this, @ParametricNullness K fromKey) {
     return tailMap(fromKey, true);
   }
 }
