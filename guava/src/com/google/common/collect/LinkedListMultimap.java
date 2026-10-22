@@ -854,27 +854,29 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @SideEffectFree
   @Override
-  public @ReceiverDependentMutable List<Entry<K, V>> entries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
-    return (@ReceiverDependentMutable List<Entry<K, V>>) super.entries();
+  public @ReceiverDependentMutable List<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+    return (@ReceiverDependentMutable List<@ReceiverDependentMutable Entry<K, V>>) super.entries();
   }
 
   @Override
-  @ReceiverDependentMutable List<Entry<K, V>> createEntries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+  @ReceiverDependentMutable List<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
     @ReceiverDependentMutable
-    class EntriesImpl extends AbstractSequentialList<Entry<K, V>> {
+    class EntriesImpl extends AbstractSequentialList<@ReceiverDependentMutable Entry<K, V>> {
       @Override
       public @NonNegative int size() {
         return size;
       }
 
       @Override
-      public ListIterator<Entry<K, V>> listIterator(int index) {
+      @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+      public @Mutable ListIterator<@ReceiverDependentMutable Entry<K, V>> listIterator(int index) {
         return new NodeIterator(index);
       }
 
       @Override
-      public void forEach(Consumer<? super Entry<K, V>> action) {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+      public void forEach(Consumer<? super @ReceiverDependentMutable Entry<K, V>> action) {
         checkNotNull(action);
         for (Node<K, V> node = head; node != null; node = node.next) {
           action.accept(node);

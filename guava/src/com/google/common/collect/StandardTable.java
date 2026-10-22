@@ -409,13 +409,14 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    @Mutable Iterator<Entry<C, V>> entryIterator() {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible"}) // the row's entries write through to the table and have its mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor, and wrapEntry's anonymous entry cannot name the table's qualifier: https://github.com/eisop/checker-framework/issues/2322
+    @Mutable Iterator<@ReceiverDependentMutable Entry<C, V>> entryIterator(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable Row this) {
       updateBackingRowMapField();
       if (backingRowMap == null) {
         return Iterators.emptyModifiableIterator();
       }
-      final Iterator<Entry<C, V>> iterator = backingRowMap.entrySet().iterator();
-      return new @Mutable Iterator<Entry<C, V>>() {
+      final Iterator<@ReceiverDependentMutable Entry<C, V>> iterator = backingRowMap.entrySet().iterator();
+      return new @Mutable Iterator<@ReceiverDependentMutable Entry<C, V>>() {
         @Override
         public boolean hasNext() {
           return iterator.hasNext();
@@ -526,15 +527,16 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @Override
-    @ReceiverDependentMutable Set<Entry<R, V>> createEntrySet(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable Column this) {
+    @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<R, V>> createEntrySet(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable Column this) {
       return new @ReceiverDependentMutable EntrySet();
     }
 
     @WeakOuter
     @ReceiverDependentMutable
-    private class EntrySet extends ImprovedAbstractSet<Entry<R, V>> {
+    private class EntrySet extends ImprovedAbstractSet<@ReceiverDependentMutable Entry<R, V>> {
       @Override
-      public Iterator<Entry<R, V>> iterator() {
+      @SuppressWarnings("mutability:return.type.incompatible") // the column's entries write through to the table and have its mutability, but the entry iterator is a fresh @Mutable cursor whose local entry class cannot name the table's qualifier: https://github.com/eisop/checker-framework/issues/2322
+      public @Mutable Iterator<@ReceiverDependentMutable Entry<R, V>> iterator() {
         return new EntrySetIterator();
       }
 
