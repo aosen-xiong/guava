@@ -268,7 +268,7 @@ public final class TypeResolver {
         resolvedOwner, (Class<?>) resolvedRawType, resolvedArgs);
   }
 
-  private static <T> T expectArgument(Class<T> type, Object arg) {
+  private static <T> T expectArgument(Class<T> type, @Immutable Object arg) {
     try {
       return type.cast(arg);
     } catch (ClassCastException e) {
