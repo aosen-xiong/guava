@@ -108,7 +108,7 @@ public final class MapMaker {
   @CheckForNull Strength keyStrength;
   @CheckForNull Strength valueStrength;
 
-  @CheckForNull Equivalence<@Readonly Object> keyEquivalence;
+  @CheckForNull @Readonly Equivalence<@Readonly Object> keyEquivalence;
 
   /**
    * Constructs a new {@code MapMaker} instance with default settings, including strong keys, strong
@@ -125,14 +125,14 @@ public final class MapMaker {
    */
   @CanIgnoreReturnValue
   @GwtIncompatible // To be supported
-  MapMaker keyEquivalence(Equivalence<@Readonly Object> equivalence) {
+  MapMaker keyEquivalence(@Readonly Equivalence<@Readonly Object> equivalence) {
     checkState(keyEquivalence == null, "key equivalence was already set to %s", keyEquivalence);
     keyEquivalence = checkNotNull(equivalence);
     this.useCustomMap = true;
     return this;
   }
 
-  Equivalence<@Readonly Object> getKeyEquivalence() {
+  @Readonly Equivalence<@Readonly Object> getKeyEquivalence() {
     return MoreObjects.firstNonNull(keyEquivalence, getKeyStrength().defaultEquivalence());
   }
 

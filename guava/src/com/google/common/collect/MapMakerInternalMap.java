@@ -170,7 +170,7 @@ class MapMakerInternalMap<
   final int concurrencyLevel;
 
   /** Strategy for comparing keys. */
-  final Equivalence<@Readonly Object> keyEquivalence;
+  final @Readonly Equivalence<@Readonly Object> keyEquivalence;
 
   /** Strategy for handling entries and segments in a type-safe and efficient manner. */
   final transient InternalEntryHelper<K, V, E, S> entryHelper;
@@ -178,7 +178,7 @@ class MapMakerInternalMap<
   /**
    * Creates a new, empty map with the specified strategy, initial capacity and concurrency level.
    */
-  private MapMakerInternalMap(MapMaker builder, InternalEntryHelper<K, V, E, S> entryHelper) {
+  private MapMakerInternalMap(MapMaker builder, @ReceiverDependentMutable InternalEntryHelper<K, V, E, S> entryHelper) {
     concurrencyLevel = Math.min(builder.getConcurrencyLevel(), MAX_SEGMENTS);
 
     keyEquivalence = builder.getKeyEquivalence();
@@ -300,7 +300,7 @@ class MapMakerInternalMap<
    */
   @ReceiverDependentMutable
   interface InternalEntryHelper<
-      K extends @Immutable Object, V, E extends @Readonly InternalEntry<K, V, E>, S extends Segment<K, V, E, S>> {
+      K extends @Immutable Object, V, E extends InternalEntry<K, V, E>, S extends Segment<K, V, E, S>> {
     /** The strength of the key type in each entry. */
     Strength keyStrength();
 
@@ -338,7 +338,7 @@ class MapMakerInternalMap<
    * <p>Invalid: - Collected: key/value was partially collected, but not yet cleaned up
    */
   @ReceiverDependentMutable
-  interface InternalEntry<K extends @Immutable Object, V, E extends @Readonly InternalEntry<K, V, E>> {
+  interface InternalEntry<K extends @Immutable Object, V, E extends InternalEntry<K, V, E>> {
     /** Gets the next entry in the chain. */
     E getNext();
 
@@ -359,7 +359,7 @@ class MapMakerInternalMap<
 
   /** Base class for {@link InternalEntry} implementations for strong keys. */
   @ReceiverDependentMutable
-  abstract static class AbstractStrongKeyEntry<K extends @Immutable Object, V, E extends @Readonly InternalEntry<K, V, E>>
+  abstract static class AbstractStrongKeyEntry<K extends @Immutable Object, V, E extends InternalEntry<K, V, E>>
       implements InternalEntry<K, V, E> {
     final K key;
     final int hash;
@@ -388,18 +388,18 @@ class MapMakerInternalMap<
 
   /** Marker interface for {@link InternalEntry} implementations for strong values. */
   @ReceiverDependentMutable
-  interface StrongValueEntry<K extends @Immutable Object, V, E extends @Readonly InternalEntry<K, V, E>>
+  interface StrongValueEntry<K extends @Immutable Object, V, E extends InternalEntry<K, V, E>>
       extends InternalEntry<K, V, E> {}
 
   /** Marker interface for {@link InternalEntry} implementations for weak values. */
   @ReceiverDependentMutable
-  interface WeakValueEntry<K extends @Immutable Object, V, E extends @Readonly InternalEntry<K, V, E>> extends InternalEntry<K, V, E> {
+  interface WeakValueEntry<K extends @Immutable Object, V, E extends InternalEntry<K, V, E>> extends InternalEntry<K, V, E> {
     /** Gets the weak value reference held by entry. */
     WeakValueReference<K, V, E> getValueReference();
   }
 
   @SuppressWarnings("unchecked") // impl never uses a parameter or returns any non-null value
-  static <K extends @Immutable Object, V, E extends @Readonly InternalEntry<K, V, E>>
+  static <K extends @Immutable Object, V, E extends InternalEntry<K, V, E>>
       WeakValueReference<K, V, E> unsetWeakValueReference() {
     return (WeakValueReference<K, V, E>) UNSET_WEAK_VALUE_REFERENCE;
   }
@@ -2570,11 +2570,11 @@ class MapMakerInternalMap<
     return (vs != null) ? vs : (values = new @ReceiverDependentMutable Values());
   }
 
-  @LazyInit @CheckForNull transient @Assignable Set<Entry<K, V>> entrySet;
+  @LazyInit @CheckForNull transient @Assignable Set<@ReceiverDependentMutable Entry<K, V>> entrySet;
 
   @Override
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet() {
-    Set<Entry<K, V>> es = entrySet;
+    Set<@ReceiverDependentMutable Entry<K, V>> es = entrySet;
     return (es != null) ? es : (entrySet = new @ReceiverDependentMutable EntrySet());
   }
 
@@ -2845,10 +2845,11 @@ class MapMakerInternalMap<
 
   @WeakOuter
   @ReceiverDependentMutable
-  final class EntrySet extends SafeToArraySet<Entry<K, V>> {
+  final class EntrySet extends SafeToArraySet<@ReceiverDependentMutable Entry<K, V>> {
 
     @Override
-    public @Mutable Iterator<Entry<K, V>> iterator(@ReceiverDependentMutable MapMakerInternalMap<K, V, E, S>.@ReceiverDependentMutable EntrySet this) {
+    @SuppressWarnings("mutability:return.type.incompatible") // the entries have the enclosing map's mutability, but the shared entry iterator is a fresh @Mutable cursor whose entries the checker cannot relate to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable MapMakerInternalMap<K, V, E, S>.@ReceiverDependentMutable EntrySet this) {
       return new @Mutable EntryIterator();
     }
 
@@ -2920,7 +2921,7 @@ class MapMakerInternalMap<
   private static final long serialVersionUID = 5;
 
   @Readonly Object writeReplace() {
-    return new SerializationProxy<>(
+    return new @ReceiverDependentMutable SerializationProxy<>(
         entryHelper.keyStrength(),
         entryHelper.valueStrength(),
         keyEquivalence,
@@ -2945,8 +2946,8 @@ class MapMakerInternalMap<
 
     final Strength keyStrength;
     final Strength valueStrength;
-    final Equivalence<@Readonly Object> keyEquivalence;
-    final Equivalence<@Readonly Object> valueEquivalence;
+    final @Readonly Equivalence<@Readonly Object> keyEquivalence;
+    final @Readonly Equivalence<@Readonly Object> valueEquivalence;
     final int concurrencyLevel;
 
     transient ConcurrentMap<K, V> delegate;
@@ -2954,10 +2955,10 @@ class MapMakerInternalMap<
     AbstractSerializationProxy(
         Strength keyStrength,
         Strength valueStrength,
-        Equivalence<@Readonly Object> keyEquivalence,
-        Equivalence<@Readonly Object> valueEquivalence,
+        @Readonly Equivalence<@Readonly Object> keyEquivalence,
+        @Readonly Equivalence<@Readonly Object> valueEquivalence,
         int concurrencyLevel,
-        ConcurrentMap<K, V> delegate) {
+        @ReceiverDependentMutable ConcurrentMap<K, V> delegate) {
       this.keyStrength = keyStrength;
       this.valueStrength = valueStrength;
       this.keyEquivalence = keyEquivalence;
@@ -3010,16 +3011,17 @@ class MapMakerInternalMap<
    * The actual object that gets serialized. Unfortunately, readResolve() doesn't get called when a
    * circular dependency is present, so the proxy must be able to behave as the map itself.
    */
+  @ReceiverDependentMutable
   private static final class SerializationProxy<K extends @Immutable Object, V> extends AbstractSerializationProxy<K, V> {
     private static final long serialVersionUID = 3;
 
     SerializationProxy(
         Strength keyStrength,
         Strength valueStrength,
-        Equivalence<@Readonly Object> keyEquivalence,
-        Equivalence<@Readonly Object> valueEquivalence,
+        @Readonly Equivalence<@Readonly Object> keyEquivalence,
+        @Readonly Equivalence<@Readonly Object> valueEquivalence,
         int concurrencyLevel,
-        ConcurrentMap<K, V> delegate) {
+        @ReceiverDependentMutable ConcurrentMap<K, V> delegate) {
       super(
           keyStrength, valueStrength, keyEquivalence, valueEquivalence, concurrencyLevel, delegate);
     }
@@ -3030,7 +3032,7 @@ class MapMakerInternalMap<
     }
 
     @J2ktIncompatible // java.io.ObjectInputStream
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable SerializationProxy<K, V> this, ObjectInputStream in) throws IOException, ClassNotFoundException {
       in.defaultReadObject();
       MapMaker mapMaker = readMapMaker(in);
       delegate = mapMaker.makeMap();

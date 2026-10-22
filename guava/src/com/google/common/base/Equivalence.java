@@ -64,7 +64,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
    * <p>Note that all calls to {@code equivalent(x, y)} are expected to return the same result as
    * long as neither {@code x} nor {@code y} is modified.
    */
-  public final boolean equivalent(@CheckForNull T a, @CheckForNull T b) {
+  public final boolean equivalent(@Readonly Equivalence<T> this, @CheckForNull T a, @CheckForNull T b) {
     if (a == b) {
       return true;
     }
@@ -95,7 +95,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
    * @since 10.0 (previously, subclasses would override equivalent())
    */
   @ForOverride
-  protected abstract boolean doEquivalent(T a, T b);
+  protected abstract boolean doEquivalent(@Readonly Equivalence<T> this, T a, T b);
 
   /**
    * Returns a hash code for {@code t}.
@@ -114,7 +114,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
    *   <li>{@code hash(null)} is {@code 0}.
    * </ul>
    */
-  public final int hash(@CheckForNull T t) {
+  public final int hash(@Readonly Equivalence<T> this, @CheckForNull T t) {
     if (t == null) {
       return 0;
     }
@@ -131,7 +131,7 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
    * @since 10.0 (previously, subclasses would override hash())
    */
   @ForOverride
-  protected abstract int doHash(T t);
+  protected abstract int doHash(@Readonly Equivalence<T> this, T t);
 
   /**
    * Returns a new equivalence relation for {@code F} which evaluates equivalence by first applying
@@ -364,12 +364,12 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
     static final Equals INSTANCE = new Equals();
 
     @Override
-    protected boolean doEquivalent(@Readonly Object a, @Readonly Object b) {
+    protected boolean doEquivalent(@Readonly Equals this, @Readonly Object a, @Readonly Object b) {
       return a.equals(b);
     }
 
     @Override
-    protected int doHash(@Readonly Object o) {
+    protected int doHash(@Readonly Equals this, @Readonly Object o) {
       return o.hashCode();
     }
 
@@ -385,12 +385,12 @@ public abstract class Equivalence<T> implements BiPredicate<@Nullable T, @Nullab
     static final Identity INSTANCE = new Identity();
 
     @Override
-    protected boolean doEquivalent(@Readonly Object a, @Readonly Object b) {
+    protected boolean doEquivalent(@Readonly Identity this, @Readonly Object a, @Readonly Object b) {
       return false;
     }
 
     @Override
-    protected int doHash(@Readonly Object o) {
+    protected int doHash(@Readonly Identity this, @Readonly Object o) {
       return System.identityHashCode(o);
     }
 

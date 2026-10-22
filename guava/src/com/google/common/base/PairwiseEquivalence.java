@@ -33,7 +33,7 @@ final class PairwiseEquivalence<E, T extends @Nullable E> extends Equivalence<It
   }
 
   @Override
-  protected boolean doEquivalent(Iterable<T> iterableA, Iterable<T> iterableB) {
+  protected boolean doEquivalent(@Readonly PairwiseEquivalence<E, T> this, Iterable<T> iterableA, Iterable<T> iterableB) {
     Iterator<T> iteratorA = iterableA.iterator();
     Iterator<T> iteratorB = iterableB.iterator();
 
@@ -47,7 +47,7 @@ final class PairwiseEquivalence<E, T extends @Nullable E> extends Equivalence<It
   }
 
   @Override
-  protected int doHash(Iterable<T> iterable) {
+  protected int doHash(@Readonly PairwiseEquivalence<E, T> this, Iterable<T> iterable) {
     int hash = 78721;
     for (T element : iterable) {
       hash = hash * 24943 + elementEquivalence.hash(element);

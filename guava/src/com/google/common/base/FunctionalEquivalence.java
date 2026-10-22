@@ -45,12 +45,12 @@ final class FunctionalEquivalence<F, T> extends Equivalence<F> implements Serial
   }
 
   @Override
-  protected boolean doEquivalent(F a, F b) {
+  protected boolean doEquivalent(@Readonly FunctionalEquivalence<F, T> this, F a, F b) {
     return resultEquivalence.equivalent(function.apply(a), function.apply(b));
   }
 
   @Override
-  protected int doHash(F a) {
+  protected int doHash(@Readonly FunctionalEquivalence<F, T> this, F a) {
     return resultEquivalence.hash(function.apply(a));
   }
 
