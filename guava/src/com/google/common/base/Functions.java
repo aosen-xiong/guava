@@ -360,13 +360,13 @@ public final class Functions {
    * @param value the constant value for the function to return
    * @return a function that always returns {@code value}
    */
-  public static <E extends @Nullable @Readonly Object> Function<@Nullable Object, E> constant(
-      @ParametricNullness E value) {
+  public static <E extends @Nullable @Readonly Object>
+      Function<@Nullable @Readonly Object, E> constant(@ParametricNullness E value) {
     return new ConstantFunction<>(value);
   }
 
   private static class ConstantFunction<E extends @Nullable @Readonly Object>
-      implements Function<@Nullable Object, E>, Serializable {
+      implements Function<@Nullable @Readonly Object, E>, Serializable {
     @ParametricNullness private final E value;
 
     public ConstantFunction(@ParametricNullness E value) {
@@ -375,7 +375,7 @@ public final class Functions {
 
     @Override
     @ParametricNullness
-    public E apply(@CheckForNull Object from) {
+    public E apply(@CheckForNull @Readonly Object from) {
       return value;
     }
 
