@@ -118,7 +118,7 @@ public abstract class Striped<L> {
   /**
    * Returns the index to which the given key is mapped, so that getAt(indexFor(key)) == get(key).
    */
-  abstract int indexFor(Object key);
+  abstract int indexFor(@Readonly Object key);
 
   /** Returns the total number of stripes in this instance. */
   public abstract int size();
@@ -141,9 +141,9 @@ public abstract class Striped<L> {
    * @return the stripes corresponding to the objects (one per each object, derived by delegating to
    *     {@link #get(Object)}; may contain duplicates), in an increasing index order.
    */
-  public Iterable<L> bulkGet(Iterable<? extends Object> keys) {
+  public @Readonly Iterable<L> bulkGet(Iterable<? extends @Readonly Object> keys) {
     // Initially using the list to store the keys, then reusing it to store the respective L's
-    List<Object> result = newArrayList(keys);
+    List<@Readonly Object> result = newArrayList(keys);
     if (result.isEmpty()) {
       return ImmutableList.of();
     }
@@ -347,7 +347,7 @@ public abstract class Striped<L> {
     }
 
     @Override
-    final int indexFor(Object key) {
+    final int indexFor(@Readonly Object key) {
       int hash = smear(key.hashCode());
       return hash & mask;
     }
