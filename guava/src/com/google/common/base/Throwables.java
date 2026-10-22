@@ -436,7 +436,7 @@ public final class Throwables {
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   private static @Readonly Object invokeAccessibleNonThrowingMethod(
-      Method method, Object receiver, Object... params) {
+      Method method, @Readonly Object receiver, @Readonly Object... params) {
     try {
       return method.invoke(receiver, params);
     } catch (IllegalAccessException e) {
@@ -460,7 +460,7 @@ public final class Throwables {
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   @CheckForNull
-  private static final Object jla = getJLA();
+  private static final @Readonly Object jla = getJLA();
 
   /**
    * The "getStackTraceElementMethod" method, only available on some JDKs so we use reflection to
@@ -531,7 +531,7 @@ public final class Throwables {
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   @CheckForNull
-  private static Method getSizeMethod(Object jla) {
+  private static Method getSizeMethod(@Readonly Object jla) {
     try {
       Method getStackTraceDepth = getJlaMethod("getStackTraceDepth", Throwable.class);
       if (getStackTraceDepth == null) {
