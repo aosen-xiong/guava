@@ -29,6 +29,7 @@ import java.net.URLClassLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A reference queue with an associated background thread that dequeues references and invokes
@@ -147,7 +148,7 @@ public class FinalizableReferenceQueue implements Closeable {
   }
 
   /** The actual reference queue that our background thread will poll. */
-  final ReferenceQueue<Object> queue;
+  final ReferenceQueue<@Readonly Object> queue;
 
   final PhantomReference<Object> frqRef;
 
