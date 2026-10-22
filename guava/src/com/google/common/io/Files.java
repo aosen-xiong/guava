@@ -852,7 +852,7 @@ public final class Files {
   private static final SuccessorsFunction<File> FILE_TREE =
       new SuccessorsFunction<File>() {
         @Override
-        public Iterable<File> successors(File file) {
+        public @Readonly Iterable<File> successors(File file) {
           // check isDirectory() just because it may be faster than listFiles() on a non-directory
           if (file.isDirectory()) {
             File[] files = file.listFiles();

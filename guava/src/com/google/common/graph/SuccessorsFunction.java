@@ -18,6 +18,7 @@ package com.google.common.graph;
 
 import com.google.common.annotations.Beta;
 import com.google.errorprone.annotations.DoNotMock;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
@@ -107,5 +108,5 @@ public interface SuccessorsFunction<N> {
    *
    * @throws IllegalArgumentException if {@code node} is not an element of this graph
    */
-  Iterable<? extends N> successors(N node);
+  @Readonly Iterable<? extends N> successors(N node);
 }
