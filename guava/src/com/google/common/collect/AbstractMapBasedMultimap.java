@@ -178,7 +178,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     return createCollection();
   }
 
-  @PolyMutable Map<K, @PolyMutable Collection<V>> backingMap(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> backingMap(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return map;
   }
 
@@ -318,7 +318,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   final @ReceiverDependentMutable List<V> wrapList(
-      @ParametricNullness K key, @ReceiverDependentMutable List<V> list, @CheckForNull WrappedCollection ancestor) {
+      @ParametricNullness K key, @ReceiverDependentMutable List<V> list, @CheckForNull @ReceiverDependentMutable WrappedCollection ancestor) {
     return (list instanceof RandomAccess)
         ? new @ReceiverDependentMutable RandomAccessWrappedList(key, list, ancestor)
         : new @ReceiverDependentMutable WrappedList(key, list, ancestor);
@@ -650,7 +650,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @ReceiverDependentMutable SortedSet<V> getSortedSetDelegate(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedSortedSet this) {
-      return (SortedSet<V>) getDelegate();
+      return (@ReceiverDependentMutable SortedSet<V>) getDelegate();
     }
 
     @Override
@@ -792,12 +792,12 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   @ReceiverDependentMutable
   class WrappedList extends WrappedCollection implements List<V> {
     WrappedList(
-        @ParametricNullness K key, @ReceiverDependentMutable List<V> delegate, @CheckForNull WrappedCollection ancestor) {
+        @ParametricNullness K key, @ReceiverDependentMutable List<V> delegate, @CheckForNull @ReceiverDependentMutable WrappedCollection ancestor) {
       super(key, delegate, ancestor);
     }
 
     @ReceiverDependentMutable List<V> getListDelegate(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedList this) {
-      return (List<V>) getDelegate();
+      return (@ReceiverDependentMutable List<V>) getDelegate();
     }
 
     @Override
@@ -943,7 +943,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   @ReceiverDependentMutable
   private class RandomAccessWrappedList extends WrappedList implements RandomAccess {
     RandomAccessWrappedList(
-        @ParametricNullness K key, @ReceiverDependentMutable List<V> delegate, @CheckForNull WrappedCollection ancestor) {
+        @ParametricNullness K key, @ReceiverDependentMutable List<V> delegate, @CheckForNull @ReceiverDependentMutable WrappedCollection ancestor) {
       super(key, delegate, ancestor);
     }
   }
@@ -1320,8 +1320,9 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    * @return an iterator across map entries
    */
   @Override
-  Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable AbstractMapBasedMultimap<K, V> this) {
-    return new Itr<@PolyMutable Entry<K, V>>() {
+  @SuppressWarnings("mutability:return.type.incompatible") // the entries have the multimap's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+  @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
+    return new Itr<@ReceiverDependentMutable Entry<K, V>>() {
       @Override
       @Immutable Entry<K, V> output(@ParametricNullness K key, @ParametricNullness V value) {
         return Maps.immutableEntry(key, value);
@@ -1465,7 +1466,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       }
 
       @Override
-      public Iterator<Entry<K, Collection<V>>> iterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable AsMap.@ReceiverDependentMutable AsMapEntries this) {
+      public @Mutable Iterator<@Immutable Entry<K, Collection<V>>> iterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable AsMap.@ReceiverDependentMutable AsMapEntries this) {
         return new AsMapIterator();
       }
 
@@ -1494,7 +1495,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     /** Iterator across all keys and value collections. */
-    class AsMapIterator implements Iterator<Entry<K, Collection<V>>> {
+    class AsMapIterator implements Iterator<@Immutable Entry<K, Collection<V>>> {
       final Iterator<Entry<K, Collection<V>>> delegateIterator = submap.entrySet().iterator();
       @CheckForNull Collection<V> collection;
 

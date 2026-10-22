@@ -54,8 +54,8 @@ abstract class AbstractSortedKeySortedSetMultimap<
   }
 
   @Override
-  @PolyMutable SortedMap<K, @PolyMutable Collection<V>> backingMap(@PolyMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
-    return (@PolyMutable SortedMap<K, @PolyMutable Collection<V>>) super.backingMap();
+  @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> backingMap(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
+    return (@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>>) super.backingMap();
   }
 
   @Override

@@ -56,7 +56,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
   }
 
   @Override
-  abstract List<V> createCollection();
+  abstract @PolyMutable List<V> createCollection(@PolyMutable AbstractListMultimap<K, V> this);
 
   @Override
   @Immutable List<V> createUnmodifiableEmptyCollection() {
