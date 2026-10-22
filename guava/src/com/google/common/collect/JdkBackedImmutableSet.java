@@ -70,7 +70,7 @@ final class JdkBackedImmutableSet<E> extends IndexedImmutableSet<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

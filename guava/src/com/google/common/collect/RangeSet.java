@@ -19,8 +19,8 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -59,7 +59,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public interface RangeSet<C extends @Readonly Comparable> {
+public interface RangeSet<C extends @Immutable Comparable> {
   // TODO(lowasser): consider adding default implementations of some of these methods
 
   // Query methods
@@ -81,13 +81,13 @@ public interface RangeSet<C extends @Readonly Comparable> {
    *
    * @since 20.0
    */
-  boolean intersects(@Readonly RangeSet<C> this, @Readonly Range<C> otherRange);
+  boolean intersects(@Readonly RangeSet<C> this, Range<C> otherRange);
 
   /**
    * Returns {@code true} if there exists a member range in this range set which {@linkplain
    * Range#encloses encloses} the specified range.
    */
-  boolean encloses(@Readonly RangeSet<C> this, @Readonly Range<C> otherRange);
+  boolean encloses(@Readonly RangeSet<C> this, Range<C> otherRange);
 
   /**
    * Returns {@code true} if for each member range in {@code other} there exists a member range in
@@ -138,7 +138,7 @@ public interface RangeSet<C extends @Readonly Comparable> {
    * Iterable#iterator} method return the ranges in increasing order of lower bound (equivalently,
    * of upper bound).
    */
-  @PolyMutable Set<Range<C>> asRanges(@PolyMutable RangeSet<C> this);
+  @ReceiverDependentMutable Set<Range<C>> asRanges(@ReceiverDependentMutable RangeSet<C> this);
 
   /**
    * Returns a descending view of the {@linkplain Range#isConnected disconnected} ranges that make
@@ -148,7 +148,7 @@ public interface RangeSet<C extends @Readonly Comparable> {
    *
    * @since 19.0
    */
-    @PolyMutable Set<Range<C>> asDescendingSetOfRanges(@PolyMutable RangeSet<C> this);
+    @ReceiverDependentMutable Set<Range<C>> asDescendingSetOfRanges(@ReceiverDependentMutable RangeSet<C> this);
 
   /**
    * Returns a view of the complement of this {@code RangeSet}.
@@ -156,7 +156,7 @@ public interface RangeSet<C extends @Readonly Comparable> {
    * <p>The returned view supports the {@link #add} operation if this {@code RangeSet} supports
    * {@link #remove}, and vice versa.
    */
-  @PolyMutable RangeSet<C> complement(@PolyMutable RangeSet<C> this);
+  @ReceiverDependentMutable RangeSet<C> complement(@ReceiverDependentMutable RangeSet<C> this);
 
   /**
    * Returns a view of the intersection of this {@code RangeSet} with the specified range.
@@ -165,7 +165,7 @@ public interface RangeSet<C extends @Readonly Comparable> {
    * the caveat that an {@link IllegalArgumentException} is thrown on an attempt to {@linkplain
    * #add(Range) add} any range not {@linkplain Range#encloses(Range) enclosed} by {@code view}.
    */
-  @PolyMutable RangeSet<C> subRangeSet(@PolyMutable RangeSet<C> this, Range<C> view);
+  @ReceiverDependentMutable RangeSet<C> subRangeSet(@ReceiverDependentMutable RangeSet<C> this, Range<C> view);
 
   // Modification
 

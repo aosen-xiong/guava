@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.stream.Collector;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -58,14 +59,14 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-public final class ImmutableRangeSet<C extends @Readonly Comparable> extends AbstractRangeSet<C>
+public final class ImmutableRangeSet<C extends @Immutable Comparable> extends AbstractRangeSet<C>
     implements Serializable {
 
-  private static final ImmutableRangeSet<Comparable<?>> EMPTY =
-      new ImmutableRangeSet<>(ImmutableList.<Range<Comparable<?>>>of());
+  private static final ImmutableRangeSet<@Immutable Comparable<?>> EMPTY =
+      new ImmutableRangeSet<>(ImmutableList.<Range<@Immutable Comparable<?>>>of());
 
-  private static final ImmutableRangeSet<Comparable<?>> ALL =
-      new ImmutableRangeSet<>(ImmutableList.of(Range.<Comparable<?>>all()));
+  private static final ImmutableRangeSet<@Immutable Comparable<?>> ALL =
+      new ImmutableRangeSet<>(ImmutableList.of(Range.<@Immutable Comparable<?>>all()));
 
   /**
    * Returns a {@code Collector} that accumulates the input elements into a new {@code
@@ -74,7 +75,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
    *
    * @since 23.1
    */
-  public static <E extends @Readonly Comparable<? super E>>
+  public static <E extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<? super E>>
       Collector<Range<E>, ?, ImmutableRangeSet<E>> toImmutableRangeSet() {
     return CollectCollectors.toImmutableRangeSet();
   }
@@ -85,7 +86,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
    * <p><b>Performance note:</b> the instance returned is a singleton.
    */
   @SuppressWarnings("unchecked")
-  public static <C extends @Readonly Comparable> ImmutableRangeSet<C> of() {
+  public static <C extends @Immutable Comparable> ImmutableRangeSet<C> of() {
     return (ImmutableRangeSet<C>) EMPTY;
   }
 
@@ -93,7 +94,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
    * Returns an immutable range set containing the specified single range. If {@link Range#isEmpty()
    * range.isEmpty()}, this is equivalent to {@link ImmutableRangeSet#of()}.
    */
-  public static <C extends @Readonly Comparable> ImmutableRangeSet<C> of(Range<C> range) {
+  public static <C extends @Immutable Comparable> ImmutableRangeSet<C> of(Range<C> range) {
     checkNotNull(range);
     if (range.isEmpty()) {
       return of();
@@ -106,12 +107,12 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
 
   /** Returns an immutable range set containing the single range {@link Range#all()}. */
   @SuppressWarnings("unchecked")
-  static <C extends @Readonly Comparable> ImmutableRangeSet<C> all() {
+  static <C extends @Immutable Comparable> ImmutableRangeSet<C> all() {
     return (ImmutableRangeSet<C>) ALL;
   }
 
   /** Returns an immutable copy of the specified {@code RangeSet}. */
-  public static <C extends @Readonly Comparable> ImmutableRangeSet<C> copyOf(RangeSet<C> rangeSet) {
+  public static <C extends @Immutable Comparable> ImmutableRangeSet<C> copyOf(@Readonly RangeSet<C> rangeSet) {
     checkNotNull(rangeSet);
     if (rangeSet.isEmpty()) {
       return of();
@@ -136,7 +137,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
    * @throws IllegalArgumentException if any ranges overlap or are empty
    * @since 21.0
    */
-  public static <C extends @Readonly Comparable<?>> ImmutableRangeSet<C> copyOf(Iterable<Range<C>> ranges) {
+  public static <C extends @Immutable Comparable<?>> ImmutableRangeSet<C> copyOf(@Readonly Iterable<Range<C>> ranges) {
     return new ImmutableRangeSet.Builder<C>().addAll(ranges).build();
   }
 
@@ -148,7 +149,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
    *
    * @since 21.0
    */
-  public static <C extends @Readonly Comparable<?>> ImmutableRangeSet<C> unionOf(Iterable<Range<C>> ranges) {
+  public static <C extends @Immutable Comparable<?>> ImmutableRangeSet<C> unionOf(@Readonly Iterable<Range<C>> ranges) {
     return copyOf(TreeRangeSet.create(ranges));
   }
 
@@ -164,7 +165,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   private final transient ImmutableList<Range<C>> ranges;
 
   @Override
-  public boolean intersects(Range<C> otherRange) {
+  public boolean intersects(@Readonly ImmutableRangeSet<C> this, Range<C> otherRange) {
     int ceilingIndex =
         SortedLists.binarySearch(
             ranges,
@@ -184,7 +185,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   }
 
   @Override
-  public boolean encloses(Range<C> otherRange) {
+  public boolean encloses(@Readonly ImmutableRangeSet<C> this, Range<C> otherRange) {
     int index =
         SortedLists.binarySearch(
             ranges,
@@ -249,7 +250,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public void addAll(RangeSet<C> other) {
+  public void addAll(@Readonly RangeSet<C> other) {
     throw new UnsupportedOperationException();
   }
 
@@ -262,7 +263,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public void addAll(Iterable<Range<C>> other) {
+  public void addAll(@Readonly Iterable<Range<C>> other) {
     throw new UnsupportedOperationException();
   }
 
@@ -288,7 +289,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public void removeAll(RangeSet<C> other) {
+  public void removeAll(@Readonly RangeSet<C> other) {
     throw new UnsupportedOperationException();
   }
 
@@ -301,7 +302,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public void removeAll(Iterable<Range<C>> other) {
+  public void removeAll(@Readonly Iterable<Range<C>> other) {
     throw new UnsupportedOperationException();
   }
 
@@ -321,7 +322,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
     return new RegularImmutableSortedSet<>(ranges.reverse(), Range.<C>rangeLexOrdering().reverse());
   }
 
-  @LazyInit @CheckForNull private transient ImmutableRangeSet<C> complement;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableRangeSet<C> complement;
 
   @Immutable
   private final class ComplementRanges extends ImmutableList<Range<C>> {
@@ -382,7 +383,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
     @SuppressWarnings("RedundantOverride")
     @Override
     @J2ktIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -510,7 +511,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
         @Override
         @J2ktIncompatible // serialization
         @GwtIncompatible // serialization
-        Object writeReplace() {
+        @Readonly Object writeReplace() {
           return super.writeReplace();
         }
       };
@@ -582,7 +583,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
       this.domain = domain;
     }
 
-    @LazyInit @CheckForNull private transient Integer size;
+    @LazyInit @CheckForNull private transient @Assignable Integer size;
 
     @Override
     public @NonNegative int size() {
@@ -590,7 +591,10 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
       Integer result = size;
       if (result == null) {
         long total = 0;
-        for (Range<C> range : ranges) {
+        // CHECKER BUG: the enhanced-for loop variable is defaulted @Mutable instead of taking
+        // Range's @Immutable class bound; ranges.get(0) on the same field is correctly
+        // @Immutable. The checker flags its own default with type.invalid.annotations.on.use.
+        for (@Immutable Range<C> range : ranges) {
           total += ContiguousSet.create(range, domain).size();
           if (total >= Integer.MAX_VALUE) {
             break;
@@ -602,10 +606,10 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
     }
 
     @Override
-    public UnmodifiableIterator<C> iterator() {
-      return new AbstractIterator<C>() {
+    public @Mutable UnmodifiableIterator<C> iterator() {
+      return new @Mutable AbstractIterator<C>() {
         final Iterator<Range<C>> rangeItr = ranges.iterator();
-        Iterator<C> elemItr = Iterators.emptyIterator();
+        @Assignable Iterator<C> elemItr = Iterators.emptyIterator();
 
         @Override
         @CheckForNull
@@ -624,10 +628,10 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
 
     @Override
     @GwtIncompatible("NavigableSet")
-    public UnmodifiableIterator<C> descendingIterator() {
-      return new AbstractIterator<C>() {
+    public @Mutable UnmodifiableIterator<C> descendingIterator() {
+      return new @Mutable AbstractIterator<C>() {
         final Iterator<Range<C>> rangeItr = ranges.reverse().iterator();
-        Iterator<C> elemItr = Iterators.emptyIterator();
+        @Assignable Iterator<C> elemItr = Iterators.emptyIterator();
 
         @Override
         @CheckForNull
@@ -671,7 +675,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
       if (o == null) {
         return false;
       }
@@ -685,12 +689,15 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
     }
 
     @Override
-    int indexOf(@CheckForNull Object target) {
+    int indexOf(@CheckForNull @Readonly Object target) {
       if (contains(target)) {
         @SuppressWarnings("unchecked") // if it's contained, it's definitely a C
         C c = (C) requireNonNull(target);
         long total = 0;
-        for (Range<C> range : ranges) {
+        // CHECKER BUG: the enhanced-for loop variable is defaulted @Mutable instead of taking
+        // Range's @Immutable class bound; ranges.get(0) on the same field is correctly
+        // @Immutable. The checker flags its own default with type.invalid.annotations.on.use.
+        for (@Immutable Range<C> range : ranges) {
           if (range.contains(c)) {
             return Ints.saturatedCast(total + ContiguousSet.create(range, domain).indexOf(c));
           } else {
@@ -719,7 +726,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
 
     @Override
     @J2ktIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new AsSetSerializedForm<C>(ranges, domain);
     }
 
@@ -730,7 +737,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   }
 
   @Immutable
-  private static class AsSetSerializedForm<C extends @Readonly Comparable> implements Serializable {
+  private static class AsSetSerializedForm<C extends @Immutable Comparable> implements Serializable {
     private final ImmutableList<Range<C>> ranges;
     private final DiscreteDomain<C> domain;
 
@@ -739,7 +746,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
       this.domain = domain;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return new ImmutableRangeSet<C>(ranges).asSet(domain);
     }
   }
@@ -755,7 +762,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   }
 
   /** Returns a new builder for an immutable range set. */
-  public static <C extends @Readonly Comparable<?>> Builder<C> builder() {
+  public static <C extends @Immutable Comparable<?>> Builder<C> builder() {
     return new Builder<C>();
   }
 
@@ -765,7 +772,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
    * @since 14.0
    */
   @Mutable
-  public static class Builder<C extends @Readonly Comparable<?>> {
+  public static class Builder<C extends @Immutable Comparable<?>> {
     private final List<Range<C>> ranges;
 
     public Builder() {
@@ -805,8 +812,11 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
      * @since 21.0
      */
     @CanIgnoreReturnValue
-    public Builder<C> addAll(Iterable<Range<C>> ranges) {
-      for (Range<C> range : ranges) {
+    public Builder<C> addAll(@Readonly Iterable<Range<C>> ranges) {
+      // CHECKER BUG: the enhanced-for loop variable is defaulted @Mutable instead of taking
+        // Range's @Immutable class bound; ranges.get(0) on the same field is correctly
+        // @Immutable. The checker flags its own default with type.invalid.annotations.on.use.
+        for (@Immutable Range<C> range : ranges) {
         add(range);
       }
       return this;
@@ -858,7 +868,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   }
 
   @Immutable
-  private static final class SerializedForm<C extends @Readonly Comparable> implements Serializable {
+  private static final class SerializedForm<C extends @Immutable Comparable> implements Serializable {
     private final ImmutableList<Range<C>> ranges;
 
     SerializedForm(ImmutableList<Range<C>> ranges) {
@@ -877,7 +887,7 @@ public final class ImmutableRangeSet<C extends @Readonly Comparable> extends Abs
   }
 
   @J2ktIncompatible // java.io.ObjectInputStream
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<C>(ranges);
   }
 

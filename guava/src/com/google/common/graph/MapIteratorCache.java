@@ -114,12 +114,12 @@ class MapIteratorCache<K extends @Immutable Object, V> {
   }
 
   final @Readonly Set<K> unmodifiableKeySet() {
-    return new AbstractSet<K>() {
+    return new @Mutable AbstractSet<K>() {
       @Override
       public UnmodifiableIterator<K> iterator() {
         Iterator<Entry<K, V>> entryIterator = backingMap.entrySet().iterator();
 
-        return new UnmodifiableIterator<K>() {
+        return new @Mutable UnmodifiableIterator<K>() {
           @Override
           public boolean hasNext() {
             return entryIterator.hasNext();

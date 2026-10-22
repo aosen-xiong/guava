@@ -64,7 +64,7 @@ final class Serialization {
    * second value, and so on.
    */
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> void writeMap(
-      Map<K, V> map, ObjectOutputStream stream) throws IOException {
+      @Readonly Map<K, V> map, ObjectOutputStream stream) throws IOException {
     stream.writeInt(map.size());
     for (Map.Entry<K, V> entry : map.entrySet()) {
       stream.writeObject(entry.getKey());
@@ -106,7 +106,7 @@ final class Serialization {
    * count, the second element, its count, and so on.
    */
   static <E extends @Nullable @Readonly Object> void writeMultiset(
-      Multiset<E> multiset, ObjectOutputStream stream) throws IOException {
+      @Readonly Multiset<E> multiset, ObjectOutputStream stream) throws IOException {
     int entryCount = multiset.entrySet().size();
     stream.writeInt(entryCount);
     for (Multiset.Entry<E> entry : multiset.entrySet()) {
@@ -149,8 +149,9 @@ final class Serialization {
    * <p>The serialized output consists of the number of distinct keys, and then for each distinct
    * key: the key, the number of values for that key, and the key's values.
    */
+  @SuppressWarnings("mutability:enhancedfor.type.incompatible") // lost-in-type-argument: @Lost inside Map<K, @Lost Collection<V>>
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> void writeMultimap(
-      Multimap<K, V> multimap, ObjectOutputStream stream) throws IOException {
+      @Readonly Multimap<K, V> multimap, ObjectOutputStream stream) throws IOException {
     stream.writeInt(multimap.asMap().size());
     for (Map.Entry<K, Collection<V>> entry : multimap.asMap().entrySet()) {
       stream.writeObject(entry.getKey());

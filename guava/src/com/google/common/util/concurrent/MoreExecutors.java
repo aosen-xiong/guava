@@ -54,6 +54,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Factory and utility methods for {@link java.util.concurrent.Executor}, {@link ExecutorService},
@@ -350,7 +352,7 @@ public final class MoreExecutors {
 
     // See newDirectExecutorService javadoc for unusual behavior of this method.
     @Override
-    public List<Runnable> shutdownNow() {
+    public @Immutable List<Runnable> shutdownNow() {
       shutdown();
       return Collections.emptyList();
     }
@@ -632,7 +634,7 @@ public final class MoreExecutors {
     }
 
     @Override
-    public final List<Runnable> shutdownNow() {
+    public final @Readonly List<Runnable> shutdownNow() {
       return delegate.shutdownNow();
     }
 
@@ -668,7 +670,7 @@ public final class MoreExecutors {
     }
 
     @Override
-    public <V extends @Nullable @UnknownSignedness Object> ListenableScheduledFuture<V> schedule(
+    public <V extends @Nullable @UnknownSignedness @Readonly Object> ListenableScheduledFuture<V> schedule(
         Callable<V> callable, long delay, TimeUnit unit) {
       TrustedListenableFutureTask<V> task = TrustedListenableFutureTask.create(callable);
       ScheduledFuture<?> scheduled = delegate.schedule(task, delay, unit);
@@ -692,7 +694,7 @@ public final class MoreExecutors {
       return new ListenableScheduledTask<@Nullable Void>(task, scheduled);
     }
 
-    private static final class ListenableScheduledTask<V extends @Nullable Object>
+    private static final class ListenableScheduledTask<V extends @Nullable @Readonly Object>
         extends SimpleForwardingListenableFuture<V> implements ListenableScheduledFuture<V> {
 
       private final ScheduledFuture<?> scheduledDelegate;
@@ -772,7 +774,7 @@ public final class MoreExecutors {
   @J2ktIncompatible
   @GwtIncompatible
   @ParametricNullness
-  static <T extends @Nullable Object> T invokeAnyImpl(
+  static <T extends @Nullable @Readonly Object> T invokeAnyImpl(
       ListeningExecutorService executorService,
       Collection<? extends Callable<T>> tasks,
       boolean timed,
@@ -793,7 +795,7 @@ public final class MoreExecutors {
   @J2ktIncompatible
   @GwtIncompatible
   @ParametricNullness
-  static <T extends @Nullable Object> T invokeAnyImpl(
+  static <T extends @Nullable @Readonly Object> T invokeAnyImpl(
       ListeningExecutorService executorService,
       Collection<? extends Callable<T>> tasks,
       boolean timed,
@@ -876,7 +878,7 @@ public final class MoreExecutors {
    */
   @J2ktIncompatible
   @GwtIncompatible // TODO
-  private static <T extends @Nullable Object> ListenableFuture<T> submitAndAddQueueListener(
+  private static <T extends @Nullable @Readonly Object> ListenableFuture<T> submitAndAddQueueListener(
       ListeningExecutorService executorService,
       Callable<T> task,
       final BlockingQueue<Future<T>> queue) {
@@ -1026,7 +1028,7 @@ public final class MoreExecutors {
     checkNotNull(nameSupplier);
     return new WrappingExecutorService(service) {
       @Override
-      protected <T extends @Nullable Object> Callable<T> wrapTask(Callable<T> callable) {
+      protected <T extends @Nullable @Readonly Object> Callable<T> wrapTask(Callable<T> callable) {
         return Callables.threadRenaming(callable, nameSupplier);
       }
 
@@ -1056,7 +1058,7 @@ public final class MoreExecutors {
     checkNotNull(nameSupplier);
     return new WrappingScheduledExecutorService(service) {
       @Override
-      protected <T extends @Nullable Object> Callable<T> wrapTask(Callable<T> callable) {
+      protected <T extends @Nullable @Readonly Object> Callable<T> wrapTask(Callable<T> callable) {
         return Callables.threadRenaming(callable, nameSupplier);
       }
 

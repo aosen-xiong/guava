@@ -57,6 +57,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
@@ -105,7 +106,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    */
 
   /** Creates an empty {@code CompactHashMap} instance. */
-  public static <K extends @Nullable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
   CompactHashMap<K, V> create() {
     return new CompactHashMap<>();
   }
@@ -119,7 +120,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    *     elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <K extends @Nullable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
   CompactHashMap<K, V> createWithExpectedSize(int expectedSize) {
     return new CompactHashMap<>(expectedSize);
   }
@@ -222,13 +223,13 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * The keys of the entries in the map, in the range of [0, size()). The keys in [size(),
    * keys.length) are all {@code null}.
    */
-  @VisibleForTesting @CheckForNull transient @Nullable Object[] keys;
+  @VisibleForTesting @CheckForNull transient @Nullable @Readonly Object[] keys;
 
   /**
    * The values of the entries in the map, in the range of [0, size()). The values in [size(),
    * values.length) are all {@code null}.
    */
-  @VisibleForTesting @CheckForNull transient @Nullable Object[] values;
+  @VisibleForTesting @CheckForNull transient @Nullable @Readonly Object[] values;
 
   /**
    * Keeps track of metadata like the number of hash table bits and modifications of this data
@@ -242,12 +243,13 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * its bottom {@value CompactHashing#HASH_TABLE_BITS_MAX_BITS} bits, with a modification count in
    * the remaining bits that is used to detect concurrent modification during iteration.
    */
-  private transient @Assignable int metadata;
+  private transient int metadata;
 
   /** The number of elements contained in the set. */
-  private transient @Assignable int size;
+  private transient int size;
 
   /** Constructs a new empty instance of {@code CompactHashMap}. */
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   CompactHashMap() {
     init(CompactHashing.DEFAULT_SIZE);
   }
@@ -257,12 +259,13 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    *
    * @param expectedSize the initial capacity of this {@code CompactHashMap}.
    */
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   CompactHashMap(int expectedSize) {
     init(expectedSize);
   }
 
   /** Pseudoconstructor for serialization support. */
-  void init(int expectedSize) {
+  void init(@Mutable CompactHashMap<K, V> this, int expectedSize) {
     Preconditions.checkArgument(expectedSize >= 0, "Expected size must be >= 0");
 
     // Save expectedSize for use in allocArrays()
@@ -277,7 +280,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
   /** Handle lazy allocation of arrays. */
   @CanIgnoreReturnValue
-  int allocArrays() {
+  int allocArrays(@Mutable CompactHashMap<K, V> this) {
     Preconditions.checkState(needsAllocArrays(), "Arrays already allocated");
 
     int expectedSize = metadata;
@@ -308,7 +311,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
   @VisibleForTesting
   @CanIgnoreReturnValue
-  Map<K, V> convertToHashFloodingResistantImplementation() {
+  Map<K, V> convertToHashFloodingResistantImplementation(@Mutable CompactHashMap<K, V> this) {
     Map<K, V> newDelegate = createHashFloodingResistantDelegate(hashTableMask() + 1);
     for (int i = firstEntryIndex(); i >= 0; i = getSuccessor(i)) {
       newDelegate.put(key(i), value(i));
@@ -322,7 +325,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   /** Stores the hash table mask as the number of bits needed to represent an index. */
-  private void setHashTableMask(int mask) {
+  private void setHashTableMask(@Mutable CompactHashMap<K, V> this, int mask) {
     int hashTableBits = Integer.SIZE - Integer.numberOfLeadingZeros(mask);
     metadata =
         CompactHashing.maskCombine(metadata, hashTableBits, CompactHashing.HASH_TABLE_BITS_MASK);
@@ -333,7 +336,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return (1 << (metadata & CompactHashing.HASH_TABLE_BITS_MASK)) - 1;
   }
 
-  void incrementModCount() {
+  void incrementModCount(@Mutable CompactHashMap<K, V> this) {
     metadata += CompactHashing.MODIFICATION_COUNT_INCREMENT;
   }
 
@@ -357,8 +360,8 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
       return delegate.put(key, value);
     }
     int[] entries = requireEntries();
-    @Nullable Object[] keys = requireKeys();
-    @Nullable Object[] values = requireValues();
+    @Nullable @Readonly Object[] keys = requireKeys();
+    @Nullable @Readonly Object[] values = requireValues();
 
     int newEntryIndex = this.size; // current size, and pointer to the entry to be appended
     int newSize = newEntryIndex + 1;
@@ -415,7 +418,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   /**
    * Creates a fresh entry with the specified object at the specified position in the entry arrays.
    */
-  void insertEntry(
+  void insertEntry(@Mutable CompactHashMap<K, V> this, 
       int entryIndex, @ParametricNullness K key, @ParametricNullness V value, int hash, int mask) {
     this.setEntry(entryIndex, CompactHashing.maskCombine(hash, UNSET, mask));
     this.setKey(entryIndex, key);
@@ -423,7 +426,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   /** Resizes the entries storage if necessary. */
-  private void resizeMeMaybe(int newSize) {
+  private void resizeMeMaybe(@Mutable CompactHashMap<K, V> this, int newSize) {
     int entriesSize = requireEntries().length;
     if (newSize > entriesSize) {
       // 1.5x but round up to nearest odd (this is optimal for memory consumption on Android)
@@ -439,14 +442,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * Resizes the internal entries array to the specified capacity, which may be greater or less than
    * the current capacity.
    */
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactHashMap<K, V> this, int newCapacity) {
     this.entries = Arrays.copyOf(requireEntries(), newCapacity);
     this.keys = Arrays.copyOf(requireKeys(), newCapacity);
     this.values = Arrays.copyOf(requireValues(), newCapacity);
   }
 
   @CanIgnoreReturnValue
-  private int resizeTable(int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
+  private int resizeTable(@Mutable CompactHashMap<K, V> this, int oldMask, int newCapacity, int targetHash, int targetEntryIndex) {
     Object newTable = CompactHashing.createTable(newCapacity);
     int newMask = newCapacity - 1;
 
@@ -492,7 +495,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return newMask;
   }
 
-  private int indexOf(@CheckForNull Object key) {
+  private int indexOf(@CheckForNull @Readonly Object key) {
     if (needsAllocArrays()) {
       return -1;
     }
@@ -516,14 +519,14 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     Map<K, V> delegate = delegateOrNull();
     return (delegate != null) ? delegate.containsKey(key) : indexOf(key) != -1;
   }
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull @UnknownSignedness Object key) {
+  public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
     Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.get(key);
@@ -549,7 +552,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return (oldValue == NOT_FOUND) ? null : (V) oldValue;
   }
 
-  private @Nullable Object removeHelper(@CheckForNull Object key) {
+  private @Nullable @Readonly Object removeHelper(@Mutable CompactHashMap<K, V> this, @CheckForNull @Readonly Object key) {
     if (needsAllocArrays()) {
       return NOT_FOUND;
     }
@@ -582,8 +585,8 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   void moveLastEntry(@Mutable CompactHashMap<K, V> this, int dstIndex, int mask) {
     Object table = requireTable();
     int[] entries = requireEntries();
-    @Nullable Object[] keys = requireKeys();
-    @Nullable Object[] values = requireValues();
+    @Nullable @Readonly Object[] keys = requireKeys();
+    @Nullable @Readonly Object[] values = requireValues();
     int srcIndex = size() - 1;
     if (dstIndex < srcIndex) {
       // move last entry to deleted spot
@@ -640,7 +643,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return indexBeforeRemove - 1;
   }
 
-  private abstract class Itr<T extends @Nullable Object> implements Iterator<T> {
+  private abstract class Itr<T extends @Nullable @Readonly Object> implements Iterator<T> {
     int expectedMetadata = metadata;
     int currentIndex = firstEntryIndex();
     int indexToRemove = -1;
@@ -688,7 +691,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+  public void replaceAll(@Mutable CompactHashMap<K, V> this, BiFunction<? super K, ? super V, ? extends V> function) {
     checkNotNull(function);
     Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
@@ -700,25 +703,27 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<K> keySetView;
+  @LazyInit @CheckForNull private transient @Assignable Set<K> keySetView;
 
   @Override
-  public Set<@KeyFor({"this"}) K> keySet() {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (keySetView == null) ? keySetView = createKeySet() : keySetView;
   }
 
-  Set<K> createKeySet() {
-    return new KeySetView();
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
+    return new @ReceiverDependentMutable KeySetView();
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class KeySetView extends Maps.KeySet<K, V> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     KeySetView() {
       super(CompactHashMap.this);
     }
 
     @Override
-    public @Nullable Object[] toArray() {
+    public @Nullable @Readonly Object[] toArray() {
       if (needsAllocArrays()) {
         return new Object[0];
       }
@@ -730,10 +735,10 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
     @Override
     @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-    public <T extends @Nullable @UnknownSignedness Object> T[] toArray(@PolyNull T[] a) {
+    public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] a) {
       if (needsAllocArrays()) {
         if (a.length > 0) {
-          @Nullable Object[] unsoundlyCovariantArray = a;
+          @Nullable @Readonly Object[] unsoundlyCovariantArray = a;
           unsoundlyCovariantArray[0] = null;
         }
         return a;
@@ -745,7 +750,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
       Map<K, V> delegate = delegateOrNull();
       return (delegate != null)
           ? delegate.keySet().remove(o)
@@ -810,30 +815,33 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySetView;
+  @LazyInit @CheckForNull private transient @Assignable Set<@ReceiverDependentMutable Entry<K, V>> entrySetView;
 
   @Override
-  public Set<Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (entrySetView == null) ? entrySetView = createEntrySet() : entrySetView;
   }
 
-  Set<Entry<K, V>> createEntrySet() {
-    return new EntrySetView();
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable CompactHashMap<K, V> this) {
+    return new @ReceiverDependentMutable EntrySetView();
   }
 
   @WeakOuter
+  @ReceiverDependentMutable
   class EntrySetView extends Maps.EntrySet<K, V> {
     @Override
-    Map<K, V> map() {
+    @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable CompactHashMap<K, V>.@ReceiverDependentMutable EntrySetView this) {
       return CompactHashMap.this;
     }
 
     @Override
-    public Iterator<Entry<K, V>> iterator() {
+    @SuppressWarnings("mutability:return.type.incompatible") // the entries have the enclosing map's mutability, but the shared entry iterator is a fresh @Mutable cursor whose entries the checker cannot relate to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator() {
       return entrySetIterator();
     }
 
     @Override
+    @SuppressWarnings({"mutability:override.return.invalid", "mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the spliterator reads the map's entries without a receiver to relate them to, so it can only promise @Mutable entries, as jdk#4's HashMap.EntrySet.spliterator
     public Spliterator<Entry<K, V>> spliterator() {
       Map<K, V> delegate = delegateOrNull();
       return (delegate != null)
@@ -843,7 +851,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
       Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.entrySet().contains(o);
@@ -856,7 +864,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
       Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return delegate.entrySet().remove(o);
@@ -902,10 +910,11 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     };
   }
 
+  @ReceiverDependentMutable
   final class MapEntry extends AbstractMapEntry<K, V> {
     @ParametricNullness private final K key;
 
-    private int lastKnownIndex;
+    private @Assignable int lastKnownIndex; // a lookup cache refreshed by the read methods
 
     MapEntry(int index) {
       this.key = key(index);
@@ -951,7 +960,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
     @Override
     @ParametricNullness
-    public V setValue(@ParametricNullness V value) {
+    public V setValue(@Mutable CompactHashMap<K, V>.@Mutable MapEntry this, @ParametricNullness V value) {
       Map<K, V> delegate = delegateOrNull();
       if (delegate != null) {
         return uncheckedCastNullableTToT(delegate.put(key, value)); // See discussion in getValue().
@@ -980,7 +989,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     Map<K, V> delegate = delegateOrNull();
     if (delegate != null) {
       return delegate.containsValue(value);
@@ -993,25 +1002,26 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     return false;
   }
 
-  @LazyInit @CheckForNull private transient Collection<V> valuesView;
+  @LazyInit @CheckForNull private transient @Assignable Collection<V> valuesView;
 
   @Override
-  public Collection<V> values() {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable CompactHashMap<K, V> this) {
     return (valuesView == null) ? valuesView = createValues() : valuesView;
   }
 
-  Collection<V> createValues() {
-    return new ValuesView();
+  @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable CompactHashMap<K, V> this) {
+    return new @ReceiverDependentMutable ValuesView();
   }
 
   @WeakOuter
   @ReceiverDependentMutable class ValuesView extends Maps.Values<K, V> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     ValuesView() {
       super(CompactHashMap.this);
     }
 
     @Override
-    public Iterator<V> iterator() {
+    public @Mutable Iterator<V> iterator(@ReceiverDependentMutable CompactHashMap<K, V>.@ReceiverDependentMutable ValuesView this) {
       return valuesIterator();
     }
 
@@ -1040,7 +1050,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       if (needsAllocArrays()) {
         return new Object[0];
       }
@@ -1055,7 +1065,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@PolyNull T[] a) {
       if (needsAllocArrays()) {
         if (a.length > 0) {
-          @Nullable Object[] unsoundlyCovariantArray = a;
+          @Nullable @Readonly Object[] unsoundlyCovariantArray = a;
           unsoundlyCovariantArray[0] = null;
         }
         return a;
@@ -1085,7 +1095,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * Ensures that this {@code CompactHashMap} has the smallest representation in memory, given its
    * current size.
    */
-  public void trimToSize() {
+  public void trimToSize(@Mutable CompactHashMap<K, V> this) {
     if (needsAllocArrays()) {
       return;
     }
@@ -1108,7 +1118,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactHashMap<K, V> this) {
     if (needsAllocArrays()) {
       return;
     }
@@ -1143,7 +1153,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
 
   @SuppressWarnings("unchecked")
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable CompactHashMap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int elementCount = stream.readInt();
     if (elementCount < 0) {
@@ -1169,19 +1179,19 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
    * methods. But that is a bit too painful....
    */
 
-  private Object requireTable() {
+  private @ReceiverDependentMutable Object requireTable() {
     return requireNonNull(table);
   }
 
-  private int[] requireEntries() {
+  private int @ReceiverDependentMutable [] requireEntries() {
     return requireNonNull(entries);
   }
 
-  private @Nullable Object @ReceiverDependentMutable [] requireKeys() {
+  private @Nullable @Readonly Object @ReceiverDependentMutable [] requireKeys() {
     return requireNonNull(keys);
   }
 
-  private @Nullable Object @ReceiverDependentMutable [] requireValues() {
+  private @Nullable @Readonly Object @ReceiverDependentMutable [] requireValues() {
     return requireNonNull(values);
   }
 
@@ -1215,7 +1225,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     requireValues()[i] = value;
   }
 
-  private void setEntry(int i, int value) {
+  private void setEntry(@Mutable CompactHashMap<K, V> this, int i, int value) {
     requireEntries()[i] = value;
   }
 }

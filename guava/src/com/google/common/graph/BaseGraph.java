@@ -17,6 +17,8 @@
 package com.google.common.graph;
 
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A non-public interface for the methods shared between {@link Graph} and {@link ValueGraph}.
@@ -25,13 +27,14 @@ import java.util.Set;
  * @param <N> Node parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 interface BaseGraph<N> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
   //
   // Graph-level accessors
   //
 
   /** Returns all nodes in this graph, in the order specified by {@link #nodeOrder()}. */
-  Set<N> nodes();
+  @Readonly Set<N> nodes();
 
   /** Returns all edges in this graph. */
   Set<EndpointPair<N>> edges();

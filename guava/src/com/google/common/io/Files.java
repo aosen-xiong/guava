@@ -59,6 +59,8 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Provides utility methods for working with {@linkplain File files}.
@@ -587,7 +589,7 @@ public final class Files {
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
   public
-  static <T extends @Nullable Object> T readLines(
+  static <T extends @Nullable @Readonly Object> T readLines(
       File file, Charset charset, LineProcessor<T> callback) throws IOException {
     return asCharSource(file, charset).readLines(callback);
   }
@@ -610,7 +612,7 @@ public final class Files {
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
   public
-  static <T extends @Nullable Object> T readBytes(File file, ByteProcessor<T> processor)
+  static <T extends @Nullable @Readonly Object> T readBytes(File file, ByteProcessor<T> processor)
       throws IOException {
     return asByteSource(file).read(processor);
   }
@@ -850,7 +852,7 @@ public final class Files {
   private static final SuccessorsFunction<File> FILE_TREE =
       new SuccessorsFunction<File>() {
         @Override
-        public Iterable<File> successors(File file) {
+        public @Readonly Iterable<File> successors(File file) {
           // check isDirectory() just because it may be faster than listFiles() on a non-directory
           if (file.isDirectory()) {
             File[] files = file.listFiles();
@@ -868,7 +870,7 @@ public final class Files {
    *
    * @since 15.0
    */
-  public static Predicate<File> isDirectory() {
+  public static @Immutable Predicate<File> isDirectory() {
     return FilePredicate.IS_DIRECTORY;
   }
 
@@ -877,7 +879,7 @@ public final class Files {
    *
    * @since 15.0
    */
-  public static Predicate<File> isFile() {
+  public static @Immutable Predicate<File> isFile() {
     return FilePredicate.IS_FILE;
   }
 

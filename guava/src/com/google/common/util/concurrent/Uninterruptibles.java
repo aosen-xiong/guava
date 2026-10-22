@@ -239,7 +239,7 @@ public final class Uninterruptibles {
    */
   @CanIgnoreReturnValue
   @ParametricNullness
-  public static <V extends @Nullable Object> V getUninterruptibly(Future<V> future)
+  public static <V extends @Nullable @Readonly Object> V getUninterruptibly(Future<V> future)
       throws ExecutionException {
     boolean interrupted = false;
     try {
@@ -280,7 +280,7 @@ public final class Uninterruptibles {
   @J2ktIncompatible
   @GwtIncompatible // java.time.Duration
   @ParametricNullness
-  public static <V extends @Nullable Object> V getUninterruptibly(
+  public static <V extends @Nullable @Readonly Object> V getUninterruptibly(
       Future<V> future, Duration timeout) throws ExecutionException, TimeoutException {
     return getUninterruptibly(future, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);
   }

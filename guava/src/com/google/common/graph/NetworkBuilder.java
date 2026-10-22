@@ -22,6 +22,7 @@ import static com.google.common.graph.Graphs.checkNonNegative;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A builder for constructing instances of {@link MutableNetwork} or {@link ImmutableNetwork} with
@@ -117,7 +118,8 @@ public final class NetworkBuilder<N, E> extends AbstractGraphBuilder<N> {
    *
    * @since 28.0
    */
-  public <N1 extends N, E1 extends E> ImmutableNetwork.Builder<N1, E1> immutable() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // N1 and E1 are N and E restricted to @Immutable, which cast() (unchecked) preserves
+  public <N1 extends @Immutable N, E1 extends @Immutable E> ImmutableNetwork.Builder<N1, E1> immutable() {
     NetworkBuilder<N1, E1> castBuilder = cast();
     return new ImmutableNetwork.Builder<>(castBuilder);
   }
@@ -192,7 +194,8 @@ public final class NetworkBuilder<N, E> extends AbstractGraphBuilder<N> {
   }
 
   /** Returns an empty {@link MutableNetwork} with the properties of this {@link NetworkBuilder}. */
-  public <N1 extends N, E1 extends E> MutableNetwork<N1, E1> build() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // nodes are hash keys, so N1 is @Immutable; inference cannot relate this builder's N to N1 without the cast that immutable() makes
+  public <N1 extends @Immutable N, E1 extends @Immutable E> MutableNetwork<N1, E1> build() {
     return new StandardMutableNetwork<>(this);
   }
 

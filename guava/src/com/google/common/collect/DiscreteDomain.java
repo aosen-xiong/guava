@@ -51,7 +51,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-public abstract class DiscreteDomain<C extends @Readonly Comparable> {
+public abstract class DiscreteDomain<C extends @Immutable Comparable> {
 
   /**
    * Returns the discrete domain for values of type {@code Integer}.
@@ -109,7 +109,7 @@ public abstract class DiscreteDomain<C extends @Readonly Comparable> {
       return Integer.MAX_VALUE;
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -187,7 +187,7 @@ public abstract class DiscreteDomain<C extends @Readonly Comparable> {
       return Long.MAX_VALUE;
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -244,7 +244,7 @@ public abstract class DiscreteDomain<C extends @Readonly Comparable> {
       return end.subtract(start).max(MIN_LONG).min(MAX_LONG).longValue();
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

@@ -21,6 +21,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An {@code Iterable} whose elements are sorted relative to a {@code Comparator}, typically
@@ -37,12 +38,12 @@ interface SortedIterable<T extends @Nullable @Readonly Object> extends Iterable<
    * Returns the {@code Comparator} by which the elements of this iterable are ordered, or {@code
    * Ordering.natural()} if the elements are ordered by their natural ordering.
    */
-  Comparator<? super T> comparator();
+  @Readonly Comparator<? super T> comparator();
 
   /**
    * Returns an iterator over elements of type {@code T}. The elements are returned in nondecreasing
    * order according to the associated {@link #comparator}.
    */
   @Override
-  Iterator<T> iterator();
+  @Mutable Iterator<T> iterator();
 }

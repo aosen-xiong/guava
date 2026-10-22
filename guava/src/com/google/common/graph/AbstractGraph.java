@@ -18,7 +18,10 @@ package com.google.common.graph;
 
 import com.google.common.annotations.Beta;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * This class provides a skeletal implementation of {@link Graph}. It is recommended to extend this
@@ -30,10 +33,11 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
-public abstract class AbstractGraph<N> extends AbstractBaseGraph<N> implements Graph<N> {
+@ReceiverDependentMutable
+public abstract class AbstractGraph<N extends @Immutable Object> extends AbstractBaseGraph<N> implements Graph<N> {
 
   @Override
-  public final boolean equals(@CheckForNull Object obj) {
+  public final boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     }

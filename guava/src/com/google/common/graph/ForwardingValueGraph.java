@@ -19,6 +19,9 @@ package com.google.common.graph;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to allow {@link ValueGraph} implementations to be backed by a provided delegate. This is
@@ -28,12 +31,13 @@ import javax.annotation.CheckForNull;
  * @author Joshua O'Madadhain
  */
 @ElementTypesAreNonnullByDefault
-abstract class ForwardingValueGraph<N, V> extends AbstractValueGraph<N, V> {
+@ReceiverDependentMutable
+abstract class ForwardingValueGraph<N extends @Immutable Object, V> extends AbstractValueGraph<N, V> {
 
-  abstract ValueGraph<N, V> delegate();
+  abstract @ReceiverDependentMutable ValueGraph<N, V> delegate();
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return delegate().nodes();
   }
 

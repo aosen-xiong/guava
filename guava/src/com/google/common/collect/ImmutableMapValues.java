@@ -31,6 +31,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * {@code values()} implementation for {@link ImmutableMap}.
@@ -55,9 +56,9 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
   }
 
   @Override
-  public @Readonly UnmodifiableIterator<V> iterator() {
-    return new UnmodifiableIterator<V>() {
-      final UnmodifiableIterator<Entry<K, V>> entryItr = map.entrySet().iterator();
+  public @Mutable UnmodifiableIterator<V> iterator() {
+    return new @Mutable UnmodifiableIterator<V>() {
+      final UnmodifiableIterator<@Immutable Entry<K, V>> entryItr = map.entrySet().iterator();
 
       @Override
       public boolean hasNext() {
@@ -88,7 +89,7 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
 
   @Override
   public ImmutableList<V> asList() {
-    final ImmutableList<Entry<K, V>> entryList = map.entrySet().asList();
+    final ImmutableList<@Immutable Entry<K, V>> entryList = map.entrySet().asList();
     return new ImmutableAsList<V>() {
       @Override
       public V get(int index) {
@@ -105,7 +106,7 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
       @Override
       @J2ktIncompatible // serialization
       @GwtIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     };
@@ -123,7 +124,7 @@ final class ImmutableMapValues<K extends @Immutable Object, V> extends Immutable
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 

@@ -92,7 +92,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  protected @PolyMutable Map<K, V> delegate(@PolyMutable AbstractBiMap<K,V> this) {
+  protected @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable AbstractBiMap<K,V> this) {
     return delegate;
   }
 
@@ -248,24 +248,24 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   // Views
 
   @Override
-  public @PolyMutable BiMap<V, K> inverse(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     return inverse;
   }
 
-  @LazyInit @CheckForNull private transient Set<K> keySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<K> keySet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<K> result = keySet;
-    return (result == null) ? keySet = new KeySet() : result;
+    return (result == null) ? keySet = new @ReceiverDependentMutable KeySet() : result;
   }
 
   @WeakOuter
   @ReceiverDependentMutable
   private class KeySet extends ForwardingSet<K> {
     @Override
-    protected @PolyMutable Set<K> delegate(@PolyMutable KeySet this) {
+    protected @ReceiverDependentMutable Set<K> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable KeySet this) {
       return delegate.keySet();
     }
 
@@ -294,22 +294,22 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public Iterator<K> iterator(@Readonly KeySet this) {
+    public @Mutable Iterator<K> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable KeySet this) {
       return Maps.keyIterator(entrySet().iterator());
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<V> valueSet;
+  @LazyInit @CheckForNull private transient @Assignable Set<V> valueSet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<V> values(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     /*
      * We can almost reuse the inverse's keySet, except we have to fix the
      * iteration order so that it is consistent with the forward map.
      */
     Set<V> result = valueSet;
-    return (result == null) ? valueSet = new ValueSet() : result;
+    return (result == null) ? valueSet = new @ReceiverDependentMutable ValueSet() : result;
   }
 
   @WeakOuter
@@ -318,12 +318,12 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     final Set<V> valuesDelegate = inverse.keySet();
 
     @Override
-    protected @PolyMutable Set<V> delegate(@PolyMutable ValueSet this) {
+    protected @ReceiverDependentMutable Set<V> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return valuesDelegate;
     }
 
     @Override
-    public Iterator<V> iterator(@Readonly ValueSet this) {
+    public @Mutable Iterator<V> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return Maps.valueIterator(entrySet().iterator());
     }
 
@@ -346,13 +346,13 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<Entry<K, V>> result = entrySet;
-    return (result == null) ? entrySet = new EntrySet() : result;
+    return (result == null) ? entrySet = new @ReceiverDependentMutable EntrySet() : result;
   }
 
   @ReceiverDependentMutable
@@ -364,7 +364,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    protected @PolyMutable Entry<K, V> delegate(@PolyMutable BiMapEntry this) {
+    protected @ReceiverDependentMutable Entry<K, V> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable BiMapEntry this) {
       return delegate;
     }
 
@@ -387,7 +387,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   Iterator<Entry<K, V>> entrySetIterator(@Readonly AbstractBiMap<K, V> this) {
     final Iterator<Entry<K, V>> iterator = delegate.entrySet().iterator();
-    return new Iterator<Entry<K, V>>() {
+    return new @Mutable Iterator<Entry<K, V>>() {
       @CheckForNull Entry<K, V> entry;
 
       @Override
@@ -420,7 +420,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     final Set<Entry<K, V>> esDelegate = delegate.entrySet();
 
     @Override
-    protected Set<Entry<K, V>> delegate(@PolyMutable EntrySet this) {
+    protected @ReceiverDependentMutable Set<Entry<K, V>> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable EntrySet this) {
       return esDelegate;
     }
 
@@ -540,14 +540,14 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     @GwtIncompatible // java.io.ObjectInputStream
     @J2ktIncompatible
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable Inverse<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
       stream.defaultReadObject();
       setInverse((AbstractBiMap<V, K>) requireNonNull(stream.readObject()));
     }
 
     @GwtIncompatible // Not needed in the emulated source.
     @J2ktIncompatible
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return inverse().inverse();
     }
 

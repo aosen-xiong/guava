@@ -49,6 +49,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Utilities for working with {@link Type}.
@@ -222,6 +223,7 @@ final class Types {
     return null;
   }
 
+  @Immutable
   private static final class GenericArrayTypeImpl implements GenericArrayType, Serializable {
 
     private final Type componentType;
@@ -246,7 +248,7 @@ final class Types {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof GenericArrayType) {
         GenericArrayType that = (GenericArrayType) obj;
         return Objects.equal(getGenericComponentType(), that.getGenericComponentType());
@@ -257,6 +259,7 @@ final class Types {
     private static final long serialVersionUID = 0;
   }
 
+  @Immutable
   private static final class ParameterizedTypeImpl implements ParameterizedType, Serializable {
 
     @CheckForNull private final Type ownerType;
@@ -310,7 +313,7 @@ final class Types {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object other) {
+    public boolean equals(@CheckForNull @Readonly Object other) {
       if (!(other instanceof ParameterizedType)) {
         return false;
       }
@@ -387,7 +390,7 @@ final class Types {
 
     @Override
     @CheckForNull
-    public Object invoke(Object proxy, Method method, @CheckForNull @Nullable Object[] args)
+    public @Readonly Object invoke(Object proxy, Method method, @CheckForNull @Nullable Object[] args)
         throws Throwable {
       String methodName = method.getName();
       Method typeVariableMethod = typeVariableMethods.get(methodName);
@@ -443,7 +446,7 @@ final class Types {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (NativeTypeVariableEquals.NATIVE_TYPE_VARIABLE_ONLY) {
         // equal only to our TypeVariable implementation with identical bounds
         if (obj != null
@@ -469,6 +472,7 @@ final class Types {
     }
   }
 
+  @Immutable
   static final class WildcardTypeImpl implements WildcardType, Serializable {
 
     private final ImmutableList<Type> lowerBounds;
@@ -493,7 +497,7 @@ final class Types {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof WildcardType) {
         WildcardType that = (WildcardType) obj;
         return lowerBounds.equals(Arrays.asList(that.getLowerBounds()))

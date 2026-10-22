@@ -24,6 +24,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.NoSuchElementException;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -71,9 +72,9 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @CFComment("AOSEN: Is this a design issue?")
-@ReceiverDependentMutable
+@Mutable
 public abstract class AbstractIterator<T extends @Nullable @Readonly Object> extends UnmodifiableIterator<T> {
-  private State state = State.NOT_READY;
+  private @Assignable State state = State.NOT_READY;
 
   /** Constructor for use by subclasses. */
   protected AbstractIterator() {}
@@ -92,7 +93,7 @@ public abstract class AbstractIterator<T extends @Nullable @Readonly Object> ext
     FAILED,
   }
 
-  @CheckForNull private T next;
+  @CheckForNull private @Assignable T next;
 
   /**
    * Returns the next element. <b>Note:</b> the implementation must call {@link #endOfData()} when
@@ -119,7 +120,7 @@ public abstract class AbstractIterator<T extends @Nullable @Readonly Object> ext
    *     IllegalStateException}.
    */
   @CheckForNull
-  protected abstract T computeNext(@Mutable AbstractIterator<T> this);
+  protected abstract T computeNext(@Readonly AbstractIterator<T> this);
 
   /**
    * Implementations of {@link #computeNext} <b>must</b> invoke this method when there are no
@@ -130,7 +131,7 @@ public abstract class AbstractIterator<T extends @Nullable @Readonly Object> ext
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  protected final T endOfData(@Mutable AbstractIterator<T> this) {
+  protected final T endOfData(@Readonly AbstractIterator<T> this) {
     state = State.DONE;
     return null;
   }
@@ -148,7 +149,7 @@ public abstract class AbstractIterator<T extends @Nullable @Readonly Object> ext
     return tryToComputeNext();
   }
 
-  private boolean tryToComputeNext(@Mutable AbstractIterator<T> this) {
+  private boolean tryToComputeNext(@Readonly AbstractIterator<T> this) {
     state = State.FAILED; // temporary pessimism
     next = computeNext();
     if (state != State.DONE) {

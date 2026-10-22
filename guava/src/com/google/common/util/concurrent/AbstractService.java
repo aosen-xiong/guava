@@ -39,6 +39,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Base class for implementing services that can handle {@link #doStart} and {@link #doStop}

@@ -182,7 +182,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   // In the backport, we don't have those cases and thus don't need this suppression.
   // We keep it to minimize diffs.
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableSet<E> copyOf(Collection<? extends E> elements) {
+  public static <E> ImmutableSet<E> copyOf(@Readonly Collection<? extends E> elements) {
     /*
      * TODO(lowasser): consider checking for ImmutableAsList here
      * TODO(lowasser): consider checking for Multiset here
@@ -228,7 +228,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<E> copyOf(Iterable<? extends E> elements) {
+  public static <E> ImmutableSet<@Readonly E> copyOf(@Readonly Iterable<? extends E> elements) {
     return (elements instanceof Collection)
         ? copyOf((Collection<? extends E>) elements)
         : copyOf(elements.iterator());
@@ -240,7 +240,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<E> copyOf(Iterator<? extends E> elements) {
+  public static <E> ImmutableSet<E> copyOf(@Mutable Iterator<? extends E> elements) {
     // We special-case for 0 or 1 elements, but anything further is madness.
     if (!elements.hasNext()) {
       return of();
@@ -260,11 +260,11 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * @throws NullPointerException if any of {@code elements} is null
    * @since 3.0
    */
-  public static <E> ImmutableSet<E> copyOf(E[] elements) {
+  public static <E> ImmutableSet<E> copyOf(E @Readonly [] elements) {
     return fromArrayWithExpectedSize(elements, estimatedSizeForUnknownDuplication(elements.length));
   }
 
-  private static <E> ImmutableSet<E> fromArrayWithExpectedSize(E[] elements, int expectedSize) {
+  private static <E> ImmutableSet<E> fromArrayWithExpectedSize(E @Readonly [] elements, int expectedSize) {
     switch (elements.length) {
       case 0:
         return of();
@@ -316,7 +316,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   // This declaration is needed to make Set.iterator() and
   // ImmutableCollection.iterator() consistent.
   @Override
-  public abstract UnmodifiableIterator<E> iterator();
+  public abstract @Mutable UnmodifiableIterator<E> iterator();
 
   @GwtCompatible
   @Immutable
@@ -342,7 +342,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -352,7 +352,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     abstract E get(int index);
 
     @Override
-    public UnmodifiableIterator<E> iterator() {
+    public @Mutable UnmodifiableIterator<E> iterator() {
       return asList().iterator();
     }
 
@@ -371,7 +371,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     @Override
-    int copyIntoArray(@Nullable Object[] dst, int offset) {
+    int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
       return asList().copyIntoArray(dst, offset);
     }
 
@@ -393,7 +393,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
         @Override
         @J2ktIncompatible // serialization
         @GwtIncompatible // serialization
-        Object writeReplace() {
+        @Readonly Object writeReplace() {
           return super.writeReplace();
         }
       };
@@ -404,7 +404,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -418,13 +418,13 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    */
   @J2ktIncompatible // serialization
   private static class SerializedForm implements Serializable {
-    final Object[] elements;
+    final @Readonly Object[] elements;
 
-    SerializedForm(Object[] elements) {
+    SerializedForm(@Readonly Object[] elements) {
       this.elements = elements;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return copyOf(elements);
     }
 
@@ -433,7 +433,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
 
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm(toArray());
   }
 
@@ -555,14 +555,14 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
      */
     @Override
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       super.addAll(elements);
       return this;
     }
 
     @Override
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Mutable Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }
@@ -737,7 +737,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    */
   private static final @Mutable class RegularSetBuilderImpl<E> extends SetBuilderImpl<E> {
     // null until at least two elements are present
-    @CheckForNull private @Nullable Object[] hashTable;
+    @CheckForNull private @Nullable @Readonly Object[] hashTable;
     private int maxRunBeforeFallback;
     private int expandTableThreshold;
     private int hashCode;
@@ -842,8 +842,8 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     /** Builds a new open-addressed hash table from the first n objects in elements. */
-    static @Nullable Object @Mutable [] rebuildHashTable(int newTableSize, Object[] elements, int n) {
-      @Nullable Object [] hashTable = new @Nullable Object @Mutable [newTableSize];
+    static @Nullable @Readonly Object @Mutable [] rebuildHashTable(int newTableSize, @Readonly Object @Readonly [] elements, int n) {
+      @Nullable @Readonly Object [] hashTable = new @Nullable Object @Mutable [newTableSize];
       int mask = hashTable.length - 1;
       for (int i = 0; i < n; i++) {
         // requireNonNull is safe because we ensure that the first n elements have been populated.
@@ -903,7 +903,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
      * <p>This method may return {@code true} even on truly random input, but {@code
      * ImmutableSetTest} tests that the probability of that is low.
      */
-    static boolean hashFloodingDetected(@Nullable Object @Mutable [] hashTable) {
+    static boolean hashFloodingDetected(@Nullable @Readonly Object @Readonly [] hashTable) {
       int maxRunBeforeFallback = maxRunBeforeFallback(hashTable.length);
       int mask = hashTable.length - 1;
 
@@ -957,6 +957,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   private static final @Mutable class JdkBackedSetBuilderImpl<E> extends SetBuilderImpl<E> {
     private final Set<@Readonly Object> delegate;
 
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // this HashSet hashes the same elements ImmutableSet's own hash table hashes; ImmutableSet does not require @Immutable elements
     JdkBackedSetBuilderImpl(SetBuilderImpl<E> toCopy) {
       super(toCopy); // initializes dedupedElements and distinct
       delegate = Sets.newHashSetWithExpectedSize(distinct);
@@ -984,6 +985,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     }
 
     @Override
+    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: delegate is this builder's own HashSet, not shared after build()
     ImmutableSet<E> build() {
       switch (distinct) {
         case 0:

@@ -27,6 +27,8 @@ import java.io.Serializable;
 import java.util.Comparator;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -41,10 +43,11 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class GeneralRange<T extends @Nullable @Readonly Object> implements Serializable {
   /** Converts a Range to a GeneralRange. */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  static <T extends Comparable> GeneralRange<T> from(Range<T> range) {
+  static <T extends @Immutable Comparable> GeneralRange<T> from(Range<T> range) {
     T lowerEndpoint = range.hasLowerBound() ? range.lowerEndpoint() : null;
     BoundType lowerBoundType = range.hasLowerBound() ? range.lowerBoundType() : OPEN;
 
@@ -61,7 +64,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
   }
 
   /** Returns the whole range relative to the specified comparator. */
-  static <T extends @Nullable @Readonly Object> GeneralRange<T> all(Comparator<? super T> comparator) {
+  static <T extends @Nullable @Readonly Object> GeneralRange<T> all(@Readonly Comparator<? super T> comparator) {
     return new GeneralRange<>(comparator, false, null, OPEN, false, null, OPEN);
   }
 
@@ -70,7 +73,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
    * endpoint behavior.
    */
   static <T extends @Nullable @Readonly Object> GeneralRange<T> downTo(
-      Comparator<? super T> comparator, @ParametricNullness T endpoint, BoundType boundType) {
+      @Readonly Comparator<? super T> comparator, @ParametricNullness T endpoint, BoundType boundType) {
     return new GeneralRange<>(comparator, true, endpoint, boundType, false, null, OPEN);
   }
 
@@ -79,7 +82,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
    * endpoint behavior.
    */
   static <T extends @Nullable @Readonly Object> GeneralRange<T> upTo(
-      Comparator<? super T> comparator, @ParametricNullness T endpoint, BoundType boundType) {
+      @Readonly Comparator<? super T> comparator, @ParametricNullness T endpoint, BoundType boundType) {
     return new GeneralRange<>(comparator, false, null, OPEN, true, endpoint, boundType);
   }
 
@@ -88,7 +91,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
    * specified endpoint behavior.
    */
   static <T extends @Nullable @Readonly Object> GeneralRange<T> range(
-      Comparator<? super T> comparator,
+      @Readonly Comparator<? super T> comparator,
       @ParametricNullness T lower,
       BoundType lowerType,
       @ParametricNullness T upper,
@@ -96,7 +99,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
     return new GeneralRange<>(comparator, true, lower, lowerType, true, upper, upperType);
   }
 
-  private final Comparator<? super T> comparator;
+  private final @Readonly Comparator<? super T> comparator;
   private final boolean hasLowerBound;
   @CheckForNull private final T lowerEndpoint;
   private final BoundType lowerBoundType;
@@ -105,7 +108,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
   private final BoundType upperBoundType;
 
   private GeneralRange(
-      Comparator<? super T> comparator,
+      @Readonly Comparator<? super T> comparator,
       boolean hasLowerBound,
       @CheckForNull T lowerEndpoint,
       BoundType lowerBoundType,
@@ -149,7 +152,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
     }
   }
 
-  Comparator<? super T> comparator() {
+  @Readonly Comparator<? super T> comparator() {
     return comparator;
   }
 
@@ -267,7 +270,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
         getUpperBoundType());
   }
 
-  @LazyInit @CheckForNull private transient GeneralRange<T> reverse;
+  @LazyInit @CheckForNull private transient @Assignable GeneralRange<T> reverse;
 
   /** Returns the same range relative to the reversed comparator. */
   GeneralRange<T> reverse() {

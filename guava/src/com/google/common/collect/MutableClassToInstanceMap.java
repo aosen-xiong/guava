@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -40,6 +41,7 @@ import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A mutable class-to-instance map backed by an arbitrary user-provided map. See also {@link
@@ -57,7 +59,7 @@ import org.checkerframework.framework.qual.CFComment;
 @SuppressWarnings("serial") // using writeReplace instead of standard serialization
 @AnnotatedFor({"nullness"})
 @ElementTypesAreNonnullByDefault
-public final class MutableClassToInstanceMap<B extends @Nullable Object>
+public final class MutableClassToInstanceMap<B extends @Nullable @Readonly Object>
     extends ForwardingMap<Class<? extends @NonNull B>, B>
     implements ClassToInstanceMap<B>, Serializable {
 
@@ -65,7 +67,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
    * Returns a new {@code MutableClassToInstanceMap} instance backed by a {@link HashMap} using the
    * default initial capacity and load factor.
    */
-  public static <B extends @Nullable Object> MutableClassToInstanceMap<B> create() {
+  public static <B extends @Nullable @Readonly Object> MutableClassToInstanceMap<B> create() {
     return new MutableClassToInstanceMap<B>(new HashMap<Class<? extends @NonNull B>, B>());
   }
 
@@ -74,7 +76,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
    * backingMap}. The caller surrenders control of the backing map, and thus should not allow any
    * direct references to it to remain accessible.
    */
-  public static <B extends @Nullable Object> MutableClassToInstanceMap<B> create(
+  public static <B extends @Nullable @Readonly Object> MutableClassToInstanceMap<B> create(
       Map<Class<? extends @NonNull B>, B> backingMap) {
     return new MutableClassToInstanceMap<B>(backingMap);
   }
@@ -93,9 +95,9 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
   /**
    * Wraps the {@code setValue} implementation of an {@code Entry} to enforce the class constraint.
    */
-  private static <B extends @Nullable Object> Entry<Class<? extends @NonNull B>, B> checkedEntry(
+  private static <B extends @Nullable @Readonly Object> Entry<Class<? extends @NonNull B>, B> checkedEntry(
       final Entry<Class<? extends @NonNull B>, B> entry) {
-    return new ForwardingMapEntry<Class<? extends @NonNull B>, B>() {
+    return new @Mutable ForwardingMapEntry<Class<? extends @NonNull B>, B>() {
       @Override
       protected Entry<Class<? extends @NonNull B>, B> delegate() {
         return entry;
@@ -112,7 +114,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
 
   @Override
   public Set<Entry<@KeyFor({"this"}) Class<? extends @NonNull B>, B>> entrySet() {
-    return new ForwardingSet<Entry<Class<? extends @NonNull B>, B>>() {
+    return new @Mutable ForwardingSet<Entry<Class<? extends @NonNull B>, B>>() {
 
       @Override
       protected Set<Entry<Class<? extends @NonNull B>, B>> delegate() {
@@ -154,7 +156,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
 
       @Override
       @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-      public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] array) {
+      public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] array) {
         return standardToArray(array);
       }
     };
@@ -169,7 +171,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
   }
 
   @Override
-  public void putAll(Map<? extends Class<? extends @NonNull B>, ? extends B> map) {
+  public void putAll(@Readonly Map<? extends Class<? extends @NonNull B>, ? extends B> map) {
     Map<Class<? extends @NonNull B>, B> copy = new LinkedHashMap<>(map);
     for (Entry<? extends Class<? extends @NonNull B>, B> entry : copy.entrySet()) {
       cast(entry.getKey(), entry.getValue());
@@ -192,11 +194,11 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
 
   @CanIgnoreReturnValue
   @CheckForNull
-  private static <T> T cast(Class<T> type, @CheckForNull Object value) {
+  private static <T> T cast(Class<T> type, @CheckForNull @Readonly Object value) {
     return Primitives.wrap(type).cast(value);
   }
 
-  private Object writeReplace() {
+  private @Readonly Object writeReplace() {
     return new SerializedForm<>(delegate());
   }
 
@@ -205,14 +207,14 @@ public final class MutableClassToInstanceMap<B extends @Nullable Object>
   }
 
   /** Serialized form of the map, to avoid serializing the constraint. */
-  private static final class SerializedForm<B extends @Nullable Object> implements Serializable {
+  private static final class SerializedForm<B extends @Nullable @Readonly Object> implements Serializable {
     private final Map<Class<? extends @NonNull B>, B> backingMap;
 
     SerializedForm(Map<Class<? extends @NonNull B>, B> backingMap) {
       this.backingMap = backingMap;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return create(backingMap);
     }
 

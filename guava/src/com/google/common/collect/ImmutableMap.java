@@ -145,7 +145,8 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * {@link Collections#singletonMap} but will not accept a null key or value. It is preferable
    * mainly for consistency and maintainability of your code.
    */
-  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableMap<K, V> of(K k1, V v1) {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // a value of an ImmutableMap is never hashed: the ImmutableBiMap behind it exposes inverse() only after a downcast
+  public static <K extends @Immutable Object, V> ImmutableMap<K, V> of(K k1, V v1) {
     return ImmutableBiMap.of(k1, v1);
   }
 
@@ -345,7 +346,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
   @SafeVarargs
   public static <K extends @Immutable Object, V> ImmutableMap<K, V> ofEntries(Entry<? extends K, ? extends V>... entries) {
     @SuppressWarnings("unchecked") // we will only ever read these
-    Entry<K, V>[] entries2 = (Entry<K, V>[]) entries;
+    @Immutable Entry<K, V>[] entries2 = (@Immutable Entry<K, V>[]) entries;
     return RegularImmutableMap.fromEntries(entries2);
   }
 
@@ -380,7 +381,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    *
    * @since 23.1
    */
-  public static <K, V> Builder<K, V> builderWithExpectedSize(int expectedSize) {
+  public static <K extends @Immutable Object, V> Builder<K, V> builderWithExpectedSize(int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     return new Builder<>(expectedSize);
   }
@@ -466,7 +467,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     @CanIgnoreReturnValue
     public Builder<K, V> put(K key, V value) {
       ensureCapacity(size + 1);
-      Entry<K, V> entry = entryOf(key, value);
+      @Immutable Entry<K, V> entry = entryOf(key, value);
       // don't inline this: we want to fail atomically if key or value is null
       entries[size++] = entry;
       return this;
@@ -480,7 +481,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
      * @since 11.0
      */
     @CanIgnoreReturnValue
-    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    public Builder<K, V> put(@Readonly Entry<? extends K, ? extends V> entry) {
       return put(entry.getKey(), entry.getValue());
     }
 
@@ -492,7 +493,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
      * @throws NullPointerException if any key or value in {@code map} is null
      */
     @CanIgnoreReturnValue
-    public Builder<K, V> putAll(Map<? extends K, ? extends V> map) {
+    public Builder<K, V> putAll(@Readonly Map<? extends K, ? extends V> map) {
       return putAll(map.entrySet());
     }
 
@@ -505,7 +506,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
      * @since 19.0
      */
     @CanIgnoreReturnValue
-    public Builder<K, V> putAll(Iterable<? extends Entry<? extends K, ? extends V>> entries) {
+    public Builder<K, V> putAll(@Readonly Iterable<? extends @Readonly Entry<? extends K, ? extends V>> entries) {
       if (entries instanceof Collection) {
         ensureCapacity(size + ((Collection<?>) entries).size());
       }
@@ -541,6 +542,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
       return this;
     }
 
+    @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     private ImmutableMap<K, V> build(boolean throwIfDuplicateKeys) {
       /*
        * If entries is full, or if hash flooding is detected, then this implementation may end up
@@ -554,7 +556,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
           return of();
         case 1:
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> onlyEntry = requireNonNull(entries[0]);
+          @Immutable Entry<K, V> onlyEntry = requireNonNull(entries[0]);
           return of(onlyEntry.getKey(), onlyEntry.getValue());
         default:
           break;
@@ -564,7 +566,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
       // It's possible to keep using this Builder after calling buildKeepingLast(), so we need to
       // ensure that its state is not corrupted by removing duplicates that should cause a later
       // buildOrThrow() to fail, or by changing the size.
-      @Nullable Entry<K, V>[] localEntries;
+      @Nullable @Immutable Entry<K, V>[] localEntries;
       int localSize = size;
       if (valueComparator == null) {
         localEntries = entries;
@@ -573,7 +575,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
           entries = Arrays.copyOf(entries, size);
         }
         @SuppressWarnings("nullness") // entries 0..localSize-1 are non-null
-        Entry<K, V>[] nonNullEntries = (Entry<K, V>[]) entries;
+        @Immutable Entry<K, V>[] nonNullEntries = (@Immutable Entry<K, V>[]) entries;
         if (!throwIfDuplicateKeys) {
           // We want to retain only the last-put value for any given key, before sorting.
           // This could be improved, but orderEntriesByValue is rather rarely used anyway.
@@ -585,7 +587,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
             0,
             localSize,
             Ordering.from(valueComparator).onResultOf(Maps.<V>valueFunction()));
-        localEntries = (@Nullable Entry<K, V>[]) nonNullEntries;
+        localEntries = (@Nullable @Immutable Entry<K, V>[]) nonNullEntries;
       }
       entriesUsed = true;
       return RegularImmutableMap.fromEntryArray(localSize, localEntries, throwIfDuplicateKeys);
@@ -647,7 +649,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
           return of();
         case 1:
           // requireNonNull is safe because the first `size` elements have been filled in.
-          Entry<K, V> onlyEntry = requireNonNull(entries[0]);
+          @Immutable Entry<K, V> onlyEntry = requireNonNull(entries[0]);
           return of(onlyEntry.getKey(), onlyEntry.getValue());
         default:
           entriesUsed = true;
@@ -655,7 +657,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
       }
     }
 
-    private static <K extends @Immutable Object, V> Entry<K, V>[] lastEntryForEachKey(Entry<K, V>[] entries, int size) {
+    private static <K extends @Immutable Object, V> @Immutable Entry<K, V>[] lastEntryForEachKey(@Immutable Entry<K, V>[] entries, int size) {
       Set<K> seen = new @Mutable HashSet<>();
       BitSet dups = new BitSet(); // slots that are overridden by a later duplicate key
       for (int i = size - 1; i >= 0; i--) {
@@ -667,7 +669,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
         return entries;
       }
       @SuppressWarnings({"rawtypes", "unchecked"})
-      Entry<K, V>[] newEntries = new Entry[size - dups.cardinality()];
+      @Immutable Entry<K, V>[] newEntries = new @Immutable Entry[size - dups.cardinality()];
       for (int inI = 0, outI = 0; inI < size; inI++) {
         if (!dups.get(inI)) {
           newEntries[outI++] = entries[inI];
@@ -689,7 +691,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    *
    * @throws NullPointerException if any key or value in {@code map} is null
    */
-  public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(Map<? extends K, ? extends V> map) {
+  public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(@Readonly Map<? extends K, ? extends V> map) {
     if ((map instanceof ImmutableMap) && !(map instanceof SortedMap)) {
       @SuppressWarnings("unchecked") // safe since map is not writable
       ImmutableMap<K, V> kvMap = (ImmutableMap<K, V>) map;
@@ -715,16 +717,16 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * @throws IllegalArgumentException if two entries have the same key
    * @since 19.0
    */
-  public static <K, V> ImmutableMap<K, V> copyOf(
-      Iterable<? extends Entry<? extends K, ? extends V>> entries) {
+  public static <K extends @Immutable Object, V> ImmutableMap<K, V> copyOf(
+      @Readonly Iterable<? extends @Readonly Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant
-    Entry<K, V>[] entryArray = (Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
+    @Immutable Entry<K, V>[] entryArray = (@Immutable Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
     switch (entryArray.length) {
       case 0:
         return of();
       case 1:
         // requireNonNull is safe because the first `size` elements have been filled in.
-        Entry<K, V> onlyEntry = requireNonNull(entryArray[0]);
+        @Immutable Entry<K, V> onlyEntry = requireNonNull(entryArray[0]);
         return of(onlyEntry.getKey(), onlyEntry.getValue());
       default:
         /*
@@ -739,7 +741,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
       EnumMap<?, ? extends V> original) {
     @SuppressWarnings("unchecked") // the best we could do to make copyOf(Map) compile
     EnumMap<K, V> copy = new EnumMap<>((EnumMap<K, ? extends V>) original);
-    for (Entry<K, V> entry : copy.entrySet()) {
+    for (@Readonly Entry<K, V> entry : copy.entrySet()) {
       checkEntryNotNull(entry.getKey(), entry.getValue());
     }
     return ImmutableEnumMap.asImmutable(copy);
@@ -749,9 +751,9 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
 
   @Immutable
   abstract static class IteratorBasedImmutableMap<K extends @Immutable Object, V> extends ImmutableMap<K, V> {
-    abstract UnmodifiableIterator<Entry<K, V>> entryIterator();
+    abstract @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator();
 
-    Spliterator<Entry<K, V>> entrySpliterator() {
+    Spliterator<@Immutable Entry<K, V>> entrySpliterator() {
       return Spliterators.spliterator(
           entryIterator(),
           size(),
@@ -764,7 +766,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     }
 
     @Override
-    ImmutableSet<Entry<K, V>> createEntrySet() {
+    ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
       @Immutable
       class EntrySetImpl extends ImmutableMapEntrySet<K, V> {
         @Override
@@ -773,7 +775,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
         }
 
         @Override
-        public UnmodifiableIterator<Entry<K, V>> iterator() {
+        public @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
           return entryIterator();
         }
 
@@ -782,7 +784,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
         @Override
         @J2ktIncompatible // serialization
         @GwtIncompatible // serialization
-        Object writeReplace() {
+        @Readonly Object writeReplace() {
           return super.writeReplace();
         }
       }
@@ -799,7 +801,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -927,7 +929,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final void putAll(Map<? extends K, ? extends V> map) {
+  public final void putAll(@Readonly Map<? extends K, ? extends V> map) {
     throw new UnsupportedOperationException();
   }
 
@@ -1015,7 +1017,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    */
   @Override
   @CheckForNull
-  public final V getOrDefault(@CheckForNull @UnknownSignedness Object key, @CheckForNull V defaultValue) {
+  public final V getOrDefault(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull V defaultValue) {
     /*
      * Even though it's weird to pass a defaultValue that is null, some callers do so. Those who
      * pass a literal "null" should probably just use `get`, but I would expect other callers to
@@ -1051,7 +1053,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
   }
 
   @CFComment("Change to @LazyFinal later")
-  @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableSet<Entry<K, V>> entrySet;
+  @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableSet<@Immutable Entry<K, V>> entrySet;
 
   /**
    * Returns an immutable set of the mappings in this map. The iteration order is specified by the
@@ -1059,12 +1061,12 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    */
   @SideEffectFree
   @Override
-  public ImmutableSet<Entry<@KeyFor({"this"}) K, V>> entrySet() {
-    ImmutableSet<Entry<K, V>> result = entrySet;
+  public ImmutableSet<@Immutable Entry<@KeyFor({"this"}) K, V>> entrySet() {
+    ImmutableSet<@Immutable Entry<K, V>> result = entrySet;
     return (result == null) ? entrySet = createEntrySet() : result;
   }
 
-  abstract ImmutableSet<Entry<K, V>> createEntrySet();
+  abstract ImmutableSet<@Immutable Entry<K, V>> createEntrySet();
 
   @CFComment("Change to @LazyFinal later")
   @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableSet<K> keySet;
@@ -1087,9 +1089,9 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    */
   abstract ImmutableSet<K> createKeySet();
 
-  UnmodifiableIterator<K> keyIterator() {
-    final UnmodifiableIterator<Entry<K, V>> entryIterator = entrySet().iterator();
-    return new UnmodifiableIterator<K>() {
+  @Mutable UnmodifiableIterator<K> keyIterator() {
+    final UnmodifiableIterator<@Immutable Entry<K, V>> entryIterator = entrySet().iterator();
+    return new @Mutable UnmodifiableIterator<K>() {
       @Override
       public boolean hasNext() {
         return entryIterator.hasNext();
@@ -1128,14 +1130,14 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
 
   // cached so that this.multimapView().inverse() only computes inverse once
   @CFComment("Change to @LazyFinal later")
-  @LazyInit @CheckForNull private transient ImmutableSetMultimap<K, @Immutable V> multimapView;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableSetMultimap<K, @Immutable V> multimapView;
 
   /**
    * Returns a multimap view of the map.
    *
    * @since 14.0
    */
-  public ImmutableSetMultimap<K, @Immutable V> asMultimap() {
+  public ImmutableSetMultimap<K, @Immutable V> asMultimap(@Immutable ImmutableMap<K, @Immutable V> this) {
     if (isEmpty()) {
       return ImmutableSetMultimap.of();
     }
@@ -1190,18 +1192,18 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     }
 
     @Override
-    UnmodifiableIterator<Entry<K, ImmutableSet<V>>> entryIterator() {
-      final Iterator<Entry<K, V>> backingIterator = ImmutableMap.this.entrySet().iterator();
-      return new UnmodifiableIterator<Entry<K, ImmutableSet<V>>>() {
+    @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>> entryIterator() {
+      final Iterator<@Immutable Entry<K, V>> backingIterator = ImmutableMap.this.entrySet().iterator();
+      return new @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>>() {
         @Override
         public boolean hasNext() {
           return backingIterator.hasNext();
         }
 
         @Override
-        public Entry<K, ImmutableSet<V>> next() {
-          final Entry<K, V> backingEntry = backingIterator.next();
-          return new AbstractMapEntry<K, ImmutableSet<V>>() {
+        public @Immutable Entry<K, ImmutableSet<V>> next() {
+          final @Immutable Entry<K, V> backingEntry = backingIterator.next();
+          return new @Immutable AbstractMapEntry<K, ImmutableSet<V>>() {
             @Override
             public K getKey() {
               return backingEntry.getKey();
@@ -1221,7 +1223,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -1256,7 +1258,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * as implementation details.
    */
   @J2ktIncompatible // serialization
-  static class SerializedForm<K, V> implements Serializable {
+  static class SerializedForm<K extends @Immutable Object, V> implements Serializable {
     // This object retains references to collections returned by keySet() and value(). This saves
     // bytes when the both the map and its keySet or value collection are written to the same
     // instance of ObjectOutputStream.
@@ -1264,16 +1266,16 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     // TODO(b/160980469): remove support for the old serialization format after some time
     private static final boolean USE_LEGACY_SERIALIZATION = true;
 
-    private final Object keys;
-    private final Object values;
+    private final @Readonly Object keys;
+    private final @Readonly Object values;
 
     SerializedForm(ImmutableMap<K, V> map) {
       if (USE_LEGACY_SERIALIZATION) {
-        Object[] keys = new Object[map.size()];
-        Object[] values = new Object[map.size()];
+        @Readonly Object[] keys = new Object[map.size()];
+        @Readonly Object[] values = new Object[map.size()];
         int i = 0;
         // "extends Object" works around https://github.com/typetools/checker-framework/issues/3013
-        for (Entry<? extends Object, ? extends @Readonly Object> entry : map.entrySet()) {
+        for (Entry<? extends @Readonly Object, ? extends @Readonly Object> entry : map.entrySet()) {
           keys[i] = entry.getKey();
           values[i] = entry.getValue();
           i++;
@@ -1336,7 +1338,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
    * of SerializedForm whose readResolve() method returns objects of the subclass type.
    */
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<>(this);
   }
 

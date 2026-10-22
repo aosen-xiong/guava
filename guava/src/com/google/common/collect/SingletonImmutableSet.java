@@ -28,6 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link ImmutableSet} with exactly one element.
@@ -63,7 +64,7 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return Iterators.singletonIterator(element);
   }
 
@@ -100,7 +101,7 @@ final class SingletonImmutableSet<E> extends ImmutableSet<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 

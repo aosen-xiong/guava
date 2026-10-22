@@ -20,6 +20,8 @@ import com.google.common.annotations.Beta;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -109,6 +111,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface ValueGraph<N, V> extends BaseGraph<N> {
   //
   // ValueGraph-level accessors
@@ -116,7 +119,7 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
 
   /** Returns all nodes in this graph, in the order specified by {@link #nodeOrder()}. */
   @Override
-  Set<N> nodes();
+  @Readonly Set<N> nodes();
 
   /** Returns all edges in this graph. */
   @Override
@@ -126,7 +129,7 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
    * Returns a live view of this graph as a {@link Graph}. The resulting {@link Graph} will have an
    * edge connecting node A to node B if this {@link ValueGraph} has an edge connecting A to B.
    */
-  Graph<N> asGraph();
+  @ReceiverDependentMutable Graph<N> asGraph();
 
   //
   // ValueGraph properties
@@ -392,7 +395,7 @@ public interface ValueGraph<N, V> extends BaseGraph<N> {
    * <p>A reference implementation of this is provided by {@link AbstractValueGraph#equals(Object)}.
    */
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns the hash code for this graph. The hash code of a graph is defined as the hash code of a

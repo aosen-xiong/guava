@@ -85,16 +85,16 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractSortedKeySortedSetMultimap<K, V> {
-  private transient @Mutable Comparator<? super K> keyComparator;
-  private transient @Mutable Comparator<? super V> valueComparator;
+  private transient @Readonly Comparator<? super K> keyComparator;
+  private transient @Readonly Comparator<? super V> valueComparator;
 
   /**
    * Creates an empty {@code TreeMultimap} ordered by the natural ordering of its keys and values.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <K extends Comparable, V extends Comparable> TreeMultimap<K, V> create() {
+  public static <K extends @Immutable Comparable, V extends @Immutable Comparable> TreeMultimap<K, V> create() {
     return new TreeMultimap<>(Ordering.natural(), Ordering.natural());
   }
 
@@ -105,7 +105,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @param keyComparator the comparator that determines the key ordering
    * @param valueComparator the comparator that determines the value ordering
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> TreeMultimap<K, V> create(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> TreeMultimap<K, V> create(
       Comparator<? super K> keyComparator, Comparator<? super V> valueComparator) {
     return new TreeMultimap<>(checkNotNull(keyComparator), checkNotNull(valueComparator));
   }
@@ -117,7 +117,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @param multimap the multimap whose contents are copied to this multimap
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <K extends Comparable, V extends Comparable> TreeMultimap<K, V> create(
+  public static <K extends @Immutable Comparable, V extends @Immutable Comparable> TreeMultimap<K, V> create(
       Multimap<? extends K, ? extends V> multimap) {
     return new TreeMultimap<>(Ordering.natural(), Ordering.natural(), multimap);
   }
@@ -128,6 +128,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
     this.valueComparator = valueComparator;
   }
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private TreeMultimap(
       @Nullable Comparator<? super K> keyComparator,
       @Nullable Comparator<? super V> valueComparator,
@@ -137,7 +138,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  @PolyMutable Map<K, @PolyMutable Collection<V>> createAsMap(@PolyMutable TreeMultimap<K, V> this) {
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable TreeMultimap<K, V> this) {
     return createMaybeNavigableAsMap();
   }
 
@@ -167,20 +168,20 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @deprecated Use {@code ((NavigableSet<K>) multimap.keySet()).comparator()} instead.
    */
   @Deprecated
-  public @Nullable Comparator<? super K> keyComparator(@Readonly TreeMultimap<K, V> this) {
+  public @Nullable @Readonly Comparator<? super K> keyComparator(@Readonly TreeMultimap<K, V> this) {
     return keyComparator;
   }
 
   @Override
-  public @Nullable Comparator<? super V> valueComparator(@Readonly TreeMultimap<K, V> this) {
+  public @Nullable @Readonly Comparator<? super V> valueComparator(@Readonly TreeMultimap<K, V> this) {
     return valueComparator;
   }
 
   /** @since 14.0 (present with return type {@code SortedSet} since 2.0) */
   @Override
   @GwtIncompatible // NavigableSet
-  public @PolyMutable NavigableSet<V> get(@PolyMutable TreeMultimap<K, V> this, @ParametricNullness K key) {
-    return (@PolyMutable NavigableSet<V>) super.get(key);
+  public @ReceiverDependentMutable NavigableSet<V> get(@ReceiverDependentMutable TreeMultimap<K, V> this, @ParametricNullness K key) {
+    return (@ReceiverDependentMutable NavigableSet<V>) super.get(key);
   }
 
   /**
@@ -194,8 +195,8 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    */
   @SideEffectFree
   @Override
-  public @PolyMutable NavigableSet<K> keySet(@PolyMutable TreeMultimap<K, V> this) {
-    return (NavigableSet<K>) super.keySet();
+  public @ReceiverDependentMutable NavigableSet<K> keySet(@ReceiverDependentMutable TreeMultimap<K, V> this) {
+    return (@ReceiverDependentMutable NavigableSet<K>) super.keySet();
   }
 
   /**
@@ -208,8 +209,8 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
    * @since 14.0 (present with return type {@code SortedMap} since 2.0)
    */
   @Override
-  public @PolyMutable NavigableMap<K, @PolyMutable Collection<V>> asMap(@PolyMutable TreeMultimap<K, V> this) {
-    return (@PolyMutable NavigableMap<K, @PolyMutable Collection<V>>) super.asMap();
+  public @ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable TreeMultimap<K, V> this) {
+    return (@ReceiverDependentMutable NavigableMap<K, @ReceiverDependentMutable Collection<V>>) super.asMap();
   }
 
   /**
@@ -228,7 +229,7 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
   @SuppressWarnings("unchecked") // reading data stored by writeObject
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable TreeMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     keyComparator = requireNonNull((Comparator<? super K>) stream.readObject());
     valueComparator = requireNonNull((Comparator<? super V>) stream.readObject());
@@ -245,5 +246,5 @@ public class TreeMultimap<K extends @Nullable @Immutable Object, V extends @Null
 public boolean equals(@Readonly TreeMultimap<K, V> this, @Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
-public SortedSet<V> removeAll(@Nullable Object arg0) { return super.removeAll(arg0); }
+public @Readonly SortedSet<V> removeAll(@Mutable TreeMultimap<K, V> this, @Nullable @Readonly Object arg0) { return super.removeAll(arg0); }
 }

@@ -21,6 +21,8 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -106,16 +108,17 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @DoNotMock("Use NetworkBuilder to create a real instance")
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
   //
   // Network-level accessors
   //
 
   /** Returns all nodes in this network, in the order specified by {@link #nodeOrder()}. */
-  Set<N> nodes();
+  @Readonly Set<N> nodes();
 
   /** Returns all edges in this network, in the order specified by {@link #edgeOrder()}. */
-  Set<E> edges();
+  @Readonly Set<E> edges();
 
   /**
    * Returns a live view of this network as a {@link Graph}. The resulting {@link Graph} will have
@@ -125,7 +128,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * treated as if collapsed into a single edge. For example, the {@link #degree(Object)} of a node
    * in the {@link Graph} view may be less than the degree of the same node in this {@link Network}.
    */
-  Graph<N> asGraph();
+  @ReceiverDependentMutable Graph<N> asGraph();
 
   //
   // Network properties
@@ -384,7 +387,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if {@code nodeU} or {@code nodeV} is not an element of this
    *     network
    */
-  Set<E> edgesConnecting(N nodeU, N nodeV);
+  @Readonly Set<E> edgesConnecting(N nodeU, N nodeV);
 
   /**
    * Returns a live view of the set of edges that each directly connect {@code endpoints} (in the
@@ -414,7 +417,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if the endpoints are unordered and the network is directed
    * @since 27.1
    */
-  Set<E> edgesConnecting(EndpointPair<N> endpoints);
+  @Readonly Set<E> edgesConnecting(EndpointPair<N> endpoints);
 
   /**
    * Returns the single edge that directly connects {@code nodeU} to {@code nodeV}, if one is
@@ -524,7 +527,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * <p>A reference implementation of this is provided by {@link AbstractNetwork#equals(Object)}.
    */
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns the hash code for this network. The hash code of a network is defined as the hash code

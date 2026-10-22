@@ -99,13 +99,14 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
    * initial capacity sufficient to hold the mappings in the specified map.
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> HashBiMap<K, V> create(
-      Map<? extends K, ? extends V> map) {
+      @Readonly Map<? extends K, ? extends V> map) {
     HashBiMap<K, V> bimap = create(map.size());
     bimap.putAll(map);
     return bimap;
   }
 
-  static final class BiEntry<K extends @Nullable Object, V extends @Nullable Object>
+  @Immutable
+  static final class BiEntry<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends ImmutableEntry<K, V> {
     final int keyHash;
     final int valueHash;
@@ -116,11 +117,11 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     // Using @Weak is necessary to avoid retain-cycles between BiEntry instances on iOS,
     // which would cause memory leaks when non-empty HashBiMap with cyclic BiEntry
     // instances is deallocated.
-    @CheckForNull BiEntry<K, V> nextInKToVBucket;
-    @Weak @CheckForNull BiEntry<K, V> nextInVToKBucket;
+    @CheckForNull @Assignable BiEntry<K, V> nextInKToVBucket;
+    @Weak @CheckForNull @Assignable BiEntry<K, V> nextInVToKBucket;
 
-    @Weak @CheckForNull BiEntry<K, V> nextInKeyInsertionOrder;
-    @Weak @CheckForNull BiEntry<K, V> prevInKeyInsertionOrder;
+    @Weak @CheckForNull @Assignable BiEntry<K, V> nextInKeyInsertionOrder;
+    @Weak @CheckForNull @Assignable BiEntry<K, V> prevInKeyInsertionOrder;
 
     BiEntry(@ParametricNullness K key, int keyHash, @ParametricNullness V value, int valueHash) {
       super(key, value);
@@ -148,11 +149,12 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   private transient int mask;
   private transient int modCount;
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private HashBiMap(int expectedSize) {
     init(expectedSize);
   }
 
-  private void init(int expectedSize) {
+  private void init(@Mutable HashBiMap<K, V> this, int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     int tableSize = Hashing.closedTableSize(expectedSize, LOAD_FACTOR);
     this.hashTableKToV = createTable(tableSize);
@@ -168,7 +170,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
    * Finds and removes {@code entry} from the bucket linked lists in both the key-to-value direction
    * and the value-to-key direction.
    */
-  private void delete(@Mutable HashBiMap<K,V> this, @Readonly BiEntry<K, V> entry) {
+  private void delete(@Mutable HashBiMap<K,V> this, BiEntry<K, V> entry) {
     int keyBucket = entry.keyHash & mask;
     BiEntry<K, V> prevBucketEntry = null;
     for (BiEntry<K, V> bucketEntry = hashTableKToV[keyBucket];
@@ -217,7 +219,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     modCount++;
   }
 
-  private void insert(@Mutable HashBiMap<K,V> this, @Readonly BiEntry<K, V> entry, @CheckForNull @Readonly BiEntry<K, V> oldEntryForKey) {
+  private void insert(@Mutable HashBiMap<K,V> this, BiEntry<K, V> entry, @CheckForNull BiEntry<K, V> oldEntryForKey) {
     int keyBucket = entry.keyHash & mask;
     entry.nextInKToVBucket = hashTableKToV[keyBucket];
     hashTableKToV[keyBucket] = entry;
@@ -400,7 +402,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return Maps.keyOrNull(oldEntryForValue);
   }
 
-  private void rehashIfNecessary() {
+  private void rehashIfNecessary(@Mutable HashBiMap<K, V> this) {
     @Nullable BiEntry<K, V>[] oldKToV = hashTableKToV;
     if (Hashing.needsResizing(size, oldKToV.length, LOAD_FACTOR)) {
       int newTableSize = oldKToV.length * 2;
@@ -454,7 +456,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return size;
   }
 
-  private abstract class Itr<T extends @Nullable Object> implements Iterator<T> {
+  private abstract class Itr<T extends @Nullable @Readonly Object> implements Iterator<T> {
     @CheckForNull BiEntry<K, V> next = firstInKeyInsertionOrder;
     @CheckForNull BiEntry<K, V> toRemove = null;
     int expectedModCount = modCount;
@@ -499,12 +501,13 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable HashBiMap<K,V> this) {
-    return new @PolyMutable KeySet();
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable HashBiMap<K,V> this) {
+    return new @ReceiverDependentMutable KeySet();
   }
 
   @ReceiverDependentMutable
   private final class KeySet extends Maps.KeySet<K, V> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     KeySet() {
       super(HashBiMap.this);
     }
@@ -535,18 +538,20 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public @PolyMutable Set<V> values(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable HashBiMap<K,V> this) {
     return inverse().keySet();
   }
 
   @Override
-  Iterator<Entry<K, V>> entryIterator() {
-    return new Itr<Entry<K, V>>() {
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the entries write through to the map and have its mutability, but inside the anonymous iterator receiver-dependent means the @Mutable cursor, and the local entry class cannot name the map's qualifier: https://github.com/eisop/checker-framework/issues/2322
+  Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator() {
+    return new Itr<@ReceiverDependentMutable Entry<K, V>>() {
       @Override
-      Entry<K, V> output(BiEntry<K, V> entry) {
-        return new MapEntry(entry);
+      @ReceiverDependentMutable Entry<K, V> output(BiEntry<K, V> entry) {
+        return new @ReceiverDependentMutable MapEntry(entry);
       }
 
+      @ReceiverDependentMutable
       class MapEntry extends AbstractMapEntry<K, V> {
         private BiEntry<K, V> delegate;
 
@@ -568,7 +573,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
         @Override
         @ParametricNullness
-        public V setValue(@ParametricNullness V value) {
+        public V setValue(@Mutable MapEntry this, @ParametricNullness V value) {
           V oldValue = delegate.value;
           int valueHash = smearedHash(value);
           if (valueHash == delegate.valueHash && Objects.equal(value, oldValue)) {
@@ -602,7 +607,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+  public void replaceAll(@Mutable HashBiMap<K, V> this, BiFunction<? super K, ? super V, ? extends V> function) {
     checkNotNull(function);
     BiEntry<K, V> oldFirst = firstInKeyInsertionOrder;
     clear();
@@ -615,15 +620,15 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
   @LazyInit @RetainedWith @CheckForNull private transient @Assignable BiMap<V, K> inverse;
 
   @Override
-  public @PolyMutable BiMap<V, K> inverse(@PolyMutable HashBiMap<K,V> this) {
+  public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable HashBiMap<K,V> this) {
     BiMap<V, K> result = inverse;
-    return (result == null) ? inverse = new Inverse() : result;
+    return (result == null) ? inverse = new @ReceiverDependentMutable Inverse() : result;
   }
 
   @ReceiverDependentMutable
   private final class Inverse extends IteratorBasedAbstractMap<V, K>
       implements BiMap<V, K>, Serializable {
-    @PolyMutable BiMap<K, V> forward(@PolyMutable Inverse this) {
+    @ReceiverDependentMutable BiMap<K, V> forward(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable Inverse this) {
       return HashBiMap.this;
     }
 
@@ -676,23 +681,24 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public @PolyMutable BiMap<K, V> inverse(@PolyMutable Inverse this) {
+    public @ReceiverDependentMutable BiMap<K, V> inverse(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable Inverse this) {
       return forward();
     }
 
     @Override
-    public @PolyMutable Set<@KeyFor({"this"}) V> keySet(@PolyMutable Inverse this) {
-      return new @PolyMutable InverseKeySet();
+    public @ReceiverDependentMutable Set<@KeyFor({"this"}) V> keySet(@ReceiverDependentMutable HashBiMap<K, V>.@ReceiverDependentMutable Inverse this) {
+      return new @ReceiverDependentMutable InverseKeySet();
     }
 
     @ReceiverDependentMutable
     private final class InverseKeySet extends Maps.KeySet<V, K> {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
       InverseKeySet() {
         super(Inverse.this);
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+      public boolean remove(@Mutable HashBiMap<K, V>.@Mutable Inverse.@Mutable InverseKeySet this, @CheckForNull @UnknownSignedness @Readonly Object o) {
         BiEntry<K, V> entry = seekByValue(o, smearedHash(o));
         if (entry == null) {
           return false;
@@ -715,18 +721,20 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public Set<K> values() {
+    public @ReceiverDependentMutable Set<K> values() {
       return forward().keySet();
     }
 
     @Override
-    Iterator<Entry<V, K>> entryIterator() {
-      return new Itr<Entry<V, K>>() {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the entries write through to the map and have its mutability, but inside the anonymous iterator receiver-dependent means the @Mutable cursor, and the local entry class cannot name the map's qualifier: https://github.com/eisop/checker-framework/issues/2322
+    Iterator<@ReceiverDependentMutable Entry<V, K>> entryIterator() {
+      return new Itr<@ReceiverDependentMutable Entry<V, K>>() {
         @Override
-        Entry<V, K> output(BiEntry<K, V> entry) {
-          return new InverseEntry(entry);
+        @ReceiverDependentMutable Entry<V, K> output(BiEntry<K, V> entry) {
+          return new @ReceiverDependentMutable InverseEntry(entry);
         }
 
+        @ReceiverDependentMutable
         class InverseEntry extends AbstractMapEntry<V, K> {
           private BiEntry<K, V> delegate;
 
@@ -748,7 +756,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
           @Override
           @ParametricNullness
-          public K setValue(@ParametricNullness K key) {
+          public K setValue(@Mutable InverseEntry this, @ParametricNullness K key) {
             K oldKey = delegate.key;
             int keyHash = smearedHash(key);
             if (keyHash == delegate.keyHash && Objects.equal(key, oldKey)) {
@@ -783,7 +791,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       }
     }
 
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new InverseSerializedForm<>(HashBiMap.this);
     }
 
@@ -800,11 +808,11 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
       implements Serializable {
     private final HashBiMap<K, V> bimap;
 
-    InverseSerializedForm(HashBiMap<K, V> bimap) {
+    InverseSerializedForm(@ReceiverDependentMutable HashBiMap<K, V> bimap) {
       this.bimap = bimap;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return bimap.inverse();
     }
   }
@@ -821,7 +829,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable HashBiMap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int size = Serialization.readCount(stream);
     init(16); // resist hostile attempts to allocate gratuitous heap
@@ -834,5 +842,5 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
 
 @Override
 @SideEffectFree
-public Set<Map.Entry<@KeyFor({"this"}) K, V>> entrySet() { return super.entrySet(); }
+public @ReceiverDependentMutable Set<Map.@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable HashBiMap<K, V> this) { return super.entrySet(); }
 }

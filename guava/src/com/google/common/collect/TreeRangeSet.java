@@ -33,6 +33,7 @@ import java.util.TreeMap;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -49,18 +50,18 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtIncompatible // uses NavigableMap
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRangeSet<C>
+public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRangeSet<C>
     implements Serializable {
 
   @VisibleForTesting final NavigableMap<Cut<C>, Range<C>> rangesByLowerBound;
 
   /** Creates an empty {@code TreeRangeSet} instance. */
-  public static <C extends @Readonly Comparable<?>> TreeRangeSet<C> create() {
+  public static <C extends @Immutable Comparable<?>> TreeRangeSet<C> create() {
     return new TreeRangeSet<>(new TreeMap<Cut<C>, Range<C>>());
   }
 
   /** Returns a {@code TreeRangeSet} initialized with the ranges in the specified range set. */
-  public static <C extends @Readonly Comparable<?>> TreeRangeSet<C> create(RangeSet<C> rangeSet) {
+  public static <C extends @Immutable Comparable<?>> TreeRangeSet<C> create(@Readonly RangeSet<C> rangeSet) {
     TreeRangeSet<C> result = create();
     result.addAll(rangeSet);
     return result;
@@ -75,30 +76,30 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
    *
    * @since 21.0
    */
-  public static <C extends @Readonly Comparable<?>> TreeRangeSet<C> create(Iterable<Range<C>> ranges) {
+  public static <C extends @Immutable Comparable<?>> TreeRangeSet<C> create(@Readonly Iterable<Range<C>> ranges) {
     TreeRangeSet<C> result = create();
     result.addAll(ranges);
     return result;
   }
 
-  private TreeRangeSet(NavigableMap<Cut<C>, Range<C>> rangesByLowerCut) {
+  private TreeRangeSet(@ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> rangesByLowerCut) {
     this.rangesByLowerBound = rangesByLowerCut;
   }
 
-  @LazyInit @CheckForNull private transient Set<Range<C>> asRanges;
-  @LazyInit @CheckForNull private transient Set<Range<C>> asDescendingSetOfRanges;
+  @LazyInit @CheckForNull private transient @Assignable Set<Range<C>> asRanges;
+  @LazyInit @CheckForNull private transient @Assignable Set<Range<C>> asDescendingSetOfRanges;
 
   @Override
-  public @PolyMutable Set<Range<C>> asRanges(@PolyMutable TreeRangeSet<C> this) {
+  public @ReceiverDependentMutable Set<Range<C>> asRanges(@ReceiverDependentMutable TreeRangeSet<C> this) {
     Set<Range<C>> result = asRanges;
-    return (result == null) ? asRanges = new AsRanges(rangesByLowerBound.values()) : result;
+    return (result == null) ? asRanges = new @ReceiverDependentMutable AsRanges(rangesByLowerBound.values()) : result;
   }
 
   @Override
-  public @PolyMutable Set<Range<C>> asDescendingSetOfRanges(@PolyMutable TreeRangeSet<C> this) {
+  public @ReceiverDependentMutable Set<Range<C>> asDescendingSetOfRanges(@ReceiverDependentMutable TreeRangeSet<C> this) {
     Set<Range<C>> result = asDescendingSetOfRanges;
     return (result == null)
-        ? asDescendingSetOfRanges = new AsRanges(rangesByLowerBound.descendingMap().values())
+        ? asDescendingSetOfRanges = new @ReceiverDependentMutable AsRanges(rangesByLowerBound.descendingMap().values())
         : result;
   }
 
@@ -112,7 +113,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    protected @PolyMutable Collection<Range<C>> delegate(@PolyMutable AsRanges this) {
+    protected @ReceiverDependentMutable Collection<Range<C>> delegate(@ReceiverDependentMutable AsRanges this) {
       return delegate;
     }
 
@@ -141,7 +142,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
   }
 
   @Override
-  public boolean intersects(Range<C> range) {
+  public boolean intersects(@Readonly TreeRangeSet<C> this, Range<C> range) {
     checkNotNull(range);
     Entry<@Immutable Cut<C>, Range<C>> ceilingEntry = rangesByLowerBound.ceilingEntry(range.lowerBound);
     if (ceilingEntry != null
@@ -156,7 +157,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
   }
 
   @Override
-  public boolean encloses(Range<C> range) {
+  public boolean encloses(@Readonly TreeRangeSet<C> this, Range<C> range) {
     checkNotNull(range);
     Entry<@Immutable Cut<C>, Range<C>> floorEntry = rangesByLowerBound.floorEntry(range.lowerBound);
     return floorEntry != null && floorEntry.getValue().encloses(range);
@@ -186,7 +187,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
   }
 
   @Override
-  public void add(Range<C> rangeToAdd) {
+  public void add(@Mutable TreeRangeSet<C> this, Range<C> rangeToAdd) {
     checkNotNull(rangeToAdd);
 
     if (rangeToAdd.isEmpty()) {
@@ -233,7 +234,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
   }
 
   @Override
-  public void remove(Range<C> rangeToRemove) {
+  public void remove(@Mutable TreeRangeSet<C> this, Range<C> rangeToRemove) {
     checkNotNull(rangeToRemove);
 
     if (rangeToRemove.isEmpty()) {
@@ -275,7 +276,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     rangesByLowerBound.subMap(rangeToRemove.lowerBound, rangeToRemove.upperBound).clear();
   }
 
-  private void replaceRangeWithSameLowerBound(Range<C> range) {
+  private void replaceRangeWithSameLowerBound(@Mutable TreeRangeSet<C> this, Range<C> range) {
     if (range.isEmpty()) {
       rangesByLowerBound.remove(range.lowerBound);
     } else {
@@ -283,17 +284,17 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
   }
 
-  @LazyInit @CheckForNull private transient RangeSet<C> complement;
+  @LazyInit @CheckForNull private transient @Assignable RangeSet<C> complement;
 
   @Override
-  public RangeSet<C> complement(@PolyMutable TreeRangeSet<C> this) {
+  public @ReceiverDependentMutable RangeSet<C> complement(@ReceiverDependentMutable TreeRangeSet<C> this) {
     RangeSet<C> result = complement;
-    return (result == null) ? complement = new Complement() : result;
+    return (result == null) ? complement = new @ReceiverDependentMutable Complement() : result;
   }
 
   @VisibleForTesting
   @ReceiverDependentMutable
-  static final class RangesByUpperBound<C extends @Readonly Comparable<?>>
+  static final class RangesByUpperBound<C extends @Immutable Comparable<?>>
       extends AbstractNavigableMap<Cut<C>, Range<C>> {
     private final NavigableMap<Cut<C>, Range<C>> rangesByLowerBound;
 
@@ -303,27 +304,27 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
      */
     private final Range<Cut<C>> upperBoundWindow;
 
-    RangesByUpperBound(NavigableMap<Cut<C>, Range<C>> rangesByLowerBound) {
+    RangesByUpperBound(@ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> rangesByLowerBound) {
       this.rangesByLowerBound = rangesByLowerBound;
       this.upperBoundWindow = Range.all();
     }
 
     private RangesByUpperBound(
-        NavigableMap<Cut<C>, Range<C>> rangesByLowerBound, Range<Cut<C>> upperBoundWindow) {
+        @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> rangesByLowerBound, Range<Cut<C>> upperBoundWindow) {
       this.rangesByLowerBound = rangesByLowerBound;
       this.upperBoundWindow = upperBoundWindow;
     }
 
-    private NavigableMap<Cut<C>, Range<C>> subMap(Range<Cut<C>> window) {
+    private @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable RangesByUpperBound<C> this, Range<Cut<C>> window) {
       if (window.isConnected(upperBoundWindow)) {
-        return new RangesByUpperBound<>(rangesByLowerBound, window.intersection(upperBoundWindow));
+        return new @ReceiverDependentMutable RangesByUpperBound<>(rangesByLowerBound, window.intersection(upperBoundWindow));
       } else {
         return ImmutableSortedMap.of();
       }
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> subMap(
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable RangesByUpperBound<C> this,
         Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
       return subMap(
           Range.range(
@@ -332,12 +333,12 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> headMap(Cut<C> toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> headMap(@ReceiverDependentMutable RangesByUpperBound<C> this, Cut<C> toKey, boolean inclusive) {
       return subMap(Range.upTo(toKey, BoundType.forBoolean(inclusive)));
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> tailMap(Cut<C> fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> tailMap(@ReceiverDependentMutable RangesByUpperBound<C> this, Cut<C> fromKey, boolean inclusive) {
       return subMap(Range.downTo(fromKey, BoundType.forBoolean(inclusive)));
     }
 
@@ -373,7 +374,8 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> entryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> entryIterator() {
       /*
        * We want to start the iteration at the first range where the upper bound is in
        * upperBoundWindow.
@@ -396,10 +398,10 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
                   .iterator();
         }
       }
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (!backingItr.hasNext()) {
             return endOfData();
           }
@@ -430,10 +432,10 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
           && upperBoundWindow.upperBound.isLessThan(backingItr.peek().upperBound)) {
         backingItr.next();
       }
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Readonly Entry<Cut<C>, Range<C>> computeNext() {
           if (!backingItr.hasNext()) {
             return endOfData();
           }
@@ -462,7 +464,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
   }
 
   @ReceiverDependentMutable
-  private static final class ComplementRangesByLowerBound<C extends @Readonly Comparable<?>>
+  private static final class ComplementRangesByLowerBound<C extends @Immutable Comparable<?>>
       extends AbstractNavigableMap<Cut<C>, Range<C>> {
     private final NavigableMap<Cut<C>, Range<C>> positiveRangesByLowerBound;
     private final NavigableMap<Cut<C>, Range<C>> positiveRangesByUpperBound;
@@ -474,28 +476,28 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
      */
     private final Range<Cut<C>> complementLowerBoundWindow;
 
-    ComplementRangesByLowerBound(NavigableMap<Cut<C>, Range<C>> positiveRangesByLowerBound) {
+    ComplementRangesByLowerBound(@ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> positiveRangesByLowerBound) {
       this(positiveRangesByLowerBound, Range.<Cut<C>>all());
     }
 
     private ComplementRangesByLowerBound(
-        NavigableMap<Cut<C>, Range<C>> positiveRangesByLowerBound, Range<Cut<C>> window) {
+        @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> positiveRangesByLowerBound, Range<Cut<C>> window) {
       this.positiveRangesByLowerBound = positiveRangesByLowerBound;
-      this.positiveRangesByUpperBound = new RangesByUpperBound<>(positiveRangesByLowerBound);
+      this.positiveRangesByUpperBound = new @ReceiverDependentMutable RangesByUpperBound<>(positiveRangesByLowerBound);
       this.complementLowerBoundWindow = window;
     }
 
-    private NavigableMap<Cut<C>, Range<C>> subMap(Range<Cut<C>> subWindow) {
+    private @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable ComplementRangesByLowerBound<C> this, Range<Cut<C>> subWindow) {
       if (!complementLowerBoundWindow.isConnected(subWindow)) {
         return ImmutableSortedMap.of();
       } else {
         subWindow = subWindow.intersection(complementLowerBoundWindow);
-        return new ComplementRangesByLowerBound<>(positiveRangesByLowerBound, subWindow);
+        return new @ReceiverDependentMutable ComplementRangesByLowerBound<>(positiveRangesByLowerBound, subWindow);
       }
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> subMap(
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable ComplementRangesByLowerBound<C> this,
         Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
       return subMap(
           Range.range(
@@ -504,12 +506,12 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> headMap(Cut<C> toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> headMap(@ReceiverDependentMutable ComplementRangesByLowerBound<C> this, Cut<C> toKey, boolean inclusive) {
       return subMap(Range.upTo(toKey, BoundType.forBoolean(inclusive)));
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> tailMap(Cut<C> fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> tailMap(@ReceiverDependentMutable ComplementRangesByLowerBound<C> this, Cut<C> fromKey, boolean inclusive) {
       return subMap(Range.downTo(fromKey, BoundType.forBoolean(inclusive)));
     }
 
@@ -519,7 +521,8 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> entryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> entryIterator() {
       /*
        * firstComplementRangeLowerBound is the first complement range lower bound inside
        * complementLowerBoundWindow. Complement range lower bounds are either positive range upper
@@ -550,12 +553,12 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
       } else {
         return Iterators.emptyIterator();
       }
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         Cut<C> nextComplementRangeLowerBound = firstComplementRangeLowerBound;
 
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (complementLowerBoundWindow.upperBound.isLessThan(nextComplementRangeLowerBound)
               || nextComplementRangeLowerBound == Cut.<C>aboveAll()) {
             return endOfData();
@@ -575,7 +578,8 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
       /*
        * firstComplementRangeUpperBound is the upper bound of the last complement range with lower
        * bound inside complementLowerBoundWindow.
@@ -611,12 +615,12 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
         cut = positiveRangesByLowerBound.higherKey(Cut.<C>belowAll());
       }
       Cut<C> firstComplementRangeUpperBound = MoreObjects.firstNonNull(cut, Cut.<C>aboveAll());
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         Cut<C> nextComplementRangeUpperBound = firstComplementRangeUpperBound;
 
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (nextComplementRangeUpperBound == Cut.<C>belowAll()) {
             return endOfData();
           } else if (positiveItr.hasNext()) {
@@ -669,17 +673,18 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
 
   @ReceiverDependentMutable
   private final class Complement extends TreeRangeSet<C> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     Complement() {
-      super(new ComplementRangesByLowerBound<C>(TreeRangeSet.this.rangesByLowerBound));
+      super(new @ReceiverDependentMutable ComplementRangesByLowerBound<C>(TreeRangeSet.this.rangesByLowerBound));
     }
 
     @Override
-    public void add(Range<C> rangeToAdd) {
+    public void add(@Mutable TreeRangeSet<C>.@Mutable Complement this, Range<C> rangeToAdd) {
       TreeRangeSet.this.remove(rangeToAdd);
     }
 
     @Override
-    public void remove(Range<C> rangeToRemove) {
+    public void remove(@Mutable TreeRangeSet<C>.@Mutable Complement this, Range<C> rangeToRemove) {
       TreeRangeSet.this.add(rangeToRemove);
     }
 
@@ -689,13 +694,13 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    public RangeSet<C> complement() {
+    public @ReceiverDependentMutable RangeSet<C> complement(@ReceiverDependentMutable Complement this) {
       return TreeRangeSet.this;
     }
   }
 
   @ReceiverDependentMutable
-  private static final class SubRangeSetRangesByLowerBound<C extends @Readonly Comparable<?>>
+  private static final class SubRangeSetRangesByLowerBound<C extends @Immutable Comparable<?>>
       extends AbstractNavigableMap<Cut<C>, Range<C>> {
     /**
      * lowerBoundWindow is the headMap/subMap/tailMap view; it only restricts the keys, and does not
@@ -715,24 +720,24 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     private SubRangeSetRangesByLowerBound(
         Range<Cut<C>> lowerBoundWindow,
         Range<C> restriction,
-        NavigableMap<Cut<C>, Range<C>> rangesByLowerBound) {
+        @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> rangesByLowerBound) {
       this.lowerBoundWindow = checkNotNull(lowerBoundWindow);
       this.restriction = checkNotNull(restriction);
       this.rangesByLowerBound = checkNotNull(rangesByLowerBound);
-      this.rangesByUpperBound = new RangesByUpperBound<>(rangesByLowerBound);
+      this.rangesByUpperBound = new @ReceiverDependentMutable RangesByUpperBound<>(rangesByLowerBound);
     }
 
-    private NavigableMap<Cut<C>, Range<C>> subMap(Range<Cut<C>> window) {
+    private @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable SubRangeSetRangesByLowerBound<C> this, Range<Cut<C>> window) {
       if (!window.isConnected(lowerBoundWindow)) {
         return ImmutableSortedMap.of();
       } else {
-        return new SubRangeSetRangesByLowerBound<>(
+        return new @ReceiverDependentMutable SubRangeSetRangesByLowerBound<>(
             lowerBoundWindow.intersection(window), restriction, rangesByLowerBound);
       }
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> subMap(
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable SubRangeSetRangesByLowerBound<C> this,
         Cut<C> fromKey, boolean fromInclusive, Cut<C> toKey, boolean toInclusive) {
       return subMap(
           Range.range(
@@ -743,12 +748,12 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> headMap(Cut<C> toKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> headMap(@ReceiverDependentMutable SubRangeSetRangesByLowerBound<C> this, Cut<C> toKey, boolean inclusive) {
       return subMap(Range.upTo(toKey, BoundType.forBoolean(inclusive)));
     }
 
     @Override
-    public NavigableMap<Cut<C>, Range<C>> tailMap(Cut<C> fromKey, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> tailMap(@ReceiverDependentMutable SubRangeSetRangesByLowerBound<C> this, Cut<C> fromKey, boolean inclusive) {
       return subMap(Range.downTo(fromKey, BoundType.forBoolean(inclusive)));
     }
 
@@ -793,7 +798,8 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> entryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> entryIterator() {
       if (restriction.isEmpty()) {
         return Iterators.emptyIterator();
       }
@@ -817,10 +823,10 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
       Cut<Cut<C>> upperBoundOnLowerBounds =
           Ordering.<Cut<Cut<C>>>natural()
               .min(lowerBoundWindow.upperBound, Cut.belowValue(restriction.upperBound));
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (!completeRangeItr.hasNext()) {
             return endOfData();
           }
@@ -836,7 +842,8 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
       if (restriction.isEmpty()) {
         return Iterators.emptyIterator();
       }
@@ -851,10 +858,10 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
               .descendingMap()
               .values()
               .iterator();
-      return new AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (!completeRangeItr.hasNext()) {
             return endOfData();
           }
@@ -879,23 +886,24 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
   }
 
   @Override
-  public RangeSet<C> subRangeSet(Range<C> view) {
-    return view.equals(Range.<C>all()) ? this : new SubRangeSet(view);
+  public @ReceiverDependentMutable RangeSet<C> subRangeSet(@ReceiverDependentMutable TreeRangeSet<C> this, Range<C> view) {
+    return view.equals(Range.<C>all()) ? this : new @ReceiverDependentMutable SubRangeSet(view);
   }
 
   @ReceiverDependentMutable
   private final class SubRangeSet extends TreeRangeSet<C> {
     private final Range<C> restriction;
 
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     SubRangeSet(Range<C> restriction) {
       super(
-          new SubRangeSetRangesByLowerBound<C>(
+          new @ReceiverDependentMutable SubRangeSetRangesByLowerBound<C>(
               Range.<Cut<C>>all(), restriction, TreeRangeSet.this.rangesByLowerBound));
       this.restriction = restriction;
     }
 
     @Override
-    public boolean encloses(Range<C> range) {
+    public boolean encloses(@Readonly SubRangeSet this, Range<C> range) {
       if (!restriction.isEmpty() && restriction.encloses(range)) {
         Range<C> enclosing = TreeRangeSet.this.rangeEnclosing(range);
         return enclosing != null && !enclosing.intersection(restriction).isEmpty();
@@ -914,7 +922,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    public void add(Range<C> rangeToAdd) {
+    public void add(@Mutable TreeRangeSet<C>.@Mutable SubRangeSet this, Range<C> rangeToAdd) {
       checkArgument(
           restriction.encloses(rangeToAdd),
           "Cannot add range %s to subRangeSet(%s)",
@@ -924,7 +932,7 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    public void remove(Range<C> rangeToRemove) {
+    public void remove(@Mutable TreeRangeSet<C>.@Mutable SubRangeSet this, Range<C> rangeToRemove) {
       if (rangeToRemove.isConnected(restriction)) {
         TreeRangeSet.this.remove(rangeToRemove.intersection(restriction));
       }
@@ -936,12 +944,12 @@ public class TreeRangeSet<C extends @Readonly Comparable<?>> extends AbstractRan
     }
 
     @Override
-    public void clear() {
+    public void clear(@Mutable TreeRangeSet<C>.@Mutable SubRangeSet this) {
       TreeRangeSet.this.remove(restriction);
     }
 
     @Override
-    public RangeSet<C> subRangeSet(Range<C> view) {
+    public @ReceiverDependentMutable RangeSet<C> subRangeSet(@ReceiverDependentMutable SubRangeSet this, Range<C> view) {
       if (view.encloses(restriction)) {
         return this;
       } else if (view.isConnected(restriction)) {

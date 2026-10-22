@@ -23,6 +23,7 @@ import java.security.PrivilegedExceptionAction;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import sun.misc.Unsafe;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Utility functions for loading and storing values from a byte array.
@@ -122,6 +123,7 @@ final class LittleEndianByteArray {
    * <p>This abstraction allows us to use single-instruction load and put when available, or fall
    * back on the slower approach of using Longs.fromBytes(byte...).
    */
+  @Immutable
   private interface LittleEndianBytes {
     long getLongLittleEndian(byte[] array, @NonNegative @LTLengthOf(value = "#1",offset = "7") int offset);
 

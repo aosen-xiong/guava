@@ -43,7 +43,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness"})
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-@ReceiverDependentMutable
+@Mutable
 public abstract class ForwardingListIterator<E extends @Nullable @Readonly Object>
     extends ForwardingIterator<E> implements ListIterator<E> {
 
@@ -51,7 +51,7 @@ public abstract class ForwardingListIterator<E extends @Nullable @Readonly Objec
   protected ForwardingListIterator() {}
 
   @Override
-  protected abstract ListIterator<E> delegate();
+  protected abstract @Mutable ListIterator<E> delegate();
 
   @Override
   public void add(@Mutable ForwardingListIterator<E> this, @ParametricNullness E element) {

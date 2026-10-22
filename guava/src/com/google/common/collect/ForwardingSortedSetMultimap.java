@@ -42,33 +42,33 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
 public abstract class ForwardingSortedSetMultimap<
-        K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+        K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends ForwardingSetMultimap<K, V> implements SortedSetMultimap<K, V> {
 
   /** Constructor for use by subclasses. */
   protected ForwardingSortedSetMultimap() {}
 
   @Override
-  protected abstract SortedSetMultimap<K, V> delegate();
+  protected abstract @ReceiverDependentMutable SortedSetMultimap<K, V> delegate();
 
   @Override
-  public SortedSet<V> get(@Readonly ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable SortedSet<V> get(@ReceiverDependentMutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key) {
     return delegate().get(key);
   }
 
   @Override
-  public SortedSet<V> removeAll(@Mutable ForwardingSortedSetMultimap<K,V> this, @CheckForNull @Mutable Object key) {
+  public @Readonly SortedSet<V> removeAll(@Mutable ForwardingSortedSetMultimap<K,V> this, @CheckForNull @Readonly Object key) {
     return delegate().removeAll(key);
   }
 
   @Override
-  public SortedSet<V> replaceValues(@Mutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly SortedSet<V> replaceValues(@Mutable ForwardingSortedSetMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 
   @Override
   @CheckForNull
-  public Comparator<? super V> valueComparator() {
+  public @Readonly Comparator<? super V> valueComparator() {
     return delegate().valueComparator();
   }
 }

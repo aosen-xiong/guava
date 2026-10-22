@@ -48,6 +48,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An immutable array of {@code long} values, with an API resembling {@link List}.
@@ -103,6 +104,7 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public final class ImmutableLongArray implements Serializable {
   private static final ImmutableLongArray EMPTY = new ImmutableLongArray(new long[0]);
 
@@ -383,7 +385,7 @@ public final class ImmutableLongArray implements Serializable {
   // it doesn't escape this class
   @SuppressWarnings("Immutable")
   @HasSubsequence(subsequence="this", from="this.start", to="this.end")
-  private final long [] array;
+  private final long @Readonly [] array;
 
   /*
    * TODO(kevinb): evaluate the trade-offs of going bimorphic to save these two fields from most
@@ -394,7 +396,7 @@ public final class ImmutableLongArray implements Serializable {
   private final transient @IndexOrHigh("array") @LessThan("this.end + 1") int start; // it happens that we only serialize instances where this is 0
   private final @IndexOrHigh("array") int end; // exclusive
 
-  private ImmutableLongArray(long[] array) {
+  private ImmutableLongArray(long @Readonly [] array) {
     this(array, 0, array.length);
   }
 
@@ -403,7 +405,7 @@ public final class ImmutableLongArray implements Serializable {
   // leads to the first two issuing errors - since each field is dependent on
   // at least one of the others
   )
-  private ImmutableLongArray(long[] array, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
+  private ImmutableLongArray(long @Readonly [] array, @IndexOrHigh("#1") int start, @IndexOrHigh("#1") int end) {
     this.array = array;
     this.start = start;
     this.end = end;
@@ -550,19 +552,19 @@ public final class ImmutableLongArray implements Serializable {
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       return indexOf(target) >= 0;
     }
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe")
-    public @GTENegativeOne int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @GTENegativeOne int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       return target instanceof Long ? parent.indexOf((@Signed Long) target) : -1;
     }
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe")
-    public @GTENegativeOne int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @GTENegativeOne int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       return target instanceof Long ? parent.lastIndexOf((@Signed Long) target) : -1;
     }
 
@@ -584,7 +586,7 @@ public final class ImmutableLongArray implements Serializable {
      * therefore i is an index for parent.array
      */
     @SuppressWarnings("upperbound:array.access.unsafe.high") // index incremented in for-each over list of same length
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object instanceof AsList) {
         AsList that = (AsList) object;
         return this.parent.equals(that.parent);
@@ -624,7 +626,7 @@ public final class ImmutableLongArray implements Serializable {
    * values as this one, in the same order.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -687,11 +689,11 @@ public final class ImmutableLongArray implements Serializable {
     return start > 0 || end < array.length;
   }
 
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return trimmed();
   }
 
-  Object readResolve() {
+  @Readonly Object readResolve() {
     return isEmpty() ? EMPTY : this;
   }
 }

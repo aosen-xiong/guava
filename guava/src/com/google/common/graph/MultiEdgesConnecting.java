@@ -25,7 +25,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to represent the set of edges connecting an (implicit) origin node to a target node.
@@ -37,12 +40,12 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-abstract class MultiEdgesConnecting<E> extends AbstractSet<E> {
+abstract class MultiEdgesConnecting<E extends @Immutable Object> extends AbstractSet<E> {
 
   private final Map<E, ?> outEdgeToNode;
-  private final Object targetNode;
+  private final @Readonly Object targetNode;
 
-  MultiEdgesConnecting(Map<E, ?> outEdgeToNode, Object targetNode) {
+  MultiEdgesConnecting(Map<E, ?> outEdgeToNode, @Readonly Object targetNode) {
     this.outEdgeToNode = checkNotNull(outEdgeToNode);
     this.targetNode = checkNotNull(targetNode);
   }
@@ -50,7 +53,7 @@ abstract class MultiEdgesConnecting<E> extends AbstractSet<E> {
   @Override
   public UnmodifiableIterator<E> iterator() {
     Iterator<? extends Entry<E, ?>> entries = outEdgeToNode.entrySet().iterator();
-    return new AbstractIterator<E>() {
+    return new @Mutable AbstractIterator<E>() {
       @Override
       @CheckForNull
       protected E computeNext() {
@@ -66,7 +69,7 @@ abstract class MultiEdgesConnecting<E> extends AbstractSet<E> {
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object edge) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object edge) {
     return targetNode.equals(outEdgeToNode.get(edge));
   }
 }

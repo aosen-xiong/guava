@@ -38,21 +38,21 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends FilteredEntryMultimap<K, V> implements FilteredSetMultimap<K, V> {
 
-  FilteredEntrySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+  FilteredEntrySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super @Readonly Entry<K, V>> predicate) {
     super(unfiltered, predicate);
   }
 
   @Override
-  public @PolyMutable SetMultimap<K, V> unfiltered(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
-    return (@PolyMutable SetMultimap<K, V>) unfiltered;
+  public @ReceiverDependentMutable SetMultimap<K, V> unfiltered(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this) {
+    return (@ReceiverDependentMutable SetMultimap<K, V>) unfiltered;
   }
 
   @Override
-  public @PolyMutable Set<V> get(@PolyMutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key) {
-    return (@PolyMutable Set<V>) super.get(key);
+  public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key) {
+    return (@ReceiverDependentMutable Set<V>) super.get(key);
   }
 
   @Override
@@ -61,17 +61,17 @@ final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V ex
   }
 
   @Override
-  public Set<V> replaceValues(@Mutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
-    return (Set<V>) super.replaceValues(key, values);
+  public @Readonly Set<V> replaceValues(@Mutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
+    return (@Readonly Set<V>) super.replaceValues(key, values);
   }
 
   @Override
-  @PolyMutable Set<@PolyMutable Entry<K, V>> createEntries(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this) {
     return Sets.filter(unfiltered().entries(), entryPredicate());
   }
 
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<K, V>> entries(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
-    return (@PolyMutable Set<@PolyMutable Entry<K, V>>) super.entries();
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this) {
+    return (@ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>>) super.entries();
   }
 }

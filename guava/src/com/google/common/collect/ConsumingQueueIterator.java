@@ -20,6 +20,8 @@ import com.google.common.annotations.GwtCompatible;
 import java.util.Queue;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An Iterator implementation which draws elements from a queue, removing them from the queue as it
@@ -27,7 +29,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class ConsumingQueueIterator<T extends @Nullable Object> extends AbstractIterator<T> {
+final class ConsumingQueueIterator<T extends @Nullable @Readonly Object> extends AbstractIterator<T> {
   private final Queue<T> queue;
 
   ConsumingQueueIterator(Queue<T> queue) {

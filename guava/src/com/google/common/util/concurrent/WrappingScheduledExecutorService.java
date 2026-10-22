@@ -22,6 +22,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An abstract {@code ScheduledExecutorService} that allows subclasses to {@linkplain
@@ -49,7 +50,7 @@ abstract class WrappingScheduledExecutorService extends WrappingExecutorService
   }
 
   @Override
-  public final <V extends @Nullable @UnknownSignedness Object> ScheduledFuture<V> schedule(
+  public final <V extends @Nullable @UnknownSignedness @Readonly Object> ScheduledFuture<V> schedule(
       Callable<V> task, long delay, TimeUnit unit) {
     return delegate.schedule(wrapTask(task), delay, unit);
   }

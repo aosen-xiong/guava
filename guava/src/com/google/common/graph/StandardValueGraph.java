@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Standard implementation of {@link ValueGraph} that supports the options supplied by {@link
@@ -44,7 +47,8 @@ import javax.annotation.CheckForNull;
  * @param <V> Value parameter type
  */
 @ElementTypesAreNonnullByDefault
-class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
+@ReceiverDependentMutable
+class StandardValueGraph<N extends @Immutable Object, V> extends AbstractValueGraph<N, V> {
   private final boolean isDirected;
   private final boolean allowsSelfLoops;
   private final ElementOrder<N> nodeOrder;
@@ -68,7 +72,7 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
    */
   StandardValueGraph(
       AbstractGraphBuilder<? super N> builder,
-      Map<N, GraphConnections<N, V>> nodeConnections,
+      @ReceiverDependentMutable Map<N, GraphConnections<N, V>> nodeConnections,
       long edgeCount) {
     this.isDirected = builder.directed;
     this.allowsSelfLoops = builder.allowsSelfLoops;
@@ -76,13 +80,13 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
     // Prefer the heavier "MapRetrievalCache" for nodes if lookup is expensive.
     this.nodeConnections =
         (nodeConnections instanceof TreeMap)
-            ? new MapRetrievalCache<N, GraphConnections<N, V>>(nodeConnections)
-            : new MapIteratorCache<N, GraphConnections<N, V>>(nodeConnections);
+            ? new @ReceiverDependentMutable MapRetrievalCache<N, GraphConnections<N, V>>(nodeConnections)
+            : new @ReceiverDependentMutable MapIteratorCache<N, GraphConnections<N, V>>(nodeConnections);
     this.edgeCount = checkNonNegative(edgeCount);
   }
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return nodeConnections.unmodifiableKeySet();
   }
 

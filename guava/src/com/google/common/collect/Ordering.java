@@ -161,8 +161,8 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * Returns a serializable ordering that uses the natural order of the values. The ordering throws
    * a {@link NullPointerException} when passed a null parameter.
    *
-   * <p>The type specification is {@code <C extends Comparable>}, instead of the technically correct
-   * {@code <C extends Comparable<? super C>>}, to support legacy types from before Java 5.
+   * <p>The type specification is {@code <C extends @Immutable Comparable>}, instead of the technically correct
+   * {@code <C extends @Immutable Comparable<? super C>>}, to support legacy types from before Java 5.
    *
    * <p><b>Java 8+ users:</b> use {@link Comparator#naturalOrder} instead.
    */
@@ -170,7 +170,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
   @SuppressWarnings({"unchecked", "rawtypes"})
   // TODO(kevinb): right way to explain this??
   // plus https://github.com/google/guava/issues/989
-  public static <C extends Comparable> Ordering<C> natural() {
+  public static <C extends @Readonly Comparable> Ordering<C> natural() {
     return (Ordering<C>) NaturalOrdering.INSTANCE;
   }
 
@@ -192,7 +192,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    *     wraps that comparator
    */
   @GwtCompatible(serializable = true)
-  public static <T extends @Nullable @Readonly Object> Ordering<T> from(Comparator<T> comparator) {
+  public static <T extends @Nullable @Readonly Object> Ordering<T> from(@Readonly Comparator<T> comparator) {
     return (comparator instanceof Ordering)
         ? (Ordering<T>) comparator
         : new ComparatorOrdering<T>(comparator);
@@ -257,7 +257,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    */
   // TODO(kevinb): provide replacement
   @GwtCompatible(serializable = true)
-  public static <T> Ordering<T> explicit(T leastValue, T... remainingValuesInOrder) {
+  public static <T extends @Immutable Object> Ordering<T> explicit(T leastValue, T... remainingValuesInOrder) {
     return explicit(Lists.asList(leastValue, remainingValuesInOrder));
   }
 
@@ -292,7 +292,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @since 13.0
    */
   @GwtCompatible(serializable = true)
-  public static Ordering<@Nullable Object> allEqual() {
+  public static Ordering<@Nullable @Readonly Object> allEqual() {
     return AllEqualOrdering.INSTANCE;
   }
 
@@ -326,7 +326,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    */
   // TODO(kevinb): copy to Comparators, etc.
   @J2ktIncompatible // MapMaker
-  public static Ordering<@Nullable Object> arbitrary() {
+  public static Ordering<@Nullable @Readonly Object> arbitrary() {
     return ArbitraryOrderingHolder.ARBITRARY_ORDERING;
   }
 
@@ -466,11 +466,11 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * (you can omit the comparator if it is the natural order).
    */
   @GwtCompatible(serializable = true)
-  public <F extends @Nullable @Readonly Object> Ordering<F> onResultOf(Function<F, ? extends T> function) {
+  public <F extends @Nullable @Readonly Object> Ordering<F> onResultOf(@Readonly Function<F, ? extends T> function) {
     return new ByFunctionOrdering<>(function, this);
   }
 
-  <T2 extends @Immutable T> Ordering<Entry<T2, ?>> onKeys() {
+  <T2 extends @Immutable T> Ordering<@Readonly Entry<T2, ?>> onKeys() {
     return onResultOf(Maps.<T2>keyFunction());
   }
 
@@ -756,7 +756,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @since 8.0
    */
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public <E extends T> List<E> leastOf(Iterable<E> iterable, int k) {
+  public <E extends T> @Readonly List<E> leastOf(Iterable<E> iterable, int k) {
     if (iterable instanceof Collection) {
       Collection<E> collection = (Collection<E>) iterable;
       if (collection.size() <= 2L * k) {
@@ -792,7 +792,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @throws IllegalArgumentException if {@code k} is negative
    * @since 14.0
    */
-  public <E extends T> List<E> leastOf(Iterator<E> iterator, int k) {
+  public <E extends T> @Readonly List<E> leastOf(Iterator<E> iterator, int k) {
     checkNotNull(iterator);
     checkNonnegative(k, "k");
 
@@ -830,7 +830,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @throws IllegalArgumentException if {@code k} is negative
    * @since 8.0
    */
-  public <E extends T> List<E> greatestOf(Iterable<E> iterable, int k) {
+  public <E extends T> @Readonly List<E> greatestOf(Iterable<E> iterable, int k) {
     // TODO(kevinb): see if delegation is hurting performance noticeably
     // TODO(kevinb): if we change this implementation, add full unit tests.
     return this.<E>reverse().leastOf(iterable, k);
@@ -852,7 +852,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @throws IllegalArgumentException if {@code k} is negative
    * @since 14.0
    */
-  public <E extends T> List<E> greatestOf(Iterator<E> iterator, int k) {
+  public <E extends T> @Readonly List<E> greatestOf(Iterator<E> iterator, int k) {
     return this.<E>reverse().leastOf(iterator, k);
   }
 
@@ -972,9 +972,9 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
   @VisibleForTesting
   @ReceiverDependentMutable
   static class IncomparableValueException extends ClassCastException {
-    final Object value;
+    final @Readonly Object value;
 
-    IncomparableValueException(@ReceiverDependentMutable Object value) {
+    IncomparableValueException(@Readonly Object value) {
       super("Cannot compare value: " + value);
       this.value = value;
     }

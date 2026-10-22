@@ -18,6 +18,7 @@ import com.google.common.annotations.Beta;
 import com.google.errorprone.annotations.DoNotMock;
 import java.io.Serializable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.framework.qual.AnnotatedFor;
 
@@ -48,6 +49,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @Beta
 @DoNotMock("Implement with a lambda")
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface Funnel<T extends @Nullable @Readonly Object> extends Serializable {
 
   /**

@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An implementation of {@link NetworkConnections} for directed networks with parallel edges.
@@ -41,21 +42,21 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class DirectedMultiNetworkConnections<N, E> extends AbstractDirectedNetworkConnections<N, E> {
+final class DirectedMultiNetworkConnections<N extends @Immutable Object, E extends @Immutable Object> extends AbstractDirectedNetworkConnections<N, E> {
 
   private DirectedMultiNetworkConnections(
       Map<E, N> inEdges, Map<E, N> outEdges, int selfLoopCount) {
     super(inEdges, outEdges, selfLoopCount);
   }
 
-  static <N, E> DirectedMultiNetworkConnections<N, E> of() {
+  static <N extends @Immutable Object, E extends @Immutable Object> DirectedMultiNetworkConnections<N, E> of() {
     return new DirectedMultiNetworkConnections<>(
         new HashMap<E, N>(INNER_CAPACITY, INNER_LOAD_FACTOR),
         new HashMap<E, N>(INNER_CAPACITY, INNER_LOAD_FACTOR),
         0);
   }
 
-  static <N, E> DirectedMultiNetworkConnections<N, E> ofImmutable(
+  static <N extends @Immutable Object, E extends @Immutable Object> DirectedMultiNetworkConnections<N, E> ofImmutable(
       Map<E, N> inEdges, Map<E, N> outEdges, int selfLoopCount) {
     return new DirectedMultiNetworkConnections<>(
         ImmutableMap.copyOf(inEdges), ImmutableMap.copyOf(outEdges), selfLoopCount);

@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A future whose value is derived from a collection of input futures.
@@ -42,7 +43,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-abstract class AggregateFuture<InputT extends @Nullable Object, OutputT extends @Nullable Object>
+abstract class AggregateFuture<InputT extends @Nullable @Readonly Object, OutputT extends @Nullable @Readonly Object>
     extends AggregateFutureState<OutputT> {
   private static final LazyLogger logger = new LazyLogger(AggregateFuture.class);
 

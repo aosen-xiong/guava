@@ -98,11 +98,11 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V extends @Readonly @Nullable Object>
+public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V extends @Immutable @Nullable Object>
     extends LinkedHashMultimapGwtSerializationDependencies<K, V> {
 
   /** Creates a new, empty {@code LinkedHashMultimap} with the default initial capacities. */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       LinkedHashMultimap<K, V> create() {
     return new LinkedHashMultimap<>(DEFAULT_KEY_CAPACITY, DEFAULT_VALUE_SET_CAPACITY);
   }
@@ -116,7 +116,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    * @throws IllegalArgumentException if {@code expectedKeys} or {@code expectedValuesPerKey} is
    *     negative
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       LinkedHashMultimap<K, V> create(int expectedKeys, int expectedValuesPerKey) {
     return new LinkedHashMultimap<>(
         Maps.capacity(expectedKeys), Maps.capacity(expectedValuesPerKey));
@@ -130,8 +130,8 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    *
    * @param multimap the multimap whose contents are copied to this multimap
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      LinkedHashMultimap<K, V> create(Multimap<? extends K, ? extends V> multimap) {
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
+      LinkedHashMultimap<K, V> create(@Readonly Multimap<? extends K, ? extends V> multimap) {
     LinkedHashMultimap<K, V> result = create(multimap.keySet().size(), DEFAULT_VALUE_SET_CAPACITY);
     result.putAll(multimap);
     return result;
@@ -182,7 +182,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
       extends ImmutableEntry<K, V> implements ValueSetLink<K, V> {
     final int smearedValueHash;
 
-    @CheckForNull ValueEntry<K, V> nextInValueBucket;
+    @CheckForNull @Assignable ValueEntry<K, V> nextInValueBucket;
     /*
      * The *InValueSet and *InMultimap fields below are null after construction, but we almost
      * always call succeedsIn*() to initialize them immediately thereafter.
@@ -208,11 +208,11 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
      * frameworks like Android that define post-construct hooks like Activity.onCreate, etc.
      */
 
-    @CheckForNull private ValueSetLink<K, V> predecessorInValueSet;
-    @CheckForNull private ValueSetLink<K, V> successorInValueSet;
+    @CheckForNull private @Assignable ValueSetLink<K, V> predecessorInValueSet;
+    @CheckForNull private @Assignable ValueSetLink<K, V> successorInValueSet;
 
-    @CheckForNull private ValueEntry<K, V> predecessorInMultimap;
-    @CheckForNull private ValueEntry<K, V> successorInMultimap;
+    @CheckForNull private @Assignable ValueEntry<K, V> predecessorInMultimap;
+    @CheckForNull private @Assignable ValueEntry<K, V> successorInMultimap;
 
     ValueEntry(
         @ParametricNullness K key,
@@ -253,11 +253,11 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
       successorInValueSet = entry;
     }
 
-    public @PolyMutable ValueEntry<K, V> getPredecessorInMultimap(@PolyMutable ValueEntry<K, V> this) {
+    public ValueEntry<K, V> getPredecessorInMultimap() {
       return requireNonNull(predecessorInMultimap); // see the comment on the class fields
     }
 
-    public @PolyMutable ValueEntry<K, V> getSuccessorInMultimap(@PolyMutable ValueEntry<K, V> this) {
+    public ValueEntry<K, V> getSuccessorInMultimap() {
       return requireNonNull(successorInMultimap); // see the comment on the class fields
     }
 
@@ -321,7 +321,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @CanIgnoreReturnValue
   @Override
-  public @Readonly Set<V> replaceValues(@Mutable LinkedHashMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Set<V> replaceValues(@Mutable LinkedHashMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return super.replaceValues(key, values);
   }
 
@@ -338,7 +338,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Set<Entry<K, V>> entries(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.entries();
   }
 
@@ -353,7 +353,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    * <i>adding</i> to the returned set is not possible.
    */
   @Override
-  public @PolyMutable Set<K> keySet(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<K> keySet(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.keySet();
   }
 
@@ -366,7 +366,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    */
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable LinkedHashMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return super.values();
   }
 
@@ -408,12 +408,12 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
     @CFComment("PICO: this is okay only if the field can not be directly accessed")
     @Override
-    public @PolyMutable ValueSetLink<K, V> getPredecessorInValueSet(@PolyMutable ValueSet this) {
+    public @ReceiverDependentMutable ValueSetLink<K, V> getPredecessorInValueSet(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return lastEntry;
     }
 
     @Override
-    public @PolyMutable ValueSetLink<K, V> getSuccessorInValueSet(@PolyMutable ValueSet this) {
+    public @ReceiverDependentMutable ValueSetLink<K, V> getSuccessorInValueSet(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return firstEntry;
     }
 
@@ -428,9 +428,9 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
     }
 
     @Override
-    public Iterator<V> iterator(@PolyMutable ValueSet this) {
-      return new Iterator<V>() {
-        ValueSetLink<K, V> nextEntry = firstEntry;
+    public Iterator<V> iterator(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
+      return new @Mutable Iterator<V>() {
+        @Readonly ValueSetLink<K, V> nextEntry = firstEntry;
         @CheckForNull ValueEntry<K, V> toRemove;
         int expectedModCount = modCount;
 
@@ -582,7 +582,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
   @Override
   Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable LinkedHashMultimap<K, V> this) {
-    return new Iterator<@PolyMutable Entry<K, V>>() {
+    return new @Mutable Iterator<@PolyMutable Entry<K, V>>() {
       ValueEntry<K, V> nextEntry = multimapHeaderEntry.getSuccessorInMultimap();
       @CheckForNull ValueEntry<K, V> toRemove;
 
@@ -592,7 +592,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
       }
 
       @Override
-      public Entry<K, V> next() {
+      public @Immutable Entry<K, V> next() {
         if (!hasNext()) {
           throw new NoSuchElementException();
         }
@@ -612,17 +612,17 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
   }
 
   @Override
-  Spliterator<@PolyMutable Entry<K, V>> entrySpliterator(@PolyMutable LinkedHashMultimap<K, V> this) {
+  Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return Spliterators.spliterator(entries(), Spliterator.DISTINCT | Spliterator.ORDERED);
   }
 
   @Override
-  Iterator<V> valueIterator(@PolyMutable LinkedHashMultimap<K, V> this) {
+  @Mutable Iterator<V> valueIterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return Maps.valueIterator(entryIterator());
   }
 
   @Override
-  Spliterator<V> valueSpliterator(@PolyMutable LinkedHashMultimap<K, V> this) {
+  Spliterator<V> valueSpliterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
     return CollectSpliterators.map(entrySpliterator(), Entry::getValue);
   }
 
@@ -653,7 +653,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable LinkedHashMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     multimapHeaderEntry = ValueEntry.newHeader();
     succeedsInMultimap(multimapHeaderEntry, multimapHeaderEntry);

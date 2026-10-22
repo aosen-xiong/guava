@@ -34,6 +34,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * Static utility methods for {@link Graph}, {@link ValueGraph}, and {@link Network} instances.
@@ -57,7 +61,7 @@ public final class Graphs extends GraphsBridgeMethods {
    *
    * <p>This method will detect any non-empty cycle, including self-loops (a cycle of length 1).
    */
-  public static <N> boolean hasCycle(Graph<N> graph) {
+  public static <N extends @Immutable Object> boolean hasCycle(Graph<N> graph) {
     int numEdges = graph.edges().size();
     if (numEdges == 0) {
       return false; // An edge-free graph is acyclic by definition.
@@ -66,7 +70,7 @@ public final class Graphs extends GraphsBridgeMethods {
       return true; // Optimization for the undirected case: at least one cycle must exist.
     }
 
-    Map<Object, NodeVisitState> visitedNodes =
+    Map<@Immutable Object, NodeVisitState> visitedNodes =
         Maps.newHashMapWithExpectedSize(graph.nodes().size());
     for (N node : graph.nodes()) {
       if (subgraphHasCycle(graph, visitedNodes, node, null)) {
@@ -83,7 +87,7 @@ public final class Graphs extends GraphsBridgeMethods {
    *
    * <p>This method will detect any non-empty cycle, including self-loops (a cycle of length 1).
    */
-  public static boolean hasCycle(Network<?, ?> network) {
+  public static boolean hasCycle(Network<@Immutable ?, @Immutable ?> network) {
     // In a directed graph, parallel edges cannot introduce a cycle in an acyclic graph.
     // However, in an undirected graph, any parallel edge induces a cycle in the graph.
     if (!network.isDirected()
@@ -99,9 +103,9 @@ public final class Graphs extends GraphsBridgeMethods {
    * already visited (following only outgoing edges and without reusing edges), we know there's a
    * cycle in the graph.
    */
-  private static <N> boolean subgraphHasCycle(
+  private static <N extends @Immutable Object> boolean subgraphHasCycle(
       Graph<N> graph,
-      Map<Object, NodeVisitState> visitedNodes,
+      Map<@Immutable Object, NodeVisitState> visitedNodes,
       N node,
       @CheckForNull N previousNode) {
     NodeVisitState state = visitedNodes.get(node);
@@ -130,7 +134,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * from B to A).
    */
   private static boolean canTraverseWithoutReusingEdge(
-      Graph<?> graph, Object nextNode, @CheckForNull Object previousNode) {
+      Graph<?> graph, @Readonly Object nextNode, @CheckForNull @Readonly Object previousNode) {
     if (graph.isDirected() || !Objects.equal(previousNode, nextNode)) {
       return true;
     }
@@ -151,7 +155,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * @since 33.1.0 (present with return type {@code Graph} since 20.0)
    */
   // TODO(b/31438252): Consider potential optimizations for this algorithm.
-  public static <N> ImmutableGraph<N> transitiveClosure(Graph<N> graph) {
+  public static <N extends @Immutable Object> ImmutableGraph<N> transitiveClosure(Graph<N> graph) {
     ImmutableGraph.Builder<N> transitiveClosure =
         GraphBuilder.from(graph).allowsSelfLoops(true).<N>immutable();
     // Every node is, at a minimum, reachable from itself. Since the resulting transitive closure
@@ -197,7 +201,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * @throws IllegalArgumentException if {@code node} is not present in {@code graph}
    * @since 33.1.0 (present with return type {@code Set} since 20.0)
    */
-  public static <N> ImmutableSet<N> reachableNodes(Graph<N> graph, N node) {
+  public static <N extends @Immutable Object> ImmutableSet<N> reachableNodes(Graph<N> graph, N node) {
     checkArgument(graph.nodes().contains(node), NODE_NOT_IN_GRAPH, node);
     return ImmutableSet.copyOf(Traverser.forGraph(graph).breadthFirst(node));
   }
@@ -210,48 +214,51 @@ public final class Graphs extends GraphsBridgeMethods {
    * Returns a view of {@code graph} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code graph} will be reflected in the view.
    */
-  public static <N> Graph<N> transpose(Graph<N> graph) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the argument and the created view are the same instantiation, and unwrapping a transposed view returns its backing graph, the same instantiation
+  public static <N extends @Immutable Object> @PolyMutable Graph<N> transpose(@PolyMutable Graph<N> graph) {
     if (!graph.isDirected()) {
       return graph; // the transpose of an undirected graph is an identical graph
     }
 
     if (graph instanceof TransposedGraph) {
-      return ((TransposedGraph<N>) graph).graph;
+      return ((@PolyMutable TransposedGraph<N>) graph).graph;
     }
 
-    return new TransposedGraph<N>(graph);
+    return new @PolyMutable TransposedGraph<N>(graph);
   }
 
   /**
    * Returns a view of {@code graph} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code graph} will be reflected in the view.
    */
-  public static <N, V> ValueGraph<N, V> transpose(ValueGraph<N, V> graph) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the argument and the created view are the same instantiation, and unwrapping a transposed view returns its backing graph, the same instantiation
+  public static <N extends @Immutable Object, V> @PolyMutable ValueGraph<N, V> transpose(@PolyMutable ValueGraph<N, V> graph) {
     if (!graph.isDirected()) {
       return graph; // the transpose of an undirected graph is an identical graph
     }
 
     if (graph instanceof TransposedValueGraph) {
-      return ((TransposedValueGraph<N, V>) graph).graph;
+      return ((@PolyMutable TransposedValueGraph<N, V>) graph).graph;
     }
 
-    return new TransposedValueGraph<>(graph);
+    return new @PolyMutable TransposedValueGraph<>(graph);
   }
 
   /**
    * Returns a view of {@code network} with the direction (if any) of every edge reversed. All other
    * properties remain intact, and further updates to {@code network} will be reflected in the view.
    */
-  public static <N, E> Network<N, E> transpose(Network<N, E> network) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the argument and the created view are the same instantiation, and unwrapping a transposed view returns its backing graph, the same instantiation
+  public static <N extends @Immutable Object, E extends @Immutable Object> @PolyMutable Network<N, E> transpose(@PolyMutable Network<N, E> network) {
     if (!network.isDirected()) {
       return network; // the transpose of an undirected network is an identical network
     }
 
     if (network instanceof TransposedNetwork) {
-      return ((TransposedNetwork<N, E>) network).network;
+      return ((@PolyMutable TransposedNetwork<N, E>) network).network;
     }
 
-    return new TransposedNetwork<>(network);
+    return new @PolyMutable TransposedNetwork<>(network);
   }
 
   static <N> EndpointPair<N> transpose(EndpointPair<N> endpoints) {
@@ -263,15 +270,16 @@ public final class Graphs extends GraphsBridgeMethods {
 
   // NOTE: this should work as long as the delegate graph's implementation of edges() (like that of
   // AbstractGraph) derives its behavior from calling successors().
-  private static class TransposedGraph<N> extends ForwardingGraph<N> {
+  @ReceiverDependentMutable
+  private static class TransposedGraph<N extends @Immutable Object> extends ForwardingGraph<N> {
     private final Graph<N> graph;
 
-    TransposedGraph(Graph<N> graph) {
+    TransposedGraph(@ReceiverDependentMutable Graph<N> graph) {
       this.graph = graph;
     }
 
     @Override
-    Graph<N> delegate() {
+    @ReceiverDependentMutable Graph<N> delegate() {
       return graph;
     }
 
@@ -320,15 +328,16 @@ public final class Graphs extends GraphsBridgeMethods {
 
   // NOTE: this should work as long as the delegate graph's implementation of edges() (like that of
   // AbstractValueGraph) derives its behavior from calling successors().
-  private static class TransposedValueGraph<N, V> extends ForwardingValueGraph<N, V> {
+  @ReceiverDependentMutable
+  private static class TransposedValueGraph<N extends @Immutable Object, V> extends ForwardingValueGraph<N, V> {
     private final ValueGraph<N, V> graph;
 
-    TransposedValueGraph(ValueGraph<N, V> graph) {
+    TransposedValueGraph(@ReceiverDependentMutable ValueGraph<N, V> graph) {
       this.graph = graph;
     }
 
     @Override
-    ValueGraph<N, V> delegate() {
+    @ReceiverDependentMutable ValueGraph<N, V> delegate() {
       return graph;
     }
 
@@ -385,15 +394,16 @@ public final class Graphs extends GraphsBridgeMethods {
     }
   }
 
-  private static class TransposedNetwork<N, E> extends ForwardingNetwork<N, E> {
+  @ReceiverDependentMutable
+  private static class TransposedNetwork<N extends @Immutable Object, E extends @Immutable Object> extends ForwardingNetwork<N, E> {
     private final Network<N, E> network;
 
-    TransposedNetwork(Network<N, E> network) {
+    TransposedNetwork(@ReceiverDependentMutable Network<N, E> network) {
       this.network = network;
     }
 
     @Override
-    Network<N, E> delegate() {
+    @ReceiverDependentMutable Network<N, E> delegate() {
       return network;
     }
 
@@ -434,12 +444,12 @@ public final class Graphs extends GraphsBridgeMethods {
     }
 
     @Override
-    public Set<E> edgesConnecting(N nodeU, N nodeV) {
+    public @Readonly Set<E> edgesConnecting(N nodeU, N nodeV) {
       return delegate().edgesConnecting(nodeV, nodeU); // transpose
     }
 
     @Override
-    public Set<E> edgesConnecting(EndpointPair<N> endpoints) {
+    public @Readonly Set<E> edgesConnecting(EndpointPair<N> endpoints) {
       return delegate().edgesConnecting(transpose(endpoints));
     }
 

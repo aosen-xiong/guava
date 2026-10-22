@@ -76,7 +76,7 @@ public final class HashMultiset<E extends @Nullable @Immutable Object> extends A
   }
 
   private HashMultiset() {
-    super(new HashMap<E, Count>());
+    super(new @ReceiverDependentMutable HashMap<E, Count>());
   }
 
   private HashMultiset(int distinctElements) {
@@ -96,7 +96,7 @@ public final class HashMultiset<E extends @Nullable @Immutable Object> extends A
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable HashMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int distinctElements = Serialization.readCount(stream);
     setBackingMap(Maps.<E, Count>newHashMap());

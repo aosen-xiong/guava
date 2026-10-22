@@ -53,7 +53,7 @@ public final class ObjectArrays {
    */
   @GwtIncompatible // Array.newInstance(Class, int)
   @SuppressWarnings("unchecked")
-  public static <T extends @Nullable Object> T[] newArray(Class<@NonNull T> type, int length) {
+  public static <T extends @Nullable @Readonly Object> T[] newArray(Class<@NonNull T> type, int length) {
     return (T[]) Array.newInstance(type, length);
   }
 
@@ -75,7 +75,7 @@ public final class ObjectArrays {
    * @param type the component type of the returned array
    */
   @GwtIncompatible // Array.newInstance(Class, int)
-  public static <T extends @Nullable Object> T[] concat(
+  public static <T extends @Nullable @Readonly Object> T[] concat(
       T[] first, T[] second, Class<@NonNull T> type) {
     T[] result = newArray(type, first.length + second.length);
     System.arraycopy(first, 0, result, 0, first.length);
@@ -133,14 +133,14 @@ public final class ObjectArrays {
    * @throws ArrayStoreException if the runtime type of the specified array is not a supertype of
    *     the runtime type of every element in the specified collection
    */
-  static <T extends @Nullable @Readonly Object> T @Mutable [] toArrayImpl(@Readonly Collection<?> c, T @Readonly [] array) {
+  static <T extends @Nullable @Readonly Object> T @Mutable [] toArrayImpl(@Readonly Collection<?> c, T @Mutable [] array) {
     int size = c.size();
     if (array.length < size) {
       array = newArray(array, size);
     }
     fillArray(c, array);
     if (array.length > size) {
-      @Nullable Object[] unsoundlyCovariantArray = array;
+      @Nullable @Readonly Object[] unsoundlyCovariantArray = array;
       unsoundlyCovariantArray[size] = null;
     }
     return array;
@@ -158,12 +158,12 @@ public final class ObjectArrays {
    * <i>only</i> if the caller knows that the collection does not contain any null elements.
    */
   static <T extends @Nullable @Readonly Object> T[] toArrayImpl(
-      @Nullable Object[] src, int offset, int len, T[] dst) {
+      @Nullable @Readonly Object @Readonly [] src, int offset, int len, T[] dst) {
     checkPositionIndexes(offset, offset + len, src.length);
     if (dst.length < len) {
       dst = newArray(dst, len);
     } else if (dst.length > len) {
-      @Nullable Object[] unsoundlyCovariantArray = dst;
+      @Nullable @Readonly Object[] unsoundlyCovariantArray = dst;
       unsoundlyCovariantArray[len] = null;
     }
     System.arraycopy(src, offset, dst, 0, len);
@@ -182,7 +182,7 @@ public final class ObjectArrays {
    *
    * @param c the collection for which to return an array of elements
    */
-  static @Nullable Object[] toArrayImpl(Collection<?> c) {
+  static @Nullable Object[] toArrayImpl(@Readonly Collection<?> c) {
     return fillArray(c, new Object[c.size()]);
   }
 
@@ -190,7 +190,7 @@ public final class ObjectArrays {
    * Returns a copy of the specified subrange of the specified array that is literally an Object[],
    * and not e.g. a {@code String[]}.
    */
-  static @Nullable Object[] copyAsObjectArray(@Nullable Object[] elements, int offset, int length) {
+  static @Nullable Object[] copyAsObjectArray(@Nullable @Readonly Object[] elements, int offset, int length) {
     checkPositionIndexes(offset, offset + length, elements.length);
     if (length == 0) {
       return new Object[0];
@@ -201,7 +201,7 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  private static @Nullable Object [] fillArray(Iterable<?> elements, @Nullable Object [] array) {
+  private static @Nullable Object [] fillArray(@Readonly Iterable<?> elements, @Nullable Object [] array) {
     int i = 0;
     for (Object element : elements) {
       array[i++] = element;
@@ -217,12 +217,12 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly ... array) {
+  static @PolySigned @Readonly Object @Readonly [] checkElementsNotNull(@PolySigned @Readonly Object @Readonly ... array) {
     return checkElementsNotNull(array, array.length);
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
+  static @PolySigned @Readonly Object @Readonly [] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
     for (int i = 0; i < length; i++) {
       checkElementNotNull(array[i], i);
     }
@@ -232,7 +232,7 @@ public final class ObjectArrays {
   // We do this instead of Preconditions.checkNotNull to save boxing and array
   // creation cost.
   @CanIgnoreReturnValue
-  static @PolySigned Object checkElementNotNull(@PolySigned @Readonly Object element, int index) {
+  static @PolySigned @Readonly Object checkElementNotNull(@PolySigned @Readonly Object element, int index) {
     if (element == null) {
       throw new NullPointerException("at index " + index);
     }

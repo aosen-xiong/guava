@@ -21,6 +21,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.net.InetAddress;
 import java.text.ParseException;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -141,7 +142,7 @@ public final class HostSpecifier {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object other) {
+  public boolean equals(@CheckForNull @Readonly Object other) {
     if (this == other) {
       return true;
     }

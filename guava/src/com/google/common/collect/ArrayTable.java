@@ -41,6 +41,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -141,7 +142,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @throws NullPointerException if {@code table} has a null key
    */
   @SuppressWarnings("unchecked") // TODO(cpovirk): Make constructor accept wildcard types?
-  public static <R, C, V> ArrayTable<R, C, V> create(Table<R, C, ? extends @Nullable V> table) {
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> ArrayTable<R, C, V> create(Table<R, C, ? extends @Nullable V> table) {
     return (table instanceof ArrayTable)
         ? new ArrayTable<R, C, V>((ArrayTable<R, C, V>) table)
         : new ArrayTable<R, C, V>(table);
@@ -153,8 +154,9 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   // TODO(jlevy): Add getters returning rowKeyToIndex and columnKeyToIndex?
   private final ImmutableMap<R, Integer> rowKeyToIndex;
   private final ImmutableMap<C, Integer> columnKeyToIndex;
-  private final @Nullable V[][] array;
+  private final @Nullable V @ReceiverDependentMutable [] @ReceiverDependentMutable [] array;
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private ArrayTable(Iterable<? extends R> rowKeys, Iterable<? extends C> columnKeys) {
     this.rowList = ImmutableList.copyOf(rowKeys);
     this.columnList = ImmutableList.copyOf(columnKeys);
@@ -171,17 +173,19 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     @SuppressWarnings("unchecked")
     @Nullable
-    V[][] tmpArray = (@Nullable V[][]) new Object[rowList.size()][columnList.size()];
+    V @ReceiverDependentMutable [] @ReceiverDependentMutable [] tmpArray = (@Nullable V @ReceiverDependentMutable [] @ReceiverDependentMutable []) new Object @ReceiverDependentMutable [rowList.size()] @ReceiverDependentMutable [columnList.size()];
     array = tmpArray;
     // Necessary because in GWT the arrays are initialized with "undefined" instead of null.
     eraseAll();
   }
 
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private ArrayTable(Table<R, C, ? extends @Nullable V> table) {
     this(table.rowKeySet(), table.columnKeySet());
     putAll(table);
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // PICO constructor fix: the constructor stores the fresh @Mutable array it fills into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do
   private ArrayTable(ArrayTable<R, C, V> table) {
     rowList = table.rowList;
     columnList = table.columnList;
@@ -232,9 +236,9 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
       return keyIndex.isEmpty();
     }
 
-    Entry<K, V> getEntry(final int index) {
+    @ReceiverDependentMutable Entry<K, V> getEntry(@ReceiverDependentMutable ArrayMap<K, V> this, final int index) {
       checkElementIndex(index, size());
-      return new AbstractMapEntry<K, V>() {
+      return new @ReceiverDependentMutable AbstractMapEntry<K, V>() {
         @Override
         public K getKey() {
           return ArrayMap.this.getKey(index);
@@ -255,8 +259,8 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Iterator<Entry<K, V>> entryIterator() {
-      return new AbstractIndexedListIterator<Entry<K, V>>(size()) {
+    Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator() {
+      return new @Mutable AbstractIndexedListIterator<Entry<K, V>>(size()) {
         @Override
         protected Entry<K, V> get(final int index) {
           return getEntry(index);
@@ -265,20 +269,20 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Spliterator<Entry<K, V>> entrySpliterator() {
+    Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator() {
       return CollectSpliterators.indexed(size(), Spliterator.ORDERED, this::getEntry);
     }
 
     // TODO(lowasser): consider an optimized values() implementation
 
     @Override
-    public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+    public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
       return keyIndex.containsKey(key);
     }
 
     @CheckForNull
     @Override
-    public V get(@CheckForNull @UnknownSignedness Object key) {
+    public V get(@CheckForNull @UnknownSignedness @Readonly Object key) {
       Integer index = keyIndex.get(key);
       if (index == null) {
         return null;
@@ -289,7 +293,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     @Override
     @CheckForNull
-    public V put(K key, @ParametricNullness V value) {
+    public V put(@Mutable ArrayMap<K, V> this, K key, @ParametricNullness V value) {
       Integer index = keyIndex.get(key);
       if (index == null) {
         throw new IllegalArgumentException(
@@ -361,7 +365,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  public V set(int rowIndex, int columnIndex, @CheckForNull V value) {
+  public V set(@Mutable ArrayTable<R, C, V> this, int rowIndex, int columnIndex, @CheckForNull V value) {
     // In GWT array access never throws IndexOutOfBoundsException.
     checkElementIndex(rowIndex, rowList.size());
     checkElementIndex(columnIndex, columnList.size());
@@ -404,7 +408,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   /** Associates the value {@code null} with every pair of allowed row and column keys. */
-  public void eraseAll() {
+  public void eraseAll(@Mutable ArrayTable<R, C, V> this) {
     for (@Nullable V[] row : array) {
       Arrays.fill(row, null);
     }
@@ -415,7 +419,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * constructed.
    */
   @Override
-  public boolean contains(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public boolean contains(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     return containsRow(rowKey) && containsColumn(columnKey);
   }
 
@@ -424,7 +428,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * table was constructed.
    */
   @Override
-  public boolean containsColumn(@CheckForNull Object columnKey) {
+  public boolean containsColumn(@CheckForNull @Readonly Object columnKey) {
     return columnKeyToIndex.containsKey(columnKey);
   }
 
@@ -433,12 +437,12 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * constructed.
    */
   @Override
-  public boolean containsRow(@CheckForNull Object rowKey) {
+  public boolean containsRow(@CheckForNull @Readonly Object rowKey) {
     return rowKeyToIndex.containsKey(rowKey);
   }
 
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     for (@Nullable V[] row : array) {
       for (V element : row) {
         if (Objects.equal(value, element)) {
@@ -451,7 +455,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
   @Override
   @CheckForNull
-  public V get(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V get(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     return (rowIndex == null || columnIndex == null) ? null : at(rowIndex, columnIndex);
@@ -474,7 +478,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V put(R rowKey, C columnKey, @CheckForNull V value) {
+  public V put(@Mutable ArrayTable<R, C, V> this, R rowKey, C columnKey, @CheckForNull V value) {
     checkNotNull(rowKey);
     checkNotNull(columnKey);
     Integer rowIndex = rowKeyToIndex.get(rowKey);
@@ -500,7 +504,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    *     in {@link #rowKeySet()} or {@link #columnKeySet()}
    */
   @Override
-  public void putAll(Table<? extends R, ? extends C, ? extends @Nullable V> table) {
+  public void putAll(@Mutable ArrayTable<R, C, V> this, @Readonly Table<? extends R, ? extends C, ? extends @Nullable V> table) {
     super.putAll(table);
   }
 
@@ -515,7 +519,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @Override
   @Deprecated
   @CheckForNull
-  public V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     throw new UnsupportedOperationException();
   }
 
@@ -534,7 +538,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  public V erase(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public V erase(@Mutable ArrayTable<R, C, V> this, @CheckForNull Object rowKey, @CheckForNull Object columnKey) {
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     if (rowIndex == null || columnIndex == null) {
@@ -562,13 +566,13 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return set of table cells consisting of row key / column key / value triplets
    */
   @Override
-  public Set<Cell<R, C, @Nullable V>> cellSet() {
+  public @ReceiverDependentMutable Set<Cell<R, C, @Nullable V>> cellSet(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     return super.cellSet();
   }
 
   @Override
-  Iterator<Cell<R, C, @Nullable V>> cellIterator() {
-    return new AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
+  @Mutable Iterator<Cell<R, C, @Nullable V>> cellIterator(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
+    return new @Mutable AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
       @Override
       protected Cell<R, C, @Nullable V> get(final int index) {
         return getCell(index);
@@ -583,7 +587,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   private Cell<R, C, @Nullable V> getCell(final int index) {
-    return new Tables.AbstractCell<R, C, @Nullable V>() {
+    return new Tables.@Mutable AbstractCell<R, C, @Nullable V>() {
       final int rowIndex = index / columnList.size();
       final int columnIndex = index % columnList.size();
 
@@ -624,16 +628,17 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return the corresponding map from row keys to values
    */
   @Override
-  public Map<R, @Nullable V> column(C columnKey) {
+  public @ReceiverDependentMutable Map<R, @Nullable V> column(@ReceiverDependentMutable ArrayTable<R, C, V> this, C columnKey) {
     checkNotNull(columnKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
     if (columnIndex == null) {
       return emptyMap();
     } else {
-      return new Column(columnIndex);
+      return new @ReceiverDependentMutable Column(columnIndex);
     }
   }
 
+  @ReceiverDependentMutable
   private class Column extends ArrayMap<R, @Nullable V> {
     final int columnIndex;
 
@@ -671,16 +676,17 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     return columnKeyToIndex.keySet();
   }
 
-  @LazyInit @CheckForNull private transient ColumnMap columnMap;
+  @LazyInit @CheckForNull private transient @Assignable ColumnMap columnMap;
 
   @Override
-  public Map<C, Map<R, @Nullable V>> columnMap() {
+  public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, @Nullable V>> columnMap(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     ColumnMap map = columnMap;
-    return (map == null) ? columnMap = new ColumnMap() : map;
+    return (map == null) ? columnMap = new @ReceiverDependentMutable ColumnMap() : map;
   }
 
   @WeakOuter
-  private class ColumnMap extends ArrayMap<C, Map<R, @Nullable V>> {
+  @ReceiverDependentMutable
+  private class ColumnMap extends ArrayMap<C, @ReceiverDependentMutable Map<R, @Nullable V>> {
     private ColumnMap() {
       super(columnKeyToIndex);
     }
@@ -691,18 +697,18 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Map<R, @Nullable V> getValue(int index) {
-      return new Column(index);
+    @ReceiverDependentMutable Map<R, @Nullable V> getValue(int index) {
+      return new @ReceiverDependentMutable Column(index);
     }
 
     @Override
-    Map<R, @Nullable V> setValue(int index, Map<R, @Nullable V> newValue) {
+    @ReceiverDependentMutable Map<R, @Nullable V> setValue(int index, @ReceiverDependentMutable Map<R, @Nullable V> newValue) {
       throw new UnsupportedOperationException();
     }
 
     @Override
     @CheckForNull
-    public Map<R, @Nullable V> put(C key, Map<R, @Nullable V> value) {
+    public @ReceiverDependentMutable Map<R, @Nullable V> put(C key, @ReceiverDependentMutable Map<R, @Nullable V> value) {
       throw new UnsupportedOperationException();
     }
   }
@@ -719,16 +725,17 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return the corresponding map from column keys to values
    */
   @Override
-  public Map<C, @Nullable V> row(R rowKey) {
+  public @ReceiverDependentMutable Map<C, @Nullable V> row(@ReceiverDependentMutable ArrayTable<R, C, V> this, R rowKey) {
     checkNotNull(rowKey);
     Integer rowIndex = rowKeyToIndex.get(rowKey);
     if (rowIndex == null) {
       return emptyMap();
     } else {
-      return new Row(rowIndex);
+      return new @ReceiverDependentMutable Row(rowIndex);
     }
   }
 
+  @ReceiverDependentMutable
   private class Row extends ArrayMap<C, @Nullable V> {
     final int rowIndex;
 
@@ -766,17 +773,17 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     return rowKeyToIndex.keySet();
   }
 
-  @LazyInit @CheckForNull private transient RowMap rowMap;
+  @LazyInit @CheckForNull private transient @Assignable RowMap rowMap;
 
   @Override
-  public Map<R, Map<C, @Nullable V>> rowMap() {
+  public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, @Nullable V>> rowMap(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     RowMap map = rowMap;
-    return (map == null) ? rowMap = new RowMap() : map;
+    return (map == null) ? rowMap = new @ReceiverDependentMutable RowMap() : map;
   }
 
   @WeakOuter
   @ReceiverDependentMutable
-  private class RowMap extends ArrayMap<R, Map<C, @Nullable V>> {
+  private class RowMap extends ArrayMap<R, @ReceiverDependentMutable Map<C, @Nullable V>> {
     private RowMap() {
       super(rowKeyToIndex);
     }
@@ -787,18 +794,18 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Map<C, @Nullable V> getValue(int index) {
-      return new Row(index);
+    @ReceiverDependentMutable Map<C, @Nullable V> getValue(int index) {
+      return new @ReceiverDependentMutable Row(index);
     }
 
     @Override
-    Map<C, @Nullable V> setValue(int index, Map<C, @Nullable V> newValue) {
+    @ReceiverDependentMutable Map<C, @Nullable V> setValue(int index, @ReceiverDependentMutable Map<C, @Nullable V> newValue) {
       throw new UnsupportedOperationException();
     }
 
     @Override
     @CheckForNull
-    public Map<C, @Nullable V> put(R key, Map<C, @Nullable V> value) {
+    public @ReceiverDependentMutable Map<C, @Nullable V> put(R key, @ReceiverDependentMutable Map<C, @Nullable V> value) {
       throw new UnsupportedOperationException();
     }
   }
@@ -813,13 +820,13 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return collection of values
    */
   @Override
-  public Collection<@Nullable V> values() {
+  public @ReceiverDependentMutable Collection<@Nullable V> values(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     return super.values();
   }
 
   @Override
-  @ReceiverDependentMutable Iterator<@Nullable V> valuesIterator() {
-    return new AbstractIndexedListIterator<@Nullable V>(size()) {
+  @Mutable Iterator<@Nullable V> valuesIterator() {
+    return new @Mutable AbstractIndexedListIterator<@Nullable V>(size()) {
       @Override
       @CheckForNull
       protected V get(int index) {

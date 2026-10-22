@@ -56,11 +56,12 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible(serializable = true, emulated = true)
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
-class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
+@Immutable
+class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Object> extends ImmutableBiMap<K, V> {
   @SuppressWarnings("unchecked") // TODO(cpovirk): Consider storing Entry<?, ?>[] instead.
-  static final RegularImmutableBiMap<Object, Object> EMPTY =
+  static final RegularImmutableBiMap<@Immutable Object, @Immutable Object> EMPTY =
       new RegularImmutableBiMap<>(
-          null, null, (Entry<@Immutable Object, @Immutable Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, 0, 0);
+          null, null, (@Immutable Entry<@Immutable Object, @Immutable Object> @Immutable []) ImmutableMap.EMPTY_ENTRY_ARRAY, 0, 0);
 
   static final double MAX_LOAD_FACTOR = 1.2;
 
@@ -70,11 +71,13 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   private final transient int mask;
   private final transient int hashCode;
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntries(@Immutable Entry<K, V>... entries) {
     return fromEntryArray(entries.length, entries);
   }
 
-  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntryArray(int n, @Nullable @Immutable Entry<K, V> @Immutable [] entryArray) {
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
+  static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntryArray(int n, @Nullable @Immutable Entry<K, V>[] entryArray) {
     checkPositionIndex(n, entryArray.length);
     int tableSize = Hashing.closedTableSize(n, MAX_LOAD_FACTOR);
     int mask = tableSize - 1;
@@ -86,13 +89,13 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
      * of non-null entries.
      */
     @SuppressWarnings("nullness")
-    Entry<K, V>[] entries =
-        (n == entryArray.length) ? (Entry<K, V>[]) entryArray : createEntryArray(n);
+    @Immutable Entry<K, V>[] entries =
+        (n == entryArray.length) ? (@Immutable Entry<K, V>[]) entryArray : createEntryArray(n);
     int hashCode = 0;
 
     for (int i = 0; i < n; i++) {
       // requireNonNull is safe because the first `n` elements have been filled in.
-      Entry<K, V> entry = requireNonNull(entryArray[i]);
+      @Immutable Entry<K, V> entry = requireNonNull(entryArray[i]);
       K key = entry.getKey();
       V value = entry.getValue();
       checkEntryNotNull(key, value);
@@ -175,7 +178,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
     checkNotNull(action);
-    for (Entry<K, V> entry : entries) {
+    for (@Immutable Entry<K, V> entry : entries) {
       action.accept(entry.getKey(), entry.getValue());
     }
   }
@@ -186,7 +189,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   }
 
   @Override
-  public int hashCode(@UnknownSignedness @Readonly RegularImmutableBiMap<K, V> this) {
+  public int hashCode(@UnknownSignedness RegularImmutableBiMap<K, V> this) {
     return hashCode;
   }
 
@@ -270,31 +273,31 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
       }
 
       @Override
-      public int hashCode(@UnknownSignedness @Readonly InverseEntrySet this) {
+      public int hashCode(@UnknownSignedness InverseEntrySet this) {
         return hashCode;
       }
 
       @Override
-      public UnmodifiableIterator<Entry<V, K>> iterator() {
+      public @Mutable UnmodifiableIterator<@Immutable Entry<V, K>> iterator() {
         return asList().iterator();
       }
 
       @Override
-      public void forEach(Consumer<? super Entry<V, K>> action) {
+      public void forEach(Consumer<? super @Immutable Entry<V, K>> action) {
         asList().forEach(action);
       }
 
       @Override
-      ImmutableList<Entry<V, K>> createAsList() {
-        return new ImmutableAsList<Entry<V, K>>() {
+      ImmutableList<@Immutable Entry<V, K>> createAsList() {
+        return new ImmutableAsList<@Immutable Entry<V, K>>() {
           @Override
-          public Entry<V, K> get(int index) {
-            Entry<K, V> entry = entries[index];
+          public @Immutable Entry<V, K> get(int index) {
+            @Immutable Entry<K, V> entry = entries[index];
             return Maps.immutableEntry(entry.getValue(), entry.getKey());
           }
 
           @Override
-          ImmutableCollection<Entry<V, K>> delegateCollection() {
+          ImmutableCollection<@Immutable Entry<V, K>> delegateCollection() {
             return InverseEntrySet.this;
           }
 
@@ -303,7 +306,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
           @Override
           @J2ktIncompatible // serialization
           @GwtIncompatible // serialization
-          Object writeReplace() {
+          @Readonly Object writeReplace() {
             return super.writeReplace();
           }
         };
@@ -314,7 +317,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
       @Override
       @J2ktIncompatible // serialization
       @GwtIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     }
@@ -327,7 +330,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new InverseSerializedForm<>(RegularImmutableBiMap.this);
     }
 
@@ -338,7 +341,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   }
 
   @J2ktIncompatible // serialization
-  private static class InverseSerializedForm<K, V> implements Serializable {
+  private static class InverseSerializedForm<K extends @Immutable Object, V extends @Immutable Object> implements Serializable {
     private final ImmutableBiMap<K, V> forward;
 
     InverseSerializedForm(ImmutableBiMap<K, V> forward) {
@@ -357,7 +360,7 @@ class RegularImmutableBiMap<K, V> extends ImmutableBiMap<K, V> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

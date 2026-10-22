@@ -28,6 +28,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 @AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
@@ -37,7 +38,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   abstract E get(int index);
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return asList().iterator();
   }
 
@@ -89,7 +90,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
       @Override
       @J2ktIncompatible // serialization
       @GwtIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     };
@@ -100,7 +101,7 @@ abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

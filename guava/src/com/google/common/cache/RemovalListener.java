@@ -15,6 +15,8 @@
 package com.google.common.cache;
 
 import com.google.common.annotations.GwtCompatible;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An object that can receive a notification when an entry is removed from a cache. The removal
@@ -35,7 +37,8 @@ import com.google.common.annotations.GwtCompatible;
 @GwtCompatible
 @FunctionalInterface
 @ElementTypesAreNonnullByDefault
-public interface RemovalListener<K, V> {
+@ReceiverDependentMutable
+public interface RemovalListener<K extends @Immutable Object, V> {
   /**
    * Notifies the listener that a removal occurred at some point in the past.
    *

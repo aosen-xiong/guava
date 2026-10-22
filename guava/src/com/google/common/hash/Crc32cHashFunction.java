@@ -26,6 +26,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 final class Crc32cHashFunction extends AbstractHashFunction {
   static final HashFunction CRC_32_C = new Crc32cHashFunction();
 

@@ -58,6 +58,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
@@ -210,7 +211,7 @@ public final class Sets {
    * This method is not actually very useful and will likely be deprecated in the future.
    */
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public static <E extends @Nullable Object> HashSet<E> newHashSet(E... elements) {
+  public static <E extends @Nullable @Immutable Object> HashSet<E> newHashSet(E... elements) {
     HashSet<E> set = newHashSetWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
@@ -285,7 +286,7 @@ public final class Sets {
    * @return a new, empty thread-safe {@code Set}
    * @since 15.0
    */
-  public static <E> Set<E> newConcurrentHashSet() {
+  public static <E extends @Immutable Object> Set<E> newConcurrentHashSet() {
     return Platform.newConcurrentHashSet();
   }
 
@@ -302,7 +303,7 @@ public final class Sets {
    * @throws NullPointerException if {@code elements} or any of its contents is null
    * @since 15.0
    */
-  public static <E> Set<E> newConcurrentHashSet(Iterable<? extends E> elements) {
+  public static <E extends @Immutable Object> Set<E> newConcurrentHashSet(Iterable<? extends E> elements) {
     Set<E> set = newConcurrentHashSet();
     Iterables.addAll(set, elements);
     return set;
@@ -382,7 +383,7 @@ public final class Sets {
    * @return a new, empty {@code TreeSet}
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends @Nullable Comparable> TreeSet<E> newTreeSet() {
+  public static <E extends @Nullable @Immutable Comparable> TreeSet<E> newTreeSet() {
     return new TreeSet<E>();
   }
 
@@ -408,7 +409,7 @@ public final class Sets {
    * @return a new {@code TreeSet} containing those elements (minus duplicates)
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends @Nullable Comparable> TreeSet<E> newTreeSet(Iterable<? extends E> elements) {
+  public static <E extends @Nullable @Immutable Comparable> TreeSet<E> newTreeSet(Iterable<? extends E> elements) {
     TreeSet<E> set = newTreeSet();
     Iterables.addAll(set, elements);
     return set;
@@ -444,7 +445,7 @@ public final class Sets {
    *
    * @since 8.0
    */
-  public static <E extends @Nullable @Immutable Object> Set<E> newIdentityHashSet() {
+  public static <E extends @Nullable @Readonly Object> Set<E> newIdentityHashSet() {
     return Collections.newSetFromMap(Maps.<E, Boolean>newIdentityHashMap());
   }
 
@@ -637,7 +638,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean remove(@CheckForNull @UnknownSignedness Object object) {
+    public final boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
       throw new UnsupportedOperationException();
     }
 
@@ -651,7 +652,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean addAll(Collection<? extends E> newElements) {
+    public final boolean addAll(@Readonly Collection<? extends E> newElements) {
       throw new UnsupportedOperationException();
     }
 
@@ -665,7 +666,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean removeAll(Collection<?> oldElements) {
+    public final boolean removeAll(@Readonly Collection<?> oldElements) {
       throw new UnsupportedOperationException();
     }
 
@@ -679,7 +680,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean removeIf(java.util.function.Predicate<? super E> filter) {
+    public final boolean removeIf(java.util.function.@Readonly Predicate<? super E> filter) {
       throw new UnsupportedOperationException();
     }
 
@@ -693,7 +694,7 @@ public final class Sets {
     @Deprecated
     @Override
     @DoNotCall("Always throws UnsupportedOperationException")
-    public final boolean retainAll(Collection<?> elementsToKeep) {
+    public final boolean retainAll(@Readonly Collection<?> elementsToKeep) {
       throw new UnsupportedOperationException();
     }
 
@@ -716,7 +717,7 @@ public final class Sets {
      * @since 20.0 (present with return type {@link Iterator} since 2.0)
      */
     @Override
-    public abstract UnmodifiableIterator<E> iterator();
+    public abstract @Mutable UnmodifiableIterator<E> iterator();
   }
 
   /**
@@ -730,11 +731,11 @@ public final class Sets {
    * {@link TreeSet} or the {@link Map#keySet} of an {@code IdentityHashMap}.
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> union(
-      final Set<? extends E> set1, final Set<? extends E> set2) {
+      final @Readonly Set<? extends E> set1, final @Readonly Set<? extends E> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Pure
       @Override
       public @NonNegative int size() {
@@ -754,10 +755,10 @@ public final class Sets {
       }
 
       @Override
-      public @Readonly UnmodifiableIterator<E> iterator() {
-        return new @Immutable AbstractIterator<E>() {
-          final Iterator<? extends E> itr1 = set1.iterator();
-          final Iterator<? extends E> itr2 = set2.iterator();
+      public @Mutable UnmodifiableIterator<E> iterator() {
+        return new @Mutable AbstractIterator<E>() {
+          final @Mutable Iterator<? extends E> itr1 = set1.iterator();
+          final @Mutable Iterator<? extends E> itr2 = set2.iterator();
 
           @Override
           @CheckForNull
@@ -838,15 +839,15 @@ public final class Sets {
    * <p>This is unfortunate, but should come up only very rarely.
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> intersection(
-      final Set<E> set1, final Set<?> set2) {
+      final @Readonly Set<E> set1, final @Readonly Set<?> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
-        return new @Immutable AbstractIterator<E>() {
-          final Iterator<E> itr = set1.iterator();
+        return new @Mutable AbstractIterator<E>() {
+          final @Mutable Iterator<E> itr = set1.iterator();
 
           @Override
           @CheckForNull
@@ -889,12 +890,12 @@ public final class Sets {
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return set1.contains(object) && set2.contains(object);
       }
 
       @Override
-      public boolean containsAll(Collection<?> collection) {
+      public boolean containsAll(@Readonly Collection<?> collection) {
         return set1.containsAll(collection) && set2.containsAll(collection);
       }
     };
@@ -911,15 +912,15 @@ public final class Sets {
    * {@link TreeSet} or the {@link Map#keySet} of an {@code IdentityHashMap}.
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> difference(
-      final Set<E> set1, final Set<?> set2) {
+      final @Readonly Set<E> set1, final @Readonly Set<?> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
-        return new AbstractIterator<E>() {
-          final Iterator<E> itr = set1.iterator();
+        return new @Mutable AbstractIterator<E>() {
+          final @Mutable Iterator<E> itr = set1.iterator();
 
           @Override
           @CheckForNull
@@ -980,16 +981,16 @@ public final class Sets {
    * @since 3.0
    */
   public static <E extends @Nullable @Readonly Object> SetView<E> symmetricDifference(
-      final Set<? extends E> set1, final Set<? extends E> set2) {
+      final @Readonly Set<? extends E> set1, final @Readonly Set<? extends E> set2) {
     checkNotNull(set1, "set1");
     checkNotNull(set2, "set2");
 
-    return new SetView<E>() {
+    return new @Mutable SetView<E>() {
       @Override
       public UnmodifiableIterator<E> iterator() {
         final Iterator<? extends E> itr1 = set1.iterator();
         final Iterator<? extends E> itr2 = set2.iterator();
-        return new AbstractIterator<E>() {
+        return new @Mutable AbstractIterator<E>() {
           @Override
           @CheckForNull
           public E computeNext() {
@@ -1065,20 +1066,21 @@ public final class Sets {
    * you to migrate to streams.
    */
   // TODO(kevinb): how to omit that last sentence when building GWT javadoc?
-  public static <E extends @Nullable @Readonly Object> Set<E> filter(
-          @Readonly Set<E> unfiltered, Predicate<? super E> predicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
+  public static <E extends @Nullable @Readonly Object> @PolyMutable Set<E> filter(
+          @PolyMutable Set<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof SortedSet) {
-      return filter((SortedSet<E>) unfiltered, predicate);
+      return filter((@PolyMutable SortedSet<E>) unfiltered, predicate);
     }
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
+      @PolyMutable FilteredSet<E> filtered = (@PolyMutable FilteredSet<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new FilteredSet<E>((Set<E>) filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredSet<E>((@PolyMutable Set<E>) filtered.unfiltered, combinedPredicate);
     }
 
-    return new FilteredSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
+    return new @PolyMutable FilteredSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
   }
 
   /**
@@ -1105,14 +1107,15 @@ public final class Sets {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   public static <E extends @Nullable @Readonly Object> @PolyMutable SortedSet<E> filter(
-      @PolyMutable SortedSet<E> unfiltered, Predicate<? super E> predicate) {
+      @PolyMutable SortedSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
+      @PolyMutable FilteredSet<E> filtered = (@PolyMutable FilteredSet<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new @PolyMutable FilteredSortedSet<E>((SortedSet<E>) filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredSortedSet<E>((@PolyMutable SortedSet<E>) filtered.unfiltered, combinedPredicate);
     }
 
     return new @PolyMutable FilteredSortedSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
@@ -1142,24 +1145,25 @@ public final class Sets {
    *
    * @since 14.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
   @GwtIncompatible // NavigableSet
-  public static <E extends @Nullable Object> NavigableSet<E> filter(
-      NavigableSet<E> unfiltered, Predicate<? super E> predicate) {
+  public static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> filter(
+      @PolyMutable NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredSet) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredSet<E> filtered = (FilteredSet<E>) unfiltered;
+      @PolyMutable FilteredSet<E> filtered = (@PolyMutable FilteredSet<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new FilteredNavigableSet<E>((NavigableSet<E>) filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredNavigableSet<E>((@PolyMutable NavigableSet<E>) filtered.unfiltered, combinedPredicate);
     }
 
-    return new FilteredNavigableSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
+    return new @PolyMutable FilteredNavigableSet<E>(checkNotNull(unfiltered), checkNotNull(predicate));
   }
 
   @ReceiverDependentMutable
   private static class FilteredSet<E extends @Nullable @Readonly Object> extends FilteredCollection<E>
       implements Set<E> {
-    FilteredSet(@ReceiverDependentMutable Set<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredSet(@ReceiverDependentMutable Set<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       super(unfiltered, predicate);
     }
 
@@ -1178,30 +1182,30 @@ public final class Sets {
   private static class FilteredSortedSet<E extends @Nullable @Readonly Object> extends FilteredSet<E>
       implements SortedSet<E> {
 
-    FilteredSortedSet(@ReceiverDependentMutable SortedSet<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredSortedSet(@ReceiverDependentMutable SortedSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       super(unfiltered, predicate);
     }
 
     @Override
     @CheckForNull
-    public Comparator<? super E> comparator(@Readonly FilteredSortedSet<E> this) {
+    public @Readonly Comparator<? super E> comparator(@Readonly FilteredSortedSet<E> this) {
       return ((SortedSet<E>) unfiltered).comparator();
     }
 
     @Override
-    public @PolyMutable SortedSet<E> subSet(@PolyMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
-      return new @PolyMutable FilteredSortedSet<E>(
-          ((@PolyMutable SortedSet<E>) unfiltered).subSet(fromElement, toElement), predicate);
+    public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
+      return new @ReceiverDependentMutable FilteredSortedSet<E>(
+          ((@ReceiverDependentMutable SortedSet<E>) unfiltered).subSet(fromElement, toElement), predicate);
     }
 
     @Override
-    public @PolyMutable SortedSet<E> headSet(@PolyMutable FilteredSortedSet<E> this, @ParametricNullness E toElement) {
-      return new @PolyMutable FilteredSortedSet<E>(((@PolyMutable SortedSet<E>) unfiltered).headSet(toElement), predicate);
+    public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E toElement) {
+      return new @ReceiverDependentMutable FilteredSortedSet<E>(((@ReceiverDependentMutable SortedSet<E>) unfiltered).headSet(toElement), predicate);
     }
 
     @Override
-    public @PolyMutable SortedSet<E> tailSet(@PolyMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement) {
-      return new @PolyMutable FilteredSortedSet<E>(((@PolyMutable SortedSet<E>) unfiltered).tailSet(fromElement), predicate);
+    public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable FilteredSortedSet<E> this, @ParametricNullness E fromElement) {
+      return new @ReceiverDependentMutable FilteredSortedSet<E>(((@ReceiverDependentMutable SortedSet<E>) unfiltered).tailSet(fromElement), predicate);
     }
 
     @Override
@@ -1228,12 +1232,12 @@ public final class Sets {
   @ReceiverDependentMutable
   private static class FilteredNavigableSet<E extends @Nullable @Readonly Object> extends FilteredSortedSet<E>
       implements NavigableSet<E> {
-    FilteredNavigableSet(@ReceiverDependentMutable NavigableSet<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredNavigableSet(@ReceiverDependentMutable NavigableSet<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       super(unfiltered, predicate);
     }
 
-    @PolyMutable NavigableSet<E> unfiltered(@PolyMutable FilteredNavigableSet<E> this) {
-      return (NavigableSet<E>) unfiltered;
+    @ReceiverDependentMutable NavigableSet<E> unfiltered(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
+      return (@ReceiverDependentMutable NavigableSet<E>) unfiltered;
     }
 
     @Override
@@ -1273,12 +1277,12 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> descendingSet(@PolyMutable FilteredNavigableSet<E> this) {
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
       return Sets.filter(unfiltered().descendingSet(), predicate);
     }
 
     @Override
-    public @Readonly Iterator<E> descendingIterator(@Readonly FilteredNavigableSet<E> this) {
+    public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable FilteredNavigableSet<E> this) {
       return Iterators.filter(unfiltered().descendingIterator(), predicate);
     }
 
@@ -1289,8 +1293,8 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> subSet(
-            @PolyMutable FilteredNavigableSet<E> this,
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
+            @ReceiverDependentMutable FilteredNavigableSet<E> this,
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
@@ -1300,12 +1304,12 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> headSet(@PolyMutable FilteredNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> headSet(@ReceiverDependentMutable FilteredNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
       return filter(unfiltered().headSet(toElement, inclusive), predicate);
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> tailSet(@PolyMutable FilteredNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(@ReceiverDependentMutable FilteredNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
       return filter(unfiltered().tailSet(fromElement, inclusive), predicate);
     }
   }
@@ -1363,7 +1367,7 @@ public final class Sets {
    * @throws IllegalArgumentException if the cartesian product size exceeds the {@code int} range
    * @since 2.0
    */
-  public static <B> Set<List<B>> cartesianProduct(List<? extends Set<? extends B>> sets) {
+  public static <B> @Immutable Set<@Immutable List<B>> cartesianProduct(@Readonly List<? extends @Readonly Set<? extends B>> sets) {
     return CartesianSet.create(sets);
   }
 
@@ -1421,17 +1425,17 @@ public final class Sets {
    * @since 2.0
    */
   @SafeVarargs
-  public static <B> Set<List<B>> cartesianProduct(Set<? extends B>... sets) {
+  public static <B> @Immutable Set<@Immutable List<B>> cartesianProduct(Set<? extends B>... sets) {
     return cartesianProduct(Arrays.asList(sets));
   }
 
-  @ReceiverDependentMutable
-  private static final class CartesianSet<E> extends ForwardingCollection<List<E>>
-      implements Set<List<E>> {
+  @Immutable
+  private static final class CartesianSet<E> extends ForwardingCollection<@Immutable List<E>>
+      implements Set<@Immutable List<E>> {
     private final transient ImmutableList<ImmutableSet<E>> axes;
     private final transient CartesianList<E> delegate;
 
-    static <E> Set<List<E>> create(List<? extends Set<? extends E>> sets) {
+    static <E> @Immutable Set<@Immutable List<E>> create(@Readonly List<? extends @Readonly Set<? extends E>> sets) {
       ImmutableList.Builder<ImmutableSet<E>> axesBuilder = new ImmutableList.Builder<>(sets.size());
       for (Set<? extends E> set : sets) {
         ImmutableSet<E> copy = ImmutableSet.copyOf(set);
@@ -1441,15 +1445,15 @@ public final class Sets {
         axesBuilder.add(copy);
       }
       final ImmutableList<ImmutableSet<E>> axes = axesBuilder.build();
-      ImmutableList<List<E>> listAxes =
-          new ImmutableList<List<E>>() {
+      ImmutableList<@Immutable List<E>> listAxes =
+          new ImmutableList<@Immutable List<E>>() {
             @Override
             public @NonNegative int size() {
               return axes.size();
             }
 
             @Override
-            public List<E> get(int index) {
+            public @Immutable List<E> get(int index) {
               return axes.get(index).asList();
             }
 
@@ -1463,20 +1467,20 @@ public final class Sets {
             @Override
             @J2ktIncompatible // serialization
             @GwtIncompatible // serialization
-            Object writeReplace() {
+            @Readonly Object writeReplace() {
               return super.writeReplace();
             }
           };
       return new CartesianSet<E>(axes, new CartesianList<E>(listAxes));
     }
 
-    private CartesianSet(ImmutableList<ImmutableSet<E>> axes, @ReceiverDependentMutable CartesianList<E> delegate) {
+    private CartesianSet(ImmutableList<ImmutableSet<E>> axes, CartesianList<E> delegate) {
       this.axes = axes;
       this.delegate = delegate;
     }
 
     @Override
-    protected @PolyMutable Collection<List<E>> delegate(@PolyMutable CartesianSet<E> this) {
+    protected @Immutable Collection<@Immutable List<E>> delegate() {
       return delegate;
     }
 
@@ -1577,8 +1581,8 @@ public final class Sets {
     }
 
     @Override
-    public Iterator<E> iterator(@Readonly SubSet<E> this) {
-      return new UnmodifiableIterator<E>() {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable SubSet<E> this) {
+      return new @Mutable UnmodifiableIterator<E>() {
         final ImmutableList<E> elements = inputSet.keySet().asList();
         int remainingSetBits = mask;
 
@@ -1632,8 +1636,8 @@ public final class Sets {
     }
 
     @Override
-    public Iterator<Set<E>> iterator(@Readonly PowerSet<E> this) {
-      return new AbstractIndexedListIterator<Set<E>>(size()) {
+    public @Mutable Iterator<Set<E>> iterator(@ReceiverDependentMutable PowerSet<E> this) {
+      return new @Mutable AbstractIndexedListIterator<Set<E>>(size()) {
         @Override
         protected Set<E> get(final int setBits) {
           return new SubSet<E>(inputSet, setBits);
@@ -1699,16 +1703,16 @@ public final class Sets {
    * @throws NullPointerException if {@code set} is or contains {@code null}
    * @since 23.0
    */
-  public static <E> Set<Set<E>> combinations(Set<E> set, final int size) {
+  public static <E extends @Immutable Object> @Readonly Set<@Readonly Set<E>> combinations(@Readonly Set<E> set, final int size) {
     final ImmutableMap<E, Integer> index = Maps.indexMap(set);
     checkNonnegative(size, "size");
     checkArgument(size <= index.size(), "size (%s) must be <= set.size() (%s)", size, index.size());
     if (size == 0) {
-      return ImmutableSet.<Set<E>>of(ImmutableSet.<E>of());
+      return ImmutableSet.<@Readonly Set<E>>of(ImmutableSet.<E>of());
     } else if (size == index.size()) {
-      return ImmutableSet.<Set<E>>of(index.keySet());
+      return ImmutableSet.<@Readonly Set<E>>of(index.keySet());
     }
-    return new AbstractSet<Set<E>>() {
+    return new @Mutable AbstractSet<@Readonly Set<E>>() {
       @Override
       public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
         if (o instanceof Set) {
@@ -1719,13 +1723,13 @@ public final class Sets {
       }
 
       @Override
-      public Iterator<Set<E>> iterator() {
-        return new AbstractIterator<Set<E>>() {
+      public @Mutable Iterator<@Readonly Set<E>> iterator() {
+        return new @Mutable AbstractIterator<@Readonly Set<E>>() {
           final BitSet bits = new BitSet(index.size());
 
           @Override
           @CheckForNull
-          protected Set<E> computeNext() {
+          protected @Readonly Set<E> computeNext() {
             if (bits.isEmpty()) {
               bits.set(0, size);
             } else {
@@ -1754,7 +1758,7 @@ public final class Sets {
               bits.set(bitToFlip);
             }
             final BitSet copy = (BitSet) bits.clone();
-            return new AbstractSet<E>() {
+            return new @Mutable AbstractSet<E>() {
               @Override
               public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
                 Integer i = index.get(o);
@@ -1763,7 +1767,7 @@ public final class Sets {
 
               @Override
               public Iterator<E> iterator() {
-                return new AbstractIterator<E>() {
+                return new @Mutable AbstractIterator<E>() {
                   int i = -1;
 
                   @Override
@@ -1844,34 +1848,35 @@ public final class Sets {
    * @return an unmodifiable view of the specified navigable set
    * @since 12.0
    */
-  public static <E extends @Nullable @Readonly Object> @Readonly NavigableSet<E> unmodifiableNavigableSet(
-      @Readonly NavigableSet<E> set) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> unmodifiableNavigableSet(
+      @PolyMutable NavigableSet<E> set) {
     if (set instanceof ImmutableCollection || set instanceof UnmodifiableNavigableSet) {
       return set;
     }
-    return new UnmodifiableNavigableSet<E>(set);
+    return new @PolyMutable UnmodifiableNavigableSet<E>(set);
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   static final class UnmodifiableNavigableSet<E extends @Nullable @Readonly Object>
       extends ForwardingSortedSet<E> implements NavigableSet<E>, Serializable {
-    private final @Readonly NavigableSet<E> delegate;
-    private final @Readonly SortedSet<E> unmodifiableDelegate;
+    private final @ReceiverDependentMutable NavigableSet<E> delegate;
+    private final @ReceiverDependentMutable SortedSet<E> unmodifiableDelegate;
 
-    UnmodifiableNavigableSet(@Readonly NavigableSet<E> delegate) {
+    UnmodifiableNavigableSet(@ReceiverDependentMutable NavigableSet<E> delegate) {
       this.delegate = checkNotNull(delegate);
       this.unmodifiableDelegate = Collections.unmodifiableSortedSet(delegate);
     }
 
     @Override
-    protected @Readonly SortedSet<E> delegate() {
+    protected @ReceiverDependentMutable SortedSet<E> delegate() {
       return unmodifiableDelegate;
     }
 
     // default methods not forwarded by ForwardingSortedSet
 
     @Override
-    public boolean removeIf(java.util.function.Predicate<? super E> filter) {
+    public boolean removeIf(java.util.function.@Readonly Predicate<? super E> filter) {
       throw new UnsupportedOperationException();
     }
 
@@ -1926,26 +1931,26 @@ public final class Sets {
       throw new UnsupportedOperationException();
     }
 
-    @LazyInit @CheckForNull private transient UnmodifiableNavigableSet<E> descendingSet;
+    @LazyInit @CheckForNull private transient @Assignable UnmodifiableNavigableSet<E> descendingSet;
 
     @Override
-    public @Readonly NavigableSet<E> descendingSet(@Readonly UnmodifiableNavigableSet<E> this) {
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this) {
       UnmodifiableNavigableSet<E> result = descendingSet;
       if (result == null) {
-        result = descendingSet = new UnmodifiableNavigableSet<E>(delegate.descendingSet());
+        result = descendingSet = new @ReceiverDependentMutable UnmodifiableNavigableSet<E>(delegate.descendingSet());
         result.descendingSet = this;
       }
       return result;
     }
 
     @Override
-    public @Readonly Iterator<E> descendingIterator(@Readonly UnmodifiableNavigableSet<E> this) {
+    public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this) {
       return Iterators.unmodifiableIterator(delegate.descendingIterator());
     }
 
     @Override
-    public @Readonly NavigableSet<E> subSet(
-            @Readonly UnmodifiableNavigableSet<E> this,
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
+            @ReceiverDependentMutable UnmodifiableNavigableSet<E> this,
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
@@ -1955,12 +1960,12 @@ public final class Sets {
     }
 
     @Override
-    public @Readonly NavigableSet<E> headSet(@Readonly UnmodifiableNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> headSet(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
       return unmodifiableNavigableSet(delegate.headSet(toElement, inclusive));
     }
 
     @Override
-    public @Readonly NavigableSet<E> tailSet(@Readonly UnmodifiableNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(@ReceiverDependentMutable UnmodifiableNavigableSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
       return unmodifiableNavigableSet(delegate.tailSet(fromElement, inclusive));
     }
 
@@ -2015,13 +2020,13 @@ public final class Sets {
    * @since 13.0
    */
   @GwtIncompatible // NavigableSet
-  public static <E extends @Nullable @Readonly Object> NavigableSet<E> synchronizedNavigableSet(
-      NavigableSet<E> navigableSet) {
+  public static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> synchronizedNavigableSet(
+      @PolyMutable NavigableSet<E> navigableSet) {
     return Synchronized.navigableSet(navigableSet);
   }
 
   /** Remove each element in an iterable from a set. */
-  static boolean removeAllImpl(Set<?> set, Iterator<?> iterator) {
+  static boolean removeAllImpl(Set<?> set, @Mutable Iterator<?> iterator) {
     boolean changed = false;
     while (iterator.hasNext()) {
       changed |= set.remove(iterator.next());
@@ -2058,7 +2063,7 @@ public final class Sets {
     }
 
     @Override
-    protected @PolyMutable NavigableSet<E> delegate(@PolyMutable DescendingSet<E> this) {
+    protected @ReceiverDependentMutable NavigableSet<E> delegate(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward;
     }
 
@@ -2099,18 +2104,18 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> descendingSet(@PolyMutable DescendingSet<E> this) {
+    public @ReceiverDependentMutable NavigableSet<E> descendingSet(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward;
     }
 
     @Override
-    public @PolyMutable Iterator<E> descendingIterator(@PolyMutable DescendingSet<E> this) {
+    public @Mutable Iterator<E> descendingIterator(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward.iterator();
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> subSet(
-            @PolyMutable DescendingSet<E> this,
+    public @ReceiverDependentMutable NavigableSet<E> subSet(
+            @ReceiverDependentMutable DescendingSet<E> this,
         @ParametricNullness E fromElement,
         boolean fromInclusive,
         @ParametricNullness E toElement,
@@ -2119,27 +2124,27 @@ public final class Sets {
     }
 
     @Override
-    public @PolyMutable SortedSet<E> subSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> subSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E fromElement, @ParametricNullness E toElement) {
       return standardSubSet(fromElement, toElement);
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> headSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> headSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E toElement, boolean inclusive) {
       return forward.tailSet(toElement, inclusive).descendingSet();
     }
 
     @Override
-    public @PolyMutable SortedSet<E> headSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E toElement) {
+    public @ReceiverDependentMutable SortedSet<E> headSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E toElement) {
       return standardHeadSet(toElement);
     }
 
     @Override
-    public @PolyMutable NavigableSet<E> tailSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
+    public @ReceiverDependentMutable NavigableSet<E> tailSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E fromElement, boolean inclusive) {
       return forward.headSet(fromElement, inclusive).descendingSet();
     }
 
     @Override
-    public @PolyMutable SortedSet<E> tailSet(@PolyMutable DescendingSet<E> this, @ParametricNullness E fromElement) {
+    public @ReceiverDependentMutable SortedSet<E> tailSet(@ReceiverDependentMutable DescendingSet<E> this, @ParametricNullness E fromElement) {
       return standardTailSet(fromElement);
     }
 
@@ -2155,7 +2160,7 @@ public final class Sets {
     }
 
     // If we inline this, we get a javac error.
-    private static <T extends @Nullable @Readonly Object> Ordering<T> reverse(Comparator<T> forward) {
+    private static <T extends @Nullable @Readonly Object> Ordering<T> reverse(@Readonly Comparator<T> forward) {
       return Ordering.from(forward).reverse();
     }
 
@@ -2172,7 +2177,7 @@ public final class Sets {
     }
 
     @Override
-    public Iterator<E> iterator(@PolyMutable DescendingSet<E> this) {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable DescendingSet<E> this) {
       return forward.descendingIterator();
     }
 
@@ -2211,7 +2216,7 @@ public final class Sets {
    * @since 20.0
    */
   @GwtIncompatible // NavigableSet
-  public static <K extends Comparable<? super K>> @PolyMutable NavigableSet<K> subSet(
+  public static <K extends @Immutable Comparable<? super K>> @PolyMutable NavigableSet<K> subSet(
           @PolyMutable NavigableSet<K> set, Range<K> range) {
     if (set.comparator() != null
         && set.comparator() != Ordering.natural()

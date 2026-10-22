@@ -25,11 +25,12 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** Aggregate future that collects (stores) results of each future. */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-abstract class CollectionFuture<V extends @Nullable Object, C extends @Nullable Object>
+abstract class CollectionFuture<V extends @Nullable @Readonly Object, C extends @Nullable @Readonly Object>
     extends AggregateFuture<V, C> {
   /*
    * We access this field racily but safely. For discussion of a similar situation, see the comments
@@ -82,7 +83,7 @@ abstract class CollectionFuture<V extends @Nullable Object, C extends @Nullable 
   abstract C combine(List<@Nullable Present<V>> values);
 
   /** Used for {@link Futures#allAsList} and {@link Futures#successfulAsList}. */
-  static final class ListFuture<V extends @Nullable Object>
+  static final class ListFuture<V extends @Nullable @Readonly Object>
       extends CollectionFuture<V, List<@Nullable V>> {
     ListFuture(
         ImmutableCollection<? extends ListenableFuture<? extends V>> futures,
@@ -102,7 +103,7 @@ abstract class CollectionFuture<V extends @Nullable Object, C extends @Nullable 
   }
 
   /** The result of a successful {@code Future}. */
-  private static final class Present<V extends @Nullable Object> {
+  private static final class Present<V extends @Nullable @Readonly Object> {
     @ParametricNullness final V value;
 
     Present(@ParametricNullness V value) {

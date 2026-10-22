@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentMap;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A builder of {@link ConcurrentMap} instances that can have keys or values automatically wrapped
@@ -107,7 +108,7 @@ public final class MapMaker {
   @CheckForNull Strength keyStrength;
   @CheckForNull Strength valueStrength;
 
-  @CheckForNull Equivalence<Object> keyEquivalence;
+  @CheckForNull @Readonly Equivalence<@Readonly Object> keyEquivalence;
 
   /**
    * Constructs a new {@code MapMaker} instance with default settings, including strong keys, strong
@@ -124,14 +125,14 @@ public final class MapMaker {
    */
   @CanIgnoreReturnValue
   @GwtIncompatible // To be supported
-  MapMaker keyEquivalence(Equivalence<Object> equivalence) {
+  MapMaker keyEquivalence(@Readonly Equivalence<@Readonly Object> equivalence) {
     checkState(keyEquivalence == null, "key equivalence was already set to %s", keyEquivalence);
     keyEquivalence = checkNotNull(equivalence);
     this.useCustomMap = true;
     return this;
   }
 
-  Equivalence<Object> getKeyEquivalence() {
+  @Readonly Equivalence<@Readonly Object> getKeyEquivalence() {
     return MoreObjects.firstNonNull(keyEquivalence, getKeyStrength().defaultEquivalence());
   }
 

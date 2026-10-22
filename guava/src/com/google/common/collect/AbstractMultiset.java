@@ -146,7 +146,7 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<E> elementSet(@PolyMutable AbstractMultiset<E> this) {
+  public @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable AbstractMultiset<E> this) {
     Set<E> result = elementSet;
     if (result == null) {
       elementSet = result = createElementSet();
@@ -158,15 +158,15 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
    * Creates a new instance of this multiset's element set, which will be returned by {@link
    * #elementSet()}.
    */
-  @PolyMutable Set<E> createElementSet(@PolyMutable AbstractMultiset<E> this) {
-    return new @PolyMutable ElementSet();
+  @ReceiverDependentMutable Set<E> createElementSet(@ReceiverDependentMutable AbstractMultiset<E> this) {
+    return new @ReceiverDependentMutable ElementSet();
   }
 
   @WeakOuter
   @ReceiverDependentMutable
   class ElementSet extends Multisets.ElementSet<E> {
     @Override
-    @PolyMutable Multiset<E> multiset(@PolyMutable AbstractMultiset<E>.ElementSet this) {
+    @ReceiverDependentMutable Multiset<E> multiset(@ReceiverDependentMutable AbstractMultiset<E>.ElementSet this) {
       return AbstractMultiset.this;
     }
 
@@ -179,12 +179,12 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
   abstract Iterator<E> elementIterator(@Readonly AbstractMultiset<E> this);
 
   @CFComment("Change to @LazyFinal later")
-  @LazyInit @CheckForNull private transient @Assignable Set<Entry<E>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<@Readonly Entry<E>> entrySet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<E>> entrySet(@PolyMutable AbstractMultiset<E> this) {
-    Set<@PolyMutable Entry<E>> result = entrySet;
+  public @ReceiverDependentMutable Set<@Readonly Entry<E>> entrySet(@ReceiverDependentMutable AbstractMultiset<E> this) {
+    Set<@Readonly Entry<E>> result = entrySet;
     if (result == null) {
       entrySet = result = createEntrySet();
     }
@@ -195,12 +195,12 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
   @ReceiverDependentMutable
   class EntrySet extends Multisets.EntrySet<E> {
     @Override
-    @PolyMutable  Multiset<E> multiset(@PolyMutable AbstractMultiset<E>.EntrySet this) {
+    @ReceiverDependentMutable  Multiset<E> multiset(@ReceiverDependentMutable AbstractMultiset<E>.EntrySet this) {
       return AbstractMultiset.this;
     }
 
     @Override
-    public Iterator<@PolyMutable Entry<E>> iterator(@PolyMutable AbstractMultiset<E>.EntrySet this) {
+    public @Mutable Iterator<@Readonly Entry<E>> iterator(@ReceiverDependentMutable AbstractMultiset<E>.EntrySet this) {
       return entryIterator();
     }
 
@@ -210,11 +210,11 @@ abstract class AbstractMultiset<E extends @Nullable @Readonly Object> extends Ab
     }
   }
 
-  @PolyMutable Set<@PolyMutable Entry<E>> createEntrySet(@PolyMutable AbstractMultiset<E> this) {
-    return new EntrySet();
+  @ReceiverDependentMutable Set<@Readonly Entry<E>> createEntrySet(@ReceiverDependentMutable AbstractMultiset<E> this) {
+    return new @ReceiverDependentMutable EntrySet();
   }
 
-  abstract Iterator<@PolyMutable Entry<E>> entryIterator(@PolyMutable AbstractMultiset<E> this);
+  abstract Iterator<@Readonly Entry<E>> entryIterator(@ReceiverDependentMutable AbstractMultiset<E> this);
 
   abstract int distinctElements(@Readonly AbstractMultiset<E> this);
 

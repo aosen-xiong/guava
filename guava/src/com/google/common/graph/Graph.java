@@ -21,6 +21,8 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Collection;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -105,6 +107,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @DoNotMock("Use GraphBuilder to create a real instance")
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 public interface Graph<N> extends BaseGraph<N> {
   //
   // Graph-level accessors
@@ -112,7 +115,7 @@ public interface Graph<N> extends BaseGraph<N> {
 
   /** Returns all nodes in this graph, in the order specified by {@link #nodeOrder()}. */
   @Override
-  Set<N> nodes();
+  @Readonly Set<N> nodes();
 
   /** Returns all edges in this graph. */
   @Override
@@ -340,7 +343,7 @@ public interface Graph<N> extends BaseGraph<N> {
    * <p>A reference implementation of this is provided by {@link AbstractGraph#equals(Object)}.
    */
   @Override
-  boolean equals(@CheckForNull Object object);
+  boolean equals(@CheckForNull @Readonly Object object);
 
   /**
    * Returns the hash code for this graph. The hash code of a graph is defined as the hash code of

@@ -20,6 +20,7 @@ import com.google.common.annotations.J2ktIncompatible;
 import java.util.Comparator;
 import java.util.Spliterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -47,7 +48,7 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
   }
 
   @Override
-  public Comparator<? super E> comparator() {
+  public @Readonly Comparator<? super E> comparator() {
     return delegateCollection().comparator();
   }
 
@@ -56,7 +57,7 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
   @GwtIncompatible // ImmutableSortedSet.indexOf
   // TODO(cpovirk): consider manual binary search under GWT to preserve O(log N) lookup
   @Override
-  public int indexOf(@CheckForNull @UnknownSignedness Object target) {
+  public int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
     int index = delegateCollection().indexOf(target);
 
     // TODO(kevinb): reconsider if it's really worth making feeble attempts at
@@ -69,12 +70,12 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
 
   @GwtIncompatible // ImmutableSortedSet.indexOf
   @Override
-  public int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+  public int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
     return indexOf(target);
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
     // Necessary for ISS's with comparators inconsistent with equals.
     return indexOf(target) >= 0;
   }
@@ -106,7 +107,7 @@ final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

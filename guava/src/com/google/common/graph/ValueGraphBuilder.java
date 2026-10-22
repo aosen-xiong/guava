@@ -23,6 +23,7 @@ import static com.google.common.graph.Graphs.checkNonNegative;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A builder for constructing instances of {@link MutableValueGraph} or {@link ImmutableValueGraph}
@@ -117,7 +118,8 @@ public final class ValueGraphBuilder<N, V> extends AbstractGraphBuilder<N> {
    *
    * @since 28.0
    */
-  public <N1 extends N, V1 extends V> ImmutableValueGraph.Builder<N1, V1> immutable() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // N1 is N restricted to @Immutable nodes, which cast() (unchecked) preserves
+  public <N1 extends @Immutable N, V1 extends V> ImmutableValueGraph.Builder<N1, V1> immutable() {
     ValueGraphBuilder<N1, V1> castBuilder = cast();
     return new ImmutableValueGraph.Builder<>(castBuilder);
   }
@@ -186,7 +188,8 @@ public final class ValueGraphBuilder<N, V> extends AbstractGraphBuilder<N> {
    * Returns an empty {@link MutableValueGraph} with the properties of this {@link
    * ValueGraphBuilder}.
    */
-  public <N1 extends N, V1 extends V> MutableValueGraph<N1, V1> build() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // nodes are hash keys, so N1 is @Immutable; inference cannot relate this builder's N to N1 without the cast that immutable() makes
+  public <N1 extends @Immutable N, V1 extends V> MutableValueGraph<N1, V1> build() {
     return new StandardMutableValueGraph<>(this);
   }
 

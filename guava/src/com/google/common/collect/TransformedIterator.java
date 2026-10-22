@@ -33,12 +33,12 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-@ReceiverDependentMutable
+@Mutable
 abstract class TransformedIterator<F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object>
     implements Iterator<T> {
   final Iterator<? extends F> backingIterator;
 
-  TransformedIterator(@ReceiverDependentMutable Iterator<? extends F> backingIterator) {
+  TransformedIterator(@Mutable Iterator<? extends F> backingIterator) {
     this.backingIterator = checkNotNull(backingIterator);
   }
 

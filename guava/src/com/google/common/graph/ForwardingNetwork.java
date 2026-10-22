@@ -19,6 +19,9 @@ package com.google.common.graph;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A class to allow {@link Network} implementations to be backed by a provided delegate. This is not
@@ -28,17 +31,18 @@ import javax.annotation.CheckForNull;
  * @author Joshua O'Madadhain
  */
 @ElementTypesAreNonnullByDefault
-abstract class ForwardingNetwork<N, E> extends AbstractNetwork<N, E> {
+@ReceiverDependentMutable
+abstract class ForwardingNetwork<N extends @Immutable Object, E extends @Immutable Object> extends AbstractNetwork<N, E> {
 
-  abstract Network<N, E> delegate();
+  abstract @ReceiverDependentMutable Network<N, E> delegate();
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return delegate().nodes();
   }
 
   @Override
-  public Set<E> edges() {
+  public @Readonly Set<E> edges() {
     return delegate().edges();
   }
 
@@ -123,12 +127,12 @@ abstract class ForwardingNetwork<N, E> extends AbstractNetwork<N, E> {
   }
 
   @Override
-  public Set<E> edgesConnecting(N nodeU, N nodeV) {
+  public @Readonly Set<E> edgesConnecting(N nodeU, N nodeV) {
     return delegate().edgesConnecting(nodeU, nodeV);
   }
 
   @Override
-  public Set<E> edgesConnecting(EndpointPair<N> endpoints) {
+  public @Readonly Set<E> edgesConnecting(EndpointPair<N> endpoints) {
     return delegate().edgesConnecting(endpoints);
   }
 
