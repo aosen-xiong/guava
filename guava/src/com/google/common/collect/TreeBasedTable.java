@@ -264,13 +264,13 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     // If the row was previously empty, we check if there's a new row here every time we're queried.
     void updateWholeRowField() {
       if (wholeRow == null || (wholeRow.isEmpty() && backingMap.containsKey(rowKey))) {
-        wholeRow = (SortedMap<C, V>) backingMap.get(rowKey);
+        wholeRow = (@ReceiverDependentMutable SortedMap<C, V>) backingMap.get(rowKey);
       }
     }
 
     @Override
     @CheckForNull
-    SortedMap<C, V> computeBackingRowMap() {
+    @ReceiverDependentMutable SortedMap<C, V> computeBackingRowMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this) {
       updateWholeRowField();
       SortedMap<C, V> map = wholeRow;
       if (map != null) {

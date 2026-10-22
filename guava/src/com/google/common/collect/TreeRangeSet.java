@@ -82,7 +82,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     return result;
   }
 
-  private TreeRangeSet(NavigableMap<Cut<C>, Range<C>> rangesByLowerCut) {
+  private TreeRangeSet(@ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> rangesByLowerCut) {
     this.rangesByLowerBound = rangesByLowerCut;
   }
 
@@ -673,8 +673,9 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
 
   @ReceiverDependentMutable
   private final class Complement extends TreeRangeSet<C> {
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     Complement() {
-      super(new ComplementRangesByLowerBound<C>(TreeRangeSet.this.rangesByLowerBound));
+      super(new @ReceiverDependentMutable ComplementRangesByLowerBound<C>(TreeRangeSet.this.rangesByLowerBound));
     }
 
     @Override
@@ -893,9 +894,10 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
   private final class SubRangeSet extends TreeRangeSet<C> {
     private final Range<C> restriction;
 
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     SubRangeSet(Range<C> restriction) {
       super(
-          new SubRangeSetRangesByLowerBound<C>(
+          new @ReceiverDependentMutable SubRangeSetRangesByLowerBound<C>(
               Range.<Cut<C>>all(), restriction, TreeRangeSet.this.rangesByLowerBound));
       this.restriction = restriction;
     }

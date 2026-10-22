@@ -86,7 +86,7 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
   }
 
   private LinkedHashMultiset() {
-    super(new LinkedHashMap<E, Count>());
+    super(new @ReceiverDependentMutable LinkedHashMap<E, Count>());
   }
 
   private LinkedHashMultiset(int distinctElements) {

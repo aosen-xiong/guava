@@ -76,7 +76,7 @@ public final class HashMultiset<E extends @Nullable @Immutable Object> extends A
   }
 
   private HashMultiset() {
-    super(new HashMap<E, Count>());
+    super(new @ReceiverDependentMutable HashMap<E, Count>());
   }
 
   private HashMultiset(int distinctElements) {

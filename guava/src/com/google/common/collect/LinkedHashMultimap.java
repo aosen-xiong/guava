@@ -253,11 +253,11 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
       successorInValueSet = entry;
     }
 
-    public @PolyMutable ValueEntry<K, V> getPredecessorInMultimap(@PolyMutable ValueEntry<K, V> this) {
+    public ValueEntry<K, V> getPredecessorInMultimap() {
       return requireNonNull(predecessorInMultimap); // see the comment on the class fields
     }
 
-    public @PolyMutable ValueEntry<K, V> getSuccessorInMultimap(@PolyMutable ValueEntry<K, V> this) {
+    public ValueEntry<K, V> getSuccessorInMultimap() {
       return requireNonNull(successorInMultimap); // see the comment on the class fields
     }
 

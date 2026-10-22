@@ -344,7 +344,7 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
     }
 
     @CheckForNull
-    Map<C, V> computeBackingRowMap() {
+    @ReceiverDependentMutable Map<C, V> computeBackingRowMap(@ReceiverDependentMutable StandardTable<R, C, V>.@ReceiverDependentMutable Row this) {
       return backingMap.get(rowKey);
     }
 
