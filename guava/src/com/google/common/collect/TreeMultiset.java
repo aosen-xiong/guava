@@ -131,7 +131,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   private final transient GeneralRange<E> range;
   private final transient AvlNode<E> header;
 
-  TreeMultiset(Reference<AvlNode<E>> rootReference, GeneralRange<E> range, @ReceiverDependentMutable AvlNode<E> endLink) {
+  TreeMultiset(@ReceiverDependentMutable Reference<AvlNode<E>> rootReference, GeneralRange<E> range, @ReceiverDependentMutable AvlNode<E> endLink) {
     super(range.comparator());
     this.rootReference = rootReference;
     this.range = range;
@@ -144,7 +144,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     this.range = GeneralRange.all(comparator);
     this.header = new AvlNode<>();
     successor(header, header);
-    this.rootReference = new Reference<>();
+    this.rootReference = new @ReceiverDependentMutable Reference<>();
   }
 
   /** A function which can be summed across a subtree. */
@@ -579,22 +579,23 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
         header);
   }
 
+  @ReceiverDependentMutable
   private static final class Reference<T> {
     @CheckForNull private T value;
 
     @CheckForNull
-    public T get() {
+    public T get(@Readonly Reference<T> this) {
       return value;
     }
 
-    public void checkAndSet(@CheckForNull T expected, @CheckForNull T newValue) {
+    public void checkAndSet(@Mutable Reference<T> this, @CheckForNull T expected, @CheckForNull T newValue) {
       if (value != expected) {
         throw new ConcurrentModificationException();
       }
       value = newValue;
     }
 
-    void clear() {
+    void clear(@Mutable Reference<T> this) {
       value = null;
     }
   }
@@ -1100,7 +1101,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   @J2ktIncompatible
   @GwtIncompatible // java.io.ObjectInputStream
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable TreeMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     @SuppressWarnings("unchecked")
     // reading data stored by writeObject

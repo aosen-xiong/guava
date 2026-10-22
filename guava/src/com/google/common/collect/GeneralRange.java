@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -42,6 +43,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class GeneralRange<T extends @Nullable @Readonly Object> implements Serializable {
   /** Converts a Range to a GeneralRange. */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
@@ -268,7 +270,7 @@ final class GeneralRange<T extends @Nullable @Readonly Object> implements Serial
         getUpperBoundType());
   }
 
-  @LazyInit @CheckForNull private transient GeneralRange<T> reverse;
+  @LazyInit @CheckForNull private transient @Assignable GeneralRange<T> reverse;
 
   /** Returns the same range relative to the reversed comparator. */
   GeneralRange<T> reverse() {
