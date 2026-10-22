@@ -65,7 +65,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
   public @ReceiverDependentMutable Graph<N> asGraph() {
     return new @ReceiverDependentMutable AbstractGraph<N>() {
       @Override
-      public Set<N> nodes() {
+      public @Readonly Set<N> nodes() {
         return AbstractNetwork.this.nodes();
       }
 
@@ -175,7 +175,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
   }
 
   @Override
-  public Set<E> edgesConnecting(N nodeU, N nodeV) {
+  public @Readonly Set<E> edgesConnecting(N nodeU, N nodeV) {
     Set<E> outEdgesU = outEdges(nodeU);
     Set<E> inEdgesV = inEdges(nodeV);
     return nodePairInvalidatableSet(
@@ -187,7 +187,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
   }
 
   @Override
-  public Set<E> edgesConnecting(EndpointPair<N> endpoints) {
+  public @Readonly Set<E> edgesConnecting(EndpointPair<N> endpoints) {
     validateEndpoints(endpoints);
     return edgesConnecting(endpoints.nodeU(), endpoints.nodeV());
   }
@@ -332,7 +332,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
         () -> String.format(NODE_PAIR_REMOVED_FROM_GRAPH, nodeU, nodeV));
   }
 
-  private static <N, E extends @Immutable Object> Map<E, EndpointPair<N>> edgeIncidentNodesMap(final @Readonly Network<N, E> network) {
+  private static <N, E extends @Immutable Object> @Readonly Map<E, EndpointPair<N>> edgeIncidentNodesMap(final @Readonly Network<N, E> network) {
     return Maps.asMap(network.edges(), network::incidentNodes);
   }
 }

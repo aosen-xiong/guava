@@ -51,7 +51,7 @@ public abstract class AbstractValueGraph<N extends @Immutable Object, V> extends
   public @ReceiverDependentMutable Graph<N> asGraph() {
     return new @ReceiverDependentMutable AbstractGraph<N>() {
       @Override
-      public Set<N> nodes() {
+      public @Readonly Set<N> nodes() {
         return AbstractValueGraph.this.nodes();
       }
 

@@ -17,6 +17,7 @@
 package com.google.common.graph;
 
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
@@ -33,7 +34,7 @@ interface BaseGraph<N> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
   //
 
   /** Returns all nodes in this graph, in the order specified by {@link #nodeOrder()}. */
-  Set<N> nodes();
+  @Readonly Set<N> nodes();
 
   /** Returns all edges in this graph. */
   Set<EndpointPair<N>> edges();

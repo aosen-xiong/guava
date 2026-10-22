@@ -444,12 +444,12 @@ public final class Graphs extends GraphsBridgeMethods {
     }
 
     @Override
-    public Set<E> edgesConnecting(N nodeU, N nodeV) {
+    public @Readonly Set<E> edgesConnecting(N nodeU, N nodeV) {
       return delegate().edgesConnecting(nodeV, nodeU); // transpose
     }
 
     @Override
-    public Set<E> edgesConnecting(EndpointPair<N> endpoints) {
+    public @Readonly Set<E> edgesConnecting(EndpointPair<N> endpoints) {
       return delegate().edgesConnecting(transpose(endpoints));
     }
 

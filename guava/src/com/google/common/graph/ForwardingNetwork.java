@@ -19,6 +19,7 @@ package com.google.common.graph;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
@@ -36,12 +37,12 @@ abstract class ForwardingNetwork<N extends @Immutable Object, E extends @Immutab
   abstract @ReceiverDependentMutable Network<N, E> delegate();
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return delegate().nodes();
   }
 
   @Override
-  public Set<E> edges() {
+  public @Readonly Set<E> edges() {
     return delegate().edges();
   }
 
@@ -126,12 +127,12 @@ abstract class ForwardingNetwork<N extends @Immutable Object, E extends @Immutab
   }
 
   @Override
-  public Set<E> edgesConnecting(N nodeU, N nodeV) {
+  public @Readonly Set<E> edgesConnecting(N nodeU, N nodeV) {
     return delegate().edgesConnecting(nodeU, nodeV);
   }
 
   @Override
-  public Set<E> edgesConnecting(EndpointPair<N> endpoints) {
+  public @Readonly Set<E> edgesConnecting(EndpointPair<N> endpoints) {
     return delegate().edgesConnecting(endpoints);
   }
 

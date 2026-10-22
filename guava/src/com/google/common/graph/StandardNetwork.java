@@ -151,7 +151,7 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
   }
 
   @Override
-  public Set<E> edgesConnecting(N nodeU, N nodeV) {
+  public @Readonly Set<E> edgesConnecting(N nodeU, N nodeV) {
     NetworkConnections<N, E> connectionsU = checkedConnections(nodeU);
     if (!allowsSelfLoops && nodeU == nodeV) { // just an optimization, only check reference equality
       return ImmutableSet.of();

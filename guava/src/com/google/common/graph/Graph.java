@@ -115,7 +115,7 @@ public interface Graph<N> extends BaseGraph<N> {
 
   /** Returns all nodes in this graph, in the order specified by {@link #nodeOrder()}. */
   @Override
-  Set<N> nodes();
+  @Readonly Set<N> nodes();
 
   /** Returns all edges in this graph. */
   @Override

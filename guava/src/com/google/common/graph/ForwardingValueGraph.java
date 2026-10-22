@@ -19,6 +19,7 @@ package com.google.common.graph;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
@@ -36,7 +37,7 @@ abstract class ForwardingValueGraph<N extends @Immutable Object, V> extends Abst
   abstract @ReceiverDependentMutable ValueGraph<N, V> delegate();
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return delegate().nodes();
   }
 

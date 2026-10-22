@@ -115,10 +115,10 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
   //
 
   /** Returns all nodes in this network, in the order specified by {@link #nodeOrder()}. */
-  Set<N> nodes();
+  @Readonly Set<N> nodes();
 
   /** Returns all edges in this network, in the order specified by {@link #edgeOrder()}. */
-  Set<E> edges();
+  @Readonly Set<E> edges();
 
   /**
    * Returns a live view of this network as a {@link Graph}. The resulting {@link Graph} will have
@@ -387,7 +387,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if {@code nodeU} or {@code nodeV} is not an element of this
    *     network
    */
-  Set<E> edgesConnecting(N nodeU, N nodeV);
+  @Readonly Set<E> edgesConnecting(N nodeU, N nodeV);
 
   /**
    * Returns a live view of the set of edges that each directly connect {@code endpoints} (in the
@@ -417,7 +417,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if the endpoints are unordered and the network is directed
    * @since 27.1
    */
-  Set<E> edgesConnecting(EndpointPair<N> endpoints);
+  @Readonly Set<E> edgesConnecting(EndpointPair<N> endpoints);
 
   /**
    * Returns the single edge that directly connects {@code nodeU} to {@code nodeV}, if one is

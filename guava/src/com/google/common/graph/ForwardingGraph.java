@@ -17,6 +17,7 @@
 package com.google.common.graph;
 
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
@@ -33,7 +34,7 @@ abstract class ForwardingGraph<N extends @Immutable Object> extends AbstractGrap
   abstract @ReceiverDependentMutable BaseGraph<N> delegate();
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return delegate().nodes();
   }
 
