@@ -126,11 +126,11 @@ public final class BloomFilter<T extends @Nullable @Readonly Object> implements 
   private final Funnel<? super T> funnel;
 
   /** The strategy we employ to map an element T to {@code numHashFunctions} bit indexes. */
-  private final Strategy strategy;
+  private final @Readonly Strategy strategy;
 
   /** Creates a BloomFilter. */
   private BloomFilter(
-      LockFreeBitArray bits, @IntRange(from = 0, to = 255) int numHashFunctions, Funnel<? super T> funnel, Strategy strategy) {
+      LockFreeBitArray bits, @IntRange(from = 0, to = 255) int numHashFunctions, Funnel<? super T> funnel, @Readonly Strategy strategy) {
     checkArgument(numHashFunctions > 0, "numHashFunctions (%s) must be > 0", numHashFunctions);
     checkArgument(
         numHashFunctions <= 255, "numHashFunctions (%s) must be <= 255", numHashFunctions);
@@ -425,7 +425,7 @@ public final class BloomFilter<T extends @Nullable @Readonly Object> implements 
 
   @VisibleForTesting
   static <T extends @Nullable @Readonly Object> BloomFilter<T> create(
-      Funnel<? super T> funnel, @NonNegative long expectedInsertions, double fpp, Strategy strategy) {
+      Funnel<? super T> funnel, @NonNegative long expectedInsertions, double fpp, @Readonly Strategy strategy) {
     checkNotNull(funnel);
     checkArgument(
         expectedInsertions >= 0, "Expected insertions (%s) must be >= 0", expectedInsertions);
@@ -558,7 +558,7 @@ public final class BloomFilter<T extends @Nullable @Readonly Object> implements 
     final long[] data;
     final @IntRange(from = 0, to = 255) int numHashFunctions;
     final Funnel<? super T> funnel;
-    final Strategy strategy;
+    final @Readonly Strategy strategy;
 
     SerialForm(BloomFilter<T> bf) {
       this.data = LockFreeBitArray.toPlainArray(bf.bits.data);
