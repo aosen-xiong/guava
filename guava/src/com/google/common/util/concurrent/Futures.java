@@ -633,7 +633,7 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
    * @since 20.0
    */
   public static <V extends @Nullable @Readonly Object> FutureCombiner<V> whenAllComplete(
-      Iterable<? extends ListenableFuture<? extends V>> futures) {
+      @Readonly Iterable<? extends ListenableFuture<? extends V>> futures) {
     return new FutureCombiner<V>(false, ImmutableList.copyOf(futures));
   }
 
@@ -658,7 +658,7 @@ public final class Futures extends GwtFuturesCatchingSpecialization {
    * @since 20.0
    */
   public static <V extends @Nullable @Readonly Object> FutureCombiner<V> whenAllSucceed(
-      Iterable<? extends ListenableFuture<? extends V>> futures) {
+      @Readonly Iterable<? extends ListenableFuture<? extends V>> futures) {
     return new FutureCombiner<V>(true, ImmutableList.copyOf(futures));
   }
 

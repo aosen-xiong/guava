@@ -1379,7 +1379,7 @@ public final class ClosingFuture<V extends @Nullable @Readonly Object> {
       return derived;
     }
 
-    private FutureCombiner<@Nullable Object> futureCombiner() {
+    private FutureCombiner<@Nullable @Readonly Object> futureCombiner() {
       return allMustSucceed
           ? Futures.whenAllSucceed(inputFutures())
           : Futures.whenAllComplete(inputFutures());
