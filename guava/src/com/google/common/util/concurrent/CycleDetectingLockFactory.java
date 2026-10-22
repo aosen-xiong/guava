@@ -42,6 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
@@ -604,7 +605,7 @@ public class CycleDetectingLockFactory {
       return lockName;
     }
 
-    void checkAcquiredLocks(Policy policy, List<LockGraphNode> acquiredLocks) {
+    void checkAcquiredLocks(@Readonly Policy policy, List<LockGraphNode> acquiredLocks) {
       for (LockGraphNode acquiredLock : acquiredLocks) {
         checkAcquiredLock(policy, acquiredLock);
       }
@@ -619,7 +620,7 @@ public class CycleDetectingLockFactory {
      * {@code acquiredLock}, or in the {@code disallowedPriorLocks} map, in which case it is not
      * safe.
      */
-    void checkAcquiredLock(Policy policy, LockGraphNode acquiredLock) {
+    void checkAcquiredLock(@Readonly Policy policy, LockGraphNode acquiredLock) {
       // checkAcquiredLock() should never be invoked by a lock that has already
       // been acquired. For unordered locks, aboutToAcquire() ensures this by
       // checking isAcquiredByCurrentThread(). For ordered locks, however, this
