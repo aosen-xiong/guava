@@ -1496,9 +1496,10 @@ public final class Maps {
    * @param entrySet the entries for which to return an unmodifiable view
    * @return an unmodifiable view of the entries
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly Set<@Readonly Entry<K, V>> unmodifiableEntrySet(@Readonly Set<@PolyMutable Entry<K, V>> entrySet) {
-    return new UnmodifiableEntrySet<>(Collections.unmodifiableSet(entrySet));
+    @PolyMutable Set<@Readonly Entry<K, V>> unmodifiableEntrySet(@PolyMutable Set<@PolyMutable Entry<K, V>> entrySet) {
+    return new @PolyMutable UnmodifiableEntrySet<>(Collections.unmodifiableSet(entrySet));
   }
 
   /**

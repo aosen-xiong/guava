@@ -1056,14 +1056,14 @@ public final class Multimaps {
    * @param collection the collection for which to return an unmodifiable view
    * @return an unmodifiable view of the collection
    */
-  private static <V extends @Nullable @Readonly Object> @Readonly Collection<V> unmodifiableValueCollection(
-          @Readonly Collection<V> collection) {
+  private static <V extends @Nullable @Readonly Object> @PolyMutable Collection<V> unmodifiableValueCollection(
+          @PolyMutable Collection<V> collection) {
     if (collection instanceof SortedSet) {
-      return Collections.unmodifiableSortedSet((SortedSet<V>) collection);
+      return Collections.unmodifiableSortedSet((@PolyMutable SortedSet<V>) collection);
     } else if (collection instanceof Set) {
-      return Collections.unmodifiableSet((Set<V>) collection);
+      return Collections.unmodifiableSet((@PolyMutable Set<V>) collection);
     } else if (collection instanceof List) {
-      return Collections.unmodifiableList((List<V>) collection);
+      return Collections.unmodifiableList((@PolyMutable List<V>) collection);
     }
     return Collections.unmodifiableCollection(collection);
   }
@@ -1076,12 +1076,13 @@ public final class Multimaps {
    * @param entries the entries for which to return an unmodifiable view
    * @return an unmodifiable view of the entries
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly Collection<@Readonly Entry<K, V>> unmodifiableEntries(@Readonly Collection<Entry<K, V>> entries) {
+    @PolyMutable Collection<@Readonly Entry<K, V>> unmodifiableEntries(@PolyMutable Collection<@PolyMutable Entry<K, V>> entries) {
     if (entries instanceof Set) {
-      return Maps.unmodifiableEntrySet((Set<@Readonly Entry<K, V>>) entries);
+      return Maps.unmodifiableEntrySet((@PolyMutable Set<@PolyMutable Entry<K, V>>) entries);
     }
-    return new Maps.UnmodifiableEntries<>(Collections.unmodifiableCollection(entries));
+    return new Maps.@PolyMutable UnmodifiableEntries<>(Collections.unmodifiableCollection(entries));
   }
 
   /**
