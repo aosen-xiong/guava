@@ -341,7 +341,8 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   }
 
   @CheckForNull
-  abstract Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
+  abstract @Readonly Object invokeInternal(
+      @CheckForNull @Readonly Object receiver, @Nullable Object[] args)
       throws InvocationTargetException, IllegalAccessException;
 
   abstract Type[] getGenericParameterTypes();
@@ -376,7 +377,8 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
 
     @Override
     @CheckForNull
-    final @Readonly Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
+    final @Readonly Object invokeInternal(
+        @CheckForNull @Readonly Object receiver, @Nullable Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       return method.invoke(receiver, args);
     }
@@ -443,7 +445,8 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
     }
 
     @Override
-    final Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
+    final @Readonly Object invokeInternal(
+        @CheckForNull @Readonly Object receiver, @Nullable Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       try {
         return constructor.newInstance(args);
