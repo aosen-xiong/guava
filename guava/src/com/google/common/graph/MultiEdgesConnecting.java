@@ -43,9 +43,9 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 abstract class MultiEdgesConnecting<E extends @Immutable Object> extends AbstractSet<E> {
 
   private final Map<E, ?> outEdgeToNode;
-  private final Object targetNode;
+  private final @Readonly Object targetNode;
 
-  MultiEdgesConnecting(Map<E, ?> outEdgeToNode, Object targetNode) {
+  MultiEdgesConnecting(Map<E, ?> outEdgeToNode, @Readonly Object targetNode) {
     this.outEdgeToNode = checkNotNull(outEdgeToNode);
     this.targetNode = checkNotNull(targetNode);
   }

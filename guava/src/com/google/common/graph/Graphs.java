@@ -35,6 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.mutability.qual.PolyMutable;
 
@@ -60,7 +61,7 @@ public final class Graphs extends GraphsBridgeMethods {
    *
    * <p>This method will detect any non-empty cycle, including self-loops (a cycle of length 1).
    */
-  public static <N> boolean hasCycle(Graph<N> graph) {
+  public static <N extends @Immutable Object> boolean hasCycle(Graph<N> graph) {
     int numEdges = graph.edges().size();
     if (numEdges == 0) {
       return false; // An edge-free graph is acyclic by definition.
@@ -69,7 +70,7 @@ public final class Graphs extends GraphsBridgeMethods {
       return true; // Optimization for the undirected case: at least one cycle must exist.
     }
 
-    Map<Object, NodeVisitState> visitedNodes =
+    Map<@Immutable Object, NodeVisitState> visitedNodes =
         Maps.newHashMapWithExpectedSize(graph.nodes().size());
     for (N node : graph.nodes()) {
       if (subgraphHasCycle(graph, visitedNodes, node, null)) {
@@ -86,7 +87,7 @@ public final class Graphs extends GraphsBridgeMethods {
    *
    * <p>This method will detect any non-empty cycle, including self-loops (a cycle of length 1).
    */
-  public static boolean hasCycle(Network<?, ?> network) {
+  public static boolean hasCycle(Network<@Immutable ?, @Immutable ?> network) {
     // In a directed graph, parallel edges cannot introduce a cycle in an acyclic graph.
     // However, in an undirected graph, any parallel edge induces a cycle in the graph.
     if (!network.isDirected()
@@ -102,9 +103,9 @@ public final class Graphs extends GraphsBridgeMethods {
    * already visited (following only outgoing edges and without reusing edges), we know there's a
    * cycle in the graph.
    */
-  private static <N> boolean subgraphHasCycle(
+  private static <N extends @Immutable Object> boolean subgraphHasCycle(
       Graph<N> graph,
-      Map<Object, NodeVisitState> visitedNodes,
+      Map<@Immutable Object, NodeVisitState> visitedNodes,
       N node,
       @CheckForNull N previousNode) {
     NodeVisitState state = visitedNodes.get(node);
@@ -133,7 +134,7 @@ public final class Graphs extends GraphsBridgeMethods {
    * from B to A).
    */
   private static boolean canTraverseWithoutReusingEdge(
-      Graph<?> graph, Object nextNode, @CheckForNull Object previousNode) {
+      Graph<?> graph, @Readonly Object nextNode, @CheckForNull @Readonly Object previousNode) {
     if (graph.isDirected() || !Objects.equal(previousNode, nextNode)) {
       return true;
     }

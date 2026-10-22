@@ -43,9 +43,9 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 final class EdgesConnecting<E extends @Immutable Object> extends AbstractSet<E> {
 
   private final Map<?, E> nodeToOutEdge;
-  private final Object targetNode;
+  private final @Readonly Object targetNode;
 
-  EdgesConnecting(Map<?, E> nodeToEdgeMap, Object targetNode) {
+  EdgesConnecting(Map<?, E> nodeToEdgeMap, @Readonly Object targetNode) {
     this.nodeToOutEdge = checkNotNull(nodeToEdgeMap);
     this.targetNode = checkNotNull(targetNode);
   }
