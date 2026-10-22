@@ -41,7 +41,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends FilteredEntryMultimap<K, V> implements FilteredSetMultimap<K, V> {
 
-  FilteredEntrySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super Entry<K, V>> predicate) {
+  FilteredEntrySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super @Readonly Entry<K, V>> predicate) {
     super(unfiltered, predicate);
   }
 
@@ -51,8 +51,8 @@ final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V ex
   }
 
   @Override
-  public @PolyMutable Set<V> get(@PolyMutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key) {
-    return (@PolyMutable Set<V>) super.get(key);
+  public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this, @ParametricNullness K key) {
+    return (@ReceiverDependentMutable Set<V>) super.get(key);
   }
 
   @Override
@@ -66,7 +66,7 @@ final class FilteredEntrySetMultimap<K extends @Nullable @Immutable Object, V ex
   }
 
   @Override
-  @PolyMutable Set<@PolyMutable Entry<K, V>> createEntries(@PolyMutable FilteredEntrySetMultimap<K, V> this) {
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable FilteredEntrySetMultimap<K, V> this) {
     return Sets.filter(unfiltered().entries(), entryPredicate());
   }
 

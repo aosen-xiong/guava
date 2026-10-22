@@ -62,7 +62,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public @Readonly Predicate<? super Entry<K, V>> entryPredicate() {
+  public @Readonly Predicate<? super @Readonly Entry<K, V>> entryPredicate() {
     return Maps.keyPredicateOnEntries(keyPredicate);
   }
 
@@ -198,9 +198,9 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
 
   @WeakOuter
   @ReceiverDependentMutable
-  class Entries extends ForwardingCollection<Entry<K, V>> {
+  class Entries extends ForwardingCollection<@ReceiverDependentMutable Entry<K, V>> {
     @Override
-    protected Collection<Entry<K, V>> delegate() {
+    protected @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> delegate(@ReceiverDependentMutable FilteredKeyMultimap<K, V>.@ReceiverDependentMutable Entries this) {
       return Collections2.filter(unfiltered.entries(), entryPredicate());
     }
 

@@ -55,9 +55,9 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractMultimap<K, V> implements FilteredMultimap<K, V> {
   final Multimap<K, V> unfiltered;
-  final @Readonly Predicate<? super Entry<K, V>> predicate;
+  final @Readonly Predicate<? super @Readonly Entry<K, V>> predicate;
 
-  FilteredEntryMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
+  FilteredEntryMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, @Readonly Predicate<? super @Readonly Entry<K, V>> predicate) {
     this.unfiltered = checkNotNull(unfiltered);
     this.predicate = checkNotNull(predicate);
   }
@@ -68,7 +68,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
   }
 
   @Override
-  public @Readonly Predicate<? super Entry<K, V>> entryPredicate() {
+  public @Readonly Predicate<? super @Readonly Entry<K, V>> entryPredicate() {
     return predicate;
   }
 
@@ -155,7 +155,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
     return asMap().keySet();
   }
 
-  boolean removeEntriesIf(@Mutable FilteredEntryMultimap<K, V> this, Predicate<? super Entry<K, Collection<V>>> predicate) {
+  boolean removeEntriesIf(@Mutable FilteredEntryMultimap<K, V> this, Predicate<? super @Readonly Entry<K, Collection<V>>> predicate) {
     Iterator<Entry<K, Collection<V>>> entryIterator = unfiltered.asMap().entrySet().iterator();
     boolean changed = false;
     while (entryIterator.hasNext()) {
@@ -268,14 +268,14 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
-        public Iterator<Entry<K, Collection<V>>> iterator() {
-          return new @Mutable AbstractIterator<Entry<K, Collection<V>>>() {
+        public @Mutable Iterator<@Immutable Entry<K, Collection<V>>> iterator() {
+          return new @Mutable AbstractIterator<@Immutable Entry<K, Collection<V>>>() {
             final Iterator<Entry<K, Collection<V>>> backingIterator =
                 unfiltered.asMap().entrySet().iterator();
 
             @Override
             @CheckForNull
-            protected Entry<K, Collection<V>> computeNext() {
+            protected @Immutable Entry<K, Collection<V>> computeNext() {
               while (backingIterator.hasNext()) {
                 Entry<K, Collection<V>> entry = backingIterator.next();
                 K key = entry.getKey();
@@ -414,9 +414,9 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
           return FilteredEntryMultimap.this.keySet().size();
         }
 
-        private boolean removeEntriesIf(Predicate<? super Multiset.Entry<K>> predicate) {
+        private boolean removeEntriesIf(Predicate<? super Multiset.@Readonly Entry<K>> predicate) {
           return FilteredEntryMultimap.this.removeEntriesIf(
-              (Map.Entry<K, Collection<V>> entry) ->
+              (Map.@Readonly Entry<K, Collection<V>> entry) ->
                   predicate.apply(
                       Multisets.immutableEntry(entry.getKey(), entry.getValue().size())));
         }

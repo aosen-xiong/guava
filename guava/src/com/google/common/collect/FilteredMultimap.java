@@ -39,5 +39,5 @@ interface FilteredMultimap<K extends @Nullable @Immutable Object, V extends @Nul
     extends Multimap<K, V> {
   @ReceiverDependentMutable Multimap<K, V> unfiltered(@ReceiverDependentMutable FilteredMultimap<K, V> this);
 
-  @Readonly Predicate<? super Entry<K, V>> entryPredicate(@Readonly FilteredMultimap<K, V> this);
+  @Readonly Predicate<? super @Readonly Entry<K, V>> entryPredicate(@Readonly FilteredMultimap<K, V> this);
 }

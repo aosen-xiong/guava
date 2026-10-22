@@ -74,7 +74,7 @@ final class FilteredKeySetMultimap<K extends @Nullable @Immutable Object, V exte
   }
 
   @ReceiverDependentMutable
-  class EntrySet extends Entries implements Set<Entry<K, V>> {
+  class EntrySet extends Entries implements Set<@ReceiverDependentMutable Entry<K, V>> {
     @Override
     public int hashCode(@UnknownSignedness EntrySet this) {
       return Sets.hashCodeImpl(this);
