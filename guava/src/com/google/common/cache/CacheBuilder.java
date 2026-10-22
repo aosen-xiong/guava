@@ -318,7 +318,7 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    * <p>Note that while this return type is {@code CacheBuilder<Object, Object>}, type parameters on
    * the {@link #build} methods allow you to create a cache of any key and value type desired.
    */
-  public static CacheBuilder<@Immutable Object, Object> newBuilder() {
+  public static CacheBuilder<@Immutable Object, @Readonly Object> newBuilder() {
     return new CacheBuilder<>();
   }
 
@@ -328,7 +328,7 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    * @since 12.0
    */
   @GwtIncompatible // To be supported
-  public static CacheBuilder<@Immutable Object, Object> from(CacheBuilderSpec spec) {
+  public static CacheBuilder<@Immutable Object, @Readonly Object> from(CacheBuilderSpec spec) {
     return spec.toCacheBuilder().lenientParsing();
   }
 
@@ -340,7 +340,7 @@ public final class CacheBuilder<K extends @Immutable Object, V> {
    * @since 12.0
    */
   @GwtIncompatible // To be supported
-  public static CacheBuilder<@Immutable Object, Object> from(String spec) {
+  public static CacheBuilder<@Immutable Object, @Readonly Object> from(String spec) {
     return from(CacheBuilderSpec.parse(spec));
   }
 

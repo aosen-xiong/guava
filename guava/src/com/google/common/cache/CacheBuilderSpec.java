@@ -170,8 +170,8 @@ public final class CacheBuilderSpec {
   }
 
   /** Returns a CacheBuilder configured according to this instance's specification. */
-  CacheBuilder<@Immutable Object, Object> toCacheBuilder() {
-    CacheBuilder<@Immutable Object, Object> builder = CacheBuilder.newBuilder();
+  CacheBuilder<@Immutable Object, @Readonly Object> toCacheBuilder() {
+    CacheBuilder<@Immutable Object, @Readonly Object> builder = CacheBuilder.newBuilder();
     if (initialCapacity != null) {
       builder.initialCapacity(initialCapacity);
     }
