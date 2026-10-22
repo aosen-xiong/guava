@@ -38,6 +38,7 @@ import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import sun.misc.Unsafe;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to {@code byte} primitives that interpret values as
@@ -279,7 +280,7 @@ public final class UnsignedBytes {
    *
    * @since 2.0
    */
-  public static Comparator<@Unsigned byte[]> lexicographicalComparator() {
+  public static @Immutable Comparator<@Unsigned byte[]> lexicographicalComparator() {
     return LexicographicalComparatorHolder.BEST_COMPARATOR;
   }
 
@@ -300,7 +301,7 @@ public final class UnsignedBytes {
     static final String UNSAFE_COMPARATOR_NAME =
         LexicographicalComparatorHolder.class.getName() + "$UnsafeComparator";
 
-    static final Comparator<@Unsigned byte[]> BEST_COMPARATOR = getBestComparator();
+    static final @Immutable Comparator<@Unsigned byte[]> BEST_COMPARATOR = getBestComparator();
 
     @VisibleForTesting
     enum UnsafeComparator implements Comparator<@Unsigned byte[]> {
@@ -455,16 +456,17 @@ public final class UnsignedBytes {
      * caught by catch(Throwable).
      */
     @SuppressWarnings("upperbound:array.access.unsafe.high") // exception caught
-    static Comparator<@Unsigned byte[]> getBestComparator() {
+    static @Immutable Comparator<@Unsigned byte[]> getBestComparator() {
       try {
         Class<?> theClass = Class.forName(UNSAFE_COMPARATOR_NAME);
 
         // requireNonNull is safe because the class is an enum.
-        Object[] constants = requireNonNull(theClass.getEnumConstants());
+        @Readonly Object[] constants = requireNonNull(theClass.getEnumConstants());
 
         // yes, UnsafeComparator does implement Comparator<byte[]>
         @SuppressWarnings("unchecked")
-        Comparator<@Unsigned byte[]> comparator = (Comparator<@Unsigned byte[]>) constants[0];
+        @Immutable Comparator<@Unsigned byte[]> comparator =
+            (@Immutable Comparator<@Unsigned byte[]>) constants[0];
         return comparator;
       } catch (Throwable t) { // ensure we really catch *everything*
         return lexicographicalComparatorJavaImpl();
