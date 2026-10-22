@@ -570,7 +570,7 @@ public final class Longs {
     return LexicographicalComparator.INSTANCE;
   }
 
-  private enum LexicographicalComparator implements Comparator<long @Readonly []> {
+  private enum LexicographicalComparator implements Comparator<long[]> {
     INSTANCE;
 
     @Override
