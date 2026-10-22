@@ -1193,7 +1193,7 @@ public final class Multisets {
 
   @Immutable
   private static final class DecreasingCount implements Comparator<Entry<?>> {
-    static final Comparator<Entry<?>> INSTANCE = new DecreasingCount();
+    static final @Immutable Comparator<Entry<?>> INSTANCE = new DecreasingCount();
 
     @Override
     public int compare(Entry<?> entry1, Entry<?> entry2) {

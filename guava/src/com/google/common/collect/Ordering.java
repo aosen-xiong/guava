@@ -170,7 +170,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
   @SuppressWarnings({"unchecked", "rawtypes"})
   // TODO(kevinb): right way to explain this??
   // plus https://github.com/google/guava/issues/989
-  public static <C extends @Immutable Comparable> Ordering<C> natural() {
+  public static <C extends @Readonly Comparable> Ordering<C> natural() {
     return (Ordering<C>) NaturalOrdering.INSTANCE;
   }
 
@@ -292,7 +292,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
    * @since 13.0
    */
   @GwtCompatible(serializable = true)
-  public static Ordering<@Nullable Object> allEqual() {
+  public static Ordering<@Nullable @Readonly Object> allEqual() {
     return AllEqualOrdering.INSTANCE;
   }
 

@@ -36,8 +36,8 @@ final class NaturalOrdering extends Ordering<@Readonly Comparable<?>> implements
   static final NaturalOrdering INSTANCE = new NaturalOrdering();
 
   // TODO: b/287198172 - Consider eagerly initializing these (but think about serialization).
-  @LazyInit @CheckForNull private transient Ordering<@Nullable Comparable<?>> nullsFirst;
-  @LazyInit @CheckForNull private transient Ordering<@Nullable Comparable<?>> nullsLast;
+  @LazyInit @CheckForNull private transient Ordering<@Nullable @Readonly Comparable<?>> nullsFirst;
+  @LazyInit @CheckForNull private transient Ordering<@Nullable @Readonly Comparable<?>> nullsLast;
 
   @Pure
   @Override
