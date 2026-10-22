@@ -1742,7 +1742,7 @@ public final class Maps {
     @LazyInit @RetainedWith @CheckForNull @Assignable BiMap<V, K> inverse;
     @LazyInit @CheckForNull transient @Assignable Set<V> values;
 
-    UnmodifiableBiMap(@ReceiverDependentMutable BiMap<? extends K, ? extends V> delegate, @CheckForNull @Readonly BiMap<V, K> inverse) {
+    UnmodifiableBiMap(@ReceiverDependentMutable BiMap<? extends K, ? extends V> delegate, @CheckForNull @ReceiverDependentMutable BiMap<V, K> inverse) {
       unmodifiableMap = Collections.unmodifiableMap(delegate);
       this.delegate = delegate;
       this.inverse = inverse;
@@ -2196,13 +2196,13 @@ public final class Maps {
 
   /** Views an entry transformer as a function from {@code Entry} to values. */
   static <K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
-      Function<Entry<K, V1>, V2> asEntryToValueFunction(
-          final EntryTransformer<? super K, ? super V1, V2> transformer) {
+      Function<@Readonly Entry<K, V1>, V2> asEntryToValueFunction(
+          final @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
     checkNotNull(transformer);
-    return new Function<Entry<K, V1>, V2>() {
+    return new Function<@Readonly Entry<K, V1>, V2>() {
       @Override
       @ParametricNullness
-      public V2 apply(Entry<K, V1> entry) {
+      public V2 apply(@Readonly Entry<K, V1> entry) {
         return transformer.transformEntry(entry.getKey(), entry.getValue());
       }
     };
@@ -2232,7 +2232,7 @@ public final class Maps {
   /** Views an entry transformer as a function from entries to entries. */
   static <K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       Function<@Readonly Entry<K, V1>, Entry<K, V2>> asEntryToEntryFunction(
-          final EntryTransformer<? super K, ? super V1, V2> transformer) {
+          final @Readonly EntryTransformer<? super K, ? super V1, V2> transformer) {
     checkNotNull(transformer);
     return new Function<@Readonly Entry<K, V1>, Entry<K, V2>>() {
       @Override
@@ -2513,13 +2513,13 @@ public final class Maps {
     }
 
     @CheckForNull
-    private @PolyMutable Entry<K, V2> transformEntry(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this, @CheckForNull @Readonly Entry<K, V1> entry) {
+    private @Readonly Entry<K, V2> transformEntry(@Readonly TransformedEntriesNavigableMap<K, V1, V2> this, @CheckForNull @Readonly Entry<K, V1> entry) {
       return (entry == null) ? null : Maps.transformEntry(transformer, entry);
     }
 
     @Override
     protected @PolyMutable NavigableMap<K, V1> fromMap(@PolyMutable TransformedEntriesNavigableMap<K, V1, V2> this) {
-      return (NavigableMap<K, V1>) super.fromMap();
+      return (@PolyMutable NavigableMap<K, V1>) super.fromMap();
     }
   }
 
@@ -3062,7 +3062,7 @@ public final class Maps {
       final @Readonly Predicate<? super Entry<K, V>> predicate;
 
       FilteredMapValues(
-              @ReceiverDependentMutable Map<K, V> filteredMap, Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
+              @ReceiverDependentMutable Map<K, V> filteredMap, @ReceiverDependentMutable Map<K, V> unfiltered, @Readonly Predicate<? super Entry<K, V>> predicate) {
           super(filteredMap);
           this.unfiltered = unfiltered;
           this.predicate = predicate;
@@ -3110,7 +3110,7 @@ public final class Maps {
       }
 
       @Override
-      public @PolyNull @PolySigned @PolyMutable Object[] toArray(FilteredMapValues<@PolyNull @PolySigned @PolyMutable K, V>this) {
+      public @PolyNull @PolySigned @PolyMutable Object[] toArray(FilteredMapValues<K, @PolyNull @PolySigned @PolyMutable V> this) {
           // creating an ArrayList so filtering happens once
           return Lists.newArrayList(iterator()).toArray();
       }
@@ -3177,14 +3177,15 @@ public final class Maps {
     @WeakOuter
     @ReceiverDependentMutable
     @CFComment("PICO: outer receiver dependency")
-    private class EntrySet extends ForwardingSet<@Readonly Entry<K, V>> {
+    private class EntrySet extends ForwardingSet<@ReceiverDependentMutable Entry<K, V>> {
       @Override
-      protected @ReceiverDependentMutable Set<@Readonly Entry<K, V>> delegate(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
+      protected @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> delegate(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
         return filteredEntrySet;
       }
 
       @Override
-      public @Mutable Iterator<@Readonly Entry<K, V>> iterator(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
+      @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible"}) // the entries write through to the map and have its mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+      public @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> iterator(@ReceiverDependentMutable FilteredEntryMap<K, V>.@ReceiverDependentMutable EntrySet this) {
         return new @Mutable TransformedIterator<Entry<K, V>, Entry<K, V>>(filteredEntrySet.iterator()) {
           @Override
           Entry<K, V> transform(final Entry<K, V> entry) {
@@ -3421,7 +3422,7 @@ public final class Maps {
 
     @Override
     public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable FilteredEntryNavigableMap<K, V> this) {
-      return new Maps.NavigableKeySet<K, V>(this) {
+      return new Maps.@ReceiverDependentMutable NavigableKeySet<K, V>(this) {
         @Override
         public boolean removeAll(@Readonly Collection<?> collection) {
           return FilteredEntryMap.removeAllKeys(unfiltered, entryPredicate, collection);
@@ -3923,11 +3924,11 @@ public final class Maps {
      */
     abstract @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntrySet(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this);
 
-    @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
+    @LazyInit @CheckForNull private transient @Assignable Set<@ReceiverDependentMutable Entry<K, V>> entrySet;
 
     @Override
     public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable ViewCachingAbstractMap<K, V> this) {
-      Set<Entry<K, V>> result = entrySet;
+      Set<@ReceiverDependentMutable Entry<K, V>> result = entrySet;
       return (result == null) ? entrySet = createEntrySet() : result;
     }
 
@@ -4626,7 +4627,7 @@ public final class Maps {
       return forward();
     }
 
-    @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
+    @LazyInit @CheckForNull private transient @Assignable Set<@ReceiverDependentMutable Entry<K, V>> entrySet;
 
     @Override
     public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable DescendingMap<K, V> this) {

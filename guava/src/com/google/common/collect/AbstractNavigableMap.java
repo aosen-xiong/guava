@@ -65,13 +65,13 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   @CheckForNull
-  public Entry<K, V> pollFirstEntry(@Mutable AbstractNavigableMap<K,V> this) {
+  public @Readonly Entry<K, V> pollFirstEntry(@Mutable AbstractNavigableMap<K,V> this) {
     return Iterators.pollNext(entryIterator());
   }
 
   @Override
   @CheckForNull
-  public Entry<K, V> pollLastEntry(@Mutable AbstractNavigableMap<K,V> this) {
+  public @Readonly Entry<K, V> pollLastEntry(@Mutable AbstractNavigableMap<K,V> this) {
     return Iterators.pollNext(descendingEntryIterator());
   }
 
