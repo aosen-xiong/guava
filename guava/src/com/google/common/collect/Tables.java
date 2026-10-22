@@ -613,7 +613,7 @@ public final class Tables {
 
     @Override
     public @ReceiverDependentMutable Map<C, @Readonly Map<R, V>> columnMap() {
-      Function<Map<R, V>, Map<R, V>> wrapper = unmodifiableWrapper();
+      Function<@Readonly Map<R, V>, @Readonly Map<R, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.columnMap(), wrapper));
     }
 
@@ -648,8 +648,8 @@ public final class Tables {
     }
 
     @Override
-    public @ReceiverDependentMutable Map<R, Map<C, V>> rowMap() {
-      Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
+    public @ReceiverDependentMutable Map<R, @Readonly Map<C, V>> rowMap() {
+      Function<@Readonly Map<C, V>, @Readonly Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.rowMap(), wrapper));
     }
 
@@ -700,8 +700,8 @@ public final class Tables {
     }
 
     @Override
-    public @ReceiverDependentMutable SortedMap<R, Map<C, V>> rowMap() {
-      Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
+    public @ReceiverDependentMutable SortedMap<R, @Readonly Map<C, V>> rowMap() {
+      Function<@Readonly Map<C, V>, @Readonly Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableSortedMap(Maps.transformValues(delegate().rowMap(), wrapper));
     }
 
@@ -715,14 +715,14 @@ public final class Tables {
 
   @SuppressWarnings("unchecked")
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Function<Map<K, V>, Map<K, V>> unmodifiableWrapper() {
+      Function<@Readonly Map<K, V>, @Readonly Map<K, V>> unmodifiableWrapper() {
     return (Function) UNMODIFIABLE_WRAPPER;
   }
 
-  private static final Function<? extends Map<?, ?>, ? extends Map<?, ?>> UNMODIFIABLE_WRAPPER =
-      new Function<Map<@Immutable Object, @Readonly Object>, Map<@Immutable Object, @Readonly Object>>() {
+  private static final Function<? extends @Readonly Map<?, ?>, ? extends @Readonly Map<?, ?>> UNMODIFIABLE_WRAPPER =
+      new Function<@Readonly Map<@Immutable Object, @Readonly Object>, @Readonly Map<@Immutable Object, @Readonly Object>>() {
         @Override
-        public @Readonly Map<@Immutable Object, @Readonly Object> apply(Map<@Immutable Object, @Readonly Object> input) {
+        public @Readonly Map<@Immutable Object, @Readonly Object> apply(@Readonly Map<@Immutable Object, @Readonly Object> input) {
           return Collections.unmodifiableMap(input);
         }
       };
