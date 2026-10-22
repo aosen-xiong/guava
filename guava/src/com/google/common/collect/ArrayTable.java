@@ -154,7 +154,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   // TODO(jlevy): Add getters returning rowKeyToIndex and columnKeyToIndex?
   private final ImmutableMap<R, Integer> rowKeyToIndex;
   private final ImmutableMap<C, Integer> columnKeyToIndex;
-  private final @Nullable V[][] array;
+  private final @Nullable V @ReceiverDependentMutable [] @ReceiverDependentMutable [] array;
 
   @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
   private ArrayTable(Iterable<? extends R> rowKeys, Iterable<? extends C> columnKeys) {
@@ -173,7 +173,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
     @SuppressWarnings("unchecked")
     @Nullable
-    V[][] tmpArray = (@Nullable V[][]) new Object[rowList.size()][columnList.size()];
+    V @ReceiverDependentMutable [] @ReceiverDependentMutable [] tmpArray = (@Nullable V @ReceiverDependentMutable [] @ReceiverDependentMutable []) new Object @ReceiverDependentMutable [rowList.size()] @ReceiverDependentMutable [columnList.size()];
     array = tmpArray;
     // Necessary because in GWT the arrays are initialized with "undefined" instead of null.
     eraseAll();
@@ -185,6 +185,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     putAll(table);
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // PICO constructor fix: the constructor stores the fresh @Mutable array it fills into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do
   private ArrayTable(ArrayTable<R, C, V> table) {
     rowList = table.rowList;
     columnList = table.columnList;
@@ -685,7 +686,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
 
   @WeakOuter
   @ReceiverDependentMutable
-  private class ColumnMap extends ArrayMap<C, Map<R, @Nullable V>> {
+  private class ColumnMap extends ArrayMap<C, @ReceiverDependentMutable Map<R, @Nullable V>> {
     private ColumnMap() {
       super(columnKeyToIndex);
     }
@@ -696,18 +697,18 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Map<R, @Nullable V> getValue(int index) {
+    @ReceiverDependentMutable Map<R, @Nullable V> getValue(int index) {
       return new @ReceiverDependentMutable Column(index);
     }
 
     @Override
-    Map<R, @Nullable V> setValue(int index, Map<R, @Nullable V> newValue) {
+    @ReceiverDependentMutable Map<R, @Nullable V> setValue(int index, @ReceiverDependentMutable Map<R, @Nullable V> newValue) {
       throw new UnsupportedOperationException();
     }
 
     @Override
     @CheckForNull
-    public Map<R, @Nullable V> put(C key, Map<R, @Nullable V> value) {
+    public @ReceiverDependentMutable Map<R, @Nullable V> put(C key, @ReceiverDependentMutable Map<R, @Nullable V> value) {
       throw new UnsupportedOperationException();
     }
   }
@@ -777,12 +778,12 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
   @Override
   public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, @Nullable V>> rowMap(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     RowMap map = rowMap;
-    return (map == null) ? rowMap = new RowMap() : map;
+    return (map == null) ? rowMap = new @ReceiverDependentMutable RowMap() : map;
   }
 
   @WeakOuter
   @ReceiverDependentMutable
-  private class RowMap extends ArrayMap<R, Map<C, @Nullable V>> {
+  private class RowMap extends ArrayMap<R, @ReceiverDependentMutable Map<C, @Nullable V>> {
     private RowMap() {
       super(rowKeyToIndex);
     }
@@ -793,18 +794,18 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    Map<C, @Nullable V> getValue(int index) {
+    @ReceiverDependentMutable Map<C, @Nullable V> getValue(int index) {
       return new @ReceiverDependentMutable Row(index);
     }
 
     @Override
-    Map<C, @Nullable V> setValue(int index, Map<C, @Nullable V> newValue) {
+    @ReceiverDependentMutable Map<C, @Nullable V> setValue(int index, @ReceiverDependentMutable Map<C, @Nullable V> newValue) {
       throw new UnsupportedOperationException();
     }
 
     @Override
     @CheckForNull
-    public Map<C, @Nullable V> put(R key, Map<C, @Nullable V> value) {
+    public @ReceiverDependentMutable Map<C, @Nullable V> put(R key, @ReceiverDependentMutable Map<C, @Nullable V> value) {
       throw new UnsupportedOperationException();
     }
   }
