@@ -100,8 +100,8 @@ final class Platform {
    * about arrays for now, as they're a mess. (We previously discussed this in the review of
    * ObjectArrays, which is the main caller of this method.)
    */
-  static <T extends @Nullable @Readonly Object> T[] newArray(T[] reference, int length) {
-    T[] empty = reference.length == 0 ? reference : Arrays.copyOf(reference, 0);
+  static <T extends @Nullable @Readonly Object> T[] newArray(T @Readonly [] reference, int length) {
+    T @Readonly [] empty = reference.length == 0 ? reference : Arrays.copyOf(reference, 0);
     return Arrays.copyOf(empty, length);
   }
 

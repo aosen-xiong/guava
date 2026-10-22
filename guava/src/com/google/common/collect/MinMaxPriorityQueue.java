@@ -928,7 +928,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
   public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly MinMaxPriorityQueue<@PolyNull @PolySigned @PolyMutable E> this) {
-    Object[] copyTo = new Object[size];
+    @PolyMutable Object[] copyTo = new @PolyMutable Object[size];
     System.arraycopy(queue, 0, copyTo, 0, size);
     return copyTo;
   }

@@ -271,7 +271,7 @@ final class Synchronized {
 
     @Override
     @SuppressWarnings("nullness:return")
-    public @PolyNull @PolySigned @Readonly Object[] toArray() {
+    public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly SynchronizedCollection<@PolyNull @PolySigned @PolyMutable E> this) {
       synchronized (mutex) {
         return delegate().toArray();
       }

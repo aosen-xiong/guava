@@ -217,12 +217,12 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly ... array) {
+  static @PolySigned @Readonly Object @Readonly [] checkElementsNotNull(@PolySigned @Readonly Object @Readonly ... array) {
     return checkElementsNotNull(array, array.length);
   }
 
   @CanIgnoreReturnValue
-  static @PolySigned Object[] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
+  static @PolySigned @Readonly Object @Readonly [] checkElementsNotNull(@PolySigned @Readonly Object @Readonly [] array, int length) {
     for (int i = 0; i < length; i++) {
       checkElementNotNull(array[i], i);
     }
