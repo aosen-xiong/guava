@@ -448,7 +448,7 @@ public final class Lists {
    *     a provided list is null
    * @since 19.0
    */
-  public static <B> List<@Readonly List<B>> cartesianProduct(List<? extends @Readonly List<? extends B>> lists) {
+  public static <B> @Immutable List<@Immutable List<B>> cartesianProduct(@Readonly List<? extends @Readonly List<? extends B>> lists) {
     return CartesianList.create(lists);
   }
 
@@ -507,7 +507,7 @@ public final class Lists {
    * @since 19.0
    */
   @SafeVarargs
-  public static <B> List<@Readonly List<B>> cartesianProduct(List<? extends B>... lists) {
+  public static <B> @Immutable List<@Immutable List<B>> cartesianProduct(List<? extends B>... lists) {
     return cartesianProduct(Arrays.asList(lists));
   }
 

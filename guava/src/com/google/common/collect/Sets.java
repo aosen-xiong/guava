@@ -1367,7 +1367,7 @@ public final class Sets {
    * @throws IllegalArgumentException if the cartesian product size exceeds the {@code int} range
    * @since 2.0
    */
-  public static <B> Set<List<B>> cartesianProduct(List<? extends Set<? extends B>> sets) {
+  public static <B> @Immutable Set<@Immutable List<B>> cartesianProduct(@Readonly List<? extends @Readonly Set<? extends B>> sets) {
     return CartesianSet.create(sets);
   }
 
@@ -1425,17 +1425,17 @@ public final class Sets {
    * @since 2.0
    */
   @SafeVarargs
-  public static <B> Set<List<B>> cartesianProduct(Set<? extends B>... sets) {
+  public static <B> @Immutable Set<@Immutable List<B>> cartesianProduct(Set<? extends B>... sets) {
     return cartesianProduct(Arrays.asList(sets));
   }
 
-  @ReceiverDependentMutable
-  private static final class CartesianSet<E> extends ForwardingCollection<List<E>>
-      implements Set<List<E>> {
+  @Immutable
+  private static final class CartesianSet<E> extends ForwardingCollection<@Immutable List<E>>
+      implements Set<@Immutable List<E>> {
     private final transient ImmutableList<ImmutableSet<E>> axes;
     private final transient CartesianList<E> delegate;
 
-    static <E> Set<List<E>> create(List<? extends Set<? extends E>> sets) {
+    static <E> @Immutable Set<@Immutable List<E>> create(@Readonly List<? extends @Readonly Set<? extends E>> sets) {
       ImmutableList.Builder<ImmutableSet<E>> axesBuilder = new ImmutableList.Builder<>(sets.size());
       for (Set<? extends E> set : sets) {
         ImmutableSet<E> copy = ImmutableSet.copyOf(set);
@@ -1445,8 +1445,8 @@ public final class Sets {
         axesBuilder.add(copy);
       }
       final ImmutableList<ImmutableSet<E>> axes = axesBuilder.build();
-      ImmutableList<List<E>> listAxes =
-          new ImmutableList<List<E>>() {
+      ImmutableList<@Immutable List<E>> listAxes =
+          new ImmutableList<@Immutable List<E>>() {
             @Override
             public @NonNegative int size() {
               return axes.size();
@@ -1480,7 +1480,7 @@ public final class Sets {
     }
 
     @Override
-    protected @ReceiverDependentMutable Collection<List<E>> delegate(@ReceiverDependentMutable CartesianSet<E> this) {
+    protected @Immutable Collection<@Immutable List<E>> delegate() {
       return delegate;
     }
 

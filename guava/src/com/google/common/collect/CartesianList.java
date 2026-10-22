@@ -40,12 +40,12 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class CartesianList<E> extends AbstractList<List<E>> implements RandomAccess {
+final class CartesianList<E> extends AbstractList<@Immutable List<E>> implements RandomAccess {
 
-  private final transient ImmutableList<List<E>> axes;
+  private final transient ImmutableList<@Immutable List<E>> axes;
   private final transient int[] axesSizeProduct;
 
-  static <E> @Immutable List<List<E>> create(@Readonly List<? extends List<? extends E>> lists) {
+  static <E> @Immutable List<@Immutable List<E>> create(@Readonly List<? extends @Readonly List<? extends E>> lists) {
     ImmutableList.Builder<@Immutable List<E>> axesBuilder = new ImmutableList.Builder<>(lists.size());
     for (List<? extends E> list : lists) {
       List<E> copy = ImmutableList.copyOf(list);
