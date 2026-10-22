@@ -524,7 +524,7 @@ public final class Longs {
    * @return an array containing the values of {@code array}, with guaranteed minimum length {@code
    *     minLength}
    */
-  public static long[] ensureCapacity(long @Readonly [] array, @NonNegative int minLength, @NonNegative int padding) {
+  public static long[] ensureCapacity(long[] array, @NonNegative int minLength, @NonNegative int padding) {
     checkArgument(minLength >= 0, "Invalid minLength: %s", minLength);
     checkArgument(padding >= 0, "Invalid padding: %s", padding);
     return (array.length < minLength) ? Arrays.copyOf(array, minLength + padding) : array;
