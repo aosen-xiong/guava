@@ -3463,6 +3463,7 @@ public final class Maps {
     }
 
     @Override
+    @SuppressWarnings({"mutability:mutability.lost.type.argument", "mutability:mutability.lost.parameter"}) // lost-in-type-argument: @MutabilityLost inside the unfiltered map's Set<@MutabilityLost Entry>, reached through the @Readonly receiver. The call only reads it
     public boolean isEmpty(@Readonly FilteredEntryNavigableMap<K, V> this) {
       return !Iterables.any(unfiltered.entrySet(), entryPredicate);
     }
@@ -4059,11 +4060,13 @@ public final class Maps {
   }
 
   /** An admittedly inefficient implementation of {@link Map#containsKey}. */
+  @SuppressWarnings("mutability:mutability.lost.parameter") // lost-in-type-argument: @MutabilityLost inside Iterator<@MutabilityLost Entry>, reached through the @Readonly map. The call only reads it
   static boolean containsKeyImpl(@Readonly Map<?, ?> map, @CheckForNull @UnknownSignedness @Readonly Object key) {
     return Iterators.contains(keyIterator(map.entrySet().iterator()), key);
   }
 
   /** An implementation of {@link Map#containsValue}. */
+  @SuppressWarnings("mutability:mutability.lost.parameter") // lost-in-type-argument: @MutabilityLost inside Iterator<@MutabilityLost Entry>, reached through the @Readonly map. The call only reads it
   static boolean containsValueImpl(@Readonly Map<?, ?> map, @CheckForNull @UnknownSignedness @Readonly Object value) {
     return Iterators.contains(valueIterator(map.entrySet().iterator()), value);
   }

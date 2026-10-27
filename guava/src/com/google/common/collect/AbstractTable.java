@@ -81,6 +81,7 @@ abstract class AbstractTable<
   }
 
   @Override
+  @SuppressWarnings({"mutability:mutability.lost.type.argument", "mutability:mutability.lost.parameter"}) // lost-in-type-argument: @MutabilityLost inside Map<R, @MutabilityLost Map<C, V>>, reached through the @Readonly receiver. The call only reads it
   public boolean contains(@Readonly AbstractTable<R, C, V> this, @CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     Map<C, V> row = Maps.safeGet(rowMap(), rowKey);
     return row != null && Maps.safeContainsKey(row, columnKey);
@@ -88,6 +89,7 @@ abstract class AbstractTable<
 
   @Override
   @CheckForNull
+  @SuppressWarnings({"mutability:mutability.lost.type.argument", "mutability:mutability.lost.parameter"}) // lost-in-type-argument: @MutabilityLost inside Map<R, @MutabilityLost Map<C, V>>, reached through the @Readonly receiver. The call only reads it
   public V get(@Readonly AbstractTable<R, C, V> this, @CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     Map<C, V> row = Maps.safeGet(rowMap(), rowKey);
     return (row == null) ? null : Maps.safeGet(row, columnKey);

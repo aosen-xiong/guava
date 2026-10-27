@@ -352,6 +352,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
   @SideEffectFree
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // EntrySet's element type is @Mutable Entry, as its toArray states, where the contract states receiver-dependent entries. Its BiMapEntry wrappers write through to the bimap
   public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<Entry<K, V>> result = entrySet;
     return (result == null) ? entrySet = new @ReceiverDependentMutable EntrySet() : result;
@@ -387,6 +388,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // lost-in-type-argument: @MutabilityLost inside Iterator<@MutabilityLost Entry>, reached through the @Readonly receiver. The iterator wraps each entry in a BiMapEntry, typed @Mutable as EntrySet's element type is
   Iterator<Entry<K, V>> entrySetIterator(@Readonly AbstractBiMap<K, V> this) {
     final Iterator<Entry<K, V>> iterator = delegate.entrySet().iterator();
     return new @Mutable Iterator<Entry<K, V>>() {

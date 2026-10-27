@@ -1836,6 +1836,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings({"mutability:mutability.lost.type.argument", "mutability:mutability.lost.parameter"}) // lost-in-type-argument: @MutabilityLost inside Map<K, @MutabilityLost Collection<V>>, reached through the @Readonly receiver. The call only reads it
     public @NonNegative int count(@Readonly Keys<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object element) {
       Collection<V> values = Maps.safeGet(multimap.asMap(), element);
       return (values == null) ? 0 : values.size();
