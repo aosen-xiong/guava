@@ -198,6 +198,7 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
   }
 
   @Override
+  @SuppressWarnings("mutability:method.invocation.invalid") // documented exception: in an access-ordered map "merely querying the map with get is a structural modification" (LinkedHashMap's class Javadoc, whose access order this map reproduces), so get relinks the entries and changes the observable iteration order through a read-only receiver
   void accessEntry(int index) {
     if (accessOrder) {
       // delete from previous position...
