@@ -409,7 +409,7 @@ public final class Iterators {
    * should use an explicit {@code break} or be certain that you will eventually remove all the
    * elements.
    */
-  public static <T extends @Nullable @Readonly Object> Iterator<T> cycle(Iterable<T> iterable) {
+  public static <T extends @Nullable @Readonly Object> Iterator<T> cycle(@Readonly Iterable<T> iterable) {
     checkNotNull(iterable);
     return new @Mutable Iterator<T>() {
       Iterator<T> iterator = emptyModifiableIterator();
@@ -1316,7 +1316,7 @@ public final class Iterators {
    * @since 11.0
    */
   public static <T extends @Nullable @Readonly Object> UnmodifiableIterator<T> mergeSorted(
-      Iterable<? extends Iterator<? extends T>> iterators, @Readonly Comparator<? super T> comparator) {
+      @Readonly Iterable<? extends Iterator<? extends T>> iterators, @Readonly Comparator<? super T> comparator) {
     checkNotNull(iterators, "iterators");
     checkNotNull(comparator, "comparator");
 
@@ -1339,7 +1339,7 @@ public final class Iterators {
 
     @SuppressWarnings("mutability:type.arguments.not.inferred") // PriorityQueue sorts @Immutable elements, but this heap holds @Mutable cursors ordered by their current heads. next() removes a cursor before advancing it and re-inserts it, so the heap order is never broken
     public MergingIterator(
-        Iterable<? extends Iterator<? extends T>> iterators, @Readonly Comparator<? super T> itemComparator) {
+        @Readonly Iterable<? extends Iterator<? extends T>> iterators, @Readonly Comparator<? super T> itemComparator) {
       // A comparator that's used by the heap, allowing the heap
       // to be sorted based on the top of each iterator.
       Comparator<PeekingIterator<T>> heapComparator =

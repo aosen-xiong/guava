@@ -382,7 +382,7 @@ public final class Iterables {
    * <p><b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
    * Stream.generate(() -> iterable).flatMap(Streams::stream)}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> cycle(final Iterable<T> iterable) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> cycle(final @Readonly Iterable<T> iterable) {
     checkNotNull(iterable);
     return new FluentIterable<T>() {
       @Override
@@ -424,7 +424,7 @@ public final class Iterables {
    * and use {@code Stream.generate(() -> collection).flatMap(Collection::stream)}.
    */
   @SafeVarargs
-  public static <T extends @Nullable @Readonly Object> Iterable<T> cycle(T... elements) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> cycle(T... elements) {
     return cycle(Lists.newArrayList(elements));
   }
 
@@ -456,8 +456,8 @@ public final class Iterables {
    * <p><b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
    * Streams.concat(a, b, c)}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> concat(
-      Iterable<? extends T> a, Iterable<? extends T> b, Iterable<? extends T> c) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> concat(
+      @Readonly Iterable<? extends T> a, @Readonly Iterable<? extends T> b, @Readonly Iterable<? extends T> c) {
     return FluentIterable.concat(a, b, c);
   }
 
@@ -473,11 +473,11 @@ public final class Iterables {
    * <p><b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
    * Streams.concat(a, b, c, d)}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> concat(
-      Iterable<? extends T> a,
-      Iterable<? extends T> b,
-      Iterable<? extends T> c,
-      Iterable<? extends T> d) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> concat(
+      @Readonly Iterable<? extends T> a,
+      @Readonly Iterable<? extends T> b,
+      @Readonly Iterable<? extends T> c,
+      @Readonly Iterable<? extends T> d) {
     return FluentIterable.concat(a, b, c, d);
   }
 
@@ -495,7 +495,7 @@ public final class Iterables {
    * @throws NullPointerException if any of the provided iterables is null
    */
   @SafeVarargs
-  public static <T extends @Nullable @Readonly Object> Iterable<T> concat(Iterable<? extends T>... inputs) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> concat(@Readonly Iterable<? extends T>... inputs) {
     return FluentIterable.concat(inputs);
   }
 
@@ -511,8 +511,8 @@ public final class Iterables {
    * <p><b>Java 8+ users:</b> The {@code Stream} equivalent of this method is {@code
    * streamOfStreams.flatMap(s -> s)}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> concat(
-      Iterable<? extends Iterable<? extends T>> inputs) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> concat(
+      @Readonly Iterable<? extends @Readonly Iterable<? extends T>> inputs) {
     return FluentIterable.concat(inputs);
   }
 
@@ -583,8 +583,8 @@ public final class Iterables {
    *
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#filter}.
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> filter(
-      final Iterable<T> unfiltered, final @Readonly Predicate<? super T> retainIfTrue) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> filter(
+      final @Readonly Iterable<T> unfiltered, final @Readonly Predicate<? super T> retainIfTrue) {
     checkNotNull(unfiltered);
     checkNotNull(retainIfTrue);
     return new FluentIterable<T>() {
@@ -627,7 +627,7 @@ public final class Iterables {
    */
   @SuppressWarnings("unchecked")
   @GwtIncompatible // Class.isInstance
-  public static <T> Iterable<T> filter(final Iterable<?> unfiltered, final Class<T> desiredType) {
+  public static <T> @Readonly Iterable<T> filter(final @Readonly Iterable<?> unfiltered, final Class<T> desiredType) {
     checkNotNull(unfiltered);
     checkNotNull(desiredType);
     return (Iterable<T>) filter(unfiltered, Predicates.instanceOf(desiredType));
@@ -745,8 +745,8 @@ public final class Iterables {
    *
    * <p><b>{@code Stream} equivalent:</b> {@link Stream#map}
    */
-  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> Iterable<T> transform(
-      final Iterable<F> fromIterable, final @Readonly Function<? super F, ? extends T> function) {
+  public static <F extends @Nullable @Readonly Object, T extends @Nullable @Readonly Object> @Readonly Iterable<T> transform(
+      final @Readonly Iterable<F> fromIterable, final @Readonly Function<? super F, ? extends T> function) {
     checkNotNull(fromIterable);
     checkNotNull(function);
     return new FluentIterable<T>() {
@@ -913,8 +913,8 @@ public final class Iterables {
    *
    * @since 3.0
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> skip(
-      final Iterable<T> iterable, final int numberToSkip) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> skip(
+      final @Readonly Iterable<T> iterable, final int numberToSkip) {
     checkNotNull(iterable);
     checkArgument(numberToSkip >= 0, "number to skip cannot be negative");
 
@@ -985,8 +985,8 @@ public final class Iterables {
    * @throws IllegalArgumentException if {@code limitSize} is negative
    * @since 3.0
    */
-  public static <T extends @Nullable @Readonly Object> Iterable<T> limit(
-      final Iterable<T> iterable, final int limitSize) {
+  public static <T extends @Nullable @Readonly Object> @Readonly Iterable<T> limit(
+      final @Readonly Iterable<T> iterable, final int limitSize) {
     checkNotNull(iterable);
     checkArgument(limitSize >= 0, "limit is negative");
     return new FluentIterable<T>() {

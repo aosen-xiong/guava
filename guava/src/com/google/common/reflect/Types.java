@@ -530,7 +530,7 @@ final class Types {
     return types.toArray(new Type[0]);
   }
 
-  private static Iterable<Type> filterUpperBounds(Iterable<Type> bounds) {
+  private static @Readonly Iterable<Type> filterUpperBounds(@Readonly Iterable<Type> bounds) {
     return Iterables.filter(bounds, Predicates.not(Predicates.<Type>equalTo(Object.class)));
   }
 

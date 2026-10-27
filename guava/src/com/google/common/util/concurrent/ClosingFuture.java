@@ -463,7 +463,7 @@ public final class ClosingFuture<V extends @Nullable @Readonly Object> {
    * @throws IllegalStateException if a {@code ClosingFuture} has already been derived from any of
    *     the {@code futures}, or if any has already been {@linkplain #finishToFuture() finished}
    */
-  public static Combiner whenAllComplete(Iterable<? extends ClosingFuture<?>> futures) {
+  public static Combiner whenAllComplete(@Readonly Iterable<? extends ClosingFuture<?>> futures) {
     return new Combiner(false, futures);
   }
 
@@ -485,7 +485,7 @@ public final class ClosingFuture<V extends @Nullable @Readonly Object> {
    * @throws IllegalStateException if a {@code ClosingFuture} has already been derived from any of
    *     the {@code futures}, or if any has already been {@linkplain #finishToFuture() finished}
    */
-  public static Combiner whenAllSucceed(Iterable<? extends ClosingFuture<?>> futures) {
+  public static Combiner whenAllSucceed(@Readonly Iterable<? extends ClosingFuture<?>> futures) {
     return new Combiner(true, futures);
   }
 

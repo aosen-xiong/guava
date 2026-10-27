@@ -328,7 +328,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     Iterator<C> merged =
         Iterators.mergeSorted(
             Iterables.transform(
-                backingMap.values(), (Map<C, V> input) -> input.keySet().iterator()),
+                backingMap.values(), (@Readonly Map<C, V> input) -> input.keySet().iterator()),
             comparator);
 
     return new @Mutable AbstractIterator<C>() {

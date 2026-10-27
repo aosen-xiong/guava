@@ -67,7 +67,7 @@ public final class Streams {
    * Returns a sequential {@link Stream} of the contents of {@code iterable}, delegating to {@link
    * Collection#stream} if possible.
    */
-  public static <T extends @Nullable @Readonly Object> Stream<T> stream(Iterable<T> iterable) {
+  public static <T extends @Nullable @Readonly Object> Stream<T> stream(@Readonly Iterable<T> iterable) {
     return (iterable instanceof Collection)
         ? ((Collection<T>) iterable).stream()
         : StreamSupport.stream(iterable.spliterator(), false);
