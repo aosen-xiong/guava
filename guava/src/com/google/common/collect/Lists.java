@@ -719,6 +719,7 @@ public final class Lists {
     }
 
     @Override
+    @SuppressWarnings("mutability:return.type.incompatible") // Lists.partition's public element type is List<T>, so each sublist is returned @Mutable and writes through to the backing list, as List.subList does. Through get's @Readonly receiver the checker reads it @MutabilityLost
     public List<T> get(@Readonly Partition<T> this, int index) {
       checkElementIndex(index, size());
       int start = index * size;
