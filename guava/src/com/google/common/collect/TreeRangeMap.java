@@ -605,6 +605,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       return new @ReceiverDependentMutable SubRangeMapAsMap() {
 
         @Override
+        @SuppressWarnings("mutability:override.receiver.invalid") // an anonymous class cannot declare its receiver, so this query cannot state the @Readonly receiver that SubRangeMapAsMap.entryIterator declares
         Iterator<@Immutable Entry<Range<K>, V>> entryIterator() {
           if (subRange.isEmpty()) {
             return Iterators.emptyIterator();

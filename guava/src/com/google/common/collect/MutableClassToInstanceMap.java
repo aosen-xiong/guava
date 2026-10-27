@@ -142,6 +142,7 @@ public final class MutableClassToInstanceMap<B extends @Nullable @Readonly Objec
 
       @CFComment("cannot write type qualifiers on receiver that is an anonymous class")
       @Override
+      @SuppressWarnings("mutability:override.return.invalid") // an anonymous class cannot declare its receiver, so this query cannot state toArray's poly contract, which needs a receiver. It returns the checked entries @Mutable, as its element type is
       public @PolyNull @PolySigned Object[] toArray() {
         /*
          * standardToArray returns `@Nullable Object[]` rather than `Object[]` but only because it
