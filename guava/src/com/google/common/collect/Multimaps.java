@@ -717,6 +717,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly value collections where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
     public @ReceiverDependentMutable Map<K, @Readonly Collection<V>> asMap() {
       Map<K, @Readonly Collection<V>> result = map;
       if (result == null) {
@@ -731,6 +732,7 @@ public final class Multimaps {
 
     @SideEffectFree
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly entries where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
     public @ReceiverDependentMutable Collection<@Readonly Entry<K, V>> entries() {
       Collection<@Readonly Entry<K, V>> result = entries;
       if (result == null) {
@@ -866,6 +868,7 @@ public final class Multimaps {
 
     @SideEffectFree
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly entries where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
     public @ReceiverDependentMutable Set<Map.@Readonly Entry<K, V>> entries() {
       return Maps.unmodifiableEntrySet(delegate().entries());
     }

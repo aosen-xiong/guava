@@ -612,6 +612,7 @@ public final class Tables {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly column maps where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
     public @ReceiverDependentMutable Map<C, @Readonly Map<R, V>> columnMap() {
       Function<@Readonly Map<R, V>, @Readonly Map<R, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.columnMap(), wrapper));
@@ -648,6 +649,7 @@ public final class Tables {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly row maps where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
     public @ReceiverDependentMutable Map<R, @Readonly Map<C, V>> rowMap() {
       Function<@Readonly Map<C, V>, @Readonly Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.rowMap(), wrapper));
@@ -700,6 +702,7 @@ public final class Tables {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly row maps where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
     public @ReceiverDependentMutable SortedMap<R, @Readonly Map<C, V>> rowMap() {
       Function<@Readonly Map<C, V>, @Readonly Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableSortedMap(Maps.transformValues(delegate().rowMap(), wrapper));
