@@ -2352,6 +2352,7 @@ final class Synchronized {
     }
 
     @Override
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the row function keeps each row's mutability: it maps a row to a synchronized view of that same row. The anonymous Function cannot be typed relative to the table, so its rows are typed @Mutable
     public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return map(
@@ -2368,6 +2369,7 @@ final class Synchronized {
     }
 
     @Override
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the column function keeps each column's mutability: it maps a column to a synchronized view of that same column. The anonymous Function cannot be typed relative to the table, so its columns are typed @Mutable
     public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> columnMap(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return map(

@@ -533,6 +533,7 @@ public final class Tables {
     }
 
     @Override
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the row function keeps each row's mutability: it maps a row to a transformed view of that same row. The anonymous Function cannot be typed relative to the table, so its rows are typed @Mutable
     public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V2>> rowMap(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       Function<Map<C, V1>, Map<C, V2>> rowFunction =
           new Function<Map<C, V1>, Map<C, V2>>() {
@@ -545,6 +546,7 @@ public final class Tables {
     }
 
     @Override
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the column function keeps each column's mutability: it maps a column to a transformed view of that same column. The anonymous Function cannot be typed relative to the table, so its columns are typed @Mutable
     public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V2>> columnMap(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       Function<Map<R, V1>, Map<R, V2>> columnFunction =
           new Function<Map<R, V1>, Map<R, V2>>() {
