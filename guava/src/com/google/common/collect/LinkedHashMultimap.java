@@ -234,21 +234,25 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and an entry returns its links @Immutable where the interface states @Mutable
     public @Immutable ValueSetLink<K, V> getPredecessorInValueSet() {
       return requireNonNull(predecessorInValueSet); // see the comment on the class fields
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and an entry returns its links @Immutable where the interface states @Mutable
     public @Immutable ValueSetLink<K, V> getSuccessorInValueSet() {
       return requireNonNull(successorInValueSet); // see the comment on the class fields
     }
 
     @Override
+    @SuppressWarnings("mutability:override.param.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and an entry takes its links @Immutable where the interface states @Readonly
     public void setPredecessorInValueSet(@Immutable ValueSetLink<K, V> entry) {
       predecessorInValueSet = entry;
     }
 
     @Override
+    @SuppressWarnings("mutability:override.param.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and an entry takes its links @Immutable where the interface states @Readonly
     public void setSuccessorInValueSet(@Immutable ValueSetLink<K, V> entry) {
       successorInValueSet = entry;
     }
@@ -410,21 +414,25 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
     @CFComment("PICO: this is okay only if the field can not be directly accessed")
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and a header returns its links receiver-dependent where the interface states @Mutable
     public @ReceiverDependentMutable ValueSetLink<K, V> getPredecessorInValueSet(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return lastEntry;
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and a header returns its links receiver-dependent where the interface states @Mutable
     public @ReceiverDependentMutable ValueSetLink<K, V> getSuccessorInValueSet(@ReceiverDependentMutable LinkedHashMultimap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return firstEntry;
     }
 
     @Override
+    @SuppressWarnings("mutability:override.param.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and a header takes its links @Mutable where the interface states @Readonly
     public void setPredecessorInValueSet(@Mutable ValueSet this, @Mutable ValueSetLink<K, V> entry) {
       lastEntry = entry;
     }
 
     @Override
+    @SuppressWarnings("mutability:override.param.invalid") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and a header takes its links @Mutable where the interface states @Readonly
     public void setSuccessorInValueSet(@Mutable ValueSet this, @Mutable ValueSetLink<K, V> entry) {
       firstEntry = entry;
     }
@@ -501,6 +509,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
     }
 
     @Override
+    @SuppressWarnings("mutability:argument.type.incompatible") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and linking a new @Immutable entry passes it where succeedsInValueSet takes a @Mutable link
     public boolean add(@Mutable ValueSet this, @ParametricNullness V value) {
       int smearedHash = Hashing.smearedHash(value);
       int bucket = smearedHash & mask();
@@ -543,6 +552,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
 
     @CanIgnoreReturnValue
     @Override
+    @SuppressWarnings("mutability:argument.type.incompatible") // documented exception: a ValueEntry's abstract state is its final key and value, and its @Assignable links belong to the multimap's value-set and insertion-order chains. Those chains link @Immutable ValueEntry nodes and receiver-dependent ValueSet headers, so ValueSetLink cannot state one qualifier for every node, and unlinking an @Immutable entry passes it where the link setters take a @Mutable link
     public boolean remove(@Mutable ValueSet this, @CheckForNull @UnknownSignedness @Readonly Object o) {
       int smearedHash = Hashing.smearedHash(o);
       int bucket = smearedHash & mask();
