@@ -315,6 +315,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       this.upperBoundWindow = upperBoundWindow;
     }
 
+    @SuppressWarnings("mutability:return.type.incompatible") // a sub-map outside the window is empty, rejects every put and has nothing to remove, so the shared @Immutable instance stands in for a view of any mutability
     private @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable RangesByUpperBound<C> this, Range<Cut<C>> window) {
       if (window.isConnected(upperBoundWindow)) {
         return new @ReceiverDependentMutable RangesByUpperBound<>(rangesByLowerBound, window.intersection(upperBoundWindow));
@@ -488,6 +489,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       this.complementLowerBoundWindow = window;
     }
 
+    @SuppressWarnings("mutability:return.type.incompatible") // a sub-map outside the window is empty, rejects every put and has nothing to remove, so the shared @Immutable instance stands in for a view of any mutability
     private @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable ComplementRangesByLowerBound<C> this, Range<Cut<C>> subWindow) {
       if (!complementLowerBoundWindow.isConnected(subWindow)) {
         return ImmutableSortedMap.of();
@@ -728,6 +730,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
       this.rangesByUpperBound = new @ReceiverDependentMutable RangesByUpperBound<>(rangesByLowerBound);
     }
 
+    @SuppressWarnings("mutability:return.type.incompatible") // a sub-map outside the window is empty, rejects every put and has nothing to remove, so the shared @Immutable instance stands in for a view of any mutability
     private @ReceiverDependentMutable NavigableMap<Cut<C>, Range<C>> subMap(@ReceiverDependentMutable SubRangeSetRangesByLowerBound<C> this, Range<Cut<C>> window) {
       if (!window.isConnected(lowerBoundWindow)) {
         return ImmutableSortedMap.of();
@@ -950,6 +953,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
+    @SuppressWarnings("mutability:return.type.incompatible") // a sub-range set of a disconnected view is empty, rejects every add (each range falls outside the restriction) and has nothing to remove, so the shared @Immutable instance stands in for a view of any mutability
     public @ReceiverDependentMutable RangeSet<C> subRangeSet(@ReceiverDependentMutable TreeRangeSet<C>.@ReceiverDependentMutable SubRangeSet this, Range<C> view) {
       if (view.encloses(restriction)) {
         return this;

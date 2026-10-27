@@ -210,7 +210,8 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
-    public Set<@KeyFor({"this"}) K> keySet() {
+    @SuppressWarnings("mutability:override.return.invalid") // an ArrayTable's row and column keys are fixed when it is created, so the key set is the shared @Immutable ImmutableSet whatever the map's mutability, where the contract states a receiver-dependent view
+    public @Immutable Set<@KeyFor({"this"}) K> keySet() {
       return keyIndex.keySet();
     }
 
@@ -629,6 +630,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return the corresponding map from row keys to values
    */
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // the column of an absent column key is empty and can never gain an entry, since an ArrayTable's keys are fixed when it is created, so the shared @Immutable empty map stands in for a view of any mutability
   public @ReceiverDependentMutable Map<R, @Nullable V> column(@ReceiverDependentMutable ArrayTable<R, C, V> this, C columnKey) {
     checkNotNull(columnKey);
     Integer columnIndex = columnKeyToIndex.get(columnKey);
@@ -673,6 +675,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return immutable set of column keys
    */
   @Override
+  @SuppressWarnings("mutability:override.return.invalid") // an ArrayTable's row and column keys are fixed when it is created, so the column key set is the shared @Immutable ImmutableSet whatever the table's mutability, where the contract states a receiver-dependent view
   public ImmutableSet<C> columnKeySet() {
     return columnKeyToIndex.keySet();
   }
@@ -726,6 +729,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return the corresponding map from column keys to values
    */
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // the row of an absent row key is empty and can never gain an entry, since an ArrayTable's keys are fixed when it is created, so the shared @Immutable empty map stands in for a view of any mutability
   public @ReceiverDependentMutable Map<C, @Nullable V> row(@ReceiverDependentMutable ArrayTable<R, C, V> this, R rowKey) {
     checkNotNull(rowKey);
     Integer rowIndex = rowKeyToIndex.get(rowKey);
@@ -770,6 +774,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return immutable set of row keys
    */
   @Override
+  @SuppressWarnings("mutability:override.return.invalid") // an ArrayTable's row and column keys are fixed when it is created, so the row key set is the shared @Immutable ImmutableSet whatever the table's mutability, where the contract states a receiver-dependent view
   public ImmutableSet<R> rowKeySet() {
     return rowKeyToIndex.keySet();
   }

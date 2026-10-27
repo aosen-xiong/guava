@@ -140,6 +140,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
+    @SuppressWarnings("mutability:return.type.incompatible") // the add-rejecting set for a key outside the predicate is always empty, rejects every add and has nothing to remove, so the shared @Immutable empty set stands in for a delegate of any mutability
     protected @ReceiverDependentMutable Set<V> delegate() {
       return Collections.emptySet();
     }
@@ -181,6 +182,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
+    @SuppressWarnings("mutability:return.type.incompatible") // the add-rejecting list for a key outside the predicate is always empty, rejects every add and has nothing to remove, so the shared @Immutable empty list stands in for a delegate of any mutability
     protected @ReceiverDependentMutable List<V> delegate() {
       return Collections.emptyList();
     }
