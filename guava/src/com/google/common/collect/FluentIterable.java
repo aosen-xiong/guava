@@ -685,7 +685,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @throws NullPointerException if any element is null
    * @since 19.0
    */
-  @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
+  @SuppressWarnings({"nullness", "mutability:type.argument.type.incompatible", "mutability:type.arguments.not.inferred"}) // nullness: unsafe, but we can't do much about it now. Mutability: ImmutableMultiset bounds its elements @Immutable, but FluentIterable's E is only @Readonly-bounded. The caller asks for the immutable collection, which hashes the elements, as ImmutableSet does with its unbounded E
   public final ImmutableMultiset<@NonNull E> toMultiset() {
     return ImmutableMultiset.copyOf((Iterable<@NonNull E>) getDelegate());
   }
@@ -706,7 +706,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *     valueFunction} produces {@code null} for any key
    * @since 14.0
    */
-  @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
+  @SuppressWarnings({"nullness", "mutability:type.argument.type.incompatible", "mutability:type.arguments.not.inferred"}) // nullness: unsafe, but we can't do much about it now. Mutability: ImmutableMap bounds its keys @Immutable, but FluentIterable's E is only @Readonly-bounded. The caller asks for the immutable collection, which hashes the elements, as ImmutableSet does with its unbounded E
   public final <V> ImmutableMap<@NonNull E, V> toMap(Function<? super E, V> valueFunction) {
     return Maps.toMap((Iterable<@NonNull E>) getDelegate(), valueFunction);
   }
@@ -729,7 +729,7 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    *     keyFunction} produces {@code null} for any key
    * @since 14.0
    */
-  @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
+  @SuppressWarnings({"nullness", "mutability:type.argument.type.incompatible", "mutability:type.arguments.not.inferred"}) // nullness: unsafe, but we can't do much about it now. Mutability: ImmutableListMultimap bounds its values @Immutable, but FluentIterable's E is only @Readonly-bounded. The caller asks for the immutable collection, which hashes the elements, as ImmutableSet does with its unbounded E
   public final <K extends @Immutable Object> ImmutableListMultimap<K, @NonNull E> index(Function<? super E, K> keyFunction) {
     return Multimaps.index((Iterable<@NonNull E>) getDelegate(), keyFunction);
   }
