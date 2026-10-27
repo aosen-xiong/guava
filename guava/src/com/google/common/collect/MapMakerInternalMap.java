@@ -178,7 +178,7 @@ class MapMakerInternalMap<
   /**
    * Creates a new, empty map with the specified strategy, initial capacity and concurrency level.
    */
-  @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:illegal.array.write"}) // PICO constructor fix: the constructor stores the fresh @Mutable array it fills into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do
+  @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:illegal.array.write", "mutability:method.invocation.invalid"}) // PICO constructor fix: the constructor stores the fresh @Mutable array it fills into its receiver-dependent field, and calls its own createSegment to fill it, while the object is being initialized, as jdk#4's collection constructors do
   private MapMakerInternalMap(MapMaker builder, @ReceiverDependentMutable InternalEntryHelper<K, V, E, S> entryHelper) {
     concurrencyLevel = Math.min(builder.getConcurrencyLevel(), MAX_SEGMENTS);
 
@@ -1176,7 +1176,7 @@ class MapMakerInternalMap<
     return segments[(hash >>> segmentShift) & segmentMask];
   }
 
-  Segment<K, V, E, S> createSegment(int initialCapacity) {
+  Segment<K, V, E, S> createSegment(@Mutable MapMakerInternalMap<K, V, E, S> this, int initialCapacity) {
     return entryHelper.newSegment(this, initialCapacity);
   }
 
@@ -1237,7 +1237,7 @@ class MapMakerInternalMap<
      * comments.
      */
 
-    @Weak final MapMakerInternalMap<K, V, E, S> map;
+    @Weak final @Mutable MapMakerInternalMap<K, V, E, S> map;
 
     /**
      * The number of live elements in this segment's region. This does not include unset elements
