@@ -641,6 +641,7 @@ class CompactHashSet<E extends @Nullable @Immutable Object> extends AbstractSet<
   }
 
   @Override
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the copy holds this set's elements, of the receiver's @PolyMutable E, but the backing array is typed @Readonly Object[], and the empty array holds no elements
   public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactHashSet<@PolyNull @PolySigned E> this) {
     if (needsAllocArrays()) {
       return new Object[0];

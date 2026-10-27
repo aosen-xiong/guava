@@ -330,7 +330,8 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
 
     @CFComment("signedness: is same as signedness of V, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned Object[] toArray(ValueSet this) {
+    @SuppressWarnings("mutability:override.return.invalid") // V extends @Immutable Object, so every value is @Immutable. That is the precise return, which an override of a @PolyMutable return cannot state
+    public @PolyNull @PolySigned @Immutable Object[] toArray(ValueSet this) {
       return standardToArray();
     }
 
@@ -464,9 +465,9 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
      * be used with collections that may contain null. This collection never contains nulls, so we
      * can treat it as a plain `Object[]`.
      */
-    @SuppressWarnings("nullness")
     @CFComment("signedeness: is same as V, which this method does not know")
     @Override
+    @SuppressWarnings({"nullness", "mutability:override.return.invalid"}) // the set's element type is @Mutable Entry, so the precise return is @Mutable Object[], which an override of a @PolyMutable return cannot state
     public @PolyNull @PolySigned Object[] toArray() {
       return standardToArray();
     }

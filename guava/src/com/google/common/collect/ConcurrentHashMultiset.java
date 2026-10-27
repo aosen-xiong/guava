@@ -181,7 +181,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    */
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly ConcurrentHashMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
+  @SuppressWarnings("mutability:override.return.invalid") // E extends @Immutable Object, so every element is @Immutable. That is the precise return, which an override of a @PolyMutable return cannot state
+  public @PolyNull @PolySigned @Immutable Object[] toArray(@Readonly ConcurrentHashMultiset<@PolyNull @PolySigned E> this) {
     return snapshot().toArray();
   }
 
@@ -593,6 +594,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
 
     @CFComment("signedness: is same as E, which this method doesn't know")
     @Override
+    @SuppressWarnings({"mutability:override.return.invalid", "mutability:method.invocation.invalid"}) // the entries are @Readonly snapshots, so the precise return is @Readonly Object[], which an override of a @PolyMutable return cannot state. toArray's poly does not bind to the snapshot list's @Readonly type argument
     public @PolyNull @PolySigned @Readonly Object[] toArray() {
       return snapshot().toArray();
     }

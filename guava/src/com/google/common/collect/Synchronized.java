@@ -1062,7 +1062,8 @@ final class Synchronized {
     // See Collections.CheckedMap.CheckedEntrySet for details on attacks.
 
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    @SuppressWarnings("mutability:override.return.invalid") // the entries are receiver-dependent, which a fixed return cannot relate to the receiver, so this override returns them @Readonly. An override of a @PolyMutable return cannot state a fixed qualifier
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       synchronized (mutex) {
         /*
          * toArrayImpl returns `@Nullable Object[]` rather than `Object[]` but only because it can
@@ -1567,7 +1568,7 @@ final class Synchronized {
 
   // See Collections.CheckedMap.CheckedEntrySet for details on attacks.
   //Suppressed due to annotations on toArray
-  @SuppressWarnings("nullness")
+  @SuppressWarnings({"nullness", "mutability:method.invocation.invalid", "mutability:return.type.incompatible"}) // the values are this collection's, of the receiver's @PolyMutable V, but toArray's poly does not bind through the superclass's Collection<V> type argument
   @Override
   public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly SynchronizedAsMapValues<@PolyNull @PolySigned @PolyMutable V> this) { return super.toArray(); }
 

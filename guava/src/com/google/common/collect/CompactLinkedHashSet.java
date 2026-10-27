@@ -243,6 +243,7 @@ class CompactLinkedHashSet<E extends @Nullable @Immutable Object> extends Compac
   }
 
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // the copy holds this set's elements, of the receiver's @PolyMutable E, but ObjectArrays.toArrayImpl takes a Collection<?> and types the copy @Readonly Object[]
   public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactLinkedHashSet<@PolyNull @PolySigned E> this) {
     return ObjectArrays.toArrayImpl(this);
   }

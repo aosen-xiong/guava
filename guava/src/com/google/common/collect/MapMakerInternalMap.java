@@ -2834,6 +2834,7 @@ class MapMakerInternalMap<
 
     @CFComment("qualifers depend on V, which this method doesn't know")
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // the elements are only @Readonly-bounded, so the precise return is @Readonly Object[], which an override of a @PolyMutable return cannot state
     public @PolyNull @PolySigned @Readonly Object[] toArray() {
       return toArrayList(this).toArray();
     }

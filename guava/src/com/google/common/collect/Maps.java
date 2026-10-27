@@ -1570,7 +1570,8 @@ public final class Maps {
     @CFComment({"signedness: is not applicable to `Entry` objects, which are the elements of the array",
             "nullness: the receiver is a collection of non-null `Entry` objects"})
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    @SuppressWarnings("mutability:override.return.invalid") // the entries are unmodifiable, @Readonly, so the precise return is @Readonly Object[], which an override of a @PolyMutable return cannot state
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       /*
        * standardToArray returns `@Nullable Object[]` rather than `Object[]` but because it can
        * be used with collections that may contain null. This collection never contains nulls, so we
@@ -3269,6 +3270,7 @@ public final class Maps {
       }
 
       @Override
+      @SuppressWarnings("mutability:override.return.invalid") // K extends @Immutable Object, so every key is @Immutable. That is the precise return, which an override of a @PolyMutable return cannot state
       public @PolyNull @PolySigned @Immutable Object[] toArray() {
         // creating an ArrayList so filtering happens once
         return Lists.newArrayList(iterator()).toArray();

@@ -723,6 +723,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // K extends @Immutable Object, so every key is @Immutable, but the copy is a fresh Object[] whose components are typed @Mutable, so this override returns the keys @Readonly. An override of a @PolyMutable return cannot state a fixed qualifier
     public @Nullable @Readonly Object[] toArray() {
       if (needsAllocArrays()) {
         return new Object[0];
@@ -1050,6 +1051,7 @@ class CompactHashMap<K extends @Nullable @Immutable Object, V extends @Nullable 
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // the elements are only @Readonly-bounded, so the precise return is @Readonly Object[], which an override of a @PolyMutable return cannot state
     public @PolyNull @PolySigned @Readonly Object[] toArray() {
       if (needsAllocArrays()) {
         return new Object[0];

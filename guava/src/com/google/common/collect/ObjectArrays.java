@@ -182,7 +182,7 @@ public final class ObjectArrays {
    *
    * @param c the collection for which to return an array of elements
    */
-  static @Nullable Object[] toArrayImpl(@Readonly Collection<?> c) {
+  static @Nullable @Readonly Object[] toArrayImpl(@Readonly Collection<?> c) {
     return fillArray(c, new Object[c.size()]);
   }
 
@@ -201,7 +201,7 @@ public final class ObjectArrays {
   }
 
   @CanIgnoreReturnValue
-  private static @Nullable Object [] fillArray(@Readonly Iterable<?> elements, @Nullable Object [] array) {
+  private static @Nullable @Readonly Object [] fillArray(@Readonly Iterable<?> elements, @Nullable @Readonly Object [] array) {
     int i = 0;
     for (Object element : elements) {
       array[i++] = element;

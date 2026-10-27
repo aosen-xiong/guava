@@ -260,7 +260,8 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
     class KeySetImpl extends KeySetView {
       @CFComment("signedness: is same as K, which this method doesn't know")
       @Override
-      public @PolyNull @PolySigned Object[] toArray() {
+      @SuppressWarnings("mutability:override.return.invalid") // K extends @Immutable Object, so every key is @Immutable, but the copy is a fresh Object[] whose components are typed @Mutable, so this override returns the keys @Readonly. An override of a @PolyMutable return cannot state a fixed qualifier
+      public @PolyNull @PolySigned @Readonly Object[] toArray() {
         return ObjectArrays.toArrayImpl(this);
       }
 
@@ -285,7 +286,8 @@ class CompactLinkedHashMap<K extends @Nullable @Immutable Object, V extends @Nul
     class ValuesImpl extends ValuesView {
       @CFComment("signedness: is same as V, which this method doesn't know")
       @Override
-      public @PolyNull @PolySigned Object[] toArray() {
+      @SuppressWarnings("mutability:override.return.invalid") // the elements are only @Readonly-bounded, so the precise return is @Readonly Object[], which an override of a @PolyMutable return cannot state
+      public @PolyNull @PolySigned @Readonly Object[] toArray() {
         return ObjectArrays.toArrayImpl(this);
       }
 
