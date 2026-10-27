@@ -247,6 +247,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // one poly: createCollection gives each new value collection the multimap's mutability. This override reads the client's factory, held receiver-dependent, so it returns a receiver-dependent collection, which gives the same mutability but cannot override a poly return
     protected @ReceiverDependentMutable Collection<V> createCollection(@ReceiverDependentMutable CustomMultimap<K, V> this) {
       return factory.get();
     }
@@ -368,6 +369,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // one poly: createCollection gives each new value collection the multimap's mutability. This override reads the client's factory, held receiver-dependent, so it returns a receiver-dependent collection, which gives the same mutability but cannot override a poly return
     protected @ReceiverDependentMutable List<V> createCollection(@ReceiverDependentMutable CustomListMultimap<K, V> this) {
       return factory.get();
     }
@@ -454,6 +456,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // one poly: createCollection gives each new value collection the multimap's mutability. This override reads the client's factory, held receiver-dependent, so it returns a receiver-dependent collection, which gives the same mutability but cannot override a poly return
     protected @ReceiverDependentMutable Set<V> createCollection(@ReceiverDependentMutable CustomSetMultimap<K, V> this) {
       return factory.get();
     }
@@ -566,6 +569,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // one poly: createCollection gives each new value collection the multimap's mutability. This override reads the client's factory, held receiver-dependent, so it returns a receiver-dependent collection, which gives the same mutability but cannot override a poly return
     protected @ReceiverDependentMutable SortedSet<V> createCollection(@ReceiverDependentMutable CustomSortedSetMultimap<K, V> this) {
       return factory.get();
     }

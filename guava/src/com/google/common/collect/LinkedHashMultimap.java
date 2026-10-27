@@ -295,7 +295,8 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    * @return a new {@code LinkedHashSet} containing a collection of values for one key
    */
   @Override
-  Set<V> createCollection(@Readonly LinkedHashMultimap<K, V> this) {
+  @SuppressWarnings("mutability:return.type.incompatible") // one poly: the fresh value set gets the multimap's mutability, as ArrayListMultimap's new @PolyMutable ArrayList does, but Platform's factory types it @Mutable
+  @PolyMutable Set<V> createCollection(@PolyMutable LinkedHashMultimap<K, V> this) {
     return Platform.newLinkedHashSetWithExpectedSize(valueSetCapacity);
   }
 

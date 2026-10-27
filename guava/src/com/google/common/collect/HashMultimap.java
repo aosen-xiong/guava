@@ -136,6 +136,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * @return a new {@code HashSet} containing a collection of values for one key
    */
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // one poly: the fresh value set gets the multimap's mutability, as ArrayListMultimap's new @PolyMutable ArrayList does, but Platform's factory types it @Mutable
   @PolyMutable Set<V> createCollection(@PolyMutable HashMultimap<K, V> this) {
     return Platform.<V>newHashSetWithExpectedSize(expectedValuesPerKey);
   }
