@@ -277,6 +277,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
   @VisibleForTesting transient int valueSetCapacity = DEFAULT_VALUE_SET_CAPACITY;
   private transient ValueEntry<K, V> multimapHeaderEntry;
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private LinkedHashMultimap(int keyCapacity, int valueSetCapacity) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newLinkedHashMapWithExpectedSize(keyCapacity));
     checkNonnegative(valueSetCapacity, "expectedValuesPerKey");

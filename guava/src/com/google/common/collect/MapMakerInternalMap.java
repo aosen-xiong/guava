@@ -178,6 +178,7 @@ class MapMakerInternalMap<
   /**
    * Creates a new, empty map with the specified strategy, initial capacity and concurrency level.
    */
+  @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:illegal.array.write"}) // PICO constructor fix: the constructor stores the fresh @Mutable array it fills into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do
   private MapMakerInternalMap(MapMaker builder, @ReceiverDependentMutable InternalEntryHelper<K, V, E, S> entryHelper) {
     concurrencyLevel = Math.min(builder.getConcurrencyLevel(), MAX_SEGMENTS);
 

@@ -115,13 +115,14 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
     this(12, DEFAULT_VALUES_PER_KEY);
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private HashMultimap(int expectedKeys, int expectedValuesPerKey) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newHashMapWithExpectedSize(expectedKeys));
     Preconditions.checkArgument(expectedValuesPerKey >= 0);
     this.expectedValuesPerKey = expectedValuesPerKey;
   }
 
-  @SuppressWarnings("mutability:method.invocation.invalid") // Putall method
+  @SuppressWarnings({"mutability:method.invocation.invalid", "mutability:argument.type.incompatible"}) // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter and calls its own putAll while the object is being initialized, as jdk#4's collection constructors do
   private HashMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newHashMapWithExpectedSize(multimap.keySet().size()));
     putAll(multimap);

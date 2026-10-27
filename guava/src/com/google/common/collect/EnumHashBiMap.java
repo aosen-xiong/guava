@@ -87,7 +87,7 @@ public final class EnumHashBiMap<K extends Enum<K>, V extends @Nullable @Immutab
   }
 
   private EnumHashBiMap(Class<K> keyType) {
-    super(new EnumMap<K, V>(keyType), new HashMap<V, K>());
+    super(new @ReceiverDependentMutable EnumMap<K, V>(keyType), new @ReceiverDependentMutable HashMap<V, K>());
     // TODO: cpovirk - Pre-size the HashMap based on the number of enum values?
     this.keyTypeOrObjectUnderJ2cl = keyType;
   }

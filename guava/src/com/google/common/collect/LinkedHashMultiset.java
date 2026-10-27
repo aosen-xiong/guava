@@ -89,6 +89,7 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
     super(new @ReceiverDependentMutable LinkedHashMap<E, Count>());
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private LinkedHashMultiset(int distinctElements) {
     super(Maps.<E, Count>newLinkedHashMapWithExpectedSize(distinctElements));
   }

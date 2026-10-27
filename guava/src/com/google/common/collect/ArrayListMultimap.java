@@ -122,6 +122,7 @@ public final class ArrayListMultimap<K extends @Nullable @Immutable Object, V ex
     this(12, DEFAULT_VALUES_PER_KEY);
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private ArrayListMultimap(int expectedKeys, int expectedValuesPerKey) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newHashMapWithExpectedSize(expectedKeys));
     checkNonnegative(expectedValuesPerKey, "expectedValuesPerKey");
