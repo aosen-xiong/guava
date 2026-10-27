@@ -1950,7 +1950,7 @@ public final class Multimaps {
       }
 
       @Override
-      public Iterator<Entry<K, Collection<V>>> iterator() {
+      public Iterator<@ReceiverDependentMutable Entry<K, @ReceiverDependentMutable Collection<V>>> iterator(@ReceiverDependentMutable AsMap<K, V>.@ReceiverDependentMutable EntrySet this) {
         return Maps.asMapEntryIterator(multimap.keySet(), key -> multimap.get(key));
       }
 

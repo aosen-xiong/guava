@@ -694,7 +694,7 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public @ReceiverDependentMutable RangeSet<C> complement(@ReceiverDependentMutable Complement this) {
+    public @ReceiverDependentMutable RangeSet<C> complement(@ReceiverDependentMutable TreeRangeSet<C>.@ReceiverDependentMutable Complement this) {
       return TreeRangeSet.this;
     }
   }
@@ -949,11 +949,11 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    public @ReceiverDependentMutable RangeSet<C> subRangeSet(@ReceiverDependentMutable SubRangeSet this, Range<C> view) {
+    public @ReceiverDependentMutable RangeSet<C> subRangeSet(@ReceiverDependentMutable TreeRangeSet<C>.@ReceiverDependentMutable SubRangeSet this, Range<C> view) {
       if (view.encloses(restriction)) {
         return this;
       } else if (view.isConnected(restriction)) {
-        return new SubRangeSet(restriction.intersection(view));
+        return new @ReceiverDependentMutable SubRangeSet(restriction.intersection(view));
       } else {
         return ImmutableRangeSet.of();
       }

@@ -364,7 +364,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
      * <p>For a subcollection, refresh its ancestor and validate that the ancestor delegate hasn't
      * changed.
      */
-    void refreshIfEmpty() {
+    void refreshIfEmpty(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable WrappedCollection this) {
       if (ancestor != null) {
         ancestor.refreshIfEmpty();
         if (ancestor.getDelegate() != ancestorDelegate) {
