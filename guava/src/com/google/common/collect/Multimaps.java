@@ -1190,6 +1190,7 @@ public final class Multimaps {
 
     @Pure
     @Override
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // transient hashing: the immutableEntry is a lookup key built for this one contains call and never stored
     public boolean containsEntry(@Readonly MapMultimap<K, V> this, @CheckForNull @Readonly Object key, @CheckForNull @Readonly Object value) {
       return map.entrySet().contains(Maps.immutableEntry(key, value));
     }
@@ -1259,6 +1260,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // transient hashing: the immutableEntry is a lookup key built for this one remove call and never stored
     public boolean remove(@Mutable MapMultimap<K, V> this, @CheckForNull @Readonly Object key, @CheckForNull @Readonly Object value) {
       return map.entrySet().remove(Maps.immutableEntry(key, value));
     }

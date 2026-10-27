@@ -729,6 +729,7 @@ public final class Collections2 {
   }
 
   /** Returns {@code true} if the second list is a permutation of the first. */
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // transient hashing: the two multisets are built to compare the lists once and are never stored
   private static boolean isPermutation(@Readonly List<?> first, @Readonly List<?> second) {
     if (first.size() != second.size()) {
       return false;

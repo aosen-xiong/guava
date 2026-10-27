@@ -4495,6 +4495,7 @@ public final class Maps {
     }
 
     @Override
+    @SuppressWarnings({"mutability:type.arguments.not.inferred", "mutability:argument.type.incompatible"}) // transient hashing: the fallback builds a hash set of keys for this call only and never stores it, and each key it adds equals a key of this map, which is @Immutable
     public boolean retainAll(@Mutable EntrySet<K, V> this, @Readonly Collection<?> c) {
       try {
         return super.retainAll(checkNotNull(c));
