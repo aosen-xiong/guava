@@ -852,7 +852,7 @@ public final class Lists {
    *
    * @since 7.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection. An ImmutableList argument fixes the poly to @Immutable, and its reverse() is an ImmutableList, but the unchecked cast types it @Mutable
   public static <T extends @Nullable @Readonly Object> @PolyMutable List<T> reverse(@PolyMutable List<T> list) {
     if (list instanceof ImmutableList) {
       // Avoid nullness warnings.
@@ -877,6 +877,7 @@ public final class Lists {
       this.forwardList = checkNotNull(forwardList);
     }
 
+    @SuppressWarnings("mutability:return.type.incompatible") // one poly: the forward list has this view's mutability, but the checker types the receiver-dependent field read through the poly receiver @MutabilityLost
     @PolyMutable List<T> getForwardList(@PolyMutable ReverseList<T> this) {
       return forwardList;
     }

@@ -4748,6 +4748,7 @@ public final class Maps {
    * @since 20.0
    */
   @GwtIncompatible // NavigableMap
+  @SuppressWarnings("mutability:return.type.incompatible") // one poly: the backing map and the view are the same instantiation, as in NavigableMap.subMap. The checker types the receiver-dependent subMap, tailMap and headMap results, read through the poly argument, @MutabilityLost
   public static <K extends @Immutable Comparable<? super K>, V extends @Nullable @Readonly Object>
     @PolyMutable NavigableMap<K, V> subMap(@PolyMutable NavigableMap<K, V> map, Range<K> range) {
     if (map.comparator() != null

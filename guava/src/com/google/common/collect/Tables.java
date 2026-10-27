@@ -218,7 +218,7 @@ public final class Tables {
    * columnKeySet().iterator()} doesn't. With a transposed {@link HashBasedTable}, it's the other
    * way around.
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection. A transposed table's original has the transpose's mutability, but the checker types the field read through the poly cast @Readonly
   public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       @PolyMutable Table<C, R, V> transpose(@PolyMutable Table<R, C, V> table) {
     return (table instanceof TransposeTable)

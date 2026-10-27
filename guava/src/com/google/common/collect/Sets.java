@@ -2216,6 +2216,7 @@ public final class Sets {
    * @since 20.0
    */
   @GwtIncompatible // NavigableSet
+  @SuppressWarnings("mutability:return.type.incompatible") // one poly: the backing set and the view are the same instantiation, as in NavigableSet.subSet. The checker types the receiver-dependent subSet, tailSet and headSet results, read through the poly argument, @MutabilityLost
   public static <K extends @Immutable Comparable<? super K>> @PolyMutable NavigableSet<K> subSet(
           @PolyMutable NavigableSet<K> set, Range<K> range) {
     if (set.comparator() != null
