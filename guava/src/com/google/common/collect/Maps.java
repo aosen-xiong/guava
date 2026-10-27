@@ -988,6 +988,7 @@ public final class Maps {
   }
 
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+      @SuppressWarnings("mutability:override.return.invalid") // the entries are immutableEntry snapshots, which do not support setValue, so they are @Immutable where the contract states poly ones, as Collections.unmodifiableMap does with @Readonly entries
       Iterator<@PolyMutable Entry<K, V>> asMapEntryIterator(@PolyMutable Set<K> set, final @Readonly Function<? super K, V> function) {
     return new TransformedIterator<K, @PolyMutable Entry<K, V>>(set.iterator()) {
       @Override
@@ -1122,6 +1123,7 @@ public final class Maps {
     }
 
     @Override
+    @SuppressWarnings("mutability:return.type.incompatible") // the entries are immutableEntry snapshots, which do not support setValue, so they are @Immutable where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
     Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable NavigableAsMapView<K, V> this) {
       return CollectSpliterators.map(set.spliterator(), e -> immutableEntry(e, function.apply(e)));
     }
@@ -2308,12 +2310,14 @@ public final class Maps {
     }
 
     @Override
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // each transformed entry is a fresh object that computes its value from the backing entry and does not support setValue, so it has no state of its own and a @Mutable entry stands in where the contract states a receiver-dependent one
     Iterator<@ReceiverDependentMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMap<K, V1, V2> this) {
       return Iterators.transform(
           fromMap.entrySet().iterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));
     }
 
     @Override
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // each transformed entry is a fresh object that computes its value from the backing entry and does not support setValue, so it has no state of its own and a @Mutable entry stands in where the contract states a receiver-dependent one
     Spliterator<@ReceiverDependentMutable Entry<K, V2>> entrySpliterator(@ReceiverDependentMutable TransformedEntriesMap<K, V1, V2> this) {
       return CollectSpliterators.map(
           fromMap.entrySet().spliterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));

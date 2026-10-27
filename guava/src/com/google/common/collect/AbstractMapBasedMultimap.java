@@ -1321,7 +1321,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
    * @return an iterator across map entries
    */
   @Override
-  @SuppressWarnings("mutability:return.type.incompatible") // the entries have the multimap's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the entries have the multimap's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322. The entries are immutableEntry snapshots, which do not support setValue, so they are @Immutable where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
   @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return new Itr<@ReceiverDependentMutable Entry<K, V>>() {
       @Override
@@ -1332,6 +1332,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
   }
 
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // the entries are immutableEntry snapshots, which do not support setValue, so they are @Immutable where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
   Spliterator<@ReceiverDependentMutable Entry<K, V>> entrySpliterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V> this) {
     return CollectSpliterators.flatMap(
         map.entrySet().spliterator(),
@@ -1467,11 +1468,13 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
       }
 
       @Override
+      @SuppressWarnings("mutability:override.return.invalid") // each entry is an immutableEntry snapshot of a key and its live value collection, and does not support setValue, so the entries are @Immutable where the map contract states receiver-dependent ones
       public @Mutable Iterator<@Immutable Entry<K, Collection<V>>> iterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable AsMap.@ReceiverDependentMutable AsMapEntries this) {
         return new AsMapIterator();
       }
 
       @Override
+      @SuppressWarnings({"mutability:override.return.invalid", "mutability:type.arguments.not.inferred"}) // each entry is an immutableEntry snapshot of a key and its live value collection, and does not support setValue, so the entries are @Immutable where the map contract states receiver-dependent ones
       public Spliterator<Entry<K, Collection<V>>> spliterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable AsMap.@ReceiverDependentMutable AsMapEntries this) {
         return CollectSpliterators.map(submap.entrySet().spliterator(), AsMap.this::wrapEntry);
       }

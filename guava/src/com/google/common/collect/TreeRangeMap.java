@@ -373,6 +373,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
     }
 
     @Override
+    @SuppressWarnings("mutability:override.return.invalid") // the entries are RangeMapEntry or immutableEntry objects with final fields, which do not support setValue, so their qualifier does not follow the map's, and they stand in where the map contract states receiver-dependent entries
     @Mutable Iterator<Entry<Range<K>, V>> entryIterator() {
       return entryIterable.iterator();
     }
@@ -742,6 +743,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
       }
 
       @Override
+      @SuppressWarnings({"mutability:override.return.invalid", "mutability:return.type.incompatible"}) // the entries are RangeMapEntry or immutableEntry objects with final fields, which do not support setValue, so their qualifier does not follow the map's, and they stand in where the map contract states receiver-dependent entries
       public Set<Entry<Range<K>, V>> entrySet() {
         return new Maps.@Mutable EntrySet<Range<K>, V>() {
           @Override

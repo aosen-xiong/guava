@@ -1582,6 +1582,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // each transformed entry is a fresh object that computes its value from the backing entry and does not support setValue, so it has no state of its own and a @Mutable entry stands in where the contract states a receiver-dependent one
     @Mutable Iterator<@ReceiverDependentMutable Entry<K, V2>> entryIterator(@ReceiverDependentMutable TransformedEntriesMultimap<K, V1, V2> this) {
       return Iterators.transform(
           fromMultimap.entries().iterator(), Maps.<K, V1, V2>asEntryToEntryFunction(transformer));

@@ -268,6 +268,7 @@ class FilteredEntryMultimap<K extends @Nullable @Immutable Object, V extends @Nu
         }
 
         @Override
+        @SuppressWarnings("mutability:override.return.invalid") // each entry is an immutableEntry snapshot of a key and its live value collection, and does not support setValue, so the entries are @Immutable where the map contract states receiver-dependent ones
         public @Mutable Iterator<@Immutable Entry<K, Collection<V>>> iterator() {
           return new @Mutable AbstractIterator<@Immutable Entry<K, Collection<V>>>() {
             final Iterator<Entry<K, Collection<V>>> backingIterator =

@@ -582,8 +582,9 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
   }
 
   @Override
-  Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable LinkedHashMultimap<K, V> this) {
-    return new @Mutable Iterator<@PolyMutable Entry<K, V>>() {
+  @SuppressWarnings("mutability:return.type.incompatible") // the entries are the ValueEntry nodes, which extend ImmutableEntry and do not support setValue, so they are @Immutable where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+  Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable LinkedHashMultimap<K, V> this) {
+    return new @Mutable Iterator<@Immutable Entry<K, V>>() {
       ValueEntry<K, V> nextEntry = multimapHeaderEntry.getSuccessorInMultimap();
       @CheckForNull ValueEntry<K, V> toRemove;
 

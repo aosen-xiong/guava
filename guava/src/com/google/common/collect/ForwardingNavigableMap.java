@@ -325,10 +325,11 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
     }
 
     @Override
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // NavigableMap.lastEntry and lowerEntry return snapshot entries, @Readonly in jdk#4, so the descending iterator yields @Readonly entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does
     protected Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable ForwardingNavigableMap<K, V>.@ReceiverDependentMutable StandardDescendingMap this) {
       return new @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>>() {
-        @CheckForNull private Entry<K, V> toRemove = null;
-        @CheckForNull private Entry<K, V> nextOrNull = forward().lastEntry();
+        @CheckForNull private @Readonly Entry<K, V> toRemove = null;
+        @CheckForNull private @Readonly Entry<K, V> nextOrNull = forward().lastEntry();
 
         @Override
         public boolean hasNext() {
@@ -336,7 +337,7 @@ public abstract class ForwardingNavigableMap<K extends @Nullable @Immutable Obje
         }
 
         @Override
-        public java.util.Map.Entry<K, V> next() {
+        public java.util.Map.@Readonly Entry<K, V> next() {
           if (nextOrNull == null) {
             throw new NoSuchElementException();
           }

@@ -416,7 +416,8 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
     }
 
     @Override
-    Iterator<Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
+    @SuppressWarnings("mutability:override.return.invalid") // a read-only view: its entries are immutableEntry snapshots and it does not support put, so it yields @Immutable entries where the map contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    Iterator<@Immutable Entry<Cut<C>, Range<C>>> descendingEntryIterator() {
       Collection<Range<C>> candidates;
       if (upperBoundWindow.hasUpperBound()) {
         candidates =
@@ -432,10 +433,10 @@ public class TreeRangeSet<C extends @Immutable Comparable<?>> extends AbstractRa
           && upperBoundWindow.upperBound.isLessThan(backingItr.peek().upperBound)) {
         backingItr.next();
       }
-      return new @Mutable AbstractIterator<Entry<Cut<C>, Range<C>>>() {
+      return new @Mutable AbstractIterator<@Immutable Entry<Cut<C>, Range<C>>>() {
         @Override
         @CheckForNull
-        protected @Readonly Entry<Cut<C>, Range<C>> computeNext() {
+        protected @Immutable Entry<Cut<C>, Range<C>> computeNext() {
           if (!backingItr.hasNext()) {
             return endOfData();
           }
