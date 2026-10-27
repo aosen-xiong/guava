@@ -3994,6 +3994,7 @@ public final class Maps {
         }
 
         @Override
+        @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
         public void forEach(Consumer<? super @ReceiverDependentMutable Entry<K, V>> action) {
           forEachEntry(action);
         }

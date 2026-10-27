@@ -1781,6 +1781,7 @@ public final class Multimaps {
     }
 
     @Override
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:argument.type.incompatible"}) // the entries have the multimap's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
     Iterator<Multiset.@ReceiverDependentMutable Entry<K>> entryIterator(@ReceiverDependentMutable Keys<K, V> this) {
       return new TransformedIterator<Map.Entry<K, Collection<V>>, Multiset.Entry<K>>(
           multimap.asMap().entrySet().iterator()) {

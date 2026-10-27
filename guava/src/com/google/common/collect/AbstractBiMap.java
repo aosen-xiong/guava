@@ -315,6 +315,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   @WeakOuter
   @ReceiverDependentMutable
   private class ValueSet extends ForwardingSet<V> {
+    @SuppressWarnings("mutability:assignment.type.incompatible") // Outer.this in a field initializer is @Mutable, not the enclosing instance's qualifier, and an initializer has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
     final Set<V> valuesDelegate = inverse.keySet();
 
     @Override
@@ -417,6 +418,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   @WeakOuter
   @ReceiverDependentMutable
   private class EntrySet extends ForwardingSet<Entry<K, V>> {
+    @SuppressWarnings("mutability:assignment.type.incompatible") // Outer.this in a field initializer is @Mutable, not the enclosing instance's qualifier, and an initializer has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
     final Set<Entry<K, V>> esDelegate = delegate.entrySet();
 
     @Override

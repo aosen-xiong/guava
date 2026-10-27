@@ -971,6 +971,7 @@ abstract class AbstractMapBasedMultimap<K extends @Nullable @Immutable Object, V
     }
 
     @Override
+    @SuppressWarnings("mutability:assignment.type.incompatible") // the entries have the enclosing multimap's mutability, but the anonymous iterator keeps the current one in a field, where a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
     public Iterator<K> iterator(@ReceiverDependentMutable AbstractMapBasedMultimap<K, V>.@ReceiverDependentMutable KeySet this) {
       final Iterator<Entry<K, Collection<V>>> entryIterator = map().entrySet().iterator();
       return new @Mutable Iterator<K>() {

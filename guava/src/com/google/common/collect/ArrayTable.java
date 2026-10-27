@@ -259,6 +259,7 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
     }
 
     @Override
+    @SuppressWarnings("mutability:return.type.incompatible") // the entries have the enclosing map's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
     Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator() {
       return new @Mutable AbstractIndexedListIterator<Entry<K, V>>(size()) {
         @Override
