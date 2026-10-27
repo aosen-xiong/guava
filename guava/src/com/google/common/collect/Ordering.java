@@ -343,6 +343,7 @@ public abstract class Ordering<T extends @Nullable @Readonly Object> implements 
     private final ConcurrentMap<@Immutable Object, Integer> uids =
         Platform.tryWeakKeys(new MapMaker()).makeMap();
 
+    @SuppressWarnings("mutability:argument.type.incompatible") // key type uses identity equals/hashCode: tryWeakKeys gives the uid map weak keys, which MapMaker compares by identity, so a key's state never affects its lookup
     private Integer getUid(@Readonly Object obj) {
       Integer uid = uids.get(obj);
       if (uid == null) {

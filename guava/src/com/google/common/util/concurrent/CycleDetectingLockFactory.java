@@ -585,6 +585,7 @@ public class CycleDetectingLockFactory {
      * with an example stack trace. Locks are weakly keyed to allow proper garbage collection when
      * they are no longer referenced.
      */
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // key type uses identity equals/hashCode: weakKeys() compares LockGraphNode keys by identity, and LockGraphNode does not override equals or hashCode
     final Map<LockGraphNode, ExampleStackTrace> allowedPriorLocks =
         new MapMaker().weakKeys().makeMap();
 
@@ -592,6 +593,7 @@ public class CycleDetectingLockFactory {
      * The map tracking lock nodes that can cause a lock acquisition cycle if acquired before this
      * node.
      */
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // key type uses identity equals/hashCode: weakKeys() compares LockGraphNode keys by identity, and LockGraphNode does not override equals or hashCode
     final Map<LockGraphNode, PotentialDeadlockException> disallowedPriorLocks =
         new MapMaker().weakKeys().makeMap();
 
