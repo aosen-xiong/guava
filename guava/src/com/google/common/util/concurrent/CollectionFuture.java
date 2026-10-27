@@ -40,6 +40,7 @@ abstract class CollectionFuture<V extends @Nullable @Readonly Object, C extends 
    */
   @CheckForNull @LazyInit private List<@Nullable Present<V>> values;
 
+  @SuppressWarnings({"mutability:method.invocation.invalid", "mutability:assignment.type.incompatible"}) // an empty immutable placeholder: it is used only when there are no futures, so the loop adds nothing to it and collectOneValue never sets an index in it
   CollectionFuture(
       ImmutableCollection<? extends ListenableFuture<? extends V>> futures,
       boolean allMustSucceed) {

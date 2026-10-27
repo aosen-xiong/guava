@@ -101,6 +101,7 @@ public final class MoreCollectors {
     @CheckForNull @Readonly Object element;
     List<@Readonly Object> extras;
 
+    @SuppressWarnings("mutability:assignment.type.incompatible") // an empty immutable placeholder: add and combine replace it with a fresh ArrayList before their first write, so nothing is ever written to the empty list
     ToOptionalState() {
       element = null;
       extras = emptyList();
