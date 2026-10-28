@@ -541,7 +541,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
    *     key
    * @throws NullPointerException if any key or value in {@code map} is null
    */
-  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> copyOf(Map<? extends K, ? extends V> map) {
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> copyOf(@Readonly Map<? extends K, ? extends V> map) {
     if (map instanceof ImmutableBiMap) {
       @SuppressWarnings("unchecked") // safe since map is not writable
       ImmutableBiMap<K, V> bimap = (ImmutableBiMap<K, V>) map;
@@ -564,7 +564,7 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
    * @since 19.0
    */
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> copyOf(
-      Iterable<? extends Entry<? extends K, ? extends V>> entries) {
+      @Readonly Iterable<? extends @Readonly Entry<? extends K, ? extends V>> entries) {
     @SuppressWarnings("unchecked") // we'll only be using getKey and getValue, which are covariant
     @Immutable Entry<K, V>[] entryArray = (@Immutable Entry<K, V>[]) Iterables.toArray(entries, EMPTY_ENTRY_ARRAY);
     switch (entryArray.length) {

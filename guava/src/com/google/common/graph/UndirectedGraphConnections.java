@@ -30,6 +30,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An implementation of {@link GraphConnections} for undirected graphs.
@@ -39,47 +42,48 @@ import org.checkerframework.checker.mutability.qual.Immutable;
  * @param <V> Value parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 final class UndirectedGraphConnections<N extends @Immutable Object, V> implements GraphConnections<N, V> {
   private final Map<N, V> adjacentNodeValues;
 
-  private UndirectedGraphConnections(Map<N, V> adjacentNodeValues) {
+  private UndirectedGraphConnections(@ReceiverDependentMutable Map<N, V> adjacentNodeValues) {
     this.adjacentNodeValues = checkNotNull(adjacentNodeValues);
   }
 
-  static <N extends @Immutable Object, V> UndirectedGraphConnections<N, V> of(ElementOrder<N> incidentEdgeOrder) {
+  static <N extends @Immutable Object, V> @Mutable UndirectedGraphConnections<N, V> of(ElementOrder<N> incidentEdgeOrder) {
     switch (incidentEdgeOrder.type()) {
       case UNORDERED:
-        return new UndirectedGraphConnections<>(
+        return new @Mutable UndirectedGraphConnections<>(
             new HashMap<N, V>(INNER_CAPACITY, INNER_LOAD_FACTOR));
       case STABLE:
-        return new UndirectedGraphConnections<>(
+        return new @Mutable UndirectedGraphConnections<>(
             new LinkedHashMap<N, V>(INNER_CAPACITY, INNER_LOAD_FACTOR));
       default:
         throw new AssertionError(incidentEdgeOrder.type());
     }
   }
 
-  static <N extends @Immutable Object, V> UndirectedGraphConnections<N, V> ofImmutable(Map<N, V> adjacentNodeValues) {
-    return new UndirectedGraphConnections<>(ImmutableMap.copyOf(adjacentNodeValues));
+  static <N extends @Immutable Object, V> @Immutable UndirectedGraphConnections<N, V> ofImmutable(@Readonly Map<N, V> adjacentNodeValues) {
+    return new @Immutable UndirectedGraphConnections<>(ImmutableMap.copyOf(adjacentNodeValues));
   }
 
   @Override
-  public Set<N> adjacentNodes() {
+  public @Readonly Set<N> adjacentNodes(@ReceiverDependentMutable UndirectedGraphConnections<N, V> this) {
     return Collections.unmodifiableSet(adjacentNodeValues.keySet());
   }
 
   @Override
-  public Set<N> predecessors() {
+  public @Readonly Set<N> predecessors(@ReceiverDependentMutable UndirectedGraphConnections<N, V> this) {
     return adjacentNodes();
   }
 
   @Override
-  public Set<N> successors() {
+  public @Readonly Set<N> successors(@ReceiverDependentMutable UndirectedGraphConnections<N, V> this) {
     return adjacentNodes();
   }
 
   @Override
-  public Iterator<EndpointPair<N>> incidentEdgeIterator(N thisNode) {
+  public Iterator<EndpointPair<N>> incidentEdgeIterator(@ReceiverDependentMutable UndirectedGraphConnections<N, V> this, N thisNode) {
     return Iterators.transform(
         adjacentNodeValues.keySet().iterator(),
         (N incidentNode) -> EndpointPair.unordered(thisNode, incidentNode));
@@ -87,31 +91,31 @@ final class UndirectedGraphConnections<N extends @Immutable Object, V> implement
 
   @Override
   @CheckForNull
-  public V value(N node) {
+  public V value(@ReceiverDependentMutable UndirectedGraphConnections<N, V> this, N node) {
     return adjacentNodeValues.get(node);
   }
 
   @Override
-  public void removePredecessor(N node) {
+  public void removePredecessor(@Mutable UndirectedGraphConnections<N, V> this, N node) {
     @SuppressWarnings("unused")
     V unused = removeSuccessor(node);
   }
 
   @Override
   @CheckForNull
-  public V removeSuccessor(N node) {
+  public V removeSuccessor(@Mutable UndirectedGraphConnections<N, V> this, N node) {
     return adjacentNodeValues.remove(node);
   }
 
   @Override
-  public void addPredecessor(N node, V value) {
+  public void addPredecessor(@Mutable UndirectedGraphConnections<N, V> this, N node, V value) {
     @SuppressWarnings("unused")
     V unused = addSuccessor(node, value);
   }
 
   @Override
   @CheckForNull
-  public V addSuccessor(N node, V value) {
+  public V addSuccessor(@Mutable UndirectedGraphConnections<N, V> this, N node, V value) {
     return adjacentNodeValues.put(node, value);
   }
 }

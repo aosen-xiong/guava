@@ -71,17 +71,17 @@ abstract class ForwardingValueGraph<N extends @Immutable Object, V> extends Abst
   }
 
   @Override
-  public Set<N> adjacentNodes(N node) {
+  public @Readonly Set<N> adjacentNodes(N node) {
     return delegate().adjacentNodes(node);
   }
 
   @Override
-  public Set<N> predecessors(N node) {
+  public @Readonly Set<N> predecessors(N node) {
     return delegate().predecessors(node);
   }
 
   @Override
-  public Set<N> successors(N node) {
+  public @Readonly Set<N> successors(N node) {
     return delegate().successors(node);
   }
 

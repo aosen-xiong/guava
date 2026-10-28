@@ -112,7 +112,7 @@ abstract class AbstractBaseGraph<N extends @Immutable Object> implements BaseGra
   }
 
   @Override
-  public Set<EndpointPair<N>> incidentEdges(N node) {
+  public @Readonly Set<EndpointPair<N>> incidentEdges(N node) {
     checkNotNull(node);
     checkArgument(nodes().contains(node), "Node %s is not an element of this graph.", node);
     IncidentEdgeSet<N> incident =
@@ -197,12 +197,12 @@ abstract class AbstractBaseGraph<N extends @Immutable Object> implements BaseGra
     return endpoints.isOrdered() == this.isDirected();
   }
 
-  protected final <T> Set<T> nodeInvalidatableSet(Set<T> set, N node) {
+  protected final <T> @Readonly Set<T> nodeInvalidatableSet(@Readonly Set<T> set, N node) {
     return InvalidatableSet.of(
         set, () -> nodes().contains(node), () -> String.format(NODE_REMOVED_FROM_GRAPH, node));
   }
 
-  protected final <T> Set<T> nodePairInvalidatableSet(Set<T> set, N nodeU, N nodeV) {
+  protected final <T> @Readonly Set<T> nodePairInvalidatableSet(@Readonly Set<T> set, N nodeU, N nodeV) {
     return InvalidatableSet.of(
         set,
         () -> nodes().contains(nodeU) && nodes().contains(nodeV),

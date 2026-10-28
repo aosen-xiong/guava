@@ -68,22 +68,22 @@ abstract class ForwardingGraph<N extends @Immutable Object> extends AbstractGrap
   }
 
   @Override
-  public Set<N> adjacentNodes(N node) {
+  public @Readonly Set<N> adjacentNodes(N node) {
     return delegate().adjacentNodes(node);
   }
 
   @Override
-  public Set<N> predecessors(N node) {
+  public @Readonly Set<N> predecessors(N node) {
     return delegate().predecessors(node);
   }
 
   @Override
-  public Set<N> successors(N node) {
+  public @Readonly Set<N> successors(N node) {
     return delegate().successors(node);
   }
 
   @Override
-  public Set<EndpointPair<N>> incidentEdges(N node) {
+  public @Readonly Set<EndpointPair<N>> incidentEdges(N node) {
     return delegate().incidentEdges(node);
   }
 

@@ -60,7 +60,7 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
   private final ElementOrder<N> nodeOrder;
   private final ElementOrder<E> edgeOrder;
 
-  final MapIteratorCache<N, NetworkConnections<N, E>> nodeConnections;
+  final MapIteratorCache<N, @ReceiverDependentMutable NetworkConnections<N, E>> nodeConnections;
 
   // We could make this a Map<E, EndpointPair<N>>. It would make incidentNodes(edge) slightly
   // faster, but also make Networks consume 5 to 20+% (increasing with average degree) more memory.
@@ -70,7 +70,7 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
   StandardNetwork(NetworkBuilder<? super N, ? super E> builder) {
     this(
         builder,
-        builder.nodeOrder.<N, NetworkConnections<N, E>>createMap(
+        builder.nodeOrder.<N, @ReceiverDependentMutable NetworkConnections<N, E>>createMap(
             builder.expectedNodeCount.or(DEFAULT_NODE_COUNT)),
         builder.edgeOrder.<E, N>createMap(builder.expectedEdgeCount.or(DEFAULT_EDGE_COUNT)));
   }
@@ -81,7 +81,7 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
    */
   StandardNetwork(
       NetworkBuilder<? super N, ? super E> builder,
-      @ReceiverDependentMutable Map<N, NetworkConnections<N, E>> nodeConnections,
+      @ReceiverDependentMutable Map<N, @ReceiverDependentMutable NetworkConnections<N, E>> nodeConnections,
       @ReceiverDependentMutable Map<E, N> edgeToReferenceNode) {
     this.isDirected = builder.directed;
     this.allowsParallelEdges = builder.allowsParallelEdges;
@@ -92,8 +92,8 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
     // methods that access the same node(s) repeatedly, such as Graphs.removeEdgesConnecting().
     this.nodeConnections =
         (nodeConnections instanceof TreeMap)
-            ? new @ReceiverDependentMutable MapRetrievalCache<N, NetworkConnections<N, E>>(nodeConnections)
-            : new @ReceiverDependentMutable MapIteratorCache<N, NetworkConnections<N, E>>(nodeConnections);
+            ? new @ReceiverDependentMutable MapRetrievalCache<N, @ReceiverDependentMutable NetworkConnections<N, E>>(nodeConnections)
+            : new @ReceiverDependentMutable MapIteratorCache<N, @ReceiverDependentMutable NetworkConnections<N, E>>(nodeConnections);
     this.edgeToReferenceNode = new @ReceiverDependentMutable MapIteratorCache<>(edgeToReferenceNode);
   }
 
@@ -133,7 +133,7 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
   }
 
   @Override
-  public Set<E> incidentEdges(N node) {
+  public @Readonly Set<E> incidentEdges(N node) {
     return nodeInvalidatableSet(checkedConnections(node).incidentEdges(), node);
   }
 
@@ -146,7 +146,7 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
   }
 
   @Override
-  public Set<N> adjacentNodes(N node) {
+  public @Readonly Set<N> adjacentNodes(N node) {
     return nodeInvalidatableSet(checkedConnections(node).adjacentNodes(), node);
   }
 
@@ -161,26 +161,26 @@ class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> 
   }
 
   @Override
-  public Set<E> inEdges(N node) {
+  public @Readonly Set<E> inEdges(N node) {
     return nodeInvalidatableSet(checkedConnections(node).inEdges(), node);
   }
 
   @Override
-  public Set<E> outEdges(N node) {
+  public @Readonly Set<E> outEdges(N node) {
     return nodeInvalidatableSet(checkedConnections(node).outEdges(), node);
   }
 
   @Override
-  public Set<N> predecessors(N node) {
+  public @Readonly Set<N> predecessors(N node) {
     return nodeInvalidatableSet(checkedConnections(node).predecessors(), node);
   }
 
   @Override
-  public Set<N> successors(N node) {
+  public @Readonly Set<N> successors(N node) {
     return nodeInvalidatableSet(checkedConnections(node).successors(), node);
   }
 
-  final NetworkConnections<N, E> checkedConnections(N node) {
+  final @ReceiverDependentMutable NetworkConnections<N, E> checkedConnections(N node) {
     NetworkConnections<N, E> connections = nodeConnections.get(node);
     if (connections == null) {
       checkNotNull(node);

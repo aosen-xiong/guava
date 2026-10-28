@@ -43,7 +43,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -56,6 +58,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @ElementTypesAreNonnullByDefault
 @SuppressWarnings("mutability") // not yet annotated for mutability: suppressed class-wide until it is
+@ReceiverDependentMutable
 final class DirectedGraphConnections<N extends @Immutable Object, V> implements GraphConnections<N, V> {
   /**
    * A wrapper class to indicate a node is both a predecessor and successor while still providing
@@ -158,7 +161,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
             && successorCount <= adjacentNodeValues.size());
   }
 
-  static <N, V> DirectedGraphConnections<N, V> of(ElementOrder<N> incidentEdgeOrder) {
+  static <N, V> @Mutable DirectedGraphConnections<N, V> of(ElementOrder<N> incidentEdgeOrder) {
     // We store predecessors and successors in the same map, so double the initial capacity.
     int initialCapacity = INNER_CAPACITY * 2;
 
@@ -174,15 +177,15 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
         throw new AssertionError(incidentEdgeOrder.type());
     }
 
-    return new DirectedGraphConnections<>(
+    return new @Mutable DirectedGraphConnections<>(
         /* adjacentNodeValues = */ new HashMap<N, Object>(initialCapacity, INNER_LOAD_FACTOR),
         orderedNodeConnections,
         /* predecessorCount = */ 0,
         /* successorCount = */ 0);
   }
 
-  static <N, V> DirectedGraphConnections<N, V> ofImmutable(
-      N thisNode, Iterable<EndpointPair<N>> incidentEdges, Function<N, V> successorNodeToValueFn) {
+  static <N, V> @Immutable DirectedGraphConnections<N, V> ofImmutable(
+      N thisNode, @Readonly Iterable<EndpointPair<N>> incidentEdges, @Readonly Function<N, V> successorNodeToValueFn) {
     checkNotNull(thisNode);
     checkNotNull(successorNodeToValueFn);
 
@@ -229,7 +232,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
       }
     }
 
-    return new DirectedGraphConnections<>(
+    return new @Immutable DirectedGraphConnections<>(
         adjacentNodeValues,
         orderedNodeConnectionsBuilder.build(),
         predecessorCount,
@@ -237,7 +240,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   }
 
   @Override
-  public Set<N> adjacentNodes() {
+  public @Readonly Set<N> adjacentNodes(@ReceiverDependentMutable DirectedGraphConnections<N, V> this) {
     if (orderedNodeConnections == null) {
       return Collections.unmodifiableSet(adjacentNodeValues.keySet());
     } else {
@@ -276,7 +279,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   }
 
   @Override
-  public Set<N> predecessors() {
+  public @Readonly Set<N> predecessors(@ReceiverDependentMutable DirectedGraphConnections<N, V> this) {
     return new AbstractSet<N>() {
       @Override
       public UnmodifiableIterator<N> iterator() {
@@ -326,7 +329,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   }
 
   @Override
-  public Set<N> successors() {
+  public @Readonly Set<N> successors(@ReceiverDependentMutable DirectedGraphConnections<N, V> this) {
     return new AbstractSet<N>() {
       @Override
       public UnmodifiableIterator<N> iterator() {
@@ -376,7 +379,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   }
 
   @Override
-  public Iterator<EndpointPair<N>> incidentEdgeIterator(N thisNode) {
+  public Iterator<EndpointPair<N>> incidentEdgeIterator(@ReceiverDependentMutable DirectedGraphConnections<N, V> this, N thisNode) {
     checkNotNull(thisNode);
 
     Iterator<EndpointPair<N>> resultWithDoubleSelfLoop;
@@ -425,7 +428,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   @SuppressWarnings("unchecked")
   @Override
   @CheckForNull
-  public V value(N node) {
+  public V value(@ReceiverDependentMutable DirectedGraphConnections<N, V> this, N node) {
     checkNotNull(node);
     Object value = adjacentNodeValues.get(node);
     if (value == PRED) {
@@ -438,7 +441,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   }
 
   @Override
-  public void removePredecessor(N node) {
+  public void removePredecessor(@Mutable DirectedGraphConnections<N, V> this, N node) {
     checkNotNull(node);
 
     Object previousValue = adjacentNodeValues.get(node);
@@ -466,7 +469,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   @SuppressWarnings("unchecked")
   @Override
   @CheckForNull
-  public V removeSuccessor(@UnknownSignedness Object node) {
+  public V removeSuccessor(@Mutable DirectedGraphConnections<N, V> this, @UnknownSignedness Object node) {
     checkNotNull(node);
     Object previousValue = adjacentNodeValues.get(node);
     Object removedValue;
@@ -500,7 +503,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   }
 
   @Override
-  public void addPredecessor(N node, V unused) {
+  public void addPredecessor(@Mutable DirectedGraphConnections<N, V> this, N node, V unused) {
     Object previousValue = adjacentNodeValues.put(node, PRED);
     boolean addedPredecessor;
 
@@ -530,7 +533,7 @@ final class DirectedGraphConnections<N extends @Immutable Object, V> implements 
   @SuppressWarnings("unchecked")
   @Override
   @CheckForNull
-  public V addSuccessor(N node, V value) {
+  public V addSuccessor(@Mutable DirectedGraphConnections<N, V> this, N node, V value) {
     Object previousValue = adjacentNodeValues.put(node, value);
     Object previousSuccessor;
 

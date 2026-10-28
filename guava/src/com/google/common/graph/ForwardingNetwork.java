@@ -72,32 +72,32 @@ abstract class ForwardingNetwork<N extends @Immutable Object, E extends @Immutab
   }
 
   @Override
-  public Set<N> adjacentNodes(N node) {
+  public @Readonly Set<N> adjacentNodes(N node) {
     return delegate().adjacentNodes(node);
   }
 
   @Override
-  public Set<N> predecessors(N node) {
+  public @Readonly Set<N> predecessors(N node) {
     return delegate().predecessors(node);
   }
 
   @Override
-  public Set<N> successors(N node) {
+  public @Readonly Set<N> successors(N node) {
     return delegate().successors(node);
   }
 
   @Override
-  public Set<E> incidentEdges(N node) {
+  public @Readonly Set<E> incidentEdges(N node) {
     return delegate().incidentEdges(node);
   }
 
   @Override
-  public Set<E> inEdges(N node) {
+  public @Readonly Set<E> inEdges(N node) {
     return delegate().inEdges(node);
   }
 
   @Override
-  public Set<E> outEdges(N node) {
+  public @Readonly Set<E> outEdges(N node) {
     return delegate().outEdges(node);
   }
 
@@ -107,7 +107,7 @@ abstract class ForwardingNetwork<N extends @Immutable Object, E extends @Immutab
   }
 
   @Override
-  public Set<E> adjacentEdges(E edge) {
+  public @Readonly Set<E> adjacentEdges(E edge) {
     return delegate().adjacentEdges(edge);
   }
 

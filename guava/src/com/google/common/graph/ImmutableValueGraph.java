@@ -79,19 +79,19 @@ public final class ImmutableValueGraph<N extends @org.checkerframework.checker.m
     return new ImmutableGraph<>(this); // safe because the view is effectively immutable
   }
 
-  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> ImmutableMap<N, GraphConnections<N, V>> getNodeConnections(
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> ImmutableMap<N, @org.checkerframework.checker.mutability.qual.Immutable GraphConnections<N, V>> getNodeConnections(
       ValueGraph<N, V> graph) {
     // ImmutableMap.Builder maintains the order of the elements as inserted, so the map will have
     // whatever ordering the graph's nodes do, so ImmutableSortedMap is unnecessary even if the
     // input nodes are sorted.
-    ImmutableMap.Builder<N, GraphConnections<N, V>> nodeConnections = ImmutableMap.builder();
+    ImmutableMap.Builder<N, @org.checkerframework.checker.mutability.qual.Immutable GraphConnections<N, V>> nodeConnections = ImmutableMap.builder();
     for (N node : graph.nodes()) {
       nodeConnections.put(node, connectionsOf(graph, node));
     }
     return nodeConnections.buildOrThrow();
   }
 
-  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> GraphConnections<N, V> connectionsOf(ValueGraph<N, V> graph, N node) {
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, V> @org.checkerframework.checker.mutability.qual.Immutable GraphConnections<N, V> connectionsOf(ValueGraph<N, V> graph, N node) {
     Function<N, V> successorNodeToValueFn =
         (N successorNode) ->
             // requireNonNull is safe because the endpoint pair comes from the graph.

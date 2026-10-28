@@ -32,7 +32,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An implementation of {@link NetworkConnections} for directed networks with parallel edges.
@@ -42,34 +46,35 @@ import org.checkerframework.checker.mutability.qual.Immutable;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 final class DirectedMultiNetworkConnections<N extends @Immutable Object, E extends @Immutable Object> extends AbstractDirectedNetworkConnections<N, E> {
 
   private DirectedMultiNetworkConnections(
-      Map<E, N> inEdges, Map<E, N> outEdges, int selfLoopCount) {
+      @ReceiverDependentMutable Map<E, N> inEdges, @ReceiverDependentMutable Map<E, N> outEdges, int selfLoopCount) {
     super(inEdges, outEdges, selfLoopCount);
   }
 
-  static <N extends @Immutable Object, E extends @Immutable Object> DirectedMultiNetworkConnections<N, E> of() {
-    return new DirectedMultiNetworkConnections<>(
+  static <N extends @Immutable Object, E extends @Immutable Object> @Mutable DirectedMultiNetworkConnections<N, E> of() {
+    return new @Mutable DirectedMultiNetworkConnections<>(
         new HashMap<E, N>(INNER_CAPACITY, INNER_LOAD_FACTOR),
         new HashMap<E, N>(INNER_CAPACITY, INNER_LOAD_FACTOR),
         0);
   }
 
-  static <N extends @Immutable Object, E extends @Immutable Object> DirectedMultiNetworkConnections<N, E> ofImmutable(
-      Map<E, N> inEdges, Map<E, N> outEdges, int selfLoopCount) {
-    return new DirectedMultiNetworkConnections<>(
+  static <N extends @Immutable Object, E extends @Immutable Object> @Immutable DirectedMultiNetworkConnections<N, E> ofImmutable(
+      @Readonly Map<E, N> inEdges, @Readonly Map<E, N> outEdges, int selfLoopCount) {
+    return new @Immutable DirectedMultiNetworkConnections<>(
         ImmutableMap.copyOf(inEdges), ImmutableMap.copyOf(outEdges), selfLoopCount);
   }
 
-  @CheckForNull @LazyInit private transient Reference<Multiset<N>> predecessorsReference;
+  @CheckForNull @LazyInit private transient @Assignable @Mutable Reference<@Mutable Multiset<N>> predecessorsReference;
 
   @Override
-  public Set<N> predecessors() {
+  public @Readonly Set<N> predecessors(@ReceiverDependentMutable DirectedMultiNetworkConnections<N, E> this) {
     return Collections.unmodifiableSet(predecessorsMultiset().elementSet());
   }
 
-  private Multiset<N> predecessorsMultiset() {
+  private Multiset<N> predecessorsMultiset(@ReceiverDependentMutable DirectedMultiNetworkConnections<N, E> this) {
     Multiset<N> predecessors = getReference(predecessorsReference);
     if (predecessors == null) {
       predecessors = HashMultiset.create(inEdgeMap.values());
@@ -78,14 +83,14 @@ final class DirectedMultiNetworkConnections<N extends @Immutable Object, E exten
     return predecessors;
   }
 
-  @CheckForNull @LazyInit private transient Reference<Multiset<N>> successorsReference;
+  @CheckForNull @LazyInit private transient @Assignable @Mutable Reference<@Mutable Multiset<N>> successorsReference;
 
   @Override
-  public Set<N> successors() {
+  public @Readonly Set<N> successors(@ReceiverDependentMutable DirectedMultiNetworkConnections<N, E> this) {
     return Collections.unmodifiableSet(successorsMultiset().elementSet());
   }
 
-  private Multiset<N> successorsMultiset() {
+  private Multiset<N> successorsMultiset(@ReceiverDependentMutable DirectedMultiNetworkConnections<N, E> this) {
     Multiset<N> successors = getReference(successorsReference);
     if (successors == null) {
       successors = HashMultiset.create(outEdgeMap.values());
@@ -95,7 +100,7 @@ final class DirectedMultiNetworkConnections<N extends @Immutable Object, E exten
   }
 
   @Override
-  public Set<E> edgesConnecting(N node) {
+  public @Readonly Set<E> edgesConnecting(@ReceiverDependentMutable DirectedMultiNetworkConnections<N, E> this, N node) {
     return new MultiEdgesConnecting<E>(outEdgeMap, node) {
       @Override
       public @NonNegative int size() {
@@ -105,7 +110,7 @@ final class DirectedMultiNetworkConnections<N extends @Immutable Object, E exten
   }
 
   @Override
-  public N removeInEdge(E edge, boolean isSelfLoop) {
+  public N removeInEdge(@Mutable DirectedMultiNetworkConnections<N, E> this, E edge, boolean isSelfLoop) {
     N node = super.removeInEdge(edge, isSelfLoop);
     Multiset<N> predecessors = getReference(predecessorsReference);
     if (predecessors != null) {
@@ -115,7 +120,7 @@ final class DirectedMultiNetworkConnections<N extends @Immutable Object, E exten
   }
 
   @Override
-  public N removeOutEdge(E edge) {
+  public N removeOutEdge(@Mutable DirectedMultiNetworkConnections<N, E> this, E edge) {
     N node = super.removeOutEdge(edge);
     Multiset<N> successors = getReference(successorsReference);
     if (successors != null) {
@@ -125,7 +130,7 @@ final class DirectedMultiNetworkConnections<N extends @Immutable Object, E exten
   }
 
   @Override
-  public void addInEdge(E edge, N node, boolean isSelfLoop) {
+  public void addInEdge(@Mutable DirectedMultiNetworkConnections<N, E> this, E edge, N node, boolean isSelfLoop) {
     super.addInEdge(edge, node, isSelfLoop);
     Multiset<N> predecessors = getReference(predecessorsReference);
     if (predecessors != null) {
@@ -134,7 +139,7 @@ final class DirectedMultiNetworkConnections<N extends @Immutable Object, E exten
   }
 
   @Override
-  public void addOutEdge(E edge, N node) {
+  public void addOutEdge(@Mutable DirectedMultiNetworkConnections<N, E> this, E edge, N node) {
     super.addOutEdge(edge, node);
     Multiset<N> successors = getReference(successorsReference);
     if (successors != null) {

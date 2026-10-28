@@ -93,7 +93,7 @@ interface BaseGraph<N> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
    *
    * @throws IllegalArgumentException if {@code node} is not an element of this graph
    */
-  Set<N> adjacentNodes(N node);
+  @Readonly Set<N> adjacentNodes(N node);
 
   /**
    * Returns a live view of all nodes in this graph adjacent to {@code node} which can be reached by
@@ -116,7 +116,7 @@ interface BaseGraph<N> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
    * @throws IllegalArgumentException if {@code node} is not an element of this graph
    */
   @Override
-  Set<N> predecessors(N node);
+  @Readonly Set<N> predecessors(N node);
 
   /**
    * Returns a live view of all nodes in this graph adjacent to {@code node} which can be reached by
@@ -142,7 +142,7 @@ interface BaseGraph<N> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
    * @throws IllegalArgumentException if {@code node} is not an element of this graph
    */
   @Override
-  Set<N> successors(N node);
+  @Readonly Set<N> successors(N node);
 
   /**
    * Returns a live view of the edges in this graph whose endpoints include {@code node}.
@@ -164,7 +164,7 @@ interface BaseGraph<N> extends SuccessorsFunction<N>, PredecessorsFunction<N> {
    * @throws IllegalArgumentException if {@code node} is not an element of this graph
    * @since 24.0
    */
-  Set<EndpointPair<N>> incidentEdges(N node);
+  @Readonly Set<EndpointPair<N>> incidentEdges(N node);
 
   /**
    * Returns the count of {@code node}'s incident edges, counting self-loops twice (equivalently,

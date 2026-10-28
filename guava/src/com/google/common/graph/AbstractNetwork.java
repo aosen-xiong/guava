@@ -128,17 +128,17 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
       }
 
       @Override
-      public Set<N> adjacentNodes(N node) {
+      public @Readonly Set<N> adjacentNodes(N node) {
         return AbstractNetwork.this.adjacentNodes(node);
       }
 
       @Override
-      public Set<N> predecessors(N node) {
+      public @Readonly Set<N> predecessors(N node) {
         return AbstractNetwork.this.predecessors(node);
       }
 
       @Override
-      public Set<N> successors(N node) {
+      public @Readonly Set<N> successors(N node) {
         return AbstractNetwork.this.successors(node);
       }
 
@@ -166,7 +166,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
   }
 
   @Override
-  public Set<E> adjacentEdges(E edge) {
+  public @Readonly Set<E> adjacentEdges(E edge) {
     EndpointPair<N> endpointPair = incidentNodes(edge); // Verifies that edge is in this network.
     Set<E> endpointPairIncidentEdges =
         Sets.union(incidentEdges(endpointPair.nodeU()), incidentEdges(endpointPair.nodeV()));
@@ -303,7 +303,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
    *
    * @since 33.1.0
    */
-  protected final <T> Set<T> edgeInvalidatableSet(Set<T> set, E edge) {
+  protected final <T> @Readonly Set<T> edgeInvalidatableSet(@Readonly Set<T> set, E edge) {
     return InvalidatableSet.of(
         set, () -> edges().contains(edge), () -> String.format(EDGE_REMOVED_FROM_GRAPH, edge));
   }
@@ -314,7 +314,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
    *
    * @since 33.1.0
    */
-  protected final <T> Set<T> nodeInvalidatableSet(Set<T> set, N node) {
+  protected final <T> @Readonly Set<T> nodeInvalidatableSet(@Readonly Set<T> set, N node) {
     return InvalidatableSet.of(
         set, () -> nodes().contains(node), () -> String.format(NODE_REMOVED_FROM_GRAPH, node));
   }
@@ -325,7 +325,7 @@ public abstract class AbstractNetwork<N extends @Immutable Object, E extends @Im
    *
    * @since 33.1.0
    */
-  protected final <T> Set<T> nodePairInvalidatableSet(Set<T> set, N nodeU, N nodeV) {
+  protected final <T> @Readonly Set<T> nodePairInvalidatableSet(@Readonly Set<T> set, N nodeU, N nodeV) {
     return InvalidatableSet.of(
         set,
         () -> nodes().contains(nodeU) && nodes().contains(nodeV),

@@ -184,7 +184,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    *
    * @throws IllegalArgumentException if {@code node} is not an element of this network
    */
-  Set<N> adjacentNodes(N node);
+  @Readonly Set<N> adjacentNodes(N node);
 
   /**
    * Returns a live view of all nodes in this network adjacent to {@code node} which can be reached
@@ -199,7 +199,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if {@code node} is not an element of this network
    */
   @Override
-  Set<N> predecessors(N node);
+  @Readonly Set<N> predecessors(N node);
 
   /**
    * Returns a live view of all nodes in this network adjacent to {@code node} which can be reached
@@ -225,7 +225,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if {@code node} is not an element of this network
    */
   @Override
-  Set<N> successors(N node);
+  @Readonly Set<N> successors(N node);
 
   /**
    * Returns a live view of the edges whose {@link #incidentNodes(Object) incident nodes} in this
@@ -248,7 +248,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    * @throws IllegalArgumentException if {@code node} is not an element of this network
    * @since 24.0
    */
-  Set<E> incidentEdges(N node);
+  @Readonly Set<E> incidentEdges(N node);
 
   /**
    * Returns a live view of all edges in this network which can be traversed in the direction (if
@@ -272,7 +272,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    *
    * @throws IllegalArgumentException if {@code node} is not an element of this network
    */
-  Set<E> inEdges(N node);
+  @Readonly Set<E> inEdges(N node);
 
   /**
    * Returns a live view of all edges in this network which can be traversed in the direction (if
@@ -296,7 +296,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    *
    * @throws IllegalArgumentException if {@code node} is not an element of this network
    */
-  Set<E> outEdges(N node);
+  @Readonly Set<E> outEdges(N node);
 
   /**
    * Returns the count of {@code node}'s {@link #incidentEdges(Object) incident edges}, counting
@@ -358,7 +358,7 @@ public interface Network<N, E> extends SuccessorsFunction<N>, PredecessorsFuncti
    *
    * @throws IllegalArgumentException if {@code edge} is not an element of this network
    */
-  Set<E> adjacentEdges(E edge);
+  @Readonly Set<E> adjacentEdges(E edge);
 
   /**
    * Returns a live view of the set of edges that each directly connect {@code nodeU} to {@code

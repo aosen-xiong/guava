@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A base implementation of {@link NetworkConnections} for undirected networks.
@@ -34,48 +37,49 @@ import org.checkerframework.checker.mutability.qual.Immutable;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 abstract class AbstractUndirectedNetworkConnections<N extends @Immutable Object, E extends @Immutable Object> implements NetworkConnections<N, E> {
   /** Keys are edges incident to the origin node, values are the node at the other end. */
   final Map<E, N> incidentEdgeMap;
 
-  AbstractUndirectedNetworkConnections(Map<E, N> incidentEdgeMap) {
+  AbstractUndirectedNetworkConnections(@ReceiverDependentMutable Map<E, N> incidentEdgeMap) {
     this.incidentEdgeMap = checkNotNull(incidentEdgeMap);
   }
 
   @Override
-  public Set<N> predecessors() {
+  public @Readonly Set<N> predecessors(@ReceiverDependentMutable AbstractUndirectedNetworkConnections<N, E> this) {
     return adjacentNodes();
   }
 
   @Override
-  public Set<N> successors() {
+  public @Readonly Set<N> successors(@ReceiverDependentMutable AbstractUndirectedNetworkConnections<N, E> this) {
     return adjacentNodes();
   }
 
   @Override
-  public Set<E> incidentEdges() {
+  public @Readonly Set<E> incidentEdges(@ReceiverDependentMutable AbstractUndirectedNetworkConnections<N, E> this) {
     return Collections.unmodifiableSet(incidentEdgeMap.keySet());
   }
 
   @Override
-  public Set<E> inEdges() {
+  public @Readonly Set<E> inEdges(@ReceiverDependentMutable AbstractUndirectedNetworkConnections<N, E> this) {
     return incidentEdges();
   }
 
   @Override
-  public Set<E> outEdges() {
+  public @Readonly Set<E> outEdges(@ReceiverDependentMutable AbstractUndirectedNetworkConnections<N, E> this) {
     return incidentEdges();
   }
 
   @Override
-  public N adjacentNode(E edge) {
+  public N adjacentNode(@ReceiverDependentMutable AbstractUndirectedNetworkConnections<N, E> this, E edge) {
     // We're relying on callers to call this method only with an edge that's in the graph.
     return requireNonNull(incidentEdgeMap.get(edge));
   }
 
   @Override
   @CheckForNull
-  public N removeInEdge(E edge, boolean isSelfLoop) {
+  public N removeInEdge(@Mutable AbstractUndirectedNetworkConnections<N, E> this, E edge, boolean isSelfLoop) {
     if (!isSelfLoop) {
       return removeOutEdge(edge);
     }
@@ -83,21 +87,21 @@ abstract class AbstractUndirectedNetworkConnections<N extends @Immutable Object,
   }
 
   @Override
-  public N removeOutEdge(E edge) {
+  public N removeOutEdge(@Mutable AbstractUndirectedNetworkConnections<N, E> this, E edge) {
     N previousNode = incidentEdgeMap.remove(edge);
     // We're relying on callers to call this method only with an edge that's in the graph.
     return requireNonNull(previousNode);
   }
 
   @Override
-  public void addInEdge(E edge, N node, boolean isSelfLoop) {
+  public void addInEdge(@Mutable AbstractUndirectedNetworkConnections<N, E> this, E edge, N node, boolean isSelfLoop) {
     if (!isSelfLoop) {
       addOutEdge(edge, node);
     }
   }
 
   @Override
-  public void addOutEdge(E edge, N node) {
+  public void addOutEdge(@Mutable AbstractUndirectedNetworkConnections<N, E> this, E edge, N node) {
     N previousNode = incidentEdgeMap.put(edge, node);
     checkState(previousNode == null);
   }

@@ -81,17 +81,17 @@ public abstract class AbstractValueGraph<N extends @Immutable Object, V> extends
       }
 
       @Override
-      public Set<N> adjacentNodes(N node) {
+      public @Readonly Set<N> adjacentNodes(N node) {
         return AbstractValueGraph.this.adjacentNodes(node);
       }
 
       @Override
-      public Set<N> predecessors(N node) {
+      public @Readonly Set<N> predecessors(N node) {
         return AbstractValueGraph.this.predecessors(node);
       }
 
       @Override
-      public Set<N> successors(N node) {
+      public @Readonly Set<N> successors(N node) {
         return AbstractValueGraph.this.successors(node);
       }
 

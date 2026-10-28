@@ -77,11 +77,11 @@ public final class ImmutableNetwork<N extends @org.checkerframework.checker.muta
     return new ImmutableGraph<>(super.asGraph()); // safe because the view is effectively immutable
   }
 
-  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> @org.checkerframework.checker.mutability.qual.Immutable Map<N, NetworkConnections<N, E>> getNodeConnections(Network<N, E> network) {
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> @org.checkerframework.checker.mutability.qual.Immutable Map<N, @org.checkerframework.checker.mutability.qual.Immutable NetworkConnections<N, E>> getNodeConnections(Network<N, E> network) {
     // ImmutableMap.Builder maintains the order of the elements as inserted, so the map will have
     // whatever ordering the network's nodes do, so ImmutableSortedMap is unnecessary even if the
     // input nodes are sorted.
-    ImmutableMap.Builder<N, NetworkConnections<N, E>> nodeConnections = ImmutableMap.builder();
+    ImmutableMap.Builder<N, @org.checkerframework.checker.mutability.qual.Immutable NetworkConnections<N, E>> nodeConnections = ImmutableMap.builder();
     for (N node : network.nodes()) {
       nodeConnections.put(node, connectionsOf(network, node));
     }
@@ -99,7 +99,7 @@ public final class ImmutableNetwork<N extends @org.checkerframework.checker.muta
     return edgeToReferenceNode.buildOrThrow();
   }
 
-  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> NetworkConnections<N, E> connectionsOf(Network<N, E> network, N node) {
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object, E extends @org.checkerframework.checker.mutability.qual.Immutable Object> @org.checkerframework.checker.mutability.qual.Immutable NetworkConnections<N, E> connectionsOf(Network<N, E> network, N node) {
     if (network.isDirected()) {
       Map<E, N> inEdgeMap = Maps.asMap(network.inEdges(node), sourceNodeFn(network));
       Map<E, N> outEdgeMap = Maps.asMap(network.outEdges(node), targetNodeFn(network));
