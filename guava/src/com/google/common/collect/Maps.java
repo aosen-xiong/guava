@@ -4152,7 +4152,7 @@ public final class Maps {
       this.map = checkNotNull(map);
     }
 
-    @PolyMutable Map<K, V> map(@PolyMutable KeySet<K, V> this) {
+    @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable KeySet<K, V> this) {
       return map;
     }
 
@@ -4216,8 +4216,8 @@ public final class Maps {
     }
 
     @Override
-    @PolyMutable SortedMap<K, V> map(@PolyMutable SortedKeySet<K, V> this) {
-      return (@PolyMutable SortedMap<K, V>) super.map();
+    @ReceiverDependentMutable SortedMap<K, V> map(@ReceiverDependentMutable SortedKeySet<K, V> this) {
+      return (@ReceiverDependentMutable SortedMap<K, V>) super.map();
     }
 
     @Override
@@ -4358,7 +4358,7 @@ public final class Maps {
       this.map = checkNotNull(map);
     }
 
-    final @PolyMutable Map<K, V> map(@PolyMutable Values<K, V> this) {
+    final @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable Values<K, V> this) {
       return map;
     }
 
