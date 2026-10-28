@@ -448,7 +448,7 @@ public final class TreeRangeMap<K extends @Immutable Comparable, V> implements R
         public void merge(
             Range<@Immutable Comparable<?>> range,
             @CheckForNull Object value,
-            BiFunction<? super @Readonly Object, ? super @Nullable @Readonly Object, ? extends @Nullable Object>
+            BiFunction<@Mutable ? super @Mutable Object, @Mutable ? super @Nullable @Mutable Object, ? extends @Nullable Object>
                 remappingFunction) {
           checkNotNull(range);
           throw new IllegalArgumentException(
