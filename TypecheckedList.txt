@@ -10,10 +10,10 @@
 # demand, the checker then sees some of those classes with raw supertypes, and
 # files below report errors that the whole-module run does not.
 #
-# State at gait 10711a9ba6 (checker gait 95d0bc5b96, annotated JDK jdk#4
-# 6837d064bd4): 406 files, 69,889 lines (count_java_annotations.pl), 7,807 PICO
-# annotations, 291 suppressions. The whole module (625 files) has 70 errors,
-# all in files not listed as T1, T2 or T3.
+# State at gait 8363468196 (checker gait ffb75181e, annotated JDK jdk#4
+# 6837d064bd4, run on JDK 17): 406 files, 69,889 lines (count_java_annotations.pl),
+# 7,806 PICO annotations, 291 suppressions. The whole module (625 files) has 69
+# errors, all in files not listed as T1, T2 or T3.
 #
 # Not listed: 186 files that are clean but have no PICO annotation, so there is
 # nothing to check, and the 27 other files that still report errors.
