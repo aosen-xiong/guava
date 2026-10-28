@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
-# Typecheck the targeted file set (TypecheckedList.txt), not the whole module.
+# Typecheck one tier of TypecheckedList.txt on its own, not the whole module.
 #
-# The evaluation is defined by a file set that reaches ZERO errors — the same
-# contract jdk/.../java/util/TypecheckedList.txt uses in the artifact. Driving
-# the whole 622-file module to zero is not a realistic target and was never the
-# plan; see guava-annotation-strategy.md section 10.
+# This is a quick check, not the claim. javac loads the rest of Guava from source on
+# demand (-sourcepath -implicit:none), the checker sees some of those classes with raw
+# supertypes, and listed files can report errors that the whole-module run does not.
+# The claim is measured by check-module.sh.
 set -euo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-TIER="${1:-T2}"          # T1 = regression baseline, T2 = the deliverable, ALL = both
+TIER="${1:-T2}"          # T1, T2, T3 = one tier of the claim, ALL = all three
 case "$TIER" in
   T1) sel='^T1 ' ;;
   T2) sel='^T2 ' ;;
-  ALL) sel='^T[12] ' ;;
-  *) echo "usage: $0 [T1|T2|ALL]" >&2; exit 2 ;;
+  T3) sel='^T3 ' ;;
+  ALL) sel='^T[123] ' ;;
+  *) echo "usage: $0 [T1|T2|T3|ALL]" >&2; exit 2 ;;
 esac
 mapfile -t FILES < <(grep -E "$sel" "${ROOT}/TypecheckedList.txt" \
-  | sed -E 's/^T[12] //; s/[[:space:]]*#.*$//; s#^#src/com/google/common/#')
+  | sed -E 's/^T[123] //; s/[[:space:]]*#.*$//; s#^#src/com/google/common/#')
 echo "target ${TIER}: ${#FILES[@]} files"
 "${ROOT}/typecheck-mutability.sh" "${FILES[@]}"

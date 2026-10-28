@@ -1,79 +1,57 @@
-# Guava files targeted for a clean PICO/Mutability typecheck.
-# Modelled on jdk/.../java/util/TypecheckedList.txt in the artifact: the
-# evaluation is defined by a file set that reaches ZERO errors, not by
-# driving the whole module down. The full module has 4315 errors across 328
-# files and is not a realistic target.
+# Guava files that typecheck with the PICO Mutability Checker.
+# Modelled on jdk/.../java/util/TypecheckedList.txt in the artifact. Every T1, T2
+# and T3 file below reports zero errors and is the case-study claim. A file may
+# carry narrow "mutability:<key>" suppressions, each with its reason, as the JDK
+# files do. No listed file is suppressed class-wide.
 #
-# Run:  ./typecheck-mutability.sh $(grep -v '^#' TypecheckedList.txt | sed 's#^#src/com/google/common/#')
+# Measure with ./check-module.sh, which checks the whole module and reports the
+# errors in the listed files. The claim holds in that run only. Checking just
+# these files (check-target.sh) lets javac load the rest of Guava from source on
+# demand, the checker then sees some of those classes with raw supertypes, and
+# files below report errors that the whole-module run does not.
 #
-# TIER 1 — already clean (286 files, 0 errors). Regression baseline:
-# these must never regress. Locked in at no cost.
+# State at gait 10711a9ba6 (checker gait 95d0bc5b96, annotated JDK jdk#4
+# 6837d064bd4): 406 files, 69,889 lines (count_java_annotations.pl), 7,807 PICO
+# annotations, 291 suppressions. The whole module (625 files) has 70 errors,
+# all in files not listed as T1, T2 or T3.
+#
+# Not listed: 186 files that are clean but have no PICO annotation, so there is
+# nothing to check, and the 27 other files that still report errors.
+#
+# T1 = annotated files of the original regression baseline.
+# T2 = the immutable-collection family, the featured subset.
+# T3 = annotated files outside the original target set.
+# P2 = immutable-collection files that still report errors. Not claimed.
 
-T1 annotations/Beta.java
-T1 annotations/GwtCompatible.java
-T1 annotations/GwtIncompatible.java
-T1 annotations/J2ktIncompatible.java
-T1 annotations/VisibleForTesting.java
-T1 annotations/package-info.java
+# T1: original regression baseline, annotated (117 files)
 T1 base/AbstractIterator.java
-T1 base/Charsets.java
-T1 base/CommonMatcher.java
 T1 base/CommonPattern.java
-T1 base/Defaults.java
-T1 base/ElementTypesAreNonnullByDefault.java
-T1 base/ExtraObjectsMethodsForWeb.java
-T1 base/FinalizableReference.java
 T1 base/FinalizableReferenceQueue.java
 T1 base/Function.java
-T1 base/IgnoreJRERequirement.java
-T1 base/Internal.java
-T1 base/Java8Compatibility.java
 T1 base/JdkPattern.java
 T1 base/NullnessCasts.java
 T1 base/Objects.java
-T1 base/ParametricNullness.java
-T1 base/PatternCompiler.java
-T1 base/Platform.java
 T1 base/Preconditions.java
 T1 base/Predicate.java
-T1 base/SmallCharMatcher.java
-T1 base/StandardSystemProperty.java
-T1 base/Stopwatch.java
 T1 base/Strings.java
 T1 base/Supplier.java
-T1 base/Ticker.java
-T1 base/Utf8.java
-T1 base/Verify.java
-T1 base/VerifyException.java
-T1 base/package-info.java
 T1 cache/AbstractLoadingCache.java
 T1 cache/Cache.java
-T1 cache/ElementTypesAreNonnullByDefault.java
 T1 cache/ForwardingLoadingCache.java
-T1 cache/LocalCache.java
-T1 cache/LongAddable.java
-T1 cache/LongAddables.java
-T1 cache/LongAdder.java
-T1 cache/ParametricNullness.java
 T1 cache/ReferenceEntry.java
-T1 cache/RemovalCause.java
 T1 cache/RemovalListener.java
 T1 cache/RemovalListeners.java
 T1 cache/Weigher.java
-T1 cache/package-info.java
 T1 collect/AbstractMapEntry.java
 T1 collect/ArrayListMultimapGwtSerializationDependencies.java
 T1 collect/BaseImmutableMultimap.java
-T1 collect/BoundType.java
 T1 collect/ClassToInstanceMap.java
 T1 collect/CollectPreconditions.java
 T1 collect/CompactHashing.java
 T1 collect/ComparatorOrdering.java
 T1 collect/ComparisonChain.java
-T1 collect/ComputationException.java
 T1 collect/ConsumingQueueIterator.java
 T1 collect/Count.java
-T1 collect/ElementTypesAreNonnullByDefault.java
 T1 collect/FilteredMultimap.java
 T1 collect/FilteredSetMultimap.java
 T1 collect/ForwardingImmutableCollection.java
@@ -82,20 +60,16 @@ T1 collect/ForwardingImmutableMap.java
 T1 collect/ForwardingImmutableSet.java
 T1 collect/ForwardingMapEntry.java
 T1 collect/ForwardingObject.java
-T1 collect/GwtTransient.java
 T1 collect/HashMultimapGwtSerializationDependencies.java
 T1 collect/Hashing.java
-T1 collect/IgnoreJRERequirement.java
 T1 collect/ImmutableAsList.java
 T1 collect/ImmutableEntry.java
 T1 collect/ImmutableMapEntry.java
 T1 collect/ImmutableMultisetGwtSerializationDependencies.java
-T1 collect/Interner.java
 T1 collect/JdkBackedImmutableSet.java
 T1 collect/LinkedHashMultimapGwtSerializationDependencies.java
 T1 collect/Multimap.java
 T1 collect/NullnessCasts.java
-T1 collect/ParametricNullness.java
 T1 collect/PeekingIterator.java
 T1 collect/RangeGwtSerializationDependencies.java
 T1 collect/RangeMap.java
@@ -111,260 +85,360 @@ T1 collect/TransformedListIterator.java
 T1 collect/UnmodifiableIterator.java
 T1 collect/UnmodifiableListIterator.java
 T1 collect/UsingToStringOrdering.java
-T1 collect/package-info.java
-T1 escape/ArrayBasedCharEscaper.java
-T1 escape/CharEscaperBuilder.java
-T1 escape/ElementTypesAreNonnullByDefault.java
-T1 escape/Escaper.java
-T1 escape/ParametricNullness.java
-T1 escape/Platform.java
-T1 escape/package-info.java
-T1 eventbus/AllowConcurrentEvents.java
-T1 eventbus/AsyncEventBus.java
-T1 eventbus/DeadEvent.java
-T1 eventbus/Dispatcher.java
-T1 eventbus/ElementTypesAreNonnullByDefault.java
-T1 eventbus/ParametricNullness.java
-T1 eventbus/Subscribe.java
-T1 eventbus/SubscriberExceptionContext.java
-T1 eventbus/SubscriberExceptionHandler.java
-T1 eventbus/package-info.java
-T1 graph/AbstractGraphBuilder.java
 T1 graph/BaseGraph.java
-T1 graph/DirectedGraphConnections.java
-T1 graph/ElementOrder.java
-T1 graph/ElementTypesAreNonnullByDefault.java
 T1 graph/ForwardingGraph.java
 T1 graph/ForwardingNetwork.java
-T2 graph/ForwardingValueGraph.java   # 8 override.param.invalid: supertype BaseGraph resolves RAW, so the inherited parameter erases to @Readonly Object and overriding it with N fails contravariance. Surfaced once the StructuralEqualityComparer crash was fixed.
 T1 graph/GraphBuilder.java
 T1 graph/GraphConnections.java
-T1 graph/GraphConstants.java
-T1 graph/MutableGraph.java
-T1 graph/MutableNetwork.java
-T1 graph/MutableValueGraph.java
 T1 graph/NetworkBuilder.java
 T1 graph/NetworkConnections.java
-T1 graph/ParametricNullness.java
 T1 graph/PredecessorsFunction.java
 T1 graph/StandardMutableGraph.java
 T1 graph/SuccessorsFunction.java
 T1 graph/ValueGraphBuilder.java
-T1 graph/package-info.java
-T1 hash/AbstractByteHasher.java
 T1 hash/AbstractCompositeHashFunction.java
 T1 hash/AbstractHashFunction.java
 T1 hash/AbstractHasher.java
 T1 hash/AbstractNonStreamingHashFunction.java
-T1 hash/AbstractStreamingHasher.java
 T1 hash/ChecksumHashFunction.java
 T1 hash/Crc32cHashFunction.java
-T1 hash/ElementTypesAreNonnullByDefault.java
 T1 hash/FarmHashFingerprint64.java
 T1 hash/Fingerprint2011.java
 T1 hash/Funnel.java
 T1 hash/HashFunction.java
 T1 hash/Hasher.java
-T1 hash/HashingInputStream.java
-T1 hash/HashingOutputStream.java
-T1 hash/IgnoreJRERequirement.java
 T1 hash/ImmutableSupplier.java
-T1 hash/Java8Compatibility.java
-T1 hash/LongAddable.java
-T1 hash/LongAddables.java
-T1 hash/LongAdder.java
 T1 hash/MacHashFunction.java
 T1 hash/MessageDigestHashFunction.java
-T1 hash/ParametricNullness.java
-T1 hash/PrimitiveSink.java
-T1 hash/package-info.java
-T1 html/ElementTypesAreNonnullByDefault.java
-T1 html/HtmlEscapers.java
-T1 html/ParametricNullness.java
-T1 html/package-info.java
-T1 io/ByteArrayDataInput.java
-T1 io/ByteArrayDataOutput.java
 T1 io/ByteProcessor.java
-T1 io/ByteSink.java
 T1 io/ByteStreams.java
 T1 io/CharSequenceReader.java
-T1 io/Closeables.java
-T1 io/Closer.java
-T1 io/CountingInputStream.java
-T1 io/CountingOutputStream.java
-T1 io/ElementTypesAreNonnullByDefault.java
-T1 io/FileBackedOutputStream.java
-T1 io/FileWriteMode.java
-T1 io/Flushables.java
-T1 io/IgnoreJRERequirement.java
-T1 io/InsecureRecursiveDeleteException.java
-T1 io/Java8Compatibility.java
-T1 io/LineBuffer.java
 T1 io/LineProcessor.java
-T1 io/LineReader.java
-T1 io/LittleEndianDataInputStream.java
-T1 io/LittleEndianDataOutputStream.java
-T1 io/MultiInputStream.java
-T1 io/MultiReader.java
-T1 io/ParametricNullness.java
-T1 io/PatternFilenameFilter.java
-T1 io/ReaderInputStream.java
-T1 io/RecursiveDeleteOption.java
-T1 io/package-info.java
-T1 math/BigDecimalMath.java
 T1 math/BigIntegerMath.java
 T1 math/DoubleMath.java
-T1 math/DoubleUtils.java
-T1 math/ElementTypesAreNonnullByDefault.java
-T1 math/IntMath.java
-T1 math/LinearTransformation.java
-T1 math/LongMath.java
-T1 math/MathPreconditions.java
-T1 math/PairedStatsAccumulator.java
-T1 math/ParametricNullness.java
 T1 math/StatsAccumulator.java
 T1 math/ToDoubleRounder.java
-T1 math/package-info.java
-T1 net/ElementTypesAreNonnullByDefault.java
-T1 net/HttpHeaders.java
-T1 net/ParametricNullness.java
-T1 net/UrlEscapers.java
-T1 net/package-info.java
-T1 primitives/DoublesMethodsForWeb.java
-T1 primitives/ElementTypesAreNonnullByDefault.java
-T1 primitives/FloatsMethodsForWeb.java
-T1 primitives/IntsMethodsForWeb.java
-T1 primitives/ParametricNullness.java
-T1 primitives/ParseRequest.java
-T1 primitives/ShortsMethodsForWeb.java
-T1 primitives/package-info.java
-T1 reflect/ElementTypesAreNonnullByDefault.java
-T1 reflect/IgnoreJRERequirement.java
-T1 reflect/ParametricNullness.java
-T1 reflect/TypeVisitor.java
-T1 reflect/package-info.java
 T1 util/concurrent/AbstractCatchingFuture.java
-T1 util/concurrent/AbstractExecutionThreadService.java
-T1 util/concurrent/AbstractIdleService.java
-T1 util/concurrent/AbstractScheduledService.java
 T1 util/concurrent/AbstractTransformFuture.java
 T1 util/concurrent/AggregateFuture.java
 T1 util/concurrent/AggregateFutureState.java
 T1 util/concurrent/AsyncCallable.java
 T1 util/concurrent/AsyncFunction.java
-T1 util/concurrent/AtomicDoubleArray.java
 T1 util/concurrent/Atomics.java
 T1 util/concurrent/Callables.java
 T1 util/concurrent/CombinedFuture.java
-T1 util/concurrent/ElementTypesAreNonnullByDefault.java
-T1 util/concurrent/ExecutionError.java
-T1 util/concurrent/ExecutionList.java
 T1 util/concurrent/FakeTimeLimiter.java
 T1 util/concurrent/FluentFuture.java
-T1 util/concurrent/ForwardingCondition.java
 T1 util/concurrent/ForwardingFluentFuture.java
-T1 util/concurrent/ForwardingLock.java
 T1 util/concurrent/FutureCallback.java
 T1 util/concurrent/GwtFluentFutureCatchingSpecialization.java
-T1 util/concurrent/GwtFuturesCatchingSpecialization.java
 T1 util/concurrent/ImmediateFuture.java
-T1 util/concurrent/Internal.java
 T1 util/concurrent/InterruptibleTask.java
-T1 util/concurrent/LazyLogger.java
 T1 util/concurrent/ListenableFuture.java
 T1 util/concurrent/ListenableFutureTask.java
 T1 util/concurrent/ListenableScheduledFuture.java
-T1 util/concurrent/Monitor.java
 T1 util/concurrent/NullnessCasts.java
-T1 util/concurrent/OverflowAvoidingLockSupport.java
-T1 util/concurrent/ParametricNullness.java
-T1 util/concurrent/Partially.java
-T1 util/concurrent/Platform.java
-T1 util/concurrent/RateLimiter.java
-T1 util/concurrent/Runnables.java
-T1 util/concurrent/SequentialExecutor.java
-T1 util/concurrent/Service.java
-T1 util/concurrent/SmoothRateLimiter.java
 T1 util/concurrent/TimeLimiter.java
 T1 util/concurrent/TimeoutFuture.java
 T1 util/concurrent/TrustedListenableFutureTask.java
-T1 util/concurrent/UncaughtExceptionHandlers.java
-T1 util/concurrent/UncheckedExecutionException.java
-T1 util/concurrent/UncheckedTimeoutException.java
-T1 util/concurrent/package-info.java
-T1 xml/ElementTypesAreNonnullByDefault.java
-T1 xml/ParametricNullness.java
-T1 xml/XmlEscapers.java
-T1 xml/package-info.java
 
-# TIER 2 — the deliverable (46 files, 598 errors).
-# Guava's immutable-collection family. This is the paper's story: PICO
-# typechecks a real library's immutable collections. Worst single file is
-# collect/ImmutableRangeSet.java at 50 errors — bounded work.
+# T2: immutable-collection family (50 files)
+T2 collect/CompoundOrdering.java
+T2 collect/DenseImmutableTable.java
+T2 collect/ImmutableBiMap.java
+T2 collect/ImmutableClassToInstanceMap.java
+T2 collect/ImmutableCollection.java
+T2 collect/ImmutableEnumMap.java
+T2 collect/ImmutableEnumSet.java
+T2 collect/ImmutableList.java
+T2 collect/ImmutableListMultimap.java
+T2 collect/ImmutableMapEntrySet.java
+T2 collect/ImmutableMapKeySet.java
+T2 collect/ImmutableMapValues.java
+T2 collect/ImmutableMultimap.java
+T2 collect/ImmutableMultiset.java
+T2 collect/ImmutableRangeMap.java
+T2 collect/ImmutableRangeSet.java
+T2 collect/ImmutableSet.java
+T2 collect/ImmutableSetMultimap.java
+T2 collect/ImmutableSortedAsList.java
+T2 collect/ImmutableSortedMap.java
+T2 collect/ImmutableSortedSet.java
+T2 collect/JdkBackedImmutableBiMap.java
+T2 collect/JdkBackedImmutableMap.java
+T2 collect/JdkBackedImmutableMultiset.java
+T2 collect/NullsFirstOrdering.java
+T2 collect/NullsLastOrdering.java
+T2 collect/RegularImmutableAsList.java
+T2 collect/RegularImmutableBiMap.java
+T2 collect/RegularImmutableList.java
+T2 collect/RegularImmutableMap.java
+T2 collect/RegularImmutableMultiset.java
+T2 collect/RegularImmutableSet.java
+T2 collect/RegularImmutableSortedMultiset.java
+T2 collect/RegularImmutableSortedSet.java
+T2 collect/RegularImmutableTable.java
+T2 collect/ReverseOrdering.java
+T2 collect/SingletonImmutableBiMap.java
+T2 collect/SingletonImmutableList.java
+T2 collect/SingletonImmutableSet.java
+T2 collect/SingletonImmutableTable.java
+T2 collect/SparseImmutableTable.java
+T2 graph/ForwardingValueGraph.java
+T2 graph/ImmutableGraph.java
+T2 graph/ImmutableNetwork.java
+T2 graph/ImmutableValueGraph.java
+T2 primitives/ImmutableDoubleArray.java
+T2 primitives/ImmutableIntArray.java
+T2 primitives/ImmutableLongArray.java
+T2 reflect/ImmutableTypeToInstanceMap.java
+T2 util/concurrent/SettableFuture.java
 
-T2 collect/ImmutableRangeSet.java   # 50 errors
-T2 collect/ImmutableSortedSet.java   # 37 errors
-T2 collect/ImmutableMultimap.java   # 35 errors
-T2 collect/ImmutableSortedMap.java   # 35 errors
-T2 collect/ImmutableTable.java   # 27 errors
-T2 collect/RegularImmutableBiMap.java   # 25 errors
-T2 collect/ImmutableMultiset.java   # 24 errors
-T2 collect/RegularImmutableMap.java   # 24 errors
-T2 collect/ImmutableRangeMap.java   # 22 errors
-T2 collect/ImmutableMap.java   # 21 errors
-T2 collect/ImmutableSortedMultiset.java   # 21 errors
-T2 collect/DenseImmutableTable.java   # 18 errors
-T2 collect/RegularImmutableSortedSet.java   # 17 errors
-T2 collect/ImmutableSetMultimap.java   # 15 errors
-T2 graph/ImmutableNetwork.java   # 14 errors
-T2 collect/ImmutableBiMap.java   # 12 errors
-T2 collect/ImmutableEnumMap.java   # 12 errors
-T2 collect/ImmutableList.java   # 12 errors
-T2 collect/JdkBackedImmutableBiMap.java   # 12 errors
-T2 collect/ImmutableEnumSet.java   # 11 errors
-T2 collect/RegularImmutableList.java   # 11 errors
-T2 collect/ImmutableListMultimap.java   # 10 errors
-T2 collect/RegularImmutableMultiset.java   # 10 errors
-T2 collect/RegularImmutableSet.java   # 8 errors
-T2 collect/RegularImmutableSortedMultiset.java   # 8 errors
-T2 collect/RegularImmutableTable.java   # 8 errors
-T2 collect/SingletonImmutableTable.java   # 8 errors
-T2 collect/SparseImmutableTable.java   # 8 errors
-T2 reflect/ImmutableTypeToInstanceMap.java   # 8 errors
-T2 collect/ImmutableCollection.java   # 7 errors
-T2 collect/ImmutableMapEntrySet.java   # 7 errors
-T2 collect/ImmutableMapValues.java   # 7 errors
-T2 collect/JdkBackedImmutableMultiset.java   # 6 errors
-T2 graph/ImmutableGraph.java   # 6 errors
-T2 primitives/ImmutableDoubleArray.java   # 6 errors
-T2 primitives/ImmutableIntArray.java   # 6 errors
-T2 primitives/ImmutableLongArray.java   # 6 errors
-T2 collect/ImmutableClassToInstanceMap.java   # 5 errors
-T2 graph/ImmutableValueGraph.java   # 5 errors
-T2 collect/ImmutableMapKeySet.java   # 3 errors
-T2 collect/ImmutableSortedAsList.java   # 3 errors
-T2 collect/JdkBackedImmutableMap.java   # 2 errors
-T2 collect/SingletonImmutableBiMap.java   # 2 errors
-T2 collect/SingletonImmutableList.java   # 2 errors
-T2 collect/RegularImmutableAsList.java   # 1 errors
-T2 collect/SingletonImmutableSet.java   # 1 errors
+# T3: outside the original target set (239 files)
+T3 base/Absent.java
+T3 base/Ascii.java
+T3 base/CharMatcher.java
+T3 base/Converter.java
+T3 base/Enums.java
+T3 base/Equivalence.java
+T3 base/FunctionalEquivalence.java
+T3 base/Functions.java
+T3 base/Joiner.java
+T3 base/MoreObjects.java
+T3 base/Optional.java
+T3 base/PairwiseEquivalence.java
+T3 base/Present.java
+T3 base/Splitter.java
+T3 base/Suppliers.java
+T3 base/Throwables.java
+T3 cache/AbstractCache.java
+T3 cache/CacheBuilder.java
+T3 cache/CacheBuilderSpec.java
+T3 cache/CacheLoader.java
+T3 cache/CacheStats.java
+T3 cache/ForwardingCache.java
+T3 cache/LoadingCache.java
+T3 cache/RemovalNotification.java
+T3 collect/AbstractBiMap.java
+T3 collect/AbstractIndexedListIterator.java
+T3 collect/AbstractIterator.java
+T3 collect/AbstractListMultimap.java
+T3 collect/AbstractMapBasedMultiset.java
+T3 collect/AbstractMultimap.java
+T3 collect/AbstractMultiset.java
+T3 collect/AbstractNavigableMap.java
+T3 collect/AbstractRangeSet.java
+T3 collect/AbstractSequentialIterator.java
+T3 collect/AbstractSetMultimap.java
+T3 collect/AbstractSortedKeySortedSetMultimap.java
+T3 collect/AbstractSortedMultiset.java
+T3 collect/AbstractSortedSetMultimap.java
+T3 collect/AbstractTable.java
+T3 collect/AllEqualOrdering.java
+T3 collect/ArrayListMultimap.java
+T3 collect/ArrayTable.java
+T3 collect/BiMap.java
+T3 collect/ByFunctionOrdering.java
+T3 collect/CartesianList.java
+T3 collect/CollectCollectors.java
+T3 collect/CollectSpliterators.java
+T3 collect/Collections2.java
+T3 collect/CompactHashMap.java
+T3 collect/CompactHashSet.java
+T3 collect/CompactLinkedHashMap.java
+T3 collect/CompactLinkedHashSet.java
+T3 collect/Comparators.java
+T3 collect/ConcurrentHashMultiset.java
+T3 collect/ContiguousSet.java
+T3 collect/Cut.java
+T3 collect/DescendingImmutableSortedMultiset.java
+T3 collect/DescendingImmutableSortedSet.java
+T3 collect/DescendingMultiset.java
+T3 collect/DiscreteDomain.java
+T3 collect/EmptyContiguousSet.java
+T3 collect/EmptyImmutableListMultimap.java
+T3 collect/EmptyImmutableSetMultimap.java
+T3 collect/EnumBiMap.java
+T3 collect/EnumHashBiMap.java
+T3 collect/EnumMultiset.java
+T3 collect/EvictingQueue.java
+T3 collect/ExplicitOrdering.java
+T3 collect/FilteredEntrySetMultimap.java
+T3 collect/FilteredKeyListMultimap.java
+T3 collect/FilteredKeyMultimap.java
+T3 collect/FilteredKeySetMultimap.java
+T3 collect/FilteredMultimapValues.java
+T3 collect/ForwardingCollection.java
+T3 collect/ForwardingConcurrentMap.java
+T3 collect/ForwardingDeque.java
+T3 collect/ForwardingIterator.java
+T3 collect/ForwardingList.java
+T3 collect/ForwardingListIterator.java
+T3 collect/ForwardingListMultimap.java
+T3 collect/ForwardingMap.java
+T3 collect/ForwardingMultimap.java
+T3 collect/ForwardingMultiset.java
+T3 collect/ForwardingNavigableMap.java
+T3 collect/ForwardingNavigableSet.java
+T3 collect/ForwardingQueue.java
+T3 collect/ForwardingSet.java
+T3 collect/ForwardingSetMultimap.java
+T3 collect/ForwardingSortedMap.java
+T3 collect/ForwardingSortedMultiset.java
+T3 collect/ForwardingSortedSet.java
+T3 collect/ForwardingSortedSetMultimap.java
+T3 collect/ForwardingTable.java
+T3 collect/GeneralRange.java
+T3 collect/HashBasedTable.java
+T3 collect/HashBiMap.java
+T3 collect/HashMultimap.java
+T3 collect/HashMultiset.java
+T3 collect/IndexedImmutableSet.java
+T3 collect/Interners.java
+T3 collect/Iterators.java
+T3 collect/LexicographicalOrdering.java
+T3 collect/LinkedHashMultimap.java
+T3 collect/LinkedHashMultiset.java
+T3 collect/LinkedListMultimap.java
+T3 collect/ListMultimap.java
+T3 collect/Lists.java
+T3 collect/MapDifference.java
+T3 collect/MapMaker.java
+T3 collect/MoreCollectors.java
+T3 collect/MultimapBuilder.java
+T3 collect/Multiset.java
+T3 collect/Multisets.java
+T3 collect/MutableClassToInstanceMap.java
+T3 collect/NaturalOrdering.java
+T3 collect/ObjectArrays.java
+T3 collect/Platform.java
+T3 collect/Queues.java
+T3 collect/Range.java
+T3 collect/RegularContiguousSet.java
+T3 collect/ReverseNaturalOrdering.java
+T3 collect/RowSortedTable.java
+T3 collect/SetMultimap.java
+T3 collect/Sets.java
+T3 collect/SortedLists.java
+T3 collect/SortedMultiset.java
+T3 collect/SortedMultisetBridge.java
+T3 collect/SortedMultisets.java
+T3 collect/SortedSetMultimap.java
+T3 collect/StandardRowSortedTable.java
+T3 collect/Streams.java
+T3 collect/Synchronized.java
+T3 collect/TopKSelector.java
+T3 collect/TreeBasedTable.java
+T3 collect/TreeMultimap.java
+T3 collect/TreeMultiset.java
+T3 collect/TreeRangeMap.java
+T3 collect/TreeRangeSet.java
+T3 collect/UnmodifiableSortedMultiset.java
+T3 escape/ArrayBasedUnicodeEscaper.java
+T3 escape/UnicodeEscaper.java
+T3 eventbus/Subscriber.java
+T3 graph/AbstractBaseGraph.java
+T3 graph/AbstractDirectedNetworkConnections.java
+T3 graph/AbstractGraph.java
+T3 graph/AbstractNetwork.java
+T3 graph/AbstractUndirectedNetworkConnections.java
+T3 graph/AbstractValueGraph.java
+T3 graph/DirectedMultiNetworkConnections.java
+T3 graph/DirectedNetworkConnections.java
+T3 graph/EdgesConnecting.java
+T3 graph/EndpointPairIterator.java
+T3 graph/Graph.java
+T3 graph/GraphsBridgeMethods.java
+T3 graph/IncidentEdgeSet.java
+T3 graph/InvalidatableSet.java
+T3 graph/MapIteratorCache.java
+T3 graph/MapRetrievalCache.java
+T3 graph/MultiEdgesConnecting.java
+T3 graph/Network.java
+T3 graph/StandardMutableNetwork.java
+T3 graph/StandardMutableValueGraph.java
+T3 graph/StandardNetwork.java
+T3 graph/StandardValueGraph.java
+T3 graph/UndirectedGraphConnections.java
+T3 graph/UndirectedMultiNetworkConnections.java
+T3 graph/UndirectedNetworkConnections.java
+T3 graph/ValueGraph.java
+T3 hash/BloomFilter.java
+T3 hash/BloomFilterStrategies.java
+T3 hash/Funnels.java
+T3 hash/HashCode.java
+T3 hash/Hashing.java
+T3 hash/Murmur3_128HashFunction.java
+T3 hash/Murmur3_32HashFunction.java
+T3 hash/SipHashFunction.java
+T3 io/AppendableWriter.java
+T3 io/BaseEncoding.java
+T3 io/ByteSource.java
+T3 io/CharSource.java
+T3 io/CharStreams.java
+T3 io/Files.java
+T3 io/MoreFiles.java
+T3 io/Resources.java
+T3 math/PairedStats.java
+T3 math/Quantiles.java
+T3 math/Stats.java
+T3 net/HostAndPort.java
+T3 net/HostSpecifier.java
+T3 net/InetAddresses.java
+T3 net/InternetDomainName.java
+T3 net/MediaType.java
+T3 net/PercentEscaper.java
+T3 primitives/Bytes.java
+T3 primitives/Doubles.java
+T3 primitives/Floats.java
+T3 primitives/Ints.java
+T3 primitives/Longs.java
+T3 primitives/Shorts.java
+T3 primitives/SignedBytes.java
+T3 primitives/UnsignedInteger.java
+T3 primitives/UnsignedInts.java
+T3 primitives/UnsignedLong.java
+T3 primitives/UnsignedLongs.java
+T3 reflect/AbstractInvocationHandler.java
+T3 reflect/ClassPath.java
+T3 reflect/Invokable.java
+T3 reflect/MutableTypeToInstanceMap.java
+T3 reflect/Parameter.java
+T3 reflect/TypeCapture.java
+T3 reflect/TypeParameter.java
+T3 reflect/TypeResolver.java
+T3 reflect/TypeToInstanceMap.java
+T3 reflect/TypeToken.java
+T3 reflect/Types.java
+T3 util/concurrent/AbstractListeningExecutorService.java
+T3 util/concurrent/AbstractService.java
+T3 util/concurrent/AtomicLongMap.java
+T3 util/concurrent/ClosingFuture.java
+T3 util/concurrent/CollectionFuture.java
+T3 util/concurrent/CycleDetectingLockFactory.java
+T3 util/concurrent/DirectExecutor.java
+T3 util/concurrent/ExecutionSequencer.java
+T3 util/concurrent/ForwardingExecutorService.java
+T3 util/concurrent/ForwardingFuture.java
+T3 util/concurrent/ForwardingListenableFuture.java
+T3 util/concurrent/ForwardingListeningExecutorService.java
+T3 util/concurrent/Futures.java
+T3 util/concurrent/FuturesGetChecked.java
+T3 util/concurrent/JdkFutureAdapters.java
+T3 util/concurrent/ListenerCallQueue.java
+T3 util/concurrent/ListeningExecutorService.java
+T3 util/concurrent/ListeningScheduledExecutorService.java
+T3 util/concurrent/MoreExecutors.java
+T3 util/concurrent/Striped.java
+T3 util/concurrent/ThreadFactoryBuilder.java
+T3 util/concurrent/Uninterruptibles.java
+T3 util/concurrent/WrappingExecutorService.java
+T3 util/concurrent/WrappingScheduledExecutorService.java
 
-T2 util/concurrent/SettableFuture.java   # surfaced only in target-set mode
+# P2: immutable-collection files that still report errors (3 files)
+P2 collect/ImmutableMap.java   # 2 errors: an inner class extending its outer class is substituted twice
+P2 collect/ImmutableSortedMultiset.java   # 5 errors: 4 poly varargs (https://github.com/eisop/checker-framework/issues/2293) and 1 uninstantiated poly in inference
+P2 collect/ImmutableTable.java   # 1 error: cellOf's cells, left as they are by decision
 
-# EXPLICITLY OUT OF SCOPE — high effort, weak story:
-#   collect/Maps.java (349), collect/Synchronized.java (180),
-#   collect/MapMakerInternalMap.java (154), collect/AbstractMapBasedMultimap.java
-#   util/concurrent/* (sequential semantics cannot speak to it)
-
-
-# BLOCKED — these CRASH the checker (StackOverflowError in
-# AbstractViewpointAdapter.combineAnnotationWithType, unbounded even at
-# -J-Xss256m). A crashed file reports ZERO diagnostics, so it looks clean:
-# they must be excluded from the baseline, not counted as passing.
-# See guava-annotation-strategy.md section 5.5.
-X  io/TempFileCreator.java
-T2 collect/ImmutableSet.java   # no longer crashes (2026-10-16)
-T2 collect/CompoundOrdering.java   # moved out of the baseline (target-set mode)
-T2 collect/NullsFirstOrdering.java   # moved out of the baseline (target-set mode)
-T2 collect/NullsLastOrdering.java   # moved out of the baseline (target-set mode)
-T2 collect/ReverseOrdering.java   # moved out of the baseline (target-set mode)
+# Suppressed class-wide, so not claimed although they report no errors:
+#   cache/LocalCache.java, graph/ElementOrder.java, graph/DirectedGraphConnections.java
