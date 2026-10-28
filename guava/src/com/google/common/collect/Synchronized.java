@@ -1568,9 +1568,9 @@ final class Synchronized {
 
   // See Collections.CheckedMap.CheckedEntrySet for details on attacks.
   //Suppressed due to annotations on toArray
-  @SuppressWarnings({"nullness", "mutability:method.invocation.invalid", "mutability:return.type.incompatible"}) // the values are this collection's, of the receiver's @PolyMutable V, but toArray's poly does not bind through the superclass's Collection<V> type argument
+  @SuppressWarnings({"nullness", "mutability:override.return.invalid", "mutability:method.invocation.invalid"}) // the elements are the value collections, which have the map's mutability, and a fixed return cannot relate them to the receiver, so this override returns them @Readonly. An override of a @PolyMutable return cannot state a fixed qualifier. super.toArray()'s poly does not bind through the superclass's Collection<V> type argument
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly SynchronizedAsMapValues<@PolyNull @PolySigned @PolyMutable V> this) { return super.toArray(); }
+  public @PolyNull @PolySigned @Readonly Object[] toArray(@Readonly SynchronizedAsMapValues<@PolyNull @PolySigned V> this) { return super.toArray(); }
 
   @SuppressWarnings("nullness")
   @Override public <T> T[] toArray(T[] arg0) { return super.toArray(arg0); }
