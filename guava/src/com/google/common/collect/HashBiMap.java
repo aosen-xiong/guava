@@ -105,6 +105,7 @@ public final class HashBiMap<K extends @Nullable @Immutable Object, V extends @N
     return bimap;
   }
 
+  @CFComment("PICO: an entry's state is its key and value, which ImmutableEntry fixes. The bucket and insertion-order links belong to the bimap, which re-links entries on every put and remove, so they are @Assignable")
   @Immutable
   static final class BiEntry<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       extends ImmutableEntry<K, V> {

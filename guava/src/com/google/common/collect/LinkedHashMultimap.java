@@ -177,6 +177,7 @@ public final class LinkedHashMultimap<K extends @Nullable @Immutable Object, V e
    * whole.
    */
   @VisibleForTesting
+  @CFComment("PICO: an entry's state is its key and value, which ImmutableEntry fixes. The bucket and ordering links belong to the multimap, which re-links entries on every put and remove, so they are @Assignable")
   @Immutable
   static final class ValueEntry<K extends @Nullable @Immutable Object, V extends @Readonly @Nullable Object>
       extends ImmutableEntry<K, V> implements ValueSetLink<K, V> {
