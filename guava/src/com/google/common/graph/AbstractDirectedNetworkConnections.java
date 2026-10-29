@@ -32,7 +32,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
-import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
@@ -56,7 +55,7 @@ abstract class AbstractDirectedNetworkConnections<N extends @Immutable Object, E
   /** Keys are edges outgoing from the origin node, values are the target node. */
   final Map<E, N> outEdgeMap;
 
-  private @Assignable int selfLoopCount;
+  private int selfLoopCount;
 
   AbstractDirectedNetworkConnections(@ReceiverDependentMutable Map<E, N> inEdgeMap, @ReceiverDependentMutable Map<E, N> outEdgeMap, int selfLoopCount) {
     this.inEdgeMap = checkNotNull(inEdgeMap);
