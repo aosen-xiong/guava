@@ -10,13 +10,13 @@
 # demand, the checker then sees some of those classes with raw supertypes, and
 # files below report errors that the whole-module run does not.
 #
-# State at gait 8e373cf456 (checker gait ffb75181e, annotated JDK jdk#4
-# 6837d064bd4, run on JDK 17): 410 files, 71,020 lines (count_java_annotations.pl),
-# 8,185 PICO annotations (qualcount.py), 310 suppressions. The whole module (625
-# files) has 65 errors, all in files not listed as T1, T2 or T3.
+# State at gait c3efe775ef (checker gait ffb75181e, annotated JDK jdk#4
+# 96fbe6402d4, run on JDK 17): 411 files, 71,498 lines (count_java_annotations.pl),
+# 8,425 PICO annotations (qualcount.py), 305 suppressions. The whole module (625
+# files) has 60 errors, all in files not listed as T1, T2 or T3.
 #
 # Not listed: 186 files that are clean but have no PICO annotation, so there is
-# nothing to check, and the 24 other files that still report errors.
+# nothing to check, and the 23 other files that still report errors.
 #
 # T1 = annotated files of the original regression baseline.
 # T2 = the immutable-collection family, the featured subset.
@@ -195,7 +195,7 @@ T2 primitives/ImmutableLongArray.java
 T2 reflect/ImmutableTypeToInstanceMap.java
 T2 util/concurrent/SettableFuture.java
 
-# T3: outside the original target set (242 files)
+# T3: outside the original target set (243 files)
 T3 base/Absent.java
 T3 base/Ascii.java
 T3 base/CharMatcher.java
@@ -328,6 +328,7 @@ T3 collect/SortedSetMultimap.java
 T3 collect/StandardRowSortedTable.java
 T3 collect/Streams.java
 T3 collect/Synchronized.java
+T3 collect/Tables.java
 T3 collect/TopKSelector.java
 T3 collect/TreeBasedTable.java
 T3 collect/TreeMultimap.java
