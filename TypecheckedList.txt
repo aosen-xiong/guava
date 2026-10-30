@@ -10,13 +10,13 @@
 # demand, the checker then sees some of those classes with raw supertypes, and
 # files below report errors that the whole-module run does not.
 #
-# State at gait 1f28689345 (checker gait ffb75181e, annotated JDK jdk#4
-# 6837d064bd4, run on JDK 17): 406 files, 69,890 lines (count_java_annotations.pl),
-# 7,925 PICO annotations (qualcount.py), 291 suppressions. The whole module (625
-# files) has 69 errors, all in files not listed as T1, T2 or T3.
+# State at gait 8e373cf456 (checker gait ffb75181e, annotated JDK jdk#4
+# 6837d064bd4, run on JDK 17): 410 files, 71,020 lines (count_java_annotations.pl),
+# 8,185 PICO annotations (qualcount.py), 310 suppressions. The whole module (625
+# files) has 65 errors, all in files not listed as T1, T2 or T3.
 #
 # Not listed: 186 files that are clean but have no PICO annotation, so there is
-# nothing to check, and the 27 other files that still report errors.
+# nothing to check, and the 24 other files that still report errors.
 #
 # T1 = annotated files of the original regression baseline.
 # T2 = the immutable-collection family, the featured subset.
@@ -142,7 +142,7 @@ T1 util/concurrent/TimeLimiter.java
 T1 util/concurrent/TimeoutFuture.java
 T1 util/concurrent/TrustedListenableFutureTask.java
 
-# T2: immutable-collection family (50 files)
+# T2: immutable-collection family (51 files)
 T2 collect/CompoundOrdering.java
 T2 collect/DenseImmutableTable.java
 T2 collect/ImmutableBiMap.java
@@ -164,6 +164,7 @@ T2 collect/ImmutableSetMultimap.java
 T2 collect/ImmutableSortedAsList.java
 T2 collect/ImmutableSortedMap.java
 T2 collect/ImmutableSortedSet.java
+T2 collect/ImmutableTable.java
 T2 collect/JdkBackedImmutableBiMap.java
 T2 collect/JdkBackedImmutableMap.java
 T2 collect/JdkBackedImmutableMultiset.java
@@ -194,7 +195,7 @@ T2 primitives/ImmutableLongArray.java
 T2 reflect/ImmutableTypeToInstanceMap.java
 T2 util/concurrent/SettableFuture.java
 
-# T3: outside the original target set (239 files)
+# T3: outside the original target set (242 files)
 T3 base/Absent.java
 T3 base/Ascii.java
 T3 base/CharMatcher.java
@@ -337,6 +338,7 @@ T3 collect/UnmodifiableSortedMultiset.java
 T3 escape/ArrayBasedUnicodeEscaper.java
 T3 escape/UnicodeEscaper.java
 T3 eventbus/Subscriber.java
+T3 eventbus/SubscriberRegistry.java
 T3 graph/AbstractBaseGraph.java
 T3 graph/AbstractDirectedNetworkConnections.java
 T3 graph/AbstractGraph.java
@@ -348,6 +350,7 @@ T3 graph/DirectedNetworkConnections.java
 T3 graph/EdgesConnecting.java
 T3 graph/EndpointPairIterator.java
 T3 graph/Graph.java
+T3 graph/Graphs.java
 T3 graph/GraphsBridgeMethods.java
 T3 graph/IncidentEdgeSet.java
 T3 graph/InvalidatableSet.java
@@ -359,6 +362,7 @@ T3 graph/StandardMutableNetwork.java
 T3 graph/StandardMutableValueGraph.java
 T3 graph/StandardNetwork.java
 T3 graph/StandardValueGraph.java
+T3 graph/Traverser.java
 T3 graph/UndirectedGraphConnections.java
 T3 graph/UndirectedMultiNetworkConnections.java
 T3 graph/UndirectedNetworkConnections.java
@@ -435,10 +439,9 @@ T3 util/concurrent/Uninterruptibles.java
 T3 util/concurrent/WrappingExecutorService.java
 T3 util/concurrent/WrappingScheduledExecutorService.java
 
-# P2: immutable-collection files that still report errors (3 files)
+# P2: immutable-collection files that still report errors (2 files)
 P2 collect/ImmutableMap.java   # 2 errors: an inner class extending its outer class is substituted twice
 P2 collect/ImmutableSortedMultiset.java   # 5 errors: 4 poly varargs (https://github.com/eisop/checker-framework/issues/2293) and 1 uninstantiated poly in inference
-P2 collect/ImmutableTable.java   # 1 error: cellOf's cells, left as they are by decision
 
 # Suppressed class-wide, so not claimed although they report no errors:
 #   cache/LocalCache.java, graph/ElementOrder.java, graph/DirectedGraphConnections.java
