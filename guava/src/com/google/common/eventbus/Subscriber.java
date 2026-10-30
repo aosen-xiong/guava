@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -35,6 +37,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @author Colin Decker
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 class Subscriber {
 
   /** Creates a {@code Subscriber} for {@code method} on {@code listener}. */
@@ -45,16 +48,16 @@ class Subscriber {
   }
 
   /** The event bus this subscriber belongs to. */
-  @Weak private EventBus bus;
+  @Weak private @Mutable EventBus bus;
 
   /** The object with the subscriber method. */
-  @VisibleForTesting final Object target;
+  @VisibleForTesting final @Mutable Object target;
 
   /** Subscriber method. */
   private final Method method;
 
   /** Executor to use for dispatching events to this subscriber. */
-  private final Executor executor;
+  private final @Mutable Executor executor;
 
   private Subscriber(EventBus bus, Object target, Method method) {
     this.bus = bus;
@@ -132,6 +135,7 @@ class Subscriber {
    * the method at a time.
    */
   @VisibleForTesting
+  @Immutable
   static final class SynchronizedSubscriber extends Subscriber {
 
     private SynchronizedSubscriber(EventBus bus, Object target, Method method) {
