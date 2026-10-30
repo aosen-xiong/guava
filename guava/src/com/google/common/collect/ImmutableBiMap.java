@@ -457,7 +457,6 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
      * @since 31.0
      */
     @Override
-    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     public ImmutableBiMap<K, V> buildOrThrow() {
       switch (size) {
         case 0:
@@ -506,7 +505,6 @@ public abstract class ImmutableBiMap<K extends @Immutable Object, V extends @Imm
 
     @Override
     @VisibleForTesting
-    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     ImmutableBiMap<K, V> buildJdkBacked() {
       checkState(
           valueComparator == null,

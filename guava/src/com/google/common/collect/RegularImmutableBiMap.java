@@ -71,7 +71,6 @@ class RegularImmutableBiMap<K extends @Immutable Object, V extends @Immutable Ob
   private final transient int mask;
   private final transient int hashCode;
 
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableBiMap<K, V> fromEntries(@Immutable Entry<K, V>... entries) {
     return fromEntryArray(entries.length, entries);
   }

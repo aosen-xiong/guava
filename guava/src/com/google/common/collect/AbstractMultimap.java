@@ -249,7 +249,6 @@ abstract class AbstractMultimap<K extends @Nullable @Immutable Object, V extends
     }
   }
 
-  @SuppressWarnings("mutability:return.type.incompatible") // Maps.valueIterator wraps the entries' iterator and forwards remove() to it, so it has this multimap's mutability
   @Mutable Iterator<V> valueIterator(@ReceiverDependentMutable AbstractMultimap<K, V> this) {
     return Maps.valueIterator(entries().iterator());
   }

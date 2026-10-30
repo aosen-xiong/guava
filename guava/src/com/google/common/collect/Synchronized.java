@@ -1002,7 +1002,6 @@ final class Synchronized {
     private static final long serialVersionUID = 0;
   }
 
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   private static <E extends @Nullable @Readonly Object> @PolyMutable Collection<E> typePreservingCollection(
       @PolyMutable Collection<E> collection, @CheckForNull @Readonly Object mutex) {
     if (collection instanceof SortedSet) {
@@ -1017,7 +1016,6 @@ final class Synchronized {
     return collection(collection, mutex);
   }
 
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   private static <E extends @Nullable @Readonly Object> @PolyMutable Set<E> typePreservingSet(
       @PolyMutable Set<E> set, @CheckForNull @Readonly Object mutex) {
     if (set instanceof SortedSet) {
@@ -1725,13 +1723,11 @@ final class Synchronized {
     return new @PolyMutable SynchronizedNavigableSet<E>(navigableSet, mutex);
   }
 
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableSet
   static <E extends @Nullable @Readonly Object> @PolyMutable NavigableSet<E> navigableSet(@PolyMutable NavigableSet<E> navigableSet) {
     return navigableSet(navigableSet, null);
   }
 
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the delegate and the synchronized view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable NavigableMap<K, V> navigableMap(
       @PolyMutable NavigableMap<K, V> navigableMap) {

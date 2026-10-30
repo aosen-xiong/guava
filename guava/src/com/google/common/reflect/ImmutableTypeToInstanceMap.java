@@ -174,7 +174,6 @@ public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken
   }
 
   @Override
-  @SuppressWarnings("mutability:override.return.invalid") // an @Immutable class cannot restate ForwardingObject's @PolyMutable delegate(): its receiver is always @Immutable, so the poly always means @Immutable
   protected @Immutable Map<TypeToken<? extends B>, B> delegate() {
     return delegate;
   }

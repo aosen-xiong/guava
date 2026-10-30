@@ -483,7 +483,6 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
     return fromEntries(comparator, sameComparator, map.entrySet());
   }
 
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private static <K extends @Immutable Comparable<? super K>, V> ImmutableSortedMap<K, V> fromEntries(
       @Immutable Entry<K, V>... entries) {
     return fromEntries(Ordering.natural(), false, entries, entries.length);
@@ -730,7 +729,6 @@ public final class ImmutableSortedMap<K extends @Immutable Object, V> extends Im
      * @since 31.0
      */
     @Override
-    @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     public ImmutableSortedMap<K, V> buildOrThrow() {
       switch (size) {
         case 0:

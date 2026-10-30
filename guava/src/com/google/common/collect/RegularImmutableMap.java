@@ -86,7 +86,6 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   // 'and' with an int to get a table index
   private final transient int mask;
 
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object , V> ImmutableMap<K, V> fromEntries(@Immutable Entry<K, V>... entries) {
     return fromEntryArray(entries.length, entries, /* throwIfDuplicateKeys= */ true);
   }
@@ -96,7 +95,6 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    * the entries in entryArray with its own entry objects (though they will have the same key/value
    * contents), and may take ownership of entryArray.
    */
-  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   static <K extends @Immutable Object, V> ImmutableMap<K, V> fromEntryArray(
       int n, @Nullable @Immutable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys) {
     checkPositionIndex(n, entryArray.length);

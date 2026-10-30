@@ -481,7 +481,6 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
       this.cellColumnIndices = cellColumnIndices;
     }
 
-    @SuppressWarnings("mutability:argument.type.incompatible") // rowKeySet() and columnKeySet() hold the table's @Immutable keys: toArray()'s poly does not bind to a wildcard's bound
     static SerializedForm create(
         ImmutableTable<?, ?, ?> table, int @Readonly [] cellRowIndices, int @Readonly [] cellColumnIndices) {
       return new SerializedForm(

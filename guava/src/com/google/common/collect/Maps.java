@@ -1876,7 +1876,6 @@ public final class Maps {
    * function} should be fast. To avoid lazy evaluation when the returned map doesn't need to be a
    * view, copy the returned map into a new map of your choosing.
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       @PolyMutable Map<K, V2> transformValues(@PolyMutable Map<K, V1> fromMap, @Readonly Function<? super V1, V2> function) {
@@ -1919,7 +1918,6 @@ public final class Maps {
    *
    * @since 11.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       @PolyMutable SortedMap<K, V2> transformValues(
@@ -1965,7 +1963,6 @@ public final class Maps {
    *
    * @since 13.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
@@ -2598,7 +2595,6 @@ public final class Maps {
    *
    * @since 11.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable SortedMap<K, V> filterKeys(
       @PolyMutable SortedMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     // TODO(lowasser): Return a subclass of Maps.FilteredKeyMap for slightly better
@@ -2632,7 +2628,6 @@ public final class Maps {
    *
    * @since 14.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   @GwtIncompatible // NavigableMap
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       @PolyMutable NavigableMap<K, V> filterKeys(
@@ -2666,7 +2661,6 @@ public final class Maps {
    *
    * @since 14.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable BiMap<K, V> filterKeys(
       @PolyMutable BiMap<K, V> unfiltered, final @Readonly Predicate<? super K> keyPredicate) {
     checkNotNull(keyPredicate);

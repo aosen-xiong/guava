@@ -94,7 +94,6 @@ final class RegularImmutableSet<E extends @Immutable Object> extends ImmutableSe
   }
 
   @Override
-  @SuppressWarnings("mutability:return.type.incompatible") // the array holds this collection's E elements, typed as @Readonly Object, so a spliterator over it yields E
   public Spliterator<E> spliterator() {
     return Spliterators.spliterator(elements, SPLITERATOR_CHARACTERISTICS);
   }

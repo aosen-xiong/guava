@@ -1372,7 +1372,6 @@ public final class Multimaps {
    *
    * @since 7.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       @PolyMutable Multimap<K, V2> transformValues(
@@ -1422,7 +1421,6 @@ public final class Multimaps {
    *
    * @since 7.0
    */
-  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           K extends @Nullable @Immutable Object, V1 extends @Nullable @Readonly Object, V2 extends @Nullable @Readonly Object>
       @PolyMutable ListMultimap<K, V2> transformValues(

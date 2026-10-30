@@ -542,7 +542,6 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
       return this;
     }
 
-    @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     private ImmutableMap<K, V> build(boolean throwIfDuplicateKeys) {
       /*
        * If entries is full, or if hash flooding is detected, then this implementation may end up

@@ -100,7 +100,6 @@ class RegularImmutableList<E> extends ImmutableList<E> {
   }
 
   @Override
-  @SuppressWarnings("mutability:return.type.incompatible") // the array holds this collection's E elements, typed as @Readonly Object, so a spliterator over it yields E
   public Spliterator<E> spliterator() {
     return Spliterators.spliterator(array, SPLITERATOR_CHARACTERISTICS);
   }
