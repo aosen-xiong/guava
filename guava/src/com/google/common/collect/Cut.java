@@ -39,7 +39,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>>, Serializable {
+abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>, Serializable {
   final C endpoint;
 
   Cut(C endpoint) {
@@ -120,14 +120,14 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
    * casting the type parameter is safe.
    */
   @SuppressWarnings("unchecked")
-  static <C extends @Immutable Comparable> Cut<C> belowAll() {
+  static <C extends @Readonly Comparable> Cut<C> belowAll() {
     return (Cut<C>) BelowAll.INSTANCE;
   }
 
   private static final long serialVersionUID = 0;
 
   @Immutable
-  private static final class BelowAll extends Cut<@Immutable Comparable<?>> {
+  private static final class BelowAll extends Cut<@Readonly Comparable<?>> {
     private static final BelowAll INSTANCE = new BelowAll();
 
     private BelowAll() {
@@ -141,7 +141,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    @Immutable Comparable<?> endpoint() {
+    @Readonly Comparable<?> endpoint() {
       throw new IllegalStateException("range unbounded on this side");
     }
 
@@ -161,14 +161,14 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Cut<@Immutable Comparable<?>> withLowerBoundType(
-        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withLowerBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new IllegalStateException();
     }
 
     @Override
-    Cut<@Immutable Comparable<?>> withUpperBoundType(
-        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withUpperBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError("this statement should be unreachable");
     }
 
@@ -183,26 +183,26 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    @Immutable Comparable<?> leastValueAbove(DiscreteDomain<@Immutable Comparable<?>> domain) {
+    @Readonly Comparable<?> leastValueAbove(DiscreteDomain<@Readonly Comparable<?>> domain) {
       return domain.minValue();
     }
 
     @Override
-    @Immutable Comparable<?> greatestValueBelow(DiscreteDomain<@Immutable Comparable<?>> domain) {
+    @Readonly Comparable<?> greatestValueBelow(DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError();
     }
 
     @Override
-    Cut<@Immutable Comparable<?>> canonical(DiscreteDomain<@Immutable Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> canonical(DiscreteDomain<@Readonly Comparable<?>> domain) {
       try {
-        return Cut.<@Immutable Comparable<?>>belowValue(domain.minValue());
+        return Cut.<@Readonly Comparable<?>>belowValue(domain.minValue());
       } catch (NoSuchElementException e) {
         return this;
       }
     }
 
     @Override
-    public int compareTo(Cut<@Immutable Comparable<?>> o) {
+    public int compareTo(Cut<@Readonly Comparable<?>> o) {
       return (o == this) ? 0 : -1;
     }
 
@@ -228,12 +228,12 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
    * type C, so casting the type parameter is safe.
    */
   @SuppressWarnings("unchecked")
-  static <C extends @Immutable Comparable> Cut<C> aboveAll() {
+  static <C extends @Readonly Comparable> Cut<C> aboveAll() {
     return (Cut<C>) AboveAll.INSTANCE;
   }
 
   @Immutable
-  private static final class AboveAll extends Cut<@Immutable Comparable<?>> {
+  private static final class AboveAll extends Cut<@Readonly Comparable<?>> {
     private static final AboveAll INSTANCE = new AboveAll();
 
     private AboveAll() {
@@ -242,7 +242,7 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    @Immutable Comparable<?> endpoint() {
+    @Readonly Comparable<?> endpoint() {
       throw new IllegalStateException("range unbounded on this side");
     }
 
@@ -262,14 +262,14 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    Cut<@Immutable Comparable<?>> withLowerBoundType(
-        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withLowerBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError("this statement should be unreachable");
     }
 
     @Override
-    Cut<@Immutable Comparable<?>> withUpperBoundType(
-        BoundType boundType, DiscreteDomain<@Immutable Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withUpperBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new IllegalStateException();
     }
 
@@ -284,17 +284,17 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     }
 
     @Override
-    @Immutable Comparable<?> leastValueAbove(DiscreteDomain<@Immutable Comparable<?>> domain) {
+    @Readonly Comparable<?> leastValueAbove(DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError();
     }
 
     @Override
-    @Immutable Comparable<?> greatestValueBelow(DiscreteDomain<@Immutable Comparable<?>> domain) {
+    @Readonly Comparable<?> greatestValueBelow(DiscreteDomain<@Readonly Comparable<?>> domain) {
       return domain.maxValue();
     }
 
     @Override
-    public int compareTo(Cut<@Immutable Comparable<?>> o) {
+    public int compareTo(Cut<@Readonly Comparable<?>> o) {
       return (o == this) ? 0 : 1;
     }
 
@@ -315,12 +315,12 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     private static final long serialVersionUID = 0;
   }
 
-  static <C extends @Immutable Comparable> Cut<C> belowValue(C endpoint) {
+  static <C extends @Readonly Comparable> Cut<C> belowValue(C endpoint) {
     return new BelowValue<>(endpoint);
   }
 
   @Immutable
-  private static final class BelowValue<C extends @Immutable Comparable> extends Cut<C> {
+  private static final class BelowValue<C extends @Readonly Comparable> extends Cut<C> {
     BelowValue(C endpoint) {
       super(checkNotNull(endpoint));
     }
@@ -400,12 +400,12 @@ abstract class Cut<C extends @Immutable Comparable> implements Comparable<Cut<C>
     private static final long serialVersionUID = 0;
   }
 
-  static <C extends @Immutable Comparable> Cut<C> aboveValue(C endpoint) {
+  static <C extends @Readonly Comparable> Cut<C> aboveValue(C endpoint) {
     return new AboveValue<>(endpoint);
   }
 
   @Immutable
-  private static final class AboveValue<C extends @Immutable Comparable> extends Cut<C> {
+  private static final class AboveValue<C extends @Readonly Comparable> extends Cut<C> {
     AboveValue(C endpoint) {
       super(checkNotNull(endpoint));
     }

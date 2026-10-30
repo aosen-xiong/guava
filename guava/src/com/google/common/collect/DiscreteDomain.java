@@ -51,7 +51,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-public abstract class DiscreteDomain<C extends @Immutable Comparable> {
+public abstract class DiscreteDomain<C extends @Readonly Comparable> {
 
   /**
    * Returns the discrete domain for values of type {@code Integer}.

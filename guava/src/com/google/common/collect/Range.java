@@ -124,14 +124,14 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Immutable(containerOf = "C")
 @ElementTypesAreNonnullByDefault
 @org.checkerframework.checker.mutability.qual.Immutable
-public final class Range<C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable> extends RangeGwtSerializationDependencies
+public final class Range<C extends @Readonly Comparable> extends RangeGwtSerializationDependencies
     implements Predicate<C>, Serializable {
   @SuppressWarnings("unchecked")
-  static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Ordering<Range<C>> rangeLexOrdering() {
+  static <C extends @Readonly Comparable<?>> Ordering<Range<C>> rangeLexOrdering() {
     return (Ordering<Range<C>>) RangeLexOrdering.INSTANCE;
   }
 
-  static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> create(Cut<C> lowerBound, Cut<C> upperBound) {
+  static <C extends @Readonly Comparable<?>> Range<C> create(Cut<C> lowerBound, Cut<C> upperBound) {
     return new Range<>(lowerBound, upperBound);
   }
 
@@ -144,7 +144,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    * @throws ClassCastException if {@code lower} and {@code upper} are not mutually comparable
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> open(C lower, C upper) {
+  public static <C extends @Readonly Comparable<?>> Range<C> open(C lower, C upper) {
     return create(Cut.aboveValue(lower), Cut.belowValue(upper));
   }
 
@@ -156,7 +156,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    * @throws ClassCastException if {@code lower} and {@code upper} are not mutually comparable
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> closed(C lower, C upper) {
+  public static <C extends @Readonly Comparable<?>> Range<C> closed(C lower, C upper) {
     return create(Cut.belowValue(lower), Cut.aboveValue(upper));
   }
 
@@ -168,7 +168,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    * @throws ClassCastException if {@code lower} and {@code upper} are not mutually comparable
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> closedOpen(C lower, C upper) {
+  public static <C extends @Readonly Comparable<?>> Range<C> closedOpen(C lower, C upper) {
     return create(Cut.belowValue(lower), Cut.belowValue(upper));
   }
 
@@ -180,7 +180,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    * @throws ClassCastException if {@code lower} and {@code upper} are not mutually comparable
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> openClosed(C lower, C upper) {
+  public static <C extends @Readonly Comparable<?>> Range<C> openClosed(C lower, C upper) {
     return create(Cut.aboveValue(lower), Cut.aboveValue(upper));
   }
 
@@ -192,7 +192,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    * @throws ClassCastException if {@code lower} and {@code upper} are not mutually comparable
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> range(
+  public static <C extends @Readonly Comparable<?>> Range<C> range(
       C lower, BoundType lowerType, C upper, BoundType upperType) {
     checkNotNull(lowerType);
     checkNotNull(upperType);
@@ -209,7 +209,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    *
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> lessThan(C endpoint) {
+  public static <C extends @Readonly Comparable<?>> Range<C> lessThan(C endpoint) {
     return create(Cut.<C>belowAll(), Cut.belowValue(endpoint));
   }
 
@@ -218,7 +218,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    *
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> atMost(C endpoint) {
+  public static <C extends @Readonly Comparable<?>> Range<C> atMost(C endpoint) {
     return create(Cut.<C>belowAll(), Cut.aboveValue(endpoint));
   }
 
@@ -228,7 +228,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    *
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> upTo(C endpoint, BoundType boundType) {
+  public static <C extends @Readonly Comparable<?>> Range<C> upTo(C endpoint, BoundType boundType) {
     switch (boundType) {
       case OPEN:
         return lessThan(endpoint);
@@ -244,7 +244,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    *
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> greaterThan(C endpoint) {
+  public static <C extends @Readonly Comparable<?>> Range<C> greaterThan(C endpoint) {
     return create(Cut.aboveValue(endpoint), Cut.<C>aboveAll());
   }
 
@@ -253,7 +253,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    *
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> atLeast(C endpoint) {
+  public static <C extends @Readonly Comparable<?>> Range<C> atLeast(C endpoint) {
     return create(Cut.belowValue(endpoint), Cut.<C>aboveAll());
   }
 
@@ -263,7 +263,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    *
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> downTo(C endpoint, BoundType boundType) {
+  public static <C extends @Readonly Comparable<?>> Range<C> downTo(C endpoint, BoundType boundType) {
     switch (boundType) {
       case OPEN:
         return greaterThan(endpoint);
@@ -274,7 +274,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
     }
   }
 
-  private static final Range<@org.checkerframework.checker.mutability.qual.Immutable Comparable> ALL = new Range<>(Cut.belowAll(), Cut.aboveAll());
+  private static final Range<@Readonly Comparable> ALL = new Range<>(Cut.belowAll(), Cut.aboveAll());
 
   /**
    * Returns a range that contains every value of type {@code C}.
@@ -282,7 +282,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    * @since 14.0
    */
   @SuppressWarnings("unchecked")
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> all() {
+  public static <C extends @Readonly Comparable<?>> Range<C> all() {
     return (Range) ALL;
   }
 
@@ -292,7 +292,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    *
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> singleton(C value) {
+  public static <C extends @Readonly Comparable<?>> Range<C> singleton(C value) {
     return closed(value, value);
   }
 
@@ -305,7 +305,7 @@ public final class Range<C extends @org.checkerframework.checker.mutability.qual
    * @throws NullPointerException if any of {@code values} is null
    * @since 14.0
    */
-  public static <C extends @org.checkerframework.checker.mutability.qual.Immutable Comparable<?>> Range<C> encloseAll(Iterable<C> values) {
+  public static <C extends @Readonly Comparable<?>> Range<C> encloseAll(Iterable<C> values) {
     checkNotNull(values);
     if (values instanceof SortedSet) {
       SortedSet<C> set = (SortedSet<C>) values;
