@@ -35,7 +35,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 final class SparseImmutableTable<R extends @Immutable Object, C extends @Immutable Object, V> extends RegularImmutableTable<R, C, V> {
   static final ImmutableTable<@Immutable Object, @Immutable Object, @Immutable Object> EMPTY =
       new SparseImmutableTable<>(
-          ImmutableList.<Cell<@Immutable Object, @Immutable Object, @Immutable Object>>of(), ImmutableSet.of(), ImmutableSet.of());
+          ImmutableList.<@Immutable Cell<@Immutable Object, @Immutable Object, @Immutable Object>>of(), ImmutableSet.of(), ImmutableSet.of());
 
   private final ImmutableMap<R, ImmutableMap<C, V>> rowMap;
   private final ImmutableMap<C, ImmutableMap<R, V>> columnMap;
@@ -51,7 +51,7 @@ final class SparseImmutableTable<R extends @Immutable Object, C extends @Immutab
 
   @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   SparseImmutableTable(
-      ImmutableList<Cell<R, C, V>> cellList,
+      ImmutableList<@Immutable Cell<R, C, V>> cellList,
       ImmutableSet<R> rowSpace,
       ImmutableSet<C> columnSpace) {
     Map<R, Integer> rowIndex = Maps.indexMap(rowSpace);
@@ -66,7 +66,7 @@ final class SparseImmutableTable<R extends @Immutable Object, C extends @Immutab
     int[] cellRowIndices = new int[cellList.size()];
     int[] cellColumnInRowIndices = new int[cellList.size()];
     for (int i = 0; i < cellList.size(); i++) {
-      Cell<R, C, V> cell = cellList.get(i);
+      @Immutable Cell<R, C, V> cell = cellList.get(i);
       R rowKey = cell.getRowKey();
       C columnKey = cell.getColumnKey();
       V value = cell.getValue();
@@ -119,7 +119,7 @@ final class SparseImmutableTable<R extends @Immutable Object, C extends @Immutab
   }
 
   @Override
-  Cell<R, C, V> getCell(int index) {
+  @Immutable Cell<R, C, V> getCell(int index) {
     int rowIndex = cellRowIndices[index];
     Entry<R, ImmutableMap<C, V>> rowEntry = rowMap.entrySet().asList().get(rowIndex);
     ImmutableMap<C, V> row = rowEntry.getValue();

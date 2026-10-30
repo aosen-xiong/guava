@@ -49,7 +49,7 @@ class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable 
     this.singleValue = checkNotNull(value);
   }
 
-  SingletonImmutableTable(Cell<R, C, V> cell) {
+  SingletonImmutableTable(@Immutable Cell<R, C, V> cell) {
     this(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
   }
 
@@ -77,7 +77,8 @@ class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
-  ImmutableSet<Cell<R, C, V>> createCellSet() {
+  @SuppressWarnings("mutability:override.return.invalid") // Table.cellSet types its cells @Mutable, but Cell has no mutators and an immutable table's cells are Tables.immutableCell instances
+  ImmutableSet<@Immutable Cell<R, C, V>> createCellSet() {
     return ImmutableSet.of(cellOf(singleRowKey, singleColumnKey, singleValue));
   }
 

@@ -160,7 +160,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * Verifies that {@code rowKey}, {@code columnKey} and {@code value} are non-null, and returns a
    * new entry with those values.
    */
-  static <R extends @Immutable Object, C extends @Immutable Object, V> Cell<R, C, V> cellOf(R rowKey, C columnKey, V value) {
+  static <R extends @Immutable Object, C extends @Immutable Object, V> @Immutable Cell<R, C, V> cellOf(R rowKey, C columnKey, V value) {
     return Tables.immutableCell(
         checkNotNull(rowKey, "rowKey"),
         checkNotNull(columnKey, "columnKey"),
@@ -195,7 +195,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    */
   @DoNotMock
   public static final @Mutable class Builder<R extends @Immutable Object, C extends @Immutable Object, V> {
-    private final List<Cell<R, C, V>> cells = Lists.newArrayList();
+    private final List<@Immutable Cell<R, C, V>> cells = Lists.newArrayList();
     @CheckForNull private Comparator<? super R> rowComparator;
     @CheckForNull private Comparator<? super C> columnComparator;
 
@@ -240,7 +240,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
         checkNotNull(cell.getColumnKey(), "column");
         checkNotNull(cell.getValue(), "value");
         @SuppressWarnings("unchecked") // all supported methods are covariant
-        Cell<R, C, V> immutableCell = (Cell<R, C, V>) cell;
+        @Immutable Cell<R, C, V> immutableCell = (@Immutable Cell<R, C, V>) cell;
         cells.add(immutableCell);
       } else {
         put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
@@ -304,12 +304,14 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   ImmutableTable() {}
 
   @Override
-  public ImmutableSet<Cell<R, C, V>> cellSet() {
-    return (ImmutableSet<Cell<R, C, V>>) super.cellSet();
+  @SuppressWarnings("mutability:override.return.invalid") // Table.cellSet types its cells @Mutable, but Cell has no mutators and an immutable table's cells are Tables.immutableCell instances
+  public ImmutableSet<@Immutable Cell<R, C, V>> cellSet() {
+    return (ImmutableSet<@Immutable Cell<R, C, V>>) super.cellSet();
   }
 
   @Override
-  abstract ImmutableSet<Cell<R, C, V>> createCellSet();
+  @SuppressWarnings("mutability:override.return.invalid") // Table.cellSet types its cells @Mutable, but Cell has no mutators and an immutable table's cells are Tables.immutableCell instances
+  abstract ImmutableSet<@Immutable Cell<R, C, V>> createCellSet();
 
   @Override
   final @Mutable UnmodifiableIterator<Cell<R, C, V>> cellIterator() {
@@ -497,7 +499,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
       if (cellValues.length == 1) {
         return of(rowKeys[0], columnKeys[0], cellValues[0]);
       }
-      ImmutableList.Builder<Cell<@Immutable Object, @Immutable Object, @Readonly Object>> cellListBuilder =
+      ImmutableList.Builder<@Immutable Cell<@Immutable Object, @Immutable Object, @Readonly Object>> cellListBuilder =
           new ImmutableList.Builder<>(cellValues.length);
       for (int i = 0; i < cellValues.length; i++) {
         cellListBuilder.add(

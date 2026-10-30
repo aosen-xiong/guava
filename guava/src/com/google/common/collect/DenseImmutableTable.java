@@ -62,7 +62,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
 
   @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:illegal.array.write"}) // freeze: @Unique @Mutable to @Immutable; construction: the constructor fills its own rowCounts and columnCounts
   DenseImmutableTable(
-      ImmutableList<Cell<R, C, V>> cellList,
+      ImmutableList<@Immutable Cell<R, C, V>> cellList,
       ImmutableSet<R> rowSpace,
       ImmutableSet<C> columnSpace) {
     @SuppressWarnings("unchecked")
@@ -76,7 +76,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
     int[] cellRowIndices = new int[cellList.size()];
     int[] cellColumnIndices = new int[cellList.size()];
     for (int i = 0; i < cellList.size(); i++) {
-      Cell<R, C, V> cell = cellList.get(i);
+      @Immutable Cell<R, C, V> cell = cellList.get(i);
       R rowKey = cell.getRowKey();
       C columnKey = cell.getColumnKey();
       // The requireNonNull calls are safe because we construct the indexes with indexMap.
@@ -328,7 +328,7 @@ final class DenseImmutableTable<R extends @Immutable Object, C extends @Immutabl
   }
 
   @Override
-  Cell<R, C, V> getCell(int index) {
+  @Immutable Cell<R, C, V> getCell(int index) {
     int rowIndex = cellRowIndices[index];
     int columnIndex = cellColumnIndices[index];
     R rowKey = rowKeySet().asList().get(rowIndex);
