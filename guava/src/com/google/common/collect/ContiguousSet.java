@@ -261,7 +261,7 @@ public abstract class ContiguousSet<C extends @Immutable Comparable> extends Imm
    */
   @Deprecated
   @DoNotCall("Always throws UnsupportedOperationException")
-  public static <E> ImmutableSortedSet.Builder<E> builder() {
+  public static <E extends @Immutable Object> ImmutableSortedSet.Builder<E> builder() {
     throw new UnsupportedOperationException();
   }
 

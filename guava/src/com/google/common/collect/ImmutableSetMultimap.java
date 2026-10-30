@@ -576,20 +576,20 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
     }
   }
 
-  private static <V> ImmutableSet<V> valueSet(
+  private static <V extends @Immutable Object> ImmutableSet<V> valueSet(
       @CheckForNull @Readonly Comparator<? super V> valueComparator, @Readonly Collection<? extends V> values) {
     return (valueComparator == null)
         ? ImmutableSet.copyOf(values)
         : ImmutableSortedSet.copyOf(valueComparator, values);
   }
 
-  private static <V> ImmutableSet<V> emptySet(@CheckForNull @Readonly Comparator<? super V> valueComparator) {
+  private static <V extends @Immutable Object> ImmutableSet<V> emptySet(@CheckForNull @Readonly Comparator<? super V> valueComparator) {
     return (valueComparator == null)
         ? ImmutableSet.<V>of()
         : ImmutableSortedSet.<V>emptySet(valueComparator);
   }
 
-  private static <V> ImmutableSet.Builder<V> valuesBuilder(
+  private static <V extends @Immutable Object> ImmutableSet.Builder<V> valuesBuilder(
       @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     return (valueComparator == null)
         ? new ImmutableSet.Builder<V>()
@@ -626,15 +626,15 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
   // Serialization type safety is at the caller's mercy.
-  @SuppressWarnings({"unchecked", "mutability:argument.type.incompatible"}) // deserialized keys were this multimap's @Immutable keys when written
+  @SuppressWarnings({"unchecked", "mutability:argument.type.incompatible", "mutability:type.arguments.not.inferred"}) // deserialized keys and values were this multimap's @Immutable keys and values when written
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
-    @Readonly Comparator<Object> valueComparator = (Comparator<Object>) stream.readObject();
+    @Readonly Comparator<@Readonly Object> valueComparator = (Comparator<@Readonly Object>) stream.readObject();
     int keyCount = stream.readInt();
     if (keyCount < 0) {
       throw new InvalidObjectException("Invalid key count " + keyCount);
     }
-    ImmutableMap.Builder<@Immutable Object, ImmutableSet<Object>> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<@Immutable Object, ImmutableSet<@Immutable Object>> builder = ImmutableMap.builder();
     int tmpSize = 0;
 
     for (int i = 0; i < keyCount; i++) {
@@ -644,11 +644,11 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
         throw new InvalidObjectException("Invalid value count " + valueCount);
       }
 
-      ImmutableSet.Builder<Object> valuesBuilder = valuesBuilder(valueComparator);
+      ImmutableSet.Builder<@Immutable Object> valuesBuilder = valuesBuilder(valueComparator);
       for (int j = 0; j < valueCount; j++) {
         valuesBuilder.add(requireNonNull(stream.readObject()));
       }
-      ImmutableSet<Object> valueSet = valuesBuilder.build();
+      ImmutableSet<@Immutable Object> valueSet = valuesBuilder.build();
       if (valueSet.size() != valueCount) {
         throw new InvalidObjectException("Duplicate key-value pairs exist for key " + key);
       }
@@ -656,7 +656,7 @@ public class ImmutableSetMultimap<K extends @Immutable Object, V extends @Immuta
       tmpSize += valueCount;
     }
 
-    ImmutableMap<@Immutable Object, ImmutableSet<Object>> tmpMap;
+    ImmutableMap<@Immutable Object, ImmutableSet<@Immutable Object>> tmpMap;
     try {
       tmpMap = builder.buildOrThrow();
     } catch (IllegalArgumentException e) {

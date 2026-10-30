@@ -36,7 +36,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
  * @author James Sexton
  */
 @ElementTypesAreNonnullByDefault
-abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>> {
+abstract class EndpointPairIterator<N extends @Immutable Object> extends AbstractIterator<EndpointPair<N>> {
   private final BaseGraph<N> graph;
   private final Iterator<N> nodeIterator;
 
@@ -72,7 +72,7 @@ abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>>
    * If the graph is directed, each ordered [source, target] pair will be visited once if there is
    * an edge connecting them.
    */
-  private static final class Directed<N> extends EndpointPairIterator<N> {
+  private static final class Directed<N extends @Immutable Object> extends EndpointPairIterator<N> {
     private Directed(BaseGraph<N> graph) {
       super(graph);
     }

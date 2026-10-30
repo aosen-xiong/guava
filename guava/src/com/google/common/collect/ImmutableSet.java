@@ -65,7 +65,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @SuppressWarnings("serial") // we're overriding default serialization
 @ElementTypesAreNonnullByDefault
 @Immutable
-public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements Set<E> {
+public abstract class ImmutableSet<E extends @Immutable Object> extends ImmutableCollection<E> implements Set<E> {
   static final int SPLITERATOR_CHARACTERISTICS =
       ImmutableCollection.SPLITERATOR_CHARACTERISTICS | Spliterator.DISTINCT;
 
@@ -77,7 +77,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @since 21.0
    */
-  public static <E> Collector<E, ?, ImmutableSet<E>> toImmutableSet() {
+  public static <E extends @Immutable Object> Collector<E, ?, ImmutableSet<E>> toImmutableSet() {
     return CollectCollectors.toImmutableSet();
   }
 
@@ -88,7 +88,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * <p><b>Performance note:</b> the instance returned is a singleton.
    */
   @SuppressWarnings({"unchecked"}) // fully variant implementation (never actually produces any Es)
-  public static <E> ImmutableSet<E> of() {
+  public static <E extends @Immutable Object> ImmutableSet<E> of() {
     return (ImmutableSet<E>) RegularImmutableSet.EMPTY;
   }
 
@@ -97,7 +97,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * Collections#singleton} for code consistency, {@code null} rejection, and because the return
    * type conveys the immutability guarantee.
    */
-  public static <E> ImmutableSet<E> of(E element) {
+  public static <E extends @Immutable Object> ImmutableSet<E> of(E element) {
     return new SingletonImmutableSet<E>(element);
   }
 
@@ -113,7 +113,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * first specified. That is, if multiple elements are {@linkplain Object#equals equal}, all except
    * the first are ignored.
    */
-  public static <E> ImmutableSet<E> of(E e1, E e2) {
+  public static <E extends @Immutable Object> ImmutableSet<E> of(E e1, E e2) {
     return new RegularSetBuilderImpl<E>(2).add(e1).add(e2).review().build();
   }
 
@@ -122,7 +122,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * first specified. That is, if multiple elements are {@linkplain Object#equals equal}, all except
    * the first are ignored.
    */
-  public static <E> ImmutableSet<E> of(E e1, E e2, E e3) {
+  public static <E extends @Immutable Object> ImmutableSet<E> of(E e1, E e2, E e3) {
     return new RegularSetBuilderImpl<E>(3).add(e1).add(e2).add(e3).review().build();
   }
 
@@ -131,7 +131,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * first specified. That is, if multiple elements are {@linkplain Object#equals equal}, all except
    * the first are ignored.
    */
-  public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4) {
+  public static <E extends @Immutable Object> ImmutableSet<E> of(E e1, E e2, E e3, E e4) {
     return new RegularSetBuilderImpl<E>(4).add(e1).add(e2).add(e3).add(e4).review().build();
   }
 
@@ -140,7 +140,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * first specified. That is, if multiple elements are {@linkplain Object#equals equal}, all except
    * the first are ignored.
    */
-  public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5) {
+  public static <E extends @Immutable Object> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5) {
     return new RegularSetBuilderImpl<E>(5).add(e1).add(e2).add(e3).add(e4).add(e5).review().build();
   }
 
@@ -154,7 +154,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * @since 3.0 (source-compatible since 2.0)
    */
   @SafeVarargs // For Eclipse. For internal javac we have disabled this pointless type of warning.
-  public static <E> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E... others) {
+  public static <E extends @Immutable Object> ImmutableSet<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E... others) {
     checkArgument(
         others.length <= Integer.MAX_VALUE - 6, "the total number of elements must fit in an int");
     SetBuilderImpl<E> builder = new RegularSetBuilderImpl<E>(6 + others.length);
@@ -182,7 +182,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   // In the backport, we don't have those cases and thus don't need this suppression.
   // We keep it to minimize diffs.
   @SuppressWarnings("unchecked")
-  public static <E> ImmutableSet<E> copyOf(@Readonly Collection<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableSet<E> copyOf(@Readonly Collection<? extends E> elements) {
     /*
      * TODO(lowasser): consider checking for ImmutableAsList here
      * TODO(lowasser): consider checking for Multiset here
@@ -228,7 +228,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<@Readonly E> copyOf(@Readonly Iterable<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableSet<E> copyOf(@Readonly Iterable<? extends E> elements) {
     return (elements instanceof Collection)
         ? copyOf((Collection<? extends E>) elements)
         : copyOf(elements.iterator());
@@ -240,7 +240,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @throws NullPointerException if any of {@code elements} is null
    */
-  public static <E> ImmutableSet<E> copyOf(@Mutable Iterator<? extends E> elements) {
+  public static <E extends @Immutable Object> ImmutableSet<E> copyOf(@Mutable Iterator<? extends E> elements) {
     // We special-case for 0 or 1 elements, but anything further is madness.
     if (!elements.hasNext()) {
       return of();
@@ -260,11 +260,11 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * @throws NullPointerException if any of {@code elements} is null
    * @since 3.0
    */
-  public static <E> ImmutableSet<E> copyOf(E @Readonly [] elements) {
+  public static <E extends @Immutable Object> ImmutableSet<E> copyOf(E @Readonly [] elements) {
     return fromArrayWithExpectedSize(elements, estimatedSizeForUnknownDuplication(elements.length));
   }
 
-  private static <E> ImmutableSet<E> fromArrayWithExpectedSize(E @Readonly [] elements, int expectedSize) {
+  private static <E extends @Immutable Object> ImmutableSet<E> fromArrayWithExpectedSize(E @Readonly [] elements, int expectedSize) {
     switch (elements.length) {
       case 0:
         return of();
@@ -320,7 +320,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
 
   @GwtCompatible
   @Immutable
-  abstract static class CachingAsList<E> extends ImmutableSet<E> {
+  abstract static class CachingAsList<E extends @Immutable Object> extends ImmutableSet<E> {
     @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableList<E> asList;
 
     @Override
@@ -348,7 +348,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   }
 
   @Immutable
-  abstract static class Indexed<E> extends CachingAsList<E> {
+  abstract static class Indexed<E extends @Immutable Object> extends CachingAsList<E> {
     abstract E get(int index);
 
     @Override
@@ -418,9 +418,9 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    */
   @J2ktIncompatible // serialization
   private static class SerializedForm implements Serializable {
-    final @Readonly Object[] elements;
+    final @Immutable Object[] elements;
 
-    SerializedForm(@Readonly Object[] elements) {
+    SerializedForm(@Immutable Object[] elements) {
       this.elements = elements;
     }
 
@@ -446,7 +446,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * Returns a new builder. The generated builder is equivalent to the builder created by the {@link
    * Builder} constructor.
    */
-  public static <E> Builder<E> builder() {
+  public static <E extends @Immutable Object> Builder<E> builder() {
     return new Builder<E>();
   }
 
@@ -462,7 +462,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @since 23.1
    */
-  public static <E> Builder<E> builderWithExpectedSize(int expectedSize) {
+  public static <E extends @Immutable Object> Builder<E> builderWithExpectedSize(int expectedSize) {
     checkNonnegative(expectedSize, "expectedSize");
     return new Builder<E>(expectedSize);
   }
@@ -485,7 +485,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    *
    * @since 2.0
    */
-  public static @Mutable class Builder<E> extends ImmutableCollection.Builder<E> {
+  public static @Mutable class Builder<E extends @Immutable Object> extends ImmutableCollection.Builder<E> {
     /*
      * `impl` is null only for instances of the subclass, ImmutableSortedSet.Builder. That subclass
      * overrides all the methods that access it here. Thus, all the methods here can safely assume
@@ -594,7 +594,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   }
 
   /** Swappable internal implementation of an ImmutableSet.Builder. */
-  private abstract static @Mutable class SetBuilderImpl<E> {
+  private abstract static @Mutable class SetBuilderImpl<E extends @Immutable Object> {
     // The first `distinct` elements are non-null.
     // Since we can never access null elements, we don't mark this nullable.
     E[] dedupedElements;
@@ -666,11 +666,11 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     abstract ImmutableSet<E> build();
   }
 
-  private static final @Mutable class EmptySetBuilderImpl<E> extends SetBuilderImpl<E> {
-    private static final EmptySetBuilderImpl<Object> INSTANCE = new EmptySetBuilderImpl<>();
+  private static final @Mutable class EmptySetBuilderImpl<E extends @Immutable Object> extends SetBuilderImpl<E> {
+    private static final EmptySetBuilderImpl<@Immutable Object> INSTANCE = new EmptySetBuilderImpl<>();
 
     @SuppressWarnings("unchecked")
-    static <E> SetBuilderImpl<E> instance() {
+    static <E extends @Immutable Object> SetBuilderImpl<E> instance() {
       return (SetBuilderImpl<E>) INSTANCE;
     }
 
@@ -735,7 +735,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
    * <p>This implementation attempts to detect hash flooding, and if it's identified, falls back to
    * JdkBackedSetBuilderImpl.
    */
-  private static final @Mutable class RegularSetBuilderImpl<E> extends SetBuilderImpl<E> {
+  private static final @Mutable class RegularSetBuilderImpl<E extends @Immutable Object> extends SetBuilderImpl<E> {
     // null until at least two elements are present
     @CheckForNull private @Nullable @Readonly Object[] hashTable;
     private int maxRunBeforeFallback;
@@ -954,7 +954,7 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
   /**
    * SetBuilderImpl version that uses a JDK HashSet, which has built in hash flooding protection.
    */
-  private static final @Mutable class JdkBackedSetBuilderImpl<E> extends SetBuilderImpl<E> {
+  private static final @Mutable class JdkBackedSetBuilderImpl<E extends @Immutable Object> extends SetBuilderImpl<E> {
     private final Set<@Readonly Object> delegate;
 
     @SuppressWarnings("mutability:type.arguments.not.inferred") // this HashSet hashes the same elements ImmutableSet's own hash table hashes; ImmutableSet does not require @Immutable elements

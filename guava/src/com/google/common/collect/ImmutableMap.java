@@ -1151,7 +1151,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
   @WeakOuter
   @Immutable
   private final class MapViewOfValuesAsSingletonSets
-      extends IteratorBasedImmutableMap<K, ImmutableSet<V>> {
+      extends IteratorBasedImmutableMap<K, ImmutableSet<@Immutable V>> {
 
     @Override
     public @NonNegative int size() {
@@ -1170,7 +1170,7 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
 
     @Override
     @CheckForNull
-    public ImmutableSet<V> get(@CheckForNull @UnknownSignedness @Readonly Object key) {
+    public ImmutableSet<@Immutable V> get(@CheckForNull @UnknownSignedness @Readonly Object key) {
       V outerValue = ImmutableMap.this.get(key);
       return (outerValue == null) ? null : ImmutableSet.of(outerValue);
     }
@@ -1192,25 +1192,25 @@ public abstract class ImmutableMap<K extends @Immutable Object, V> implements Ma
     }
 
     @Override
-    @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>> entryIterator() {
+    @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<@Immutable V>>> entryIterator() {
       final Iterator<@Immutable Entry<K, V>> backingIterator = ImmutableMap.this.entrySet().iterator();
-      return new @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<V>>>() {
+      return new @Mutable UnmodifiableIterator<@Immutable Entry<K, ImmutableSet<@Immutable V>>>() {
         @Override
         public boolean hasNext() {
           return backingIterator.hasNext();
         }
 
         @Override
-        public @Immutable Entry<K, ImmutableSet<V>> next() {
+        public @Immutable Entry<K, ImmutableSet<@Immutable V>> next() {
           final @Immutable Entry<K, V> backingEntry = backingIterator.next();
-          return new @Immutable AbstractMapEntry<K, ImmutableSet<V>>() {
+          return new @Immutable AbstractMapEntry<K, ImmutableSet<@Immutable V>>() {
             @Override
             public K getKey() {
               return backingEntry.getKey();
             }
 
             @Override
-            public ImmutableSet<V> getValue() {
+            public ImmutableSet<@Immutable V> getValue() {
               return ImmutableSet.of(backingEntry.getValue());
             }
           };

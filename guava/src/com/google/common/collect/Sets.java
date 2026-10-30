@@ -595,8 +595,8 @@ public final class Sets {
      * that is inconsistent with {@link Object#equals(Object)}.
      */
     @SuppressWarnings("nullness") // Unsafe, but we can't fix it now.
-    public ImmutableSet<@NonNull E> immutableCopy() {
-      return ImmutableSet.copyOf((SetView<@NonNull E>) this);
+    public ImmutableSet<@NonNull @Immutable E> immutableCopy(@Readonly SetView<@Immutable E> this) {
+      return ImmutableSet.copyOf((SetView<@NonNull @Immutable E>) this);
     }
 
     /**
@@ -801,12 +801,12 @@ public final class Sets {
 
       @Override
       @SuppressWarnings({"nullness", "unchecked"}) // see supertype
-      public ImmutableSet<@NonNull E> immutableCopy() {
-        ImmutableSet.Builder<@NonNull E> builder =
-            new ImmutableSet.Builder<@NonNull E>()
-                .addAll((Iterable<@NonNull E>) set1)
-                .addAll((Iterable<@NonNull E>) set2);
-        return (ImmutableSet<@NonNull E>) builder.build();
+      public ImmutableSet<@NonNull @Immutable E> immutableCopy() {
+        ImmutableSet.Builder<@NonNull @Immutable E> builder =
+            new ImmutableSet.Builder<@NonNull @Immutable E>()
+                .addAll((Iterable<@NonNull @Immutable E>) set1)
+                .addAll((Iterable<@NonNull @Immutable E>) set2);
+        return (ImmutableSet<@NonNull @Immutable E>) builder.build();
       }
     };
   }
@@ -1367,7 +1367,7 @@ public final class Sets {
    * @throws IllegalArgumentException if the cartesian product size exceeds the {@code int} range
    * @since 2.0
    */
-  public static <B> @Immutable Set<@Immutable List<B>> cartesianProduct(@Readonly List<? extends @Readonly Set<? extends B>> sets) {
+  public static <B extends @Immutable Object> @Immutable Set<@Immutable List<B>> cartesianProduct(@Readonly List<? extends @Readonly Set<? extends B>> sets) {
     return CartesianSet.create(sets);
   }
 
@@ -1425,17 +1425,17 @@ public final class Sets {
    * @since 2.0
    */
   @SafeVarargs
-  public static <B> @Immutable Set<@Immutable List<B>> cartesianProduct(Set<? extends B>... sets) {
+  public static <B extends @Immutable Object> @Immutable Set<@Immutable List<B>> cartesianProduct(Set<? extends B>... sets) {
     return cartesianProduct(Arrays.asList(sets));
   }
 
   @Immutable
-  private static final class CartesianSet<E> extends ForwardingCollection<@Immutable List<E>>
+  private static final class CartesianSet<E extends @Immutable Object> extends ForwardingCollection<@Immutable List<E>>
       implements Set<@Immutable List<E>> {
     private final transient ImmutableList<ImmutableSet<E>> axes;
     private final transient CartesianList<E> delegate;
 
-    static <E> @Immutable Set<@Immutable List<E>> create(@Readonly List<? extends @Readonly Set<? extends E>> sets) {
+    static <E extends @Immutable Object> @Immutable Set<@Immutable List<E>> create(@Readonly List<? extends @Readonly Set<? extends E>> sets) {
       ImmutableList.Builder<ImmutableSet<E>> axesBuilder = new ImmutableList.Builder<>(sets.size());
       for (Set<? extends E> set : sets) {
         ImmutableSet<E> copy = ImmutableSet.copyOf(set);
@@ -1703,16 +1703,16 @@ public final class Sets {
    * @throws NullPointerException if {@code set} is or contains {@code null}
    * @since 23.0
    */
-  public static <E extends @Immutable Object> @Readonly Set<@Readonly Set<E>> combinations(@Readonly Set<E> set, final int size) {
+  public static <E extends @Immutable Object> @Readonly Set<@Immutable Set<E>> combinations(@Immutable Set<E> set, final int size) {
     final ImmutableMap<E, Integer> index = Maps.indexMap(set);
     checkNonnegative(size, "size");
     checkArgument(size <= index.size(), "size (%s) must be <= set.size() (%s)", size, index.size());
     if (size == 0) {
-      return ImmutableSet.<@Readonly Set<E>>of(ImmutableSet.<E>of());
+      return ImmutableSet.<@Immutable Set<E>>of(ImmutableSet.<E>of());
     } else if (size == index.size()) {
-      return ImmutableSet.<@Readonly Set<E>>of(index.keySet());
+      return ImmutableSet.<@Immutable Set<E>>of(index.keySet());
     }
-    return new @Mutable AbstractSet<@Readonly Set<E>>() {
+    return new @Mutable AbstractSet<@Immutable Set<E>>() {
       @Override
       public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
         if (o instanceof Set) {
@@ -1723,13 +1723,13 @@ public final class Sets {
       }
 
       @Override
-      public @Mutable Iterator<@Readonly Set<E>> iterator() {
-        return new @Mutable AbstractIterator<@Readonly Set<E>>() {
+      public @Mutable Iterator<@Immutable Set<E>> iterator() {
+        return new @Mutable AbstractIterator<@Immutable Set<E>>() {
           final BitSet bits = new BitSet(index.size());
 
           @Override
           @CheckForNull
-          protected @Readonly Set<E> computeNext() {
+          protected @Immutable Set<E> computeNext() {
             if (bits.isEmpty()) {
               bits.set(0, size);
             } else {
@@ -1758,7 +1758,7 @@ public final class Sets {
               bits.set(bitToFlip);
             }
             final BitSet copy = (BitSet) bits.clone();
-            return new @Mutable AbstractSet<E>() {
+            return new @Immutable AbstractSet<E>() {
               @Override
               public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
                 Integer i = index.get(o);

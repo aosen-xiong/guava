@@ -83,6 +83,7 @@ class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // a one-element ImmutableSet keeps no hash table, so a mutable V cannot corrupt it
   ImmutableCollection<V> createValues() {
     return ImmutableSet.of(singleValue);
   }

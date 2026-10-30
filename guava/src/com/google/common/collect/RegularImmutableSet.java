@@ -42,9 +42,9 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class RegularImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
+final class RegularImmutableSet<E extends @Immutable Object> extends ImmutableSet.CachingAsList<E> {
   private static final Object[] EMPTY_ARRAY = new Object[0];
-  static final RegularImmutableSet<Object> EMPTY =
+  static final RegularImmutableSet<@Immutable Object> EMPTY =
       new RegularImmutableSet<>(EMPTY_ARRAY, 0, EMPTY_ARRAY, 0);
 
   private final transient @Readonly Object[] elements;

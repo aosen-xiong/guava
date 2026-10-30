@@ -35,7 +35,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class DescendingImmutableSortedSet<E> extends ImmutableSortedSet<E> {
+final class DescendingImmutableSortedSet<E extends @Immutable Object> extends ImmutableSortedSet<E> {
   private final ImmutableSortedSet<E> forward;
 
   DescendingImmutableSortedSet(ImmutableSortedSet<E> forward) {

@@ -34,7 +34,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
 @Immutable
-abstract class IndexedImmutableSet<E> extends ImmutableSet.CachingAsList<E> {
+abstract class IndexedImmutableSet<E extends @Immutable Object> extends ImmutableSet.CachingAsList<E> {
   abstract E get(int index);
 
   @Override

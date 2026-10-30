@@ -54,7 +54,7 @@ final class CollectCollectors {
           ImmutableList.Builder::combine,
           ImmutableList.Builder::build);
 
-  private static final Collector<Object, ?, ImmutableSet<@Readonly Object>> TO_IMMUTABLE_SET =
+  private static final Collector<@Immutable Object, ?, ImmutableSet<@Immutable Object>> TO_IMMUTABLE_SET =
       Collector.of(
           ImmutableSet::builder,
           ImmutableSet.Builder::add,
@@ -80,11 +80,11 @@ final class CollectCollectors {
   // Sets
 
   @SuppressWarnings({"rawtypes", "unchecked"})
-  static <E> Collector<E, ?, ImmutableSet<E>> toImmutableSet() {
+  static <E extends @Immutable Object> Collector<E, ?, ImmutableSet<E>> toImmutableSet() {
     return (Collector) TO_IMMUTABLE_SET;
   }
 
-  static <E> Collector<E, ?, ImmutableSortedSet<E>> toImmutableSortedSet(
+  static <E extends @Immutable Object> Collector<E, ?, ImmutableSortedSet<E>> toImmutableSortedSet(
       @Readonly Comparator<? super E> comparator) {
     checkNotNull(comparator);
     return Collector.of(

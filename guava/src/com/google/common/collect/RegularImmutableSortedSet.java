@@ -52,7 +52,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @SuppressWarnings({"serial", "rawtypes"})
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
+final class RegularImmutableSortedSet<E extends @Immutable Object> extends ImmutableSortedSet<E> {
   static final RegularImmutableSortedSet<@Immutable Comparable> NATURAL_EMPTY_SET =
       new RegularImmutableSortedSet<>(ImmutableList.<@Immutable Comparable>of(), Ordering.natural());
 

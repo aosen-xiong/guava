@@ -654,8 +654,8 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @since 14.0 (since 12.0 as {@code toImmutableSet()}).
    */
   @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
-  public final ImmutableSet<@NonNull E> toSet(@Readonly FluentIterable<E> this) {
-    return ImmutableSet.copyOf((Iterable<@NonNull E>) getDelegate());
+  public final ImmutableSet<@NonNull @Immutable E> toSet(@Readonly FluentIterable<@Immutable E> this) {
+    return ImmutableSet.copyOf((Iterable<@NonNull @Immutable E>) getDelegate());
   }
 
   /**
@@ -672,8 +672,8 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @since 14.0 (since 12.0 as {@code toImmutableSortedSet()}).
    */
   @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
-  public final ImmutableSortedSet<@NonNull E> toSortedSet(@Readonly FluentIterable<E> this, Comparator<? super E> comparator) {
-    return ImmutableSortedSet.copyOf(comparator, (Iterable<@NonNull E>) getDelegate());
+  public final ImmutableSortedSet<@NonNull @Immutable E> toSortedSet(@Readonly FluentIterable<@Immutable E> this, Comparator<? super E> comparator) {
+    return ImmutableSortedSet.copyOf(comparator, (Iterable<@NonNull @Immutable E>) getDelegate());
   }
 
   /**
@@ -685,9 +685,9 @@ public abstract class FluentIterable<E extends @Nullable @Readonly Object> imple
    * @throws NullPointerException if any element is null
    * @since 19.0
    */
-  @SuppressWarnings({"nullness", "mutability:type.argument.type.incompatible", "mutability:type.arguments.not.inferred"}) // nullness: unsafe, but we can't do much about it now. Mutability: ImmutableMultiset bounds its elements @Immutable, but FluentIterable's E is only @Readonly-bounded. The caller asks for the immutable collection, which hashes the elements, as ImmutableSet does with its unbounded E
-  public final ImmutableMultiset<@NonNull E> toMultiset(@Readonly FluentIterable<E> this) {
-    return ImmutableMultiset.copyOf((Iterable<@NonNull E>) getDelegate());
+  @SuppressWarnings("nullness") // Unsafe, but we can't do much about it now.
+  public final ImmutableMultiset<@NonNull @Immutable E> toMultiset(@Readonly FluentIterable<@Immutable E> this) {
+    return ImmutableMultiset.copyOf((Iterable<@NonNull @Immutable E>) getDelegate());
   }
 
   /**

@@ -295,6 +295,7 @@ public final class MoreFiles {
    *
    * @since 23.5
    */
+  @SuppressWarnings({"mutability:type.argument.type.incompatible", "mutability:type.arguments.not.inferred"}) // Path's Javadoc says implementations are immutable, but the annotated JDK does not declare Path @Immutable, as it does File
   public static Traverser<Path> fileTraverser() {
     return Traverser.forTree(MoreFiles::fileTreeChildren);
   }

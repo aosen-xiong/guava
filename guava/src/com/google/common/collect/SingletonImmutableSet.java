@@ -41,7 +41,7 @@ import org.checkerframework.checker.mutability.qual.Mutable;
 @SuppressWarnings("serial") // uses writeReplace(), not default serialization
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class SingletonImmutableSet<E> extends ImmutableSet<E> {
+final class SingletonImmutableSet<E extends @Immutable Object> extends ImmutableSet<E> {
   // We deliberately avoid caching the asList and hashCode here, to ensure that with
   // compressed oops, a SingletonImmutableSet packs all the way down to the optimal 16 bytes.
 

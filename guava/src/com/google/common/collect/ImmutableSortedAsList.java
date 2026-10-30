@@ -36,7 +36,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @SuppressWarnings("serial")
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class ImmutableSortedAsList<E> extends RegularImmutableAsList<E>
+final class ImmutableSortedAsList<E extends @Immutable Object> extends RegularImmutableAsList<E>
     implements SortedIterable<E> {
   ImmutableSortedAsList(ImmutableSortedSet<E> backingSet, ImmutableList<E> backingList) {
     super(backingSet, backingList);

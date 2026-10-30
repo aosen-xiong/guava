@@ -68,7 +68,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
     "Call forGraph or forTree, passing a lambda or a Graph with the desired edges (built with"
         + " GraphBuilder)")
 @ElementTypesAreNonnullByDefault
-public abstract class Traverser<N> {
+public abstract class Traverser<N extends @Immutable Object> {
   private final SuccessorsFunction<N> successorFunction;
 
   private Traverser(SuccessorsFunction<N> successorFunction) {
@@ -181,7 +181,7 @@ public abstract class Traverser<N> {
    * @param tree {@link SuccessorsFunction} representing a directed acyclic graph that has at most
    *     one path between any two nodes
    */
-  public static <N> Traverser<N> forTree(SuccessorsFunction<N> tree) {
+  public static <N extends @Immutable Object> Traverser<N> forTree(SuccessorsFunction<N> tree) {
     if (tree instanceof BaseGraph) {
       checkArgument(((BaseGraph<?>) tree).isDirected(), "Undirected graphs can never be trees.");
     }
