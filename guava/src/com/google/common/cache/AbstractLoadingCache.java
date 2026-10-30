@@ -22,6 +22,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * This class provides a skeletal implementation of the {@code Cache} interface to minimize the
@@ -40,7 +41,7 @@ import java.util.concurrent.ExecutionException;
  */
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-public abstract class AbstractLoadingCache<K, V> extends AbstractCache<K, V>
+public abstract class AbstractLoadingCache<K extends @Immutable Object, V> extends AbstractCache<K, V>
     implements LoadingCache<K, V> {
 
   /** Constructor for use by subclasses. */

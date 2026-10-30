@@ -135,7 +135,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    * @throws IllegalArgumentException if {@code countMap} is not empty
    * @since 20.0
    */
-  public static <E> ConcurrentHashMultiset<E> create(ConcurrentMap<E, AtomicInteger> countMap) {
+  public static <E extends @Immutable Object> ConcurrentHashMultiset<E> create(ConcurrentMap<E, AtomicInteger> countMap) {
     return new ConcurrentHashMultiset<>(countMap);
   }
 
@@ -181,7 +181,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    */
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object @ReceiverDependentMutable [] toArray(@ReceiverDependentMutable ConcurrentHashMultiset<@PolyNull @PolySigned @PolyMutable E> this) {
+  @SuppressWarnings("mutability:override.return.invalid") // E extends @Immutable Object, so every element is @Immutable. That is the precise return, which an override of a @PolyMutable return cannot state
+  public @PolyNull @PolySigned @Immutable Object[] toArray(@Readonly ConcurrentHashMultiset<@PolyNull @PolySigned E> this) {
     return snapshot().toArray();
   }
 
@@ -419,7 +420,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
    */
   @CanIgnoreReturnValue
   @Override
-  public boolean setCount(@Mutable ConcurrentHashMultiset<E> this, @Immutable E element, int expectedOldCount, int newCount) {
+  public boolean setCount(@Mutable ConcurrentHashMultiset<E> this, E element, int expectedOldCount, int newCount) {
     checkNotNull(element);
     checkNonnegative(expectedOldCount, "oldCount");
     checkNonnegative(newCount, "newCount");
@@ -464,31 +465,33 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   // Views
 
   @Override
-  Set<E> createElementSet() {
-    Set<E> delegate = countMap.keySet();
-    return new ForwardingSet<E>() {
+  @ReceiverDependentMutable Set<E> createElementSet(@ReceiverDependentMutable ConcurrentHashMultiset<E> this) {
+    @ReceiverDependentMutable Set<E> delegate = countMap.keySet();
+    return new @ReceiverDependentMutable ForwardingSet<E>() {
       @Override
-      protected Set<E> delegate() {
+      protected @ReceiverDependentMutable Set<E> delegate() {
         return delegate;
       }
 
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return object != null && Collections2.safeContains(delegate, object);
       }
 
       @Override
-      public boolean containsAll(Collection<?> collection) {
+      public boolean containsAll(@Readonly Collection<?> collection) {
         return standardContainsAll(collection);
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object object) {
+      @SuppressWarnings("mutability:argument.type.incompatible") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object object) {
         return object != null && Collections2.safeRemove(delegate, object);
       }
 
       @Override
-      public boolean removeAll(Collection<?> c) {
+      @SuppressWarnings("mutability:method.invocation.invalid") // an anonymous class cannot declare its receiver, so this mutator cannot state the @Mutable receiver it needs to forward the call
+      public boolean removeAll(@Readonly Collection<?> c) {
         return standardRemoveAll(c);
       }
     };
@@ -503,8 +506,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   /** @deprecated Internal method, use {@link #entrySet()}. */
   @Deprecated
   @Override
-  public Set<Multiset.Entry<E>> createEntrySet() {
-    return new EntrySet();
+  public @ReceiverDependentMutable Set<Multiset.@Readonly Entry<E>> createEntrySet(@ReceiverDependentMutable ConcurrentHashMultiset<E> this) {
+    return new @ReceiverDependentMutable EntrySet();
   }
 
   @Override
@@ -519,17 +522,17 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   }
 
   @Override
-  Iterator<Entry<E>> entryIterator() {
+  Iterator<@Readonly Entry<E>> entryIterator() {
     // AbstractIterator makes this fairly clean, but it doesn't support remove(). To support
     // remove(), we create an AbstractIterator, and then use ForwardingIterator to delegate to it.
-    Iterator<Entry<E>> readOnlyIterator =
-        new AbstractIterator<Entry<E>>() {
+    Iterator<@Readonly Entry<E>> readOnlyIterator =
+        new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           private final Iterator<Map.Entry<E, AtomicInteger>> mapEntries =
               countMap.entrySet().iterator();
 
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             while (true) {
               if (!mapEntries.hasNext()) {
                 return endOfData();
@@ -543,16 +546,16 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
           }
         };
 
-    return new ForwardingIterator<Entry<E>>() {
-      @CheckForNull private Entry<E> last;
+    return new @Mutable ForwardingIterator<@Readonly Entry<E>>() {
+      @CheckForNull private @Readonly Entry<E> last;
 
       @Override
-      protected Iterator<Entry<E>> delegate() {
+      protected Iterator<@Readonly Entry<E>> delegate() {
         return readOnlyIterator;
       }
 
       @Override
-      public Entry<E> next() {
+      public @Readonly Entry<E> next() {
         last = super.next();
         return last;
       }
@@ -580,7 +583,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   @ReceiverDependentMutable
   private class EntrySet extends AbstractMultiset<E>.EntrySet {
     @Override
-    ConcurrentHashMultiset<E> multiset() {
+    @ReceiverDependentMutable ConcurrentHashMultiset<E> multiset(@ReceiverDependentMutable ConcurrentHashMultiset<E>.@ReceiverDependentMutable EntrySet this) {
       return ConcurrentHashMultiset.this;
     }
 
@@ -591,7 +594,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
 
     @CFComment("signedness: is same as E, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned Object[] toArray() {
+    @SuppressWarnings({"mutability:override.return.invalid", "mutability:method.invocation.invalid"}) // the entries are @Readonly snapshots, so the precise return is @Readonly Object[], which an override of a @PolyMutable return cannot state. toArray's poly does not bind to the snapshot list's @Readonly type argument
+    public @PolyNull @PolySigned @Readonly Object[] toArray() {
       return snapshot().toArray();
     }
 
@@ -601,8 +605,8 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
       return snapshot().toArray(array);
     }
 
-    private List<Multiset.Entry<E>> snapshot() {
-      List<Multiset.Entry<E>> list = Lists.newArrayListWithExpectedSize(size());
+    private List<Multiset.@Readonly Entry<E>> snapshot() {
+      List<Multiset.@Readonly Entry<E>> list = Lists.newArrayListWithExpectedSize(size());
       // Not Iterables.addAll(list, this), because that'll forward right back here.
       Iterators.addAll(list, iterator());
       return list;
@@ -632,7 +636,7 @@ public final class ConcurrentHashMultiset<E extends @Immutable Object> extends A
   }
 
   @J2ktIncompatible // serialization
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable ConcurrentHashMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     @SuppressWarnings("unchecked") // reading data stored by writeObject
     ConcurrentMap<E, Integer> deserializedCountMap =

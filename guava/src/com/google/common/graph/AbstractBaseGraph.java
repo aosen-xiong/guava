@@ -32,8 +32,12 @@ import com.google.common.primitives.Ints;
 import java.util.AbstractSet;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * This class provides a skeletal implementation of {@link BaseGraph}.
@@ -45,7 +49,8 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @param <N> Node parameter type
  */
 @ElementTypesAreNonnullByDefault
-abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
+@ReceiverDependentMutable
+abstract class AbstractBaseGraph<N extends @Immutable Object> implements BaseGraph<N> {
 
   /**
    * Returns the number of edges in this graph; used to calculate the size of {@link Graph#edges()}.
@@ -68,7 +73,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
    */
   @Override
   public Set<EndpointPair<N>> edges() {
-    return new AbstractSet<EndpointPair<N>>() {
+    return new @Mutable AbstractSet<EndpointPair<N>>() {
       @Override
       public UnmodifiableIterator<EndpointPair<N>> iterator() {
         return EndpointPairIterator.of(AbstractBaseGraph.this);
@@ -80,7 +85,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
         throw new UnsupportedOperationException();
       }
 
@@ -89,7 +94,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
       // Graph<LinkedList>.
       @SuppressWarnings("unchecked")
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
         if (!(obj instanceof EndpointPair)) {
           return false;
         }
@@ -107,7 +112,7 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
   }
 
   @Override
-  public Set<EndpointPair<N>> incidentEdges(N node) {
+  public @Readonly Set<EndpointPair<N>> incidentEdges(N node) {
     checkNotNull(node);
     checkArgument(nodes().contains(node), "Node %s is not an element of this graph.", node);
     IncidentEdgeSet<N> incident =
@@ -192,12 +197,12 @@ abstract class AbstractBaseGraph<N> implements BaseGraph<N> {
     return endpoints.isOrdered() == this.isDirected();
   }
 
-  protected final <T> Set<T> nodeInvalidatableSet(Set<T> set, N node) {
+  protected final <T> @Readonly Set<T> nodeInvalidatableSet(@Readonly Set<T> set, N node) {
     return InvalidatableSet.of(
         set, () -> nodes().contains(node), () -> String.format(NODE_REMOVED_FROM_GRAPH, node));
   }
 
-  protected final <T> Set<T> nodePairInvalidatableSet(Set<T> set, N nodeU, N nodeV) {
+  protected final <T> @Readonly Set<T> nodePairInvalidatableSet(@Readonly Set<T> set, N nodeU, N nodeV) {
     return InvalidatableSet.of(
         set,
         () -> nodes().contains(nodeU) && nodes().contains(nodeV),

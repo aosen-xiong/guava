@@ -18,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtIncompatible;
 import java.util.concurrent.Executor;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A collection of common removal listeners.
@@ -38,7 +39,7 @@ public final class RemovalListeners {
    * @param listener the backing listener
    * @param executor the executor with which removal notifications are asynchronously executed
    */
-  public static <K, V> RemovalListener<K, V> asynchronous(
+  public static <K extends @Immutable Object, V> RemovalListener<K, V> asynchronous(
       RemovalListener<K, V> listener, Executor executor) {
     checkNotNull(listener);
     checkNotNull(executor);

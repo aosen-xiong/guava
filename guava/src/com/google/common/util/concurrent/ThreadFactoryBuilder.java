@@ -30,6 +30,7 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.formatter.qual.ConversionCategory;
 import org.checkerframework.checker.formatter.qual.Format;
 import org.checkerframework.checker.formatter.qual.FormatMethod;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A ThreadFactory builder, providing any combination of these features:
@@ -195,7 +196,7 @@ public final class ThreadFactoryBuilder {
   }
 
   @FormatMethod
-  private static String format(String format, Object... args) {
+  private static String format(String format, @Readonly Object... args) {
     return String.format(Locale.ROOT, format, args);
   }
 }

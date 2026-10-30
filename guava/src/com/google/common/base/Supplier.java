@@ -43,7 +43,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @FunctionalInterface
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-@SuppressWarnings("mutability")
+@SuppressWarnings("mutability:declaration.inconsistent.with.implements.clause") // java.util.function.Supplier is not annotated, so it is @Mutable, and a receiver-dependent Supplier cannot implement it
 public interface Supplier<T extends @Nullable @Readonly Object> extends java.util.function.Supplier<T> {
   /**
    * Retrieves an instance of the appropriate type. The returned object may or may not be a new

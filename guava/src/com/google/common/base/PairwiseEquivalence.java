@@ -18,6 +18,7 @@ import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 import java.util.Iterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -32,7 +33,7 @@ final class PairwiseEquivalence<E, T extends @Nullable E> extends Equivalence<It
   }
 
   @Override
-  protected boolean doEquivalent(Iterable<T> iterableA, Iterable<T> iterableB) {
+  protected boolean doEquivalent(@Readonly PairwiseEquivalence<E, T> this, Iterable<T> iterableA, Iterable<T> iterableB) {
     Iterator<T> iteratorA = iterableA.iterator();
     Iterator<T> iteratorB = iterableB.iterator();
 
@@ -46,7 +47,7 @@ final class PairwiseEquivalence<E, T extends @Nullable E> extends Equivalence<It
   }
 
   @Override
-  protected int doHash(Iterable<T> iterable) {
+  protected int doHash(@Readonly PairwiseEquivalence<E, T> this, Iterable<T> iterable) {
     int hash = 78721;
     for (T element : iterable) {
       hash = hash * 24943 + elementEquivalence.hash(element);
@@ -55,7 +56,7 @@ final class PairwiseEquivalence<E, T extends @Nullable E> extends Equivalence<It
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object instanceof PairwiseEquivalence) {
       @SuppressWarnings("unchecked")
       PairwiseEquivalence<Object, Object> that = (PairwiseEquivalence<Object, Object>) object;

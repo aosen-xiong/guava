@@ -76,9 +76,10 @@ public final class HashMultiset<E extends @Nullable @Immutable Object> extends A
   }
 
   private HashMultiset() {
-    super(new HashMap<E, Count>());
+    super(new @ReceiverDependentMutable HashMap<E, Count>());
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private HashMultiset(int distinctElements) {
     super(Maps.<E, Count>newHashMapWithExpectedSize(distinctElements));
   }
@@ -96,7 +97,7 @@ public final class HashMultiset<E extends @Nullable @Immutable Object> extends A
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable HashMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int distinctElements = Serialization.readCount(stream);
     setBackingMap(Maps.<E, Count>newHashMap());

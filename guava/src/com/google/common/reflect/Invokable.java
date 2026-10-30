@@ -31,6 +31,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -64,6 +66,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  *     31.0)
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   private final AccessibleObject accessibleObject;
   private final Member member;
@@ -212,7 +215,7 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj instanceof Invokable) {
       Invokable<?, ?> that = (Invokable<?, ?>) obj;
       return getOwnerType().equals(that.getOwnerType()) && member.equals(that.member);
@@ -338,7 +341,8 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   }
 
   @CheckForNull
-  abstract Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
+  abstract @Readonly Object invokeInternal(
+      @CheckForNull @Readonly Object receiver, @Nullable Object[] args)
       throws InvocationTargetException, IllegalAccessException;
 
   abstract Type[] getGenericParameterTypes();
@@ -361,6 +365,7 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
   @SuppressWarnings("Java7ApiChecker")
   public abstract AnnotatedType getAnnotatedReturnType();
 
+  @Immutable
   static class MethodInvokable<T> extends Invokable<T, Object> {
 
     final Method method;
@@ -372,7 +377,8 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
 
     @Override
     @CheckForNull
-    final Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
+    final @Readonly Object invokeInternal(
+        @CheckForNull @Readonly Object receiver, @Nullable Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       return method.invoke(receiver, args);
     }
@@ -428,6 +434,7 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
     }
   }
 
+  @Immutable
   static class ConstructorInvokable<T> extends Invokable<T, T> {
 
     final Constructor<?> constructor;
@@ -438,7 +445,8 @@ public abstract class Invokable<T, R> implements AnnotatedElement, Member {
     }
 
     @Override
-    final Object invokeInternal(@CheckForNull Object receiver, @Nullable Object[] args)
+    final @Readonly Object invokeInternal(
+        @CheckForNull @Readonly Object receiver, @Nullable Object[] args)
         throws InvocationTargetException, IllegalAccessException {
       try {
         return constructor.newInstance(args);

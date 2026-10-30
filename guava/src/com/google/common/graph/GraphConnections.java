@@ -20,6 +20,9 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An interface for representing and manipulating an origin node's adjacent nodes and edge values in
@@ -30,30 +33,31 @@ import javax.annotation.CheckForNull;
  * @param <V> Value parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 interface GraphConnections<N, V> {
 
-  Set<N> adjacentNodes();
+  @Readonly Set<N> adjacentNodes(@ReceiverDependentMutable GraphConnections<N, V> this);
 
-  Set<N> predecessors();
+  @Readonly Set<N> predecessors(@ReceiverDependentMutable GraphConnections<N, V> this);
 
-  Set<N> successors();
+  @Readonly Set<N> successors(@ReceiverDependentMutable GraphConnections<N, V> this);
 
   /**
    * Returns an iterator over the incident edges.
    *
    * @param thisNode The node that this all of the connections in this class are connected to.
    */
-  Iterator<EndpointPair<N>> incidentEdgeIterator(N thisNode);
+  Iterator<EndpointPair<N>> incidentEdgeIterator(@ReceiverDependentMutable GraphConnections<N, V> this, N thisNode);
 
   /**
    * Returns the value associated with the edge connecting the origin node to {@code node}, or null
    * if there is no such edge.
    */
   @CheckForNull
-  V value(N node);
+  V value(@ReceiverDependentMutable GraphConnections<N, V> this, N node);
 
   /** Remove {@code node} from the set of predecessors. */
-  void removePredecessor(N node);
+  void removePredecessor(@Mutable GraphConnections<N, V> this, N node);
 
   /**
    * Remove {@code node} from the set of successors. Returns the value previously associated with
@@ -61,13 +65,13 @@ interface GraphConnections<N, V> {
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  V removeSuccessor(N node);
+  V removeSuccessor(@Mutable GraphConnections<N, V> this, N node);
 
   /**
    * Add {@code node} as a predecessor to the origin node. In the case of an undirected graph, it
    * also becomes a successor. Associates {@code value} with the edge connecting the two nodes.
    */
-  void addPredecessor(N node, V value);
+  void addPredecessor(@Mutable GraphConnections<N, V> this, N node, V value);
 
   /**
    * Add {@code node} as a successor to the origin node. In the case of an undirected graph, it also
@@ -76,5 +80,5 @@ interface GraphConnections<N, V> {
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  V addSuccessor(N node, V value);
+  V addSuccessor(@Mutable GraphConnections<N, V> this, N node, V value);
 }

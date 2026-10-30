@@ -35,7 +35,7 @@ final class ReverseNaturalOrdering extends Ordering<@Readonly Comparable<?>> imp
 
   @Pure
   @Override
-  public int compare(Comparable<?> left, Comparable<?> right) {
+  public int compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right) {
     checkNotNull(left); // right null is caught later
     if (left == right) {
       return 0;
@@ -92,7 +92,7 @@ final class ReverseNaturalOrdering extends Ordering<@Readonly Comparable<?>> imp
   }
 
   // preserving singleton-ness gives equals()/hashCode() for free
-  private Object readResolve() {
+  private @Readonly Object readResolve() {
     return INSTANCE;
   }
 

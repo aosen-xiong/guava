@@ -9,6 +9,7 @@ import static java.lang.Long.rotateRight;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Implementation of Geoff Pike's fingerprint2011 hash function. See {@link Hashing#fingerprint2011}
@@ -30,6 +31,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * @author gpike@google.com (Geoff Pike)
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 final class Fingerprint2011 extends AbstractNonStreamingHashFunction {
   static final HashFunction FINGERPRINT_2011 = new Fingerprint2011();
 

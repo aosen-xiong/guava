@@ -32,6 +32,7 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -44,6 +45,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 final class Murmur3_128HashFunction extends AbstractHashFunction implements Serializable {
   static final HashFunction MURMUR3_128 = new Murmur3_128HashFunction(0);
 
@@ -73,7 +75,7 @@ final class Murmur3_128HashFunction extends AbstractHashFunction implements Seri
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object instanceof Murmur3_128HashFunction) {
       Murmur3_128HashFunction other = (Murmur3_128HashFunction) object;
       return seed == other.seed;

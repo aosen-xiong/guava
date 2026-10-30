@@ -39,7 +39,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-abstract class AbstractMapEntry<K extends @Nullable @Immutable Object, V extends @Readonly @Nullable Object>
+abstract class AbstractMapEntry<K extends @Nullable @Readonly Object, V extends @Readonly @Nullable Object>
     implements Entry<K, V> {
 
   @Pure

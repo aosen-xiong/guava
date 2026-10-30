@@ -51,7 +51,7 @@ final class FilteredMultimapValues<K extends @Nullable @Immutable Object, V exte
   }
 
   @Override
-  public Iterator<V> iterator() {
+  public @Mutable Iterator<V> iterator(@ReceiverDependentMutable FilteredMultimapValues<K, V> this) {
     return Maps.valueIterator(multimap.entries().iterator());
   }
 
@@ -67,7 +67,7 @@ final class FilteredMultimapValues<K extends @Nullable @Immutable Object, V exte
 
   @Override
   public boolean remove(@Mutable FilteredMultimapValues<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
-    Predicate<? super Entry<K, V>> entryPredicate = multimap.entryPredicate();
+    Predicate<? super @Readonly Entry<K, V>> entryPredicate = multimap.entryPredicate();
     for (Iterator<Entry<K, V>> unfilteredItr = multimap.unfiltered().entries().iterator();
         unfilteredItr.hasNext(); ) {
       Entry<K, V> entry = unfilteredItr.next();
@@ -84,7 +84,7 @@ final class FilteredMultimapValues<K extends @Nullable @Immutable Object, V exte
     return Iterables.removeIf(
         multimap.unfiltered().entries(),
         // explicit <Entry<K, V>> is required to build with JDK6
-        Predicates.<Entry<K, V>>and(
+        Predicates.<@Readonly Entry<K, V>>and(
             multimap.entryPredicate(), Maps.<V>valuePredicateOnEntries(Predicates.in(c))));
   }
 
@@ -93,7 +93,7 @@ final class FilteredMultimapValues<K extends @Nullable @Immutable Object, V exte
     return Iterables.removeIf(
         multimap.unfiltered().entries(),
         // explicit <Entry<K, V>> is required to build with JDK6
-        Predicates.<Entry<K, V>>and(
+        Predicates.<@Readonly Entry<K, V>>and(
             multimap.entryPredicate(),
             Maps.<V>valuePredicateOnEntries(Predicates.not(Predicates.in(c)))));
   }

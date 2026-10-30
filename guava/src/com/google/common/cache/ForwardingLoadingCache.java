@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A cache which forwards all its method calls to another cache. Subclasses should override one or
@@ -37,7 +38,6 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-@SuppressWarnings("mutability")
 public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> extends ForwardingCache<K, V>
     implements LoadingCache<K, V> {
 
@@ -45,23 +45,23 @@ public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> ext
   protected ForwardingLoadingCache() {}
 
   @Override
-  protected abstract LoadingCache<K, V> delegate();
+  protected abstract @ReceiverDependentMutable LoadingCache<K, V> delegate(@ReceiverDependentMutable ForwardingLoadingCache<K, V> this);
 
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
   @Override
-  public V get(K key) throws ExecutionException {
+  public V get(@Mutable ForwardingLoadingCache<K, V> this, K key) throws ExecutionException {
     return delegate().get(key);
   }
 
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
   @Override
-  public V getUnchecked(K key) {
+  public V getUnchecked(@Mutable ForwardingLoadingCache<K, V> this, K key) {
     return delegate().getUnchecked(key);
   }
 
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
   @Override
-  public ImmutableMap<K, V> getAll(Iterable<? extends K> keys) throws ExecutionException {
+  public ImmutableMap<K, V> getAll(@Mutable ForwardingLoadingCache<K, V> this, Iterable<? extends K> keys) throws ExecutionException {
     return delegate().getAll(keys);
   }
 
@@ -71,7 +71,7 @@ public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> ext
   }
 
   @Override
-  public void refresh(K key) {
+  public void refresh(@Mutable ForwardingLoadingCache<K, V> this, K key) {
     delegate().refresh(key);
   }
 
@@ -91,7 +91,7 @@ public abstract class ForwardingLoadingCache<K extends @Immutable Object, V> ext
     }
 
     @Override
-    protected final LoadingCache<K, V> delegate() {
+    protected final @ReceiverDependentMutable LoadingCache<K, V> delegate(@ReceiverDependentMutable SimpleForwardingLoadingCache<K, V> this) {
       return delegate;
     }
   }

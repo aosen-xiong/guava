@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -48,20 +49,20 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
     extends AbstractMultimap<K, V> implements FilteredMultimap<K, V> {
   final Multimap<K, V> unfiltered;
-  final Predicate<? super K> keyPredicate;
+  final @Readonly Predicate<? super K> keyPredicate;
 
-  FilteredKeyMultimap(Multimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
+  FilteredKeyMultimap(@ReceiverDependentMutable Multimap<K, V> unfiltered, @Readonly Predicate<? super K> keyPredicate) {
     this.unfiltered = checkNotNull(unfiltered);
     this.keyPredicate = checkNotNull(keyPredicate);
   }
 
   @Override
-  public Multimap<K, V> unfiltered() {
+  public @ReceiverDependentMutable Multimap<K, V> unfiltered() {
     return unfiltered;
   }
 
   @Override
-  public Predicate<? super Entry<K, V>> entryPredicate() {
+  public @Readonly Predicate<? super @Readonly Entry<K, V>> entryPredicate() {
     return Maps.keyPredicateOnEntries(keyPredicate);
   }
 
@@ -85,7 +86,7 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public Collection<V> removeAll(@CheckForNull @Readonly Object key) {
+  public @Readonly Collection<V> removeAll(@Mutable FilteredKeyMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     return containsKey(key) ? unfiltered.removeAll(key) : unmodifiableEmptyCollection();
   }
 
@@ -98,27 +99,28 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable FilteredKeyMultimap<K, V> this) {
     keySet().clear();
   }
 
   @Override
-  Set<K> createKeySet() {
+  @ReceiverDependentMutable Set<K> createKeySet() {
     return Sets.filter(unfiltered.keySet(), keyPredicate);
   }
 
   @Override
-  public Collection<V> get(@ParametricNullness K key) {
+  public @ReceiverDependentMutable Collection<V> get(@ParametricNullness K key) {
     if (keyPredicate.apply(key)) {
       return unfiltered.get(key);
     } else if (unfiltered instanceof SetMultimap) {
-      return new AddRejectingSet<>(key);
+      return new @ReceiverDependentMutable AddRejectingSet<>(key);
     } else {
-      return new AddRejectingList<>(key);
+      return new @ReceiverDependentMutable AddRejectingList<>(key);
     }
   }
 
-  static class AddRejectingSet<K extends @Nullable @Immutable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static class AddRejectingSet<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingSet<V> {
     @ParametricNullness final K key;
 
@@ -132,17 +134,19 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    public boolean addAll(Collection<? extends V> collection) {
+    public boolean addAll(@Readonly Collection<? extends V> collection) {
       checkNotNull(collection);
       throw new IllegalArgumentException("Key does not satisfy predicate: " + key);
     }
 
     @Override
-    protected Set<V> delegate() {
+    @SuppressWarnings("mutability:return.type.incompatible") // the add-rejecting set for a key outside the predicate is always empty, rejects every add and has nothing to remove, so the shared @Immutable empty set stands in for a delegate of any mutability
+    protected @ReceiverDependentMutable Set<V> delegate() {
       return Collections.emptySet();
     }
   }
 
+  @ReceiverDependentMutable
   static class AddRejectingList<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingList<V> {
     @ParametricNullness final K key;
@@ -164,45 +168,47 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
     }
 
     @Override
-    public boolean addAll(Collection<? extends V> collection) {
+    public boolean addAll(@Readonly Collection<? extends V> collection) {
       addAll(0, collection);
       return true;
     }
 
     @CanIgnoreReturnValue
     @Override
-    public boolean addAll(int index, Collection<? extends V> elements) {
+    public boolean addAll(int index, @Readonly Collection<? extends V> elements) {
       checkNotNull(elements);
       checkPositionIndex(index, 0);
       throw new IllegalArgumentException("Key does not satisfy predicate: " + key);
     }
 
     @Override
-    protected List<V> delegate() {
+    @SuppressWarnings("mutability:return.type.incompatible") // the add-rejecting list for a key outside the predicate is always empty, rejects every add and has nothing to remove, so the shared @Immutable empty list stands in for a delegate of any mutability
+    protected @ReceiverDependentMutable List<V> delegate() {
       return Collections.emptyList();
     }
   }
 
   @Override
-  Iterator<Entry<K, V>> entryIterator() {
+  @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable FilteredKeyMultimap<K, V> this) {
     throw new AssertionError("should never be called");
   }
 
   @Override
-  Collection<Entry<K, V>> createEntries() {
-    return new Entries();
+  @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable FilteredKeyMultimap<K, V> this) {
+    return new @ReceiverDependentMutable Entries();
   }
 
   @WeakOuter
-  class Entries extends ForwardingCollection<Entry<K, V>> {
+  @ReceiverDependentMutable
+  class Entries extends ForwardingCollection<@ReceiverDependentMutable Entry<K, V>> {
     @Override
-    protected Collection<Entry<K, V>> delegate() {
+    protected @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> delegate(@ReceiverDependentMutable FilteredKeyMultimap<K, V>.@ReceiverDependentMutable Entries this) {
       return Collections2.filter(unfiltered.entries(), entryPredicate());
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+    public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
       if (o instanceof Entry) {
         Entry<?, ?> entry = (Entry<?, ?>) o;
         if (unfiltered.containsKey(entry.getKey())
@@ -216,17 +222,17 @@ class FilteredKeyMultimap<K extends @Nullable @Immutable Object, V extends @Null
   }
 
   @Override
-  Collection<V> createValues() {
-    return new FilteredMultimapValues<>(this);
+  @ReceiverDependentMutable Collection<V> createValues(@ReceiverDependentMutable FilteredKeyMultimap<K, V> this) {
+    return new @ReceiverDependentMutable FilteredMultimapValues<>(this);
   }
 
   @Override
-  Map<K, Collection<V>> createAsMap() {
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap() {
     return Maps.filterKeys(unfiltered.asMap(), keyPredicate);
   }
 
   @Override
-  Multiset<K> createKeys() {
+  @ReceiverDependentMutable Multiset<K> createKeys() {
     return Multisets.filter(unfiltered.keys(), keyPredicate);
   }
 }

@@ -41,6 +41,7 @@ import java.math.RoundingMode;
 import java.util.Iterator;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A class for arithmetic on doubles that is not covered by {@link java.lang.Math}.
@@ -489,7 +490,7 @@ public final class DoubleMath {
   @Deprecated
   // com.google.common.math.DoubleUtils
   @GwtIncompatible
-  public static double mean(Iterable<? extends Number> values) {
+  public static double mean(Iterable<? extends @Readonly Number> values) {
     return mean(values.iterator());
   }
 
@@ -509,7 +510,7 @@ public final class DoubleMath {
   @Deprecated
   // com.google.common.math.DoubleUtils
   @GwtIncompatible
-  public static double mean(Iterator<? extends Number> values) {
+  public static double mean(Iterator<? extends @Readonly Number> values) {
     checkArgument(values.hasNext(), "Cannot take mean of 0 values");
     long count = 1;
     double mean = checkFinite(values.next().doubleValue());

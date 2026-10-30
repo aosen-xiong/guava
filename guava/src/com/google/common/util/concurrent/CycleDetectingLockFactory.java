@@ -42,6 +42,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * The {@code CycleDetectingLockFactory} creates {@link ReentrantLock} instances and {@link
@@ -170,6 +172,7 @@ public class CycleDetectingLockFactory {
    *
    * @since 13.0
    */
+  @ReceiverDependentMutable
   public interface Policy {
 
     /**
@@ -582,6 +585,7 @@ public class CycleDetectingLockFactory {
      * with an example stack trace. Locks are weakly keyed to allow proper garbage collection when
      * they are no longer referenced.
      */
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // key type uses identity equals/hashCode: weakKeys() compares LockGraphNode keys by identity, and LockGraphNode does not override equals or hashCode
     final Map<LockGraphNode, ExampleStackTrace> allowedPriorLocks =
         new MapMaker().weakKeys().makeMap();
 
@@ -589,6 +593,7 @@ public class CycleDetectingLockFactory {
      * The map tracking lock nodes that can cause a lock acquisition cycle if acquired before this
      * node.
      */
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // key type uses identity equals/hashCode: weakKeys() compares LockGraphNode keys by identity, and LockGraphNode does not override equals or hashCode
     final Map<LockGraphNode, PotentialDeadlockException> disallowedPriorLocks =
         new MapMaker().weakKeys().makeMap();
 
@@ -602,7 +607,7 @@ public class CycleDetectingLockFactory {
       return lockName;
     }
 
-    void checkAcquiredLocks(Policy policy, List<LockGraphNode> acquiredLocks) {
+    void checkAcquiredLocks(@Readonly Policy policy, List<LockGraphNode> acquiredLocks) {
       for (LockGraphNode acquiredLock : acquiredLocks) {
         checkAcquiredLock(policy, acquiredLock);
       }
@@ -617,7 +622,7 @@ public class CycleDetectingLockFactory {
      * {@code acquiredLock}, or in the {@code disallowedPriorLocks} map, in which case it is not
      * safe.
      */
-    void checkAcquiredLock(Policy policy, LockGraphNode acquiredLock) {
+    void checkAcquiredLock(@Readonly Policy policy, LockGraphNode acquiredLock) {
       // checkAcquiredLock() should never be invoked by a lock that has already
       // been acquired. For unordered locks, aboutToAcquire() ensures this by
       // checking isAcquiredByCurrentThread(). For ordered locks, however, this

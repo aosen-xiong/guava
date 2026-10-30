@@ -24,8 +24,10 @@ import java.util.Iterator;
 import java.util.NavigableSet;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * This class provides a skeletal implementation of the {@link SortedMultiset} interface.
@@ -41,7 +43,7 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @ReceiverDependentMutable
 abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> extends AbstractMultiset<E>
     implements SortedMultiset<E> {
-  @GwtTransient final Comparator<? super E> comparator;
+  @GwtTransient final @Readonly Comparator<? super E> comparator;
 
   // needed for serialization
   @SuppressWarnings("unchecked")
@@ -49,43 +51,43 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
     this((Comparator) Ordering.natural());
   }
 
-  AbstractSortedMultiset(Comparator<? super E> comparator) {
+  AbstractSortedMultiset(@Readonly Comparator<? super E> comparator) {
     this.comparator = checkNotNull(comparator);
   }
 
   @Override
-  public NavigableSet<E> elementSet() {
-    return (NavigableSet<E>) super.elementSet();
+  public @ReceiverDependentMutable NavigableSet<E> elementSet(@ReceiverDependentMutable AbstractSortedMultiset<E> this) {
+    return (@ReceiverDependentMutable NavigableSet<E>) super.elementSet();
   }
 
   @Override
-  NavigableSet<E> createElementSet() {
-    return new SortedMultisets.NavigableElementSet<>(this);
+  @ReceiverDependentMutable NavigableSet<E> createElementSet(@ReceiverDependentMutable AbstractSortedMultiset<E> this) {
+    return new SortedMultisets.@ReceiverDependentMutable NavigableElementSet<>(this);
   }
 
   @Override
-  public Comparator<? super E> comparator() {
+  public @Readonly Comparator<? super E> comparator() {
     return comparator;
   }
 
   @Override
   @CheckForNull
-  public Entry<E> firstEntry() {
-    Iterator<Entry<E>> entryIterator = entryIterator();
+  public @Readonly Entry<E> firstEntry() {
+    Iterator<@Readonly Entry<E>> entryIterator = entryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
   @Override
   @CheckForNull
-  public Entry<E> lastEntry() {
-    Iterator<Entry<E>> entryIterator = descendingEntryIterator();
+  public @Readonly Entry<E> lastEntry() {
+    Iterator<@Readonly Entry<E>> entryIterator = descendingEntryIterator();
     return entryIterator.hasNext() ? entryIterator.next() : null;
   }
 
   @Override
   @CheckForNull
-  public Entry<E> pollFirstEntry() {
-    Iterator<Entry<E>> entryIterator = entryIterator();
+  public @Readonly Entry<E> pollFirstEntry(@Mutable AbstractSortedMultiset<E> this) {
+    Iterator<@Readonly Entry<E>> entryIterator = entryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();
       result = Multisets.immutableEntry(result.getElement(), result.getCount());
@@ -97,8 +99,8 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
 
   @Override
   @CheckForNull
-  public Entry<E> pollLastEntry() {
-    Iterator<Entry<E>> entryIterator = descendingEntryIterator();
+  public @Readonly Entry<E> pollLastEntry(@Mutable AbstractSortedMultiset<E> this) {
+    Iterator<@Readonly Entry<E>> entryIterator = descendingEntryIterator();
     if (entryIterator.hasNext()) {
       Entry<E> result = entryIterator.next();
       result = Multisets.immutableEntry(result.getElement(), result.getCount());
@@ -109,7 +111,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
   }
 
   @Override
-  public SortedMultiset<E> subMultiset(
+  public @ReceiverDependentMutable SortedMultiset<E> subMultiset(@ReceiverDependentMutable AbstractSortedMultiset<E> this,
       @ParametricNullness E fromElement,
       BoundType fromBoundType,
       @ParametricNullness E toElement,
@@ -120,21 +122,22 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
     return tailMultiset(fromElement, fromBoundType).headMultiset(toElement, toBoundType);
   }
 
-  abstract Iterator<Entry<E>> descendingEntryIterator();
+  abstract Iterator<@Readonly Entry<E>> descendingEntryIterator();
 
   Iterator<E> descendingIterator() {
     return Multisets.iteratorImpl(descendingMultiset());
   }
 
-  @LazyInit @CheckForNull private transient SortedMultiset<E> descendingMultiset;
+  @LazyInit @CheckForNull private transient @Assignable SortedMultiset<E> descendingMultiset;
 
   @Override
-  public SortedMultiset<E> descendingMultiset() {
+  public @ReceiverDependentMutable SortedMultiset<E> descendingMultiset(@ReceiverDependentMutable AbstractSortedMultiset<E> this) {
     SortedMultiset<E> result = descendingMultiset;
     return (result == null) ? descendingMultiset = createDescendingMultiset() : result;
   }
 
-  SortedMultiset<E> createDescendingMultiset() {
+  @SuppressWarnings("mutability:return.type.incompatible") // the descending view wraps this multiset, so it has this multiset's mutability, which a local class cannot declare
+  @ReceiverDependentMutable SortedMultiset<E> createDescendingMultiset(@ReceiverDependentMutable AbstractSortedMultiset<E> this) {
     @WeakOuter
     class DescendingMultisetImpl extends DescendingMultiset<E> {
       @Override
@@ -143,7 +146,7 @@ abstract class AbstractSortedMultiset<E extends @Nullable @Readonly Object> exte
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
+      Iterator<@Readonly Entry<E>> entryIterator() {
         return descendingEntryIterator();
       }
 

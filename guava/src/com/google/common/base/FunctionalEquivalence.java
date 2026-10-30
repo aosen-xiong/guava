@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.GwtCompatible;
 import java.io.Serializable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -44,17 +45,17 @@ final class FunctionalEquivalence<F, T> extends Equivalence<F> implements Serial
   }
 
   @Override
-  protected boolean doEquivalent(F a, F b) {
+  protected boolean doEquivalent(@Readonly FunctionalEquivalence<F, T> this, F a, F b) {
     return resultEquivalence.equivalent(function.apply(a), function.apply(b));
   }
 
   @Override
-  protected int doHash(F a) {
+  protected int doHash(@Readonly FunctionalEquivalence<F, T> this, F a) {
     return resultEquivalence.hash(function.apply(a));
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     }

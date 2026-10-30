@@ -32,6 +32,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An implementation of {@link ContiguousSet} that contains one or more elements.
@@ -42,7 +43,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class RegularContiguousSet<C extends @Readonly Comparable> extends ContiguousSet<C> {
+final class RegularContiguousSet<C extends @Immutable Comparable> extends ContiguousSet<C> {
   private final Range<C> range;
 
   RegularContiguousSet(Range<C> range, DiscreteDomain<C> domain) {
@@ -82,7 +83,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
 
   @GwtIncompatible // not used by GWT emulation
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@CheckForNull @Readonly Object target) {
     if (!contains(target)) {
       return -1;
     }
@@ -94,7 +95,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
   }
 
   @Override
-  public UnmodifiableIterator<C> iterator() {
+  public @Mutable UnmodifiableIterator<C> iterator() {
     return new AbstractSequentialIterator<C>(first()) {
       final C last = last();
 
@@ -108,7 +109,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
 
   @GwtIncompatible // NavigableSet
   @Override
-  public UnmodifiableIterator<C> descendingIterator() {
+  public @Mutable UnmodifiableIterator<C> descendingIterator() {
     return new AbstractSequentialIterator<C>(last()) {
       final C first = first();
 
@@ -120,7 +121,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
     };
   }
 
-  private static boolean equalsOrThrow(Comparable<?> left, @CheckForNull Comparable<?> right) {
+  private static boolean equalsOrThrow(@Readonly Comparable<?> left, @CheckForNull @Readonly Comparable<?> right) {
     return right != null && Range.compareOrThrow(left, right) == 0;
   }
 
@@ -161,7 +162,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
         @Override
         @J2ktIncompatible // serialization
         @GwtIncompatible // serialization
-        Object writeReplace() {
+        @Readonly Object writeReplace() {
           return super.writeReplace();
         }
       };
@@ -177,7 +178,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == null) {
       return false;
     }
@@ -191,7 +192,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
   }
 
   @Override
-  public boolean containsAll(Collection<?> targets) {
+  public boolean containsAll(@Readonly Collection<?> targets) {
     return Collections2.containsAllImpl(this, targets);
   }
 
@@ -229,7 +230,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
   }
 
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == this) {
       return true;
     } else if (object instanceof RegularContiguousSet) {
@@ -249,7 +250,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
 
   @GwtIncompatible // serialization
   @J2ktIncompatible
-  private static final class SerializedForm<C extends Comparable> implements Serializable {
+  private static final class SerializedForm<C extends @Immutable Comparable> implements Serializable {
     final Range<C> range;
     final DiscreteDomain<C> domain;
 
@@ -258,7 +259,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
       this.domain = domain;
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return new RegularContiguousSet<>(range, domain);
     }
   }
@@ -266,7 +267,7 @@ final class RegularContiguousSet<C extends @Readonly Comparable> extends Contigu
   @GwtIncompatible // serialization
   @J2ktIncompatible
   @Override
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<>(range, domain);
   }
 

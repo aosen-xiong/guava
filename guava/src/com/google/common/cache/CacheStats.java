@@ -23,6 +23,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import java.util.concurrent.Callable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
@@ -280,7 +281,7 @@ public final class CacheStats {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object instanceof CacheStats) {
       CacheStats other = (CacheStats) object;
       return hitCount == other.hitCount

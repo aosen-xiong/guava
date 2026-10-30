@@ -20,6 +20,8 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.DoNotCall;
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A type-to-instance map backed by an {@link ImmutableMap}. See also {@link
@@ -29,6 +31,7 @@ import javax.annotation.CheckForNull;
  * @since 13.0
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken<? extends B>, B>
     implements TypeToInstanceMap<B> {
 
@@ -166,12 +169,12 @@ public final class ImmutableTypeToInstanceMap<B> extends ForwardingMap<TypeToken
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public void putAll(Map<? extends TypeToken<? extends B>, ? extends B> map) {
+  public void putAll(@Readonly Map<? extends TypeToken<? extends B>, ? extends B> map) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  protected Map<TypeToken<? extends B>, B> delegate() {
+  protected @Immutable Map<TypeToken<? extends B>, B> delegate() {
     return delegate;
   }
 

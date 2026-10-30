@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A {@link PrimitiveSink} that can compute a hash code after reading the input. Each hasher should
@@ -138,7 +139,7 @@ public interface Hasher extends PrimitiveSink {
 
   /** A simple convenience for {@code funnel.funnel(object, this)}. */
   @CanIgnoreReturnValue
-  <T extends @Nullable Object> Hasher putObject(
+  <T extends @Nullable @Readonly Object> Hasher putObject(
       @ParametricNullness T instance, Funnel<? super T> funnel);
 
   /**

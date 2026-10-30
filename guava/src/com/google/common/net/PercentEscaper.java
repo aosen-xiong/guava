@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.escape.UnicodeEscaper;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 
 /**
@@ -126,7 +127,7 @@ public final class PercentEscaper extends UnicodeEscaper {
    * escaper from ~760ns to ~400ns as measured by {@link CharEscapersBenchmark}.
    */
   @Override
-  protected @IndexOrHigh("#1") int nextEscapeIndex(CharSequence csq, @IndexOrHigh("#1") int index, @IndexOrHigh("#1") int end) {
+  protected @IndexOrHigh("#1") int nextEscapeIndex(@Readonly CharSequence csq, @IndexOrHigh("#1") int index, @IndexOrHigh("#1") int end) {
     checkNotNull(csq);
     for (; index < end; index++) {
       char c = csq.charAt(index);

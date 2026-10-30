@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.RandomAccess;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.HasSubsequence;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -44,6 +45,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code byte} primitives, that are not already found in
@@ -235,7 +237,7 @@ public final class Bytes {
       return ((ByteArrayAsList) collection).toByteArray();
     }
 
-    @PolySigned Object[] boxedArray = collection.toArray();
+    @PolySigned @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     @PolySigned byte[] array = new byte[len];
     for (int i = 0; i < len; i++) {
@@ -259,7 +261,7 @@ public final class Bytes {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
-  @SuppressWarnings({"signedness:argument", "signedness:return"}) // non-generic container class
+  @SuppressWarnings({"signedness:argument", "signedness:return", "mutability:return.type.incompatible"}) // signedness: non-generic container class. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
   public static List<@PolySigned Byte> asList(@PolySigned byte... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
@@ -309,13 +311,13 @@ public final class Bytes {
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Byte) && Bytes.indexOf(array, (Byte) target, start, end) != -1;
     }
 
     @Override
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Byte) {
         int i = Bytes.indexOf(array, (Byte) target, start, end);
@@ -327,7 +329,7 @@ public final class Bytes {
     }
 
     @Override
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Byte) {
         int i = Bytes.lastIndexOf(array, (Byte) target, start, end);
@@ -348,7 +350,7 @@ public final class Bytes {
     }
 
     @Override
-    @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
+    @SuppressWarnings({"index", "mutability:return.type.incompatible"}) // index: needs https://github.com/kelloggm/checker-framework/issues/229. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
     public List<Byte> subList(@IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
@@ -359,7 +361,7 @@ public final class Bytes {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

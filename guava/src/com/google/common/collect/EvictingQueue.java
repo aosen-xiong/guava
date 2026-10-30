@@ -27,8 +27,10 @@ import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Queue;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * A non-blocking queue which automatically evicts elements from the head of the queue when
@@ -118,7 +120,7 @@ public final class EvictingQueue<E> extends ForwardingQueue<E> implements Serial
 
   @Override
   @CanIgnoreReturnValue
-  public boolean addAll(Collection<? extends E> collection) {
+  public boolean addAll(@Readonly Collection<? extends E> collection) {
     int size = collection.size();
     if (size >= maxSize) {
       clear();
@@ -129,7 +131,7 @@ public final class EvictingQueue<E> extends ForwardingQueue<E> implements Serial
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited implementation
-  public @PolyNull @PolySigned Object[] toArray(EvictingQueue<@PolyNull @PolySigned E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly EvictingQueue<@PolyNull @PolySigned @PolyMutable E> this) {
     /*
      * If we could, we'd declare the no-arg `Collection.toArray()` to return "Object[] but elements
      * have the same nullness as E." Since we can't, we declare it to return nullable elements, and

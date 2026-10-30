@@ -32,6 +32,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An implementation of {@link NetworkConnections} for undirected networks with parallel edges.
@@ -41,30 +46,31 @@ import org.checkerframework.checker.index.qual.NonNegative;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class UndirectedMultiNetworkConnections<N, E>
+@ReceiverDependentMutable
+final class UndirectedMultiNetworkConnections<N extends @Immutable Object, E extends @Immutable Object>
     extends AbstractUndirectedNetworkConnections<N, E> {
 
-  private UndirectedMultiNetworkConnections(Map<E, N> incidentEdges) {
+  private UndirectedMultiNetworkConnections(@ReceiverDependentMutable Map<E, N> incidentEdges) {
     super(incidentEdges);
   }
 
-  static <N, E> UndirectedMultiNetworkConnections<N, E> of() {
-    return new UndirectedMultiNetworkConnections<>(
+  static <N extends @Immutable Object, E extends @Immutable Object> @Mutable UndirectedMultiNetworkConnections<N, E> of() {
+    return new @Mutable UndirectedMultiNetworkConnections<>(
         new HashMap<E, N>(INNER_CAPACITY, INNER_LOAD_FACTOR));
   }
 
-  static <N, E> UndirectedMultiNetworkConnections<N, E> ofImmutable(Map<E, N> incidentEdges) {
-    return new UndirectedMultiNetworkConnections<>(ImmutableMap.copyOf(incidentEdges));
+  static <N extends @Immutable Object, E extends @Immutable Object> @Immutable UndirectedMultiNetworkConnections<N, E> ofImmutable(@Readonly Map<E, N> incidentEdges) {
+    return new @Immutable UndirectedMultiNetworkConnections<>(ImmutableMap.copyOf(incidentEdges));
   }
 
-  @CheckForNull @LazyInit private transient Reference<Multiset<N>> adjacentNodesReference;
+  @CheckForNull @LazyInit private transient @Assignable @Mutable Reference<@Mutable Multiset<N>> adjacentNodesReference;
 
   @Override
-  public Set<N> adjacentNodes() {
+  public @Readonly Set<N> adjacentNodes(@ReceiverDependentMutable UndirectedMultiNetworkConnections<N, E> this) {
     return Collections.unmodifiableSet(adjacentNodesMultiset().elementSet());
   }
 
-  private Multiset<N> adjacentNodesMultiset() {
+  private Multiset<N> adjacentNodesMultiset(@ReceiverDependentMutable UndirectedMultiNetworkConnections<N, E> this) {
     Multiset<N> adjacentNodes = getReference(adjacentNodesReference);
     if (adjacentNodes == null) {
       adjacentNodes = HashMultiset.create(incidentEdgeMap.values());
@@ -74,7 +80,7 @@ final class UndirectedMultiNetworkConnections<N, E>
   }
 
   @Override
-  public Set<E> edgesConnecting(N node) {
+  public @Readonly Set<E> edgesConnecting(@ReceiverDependentMutable UndirectedMultiNetworkConnections<N, E> this, N node) {
     return new MultiEdgesConnecting<E>(incidentEdgeMap, node) {
       @Override
       public @NonNegative int size() {
@@ -85,7 +91,7 @@ final class UndirectedMultiNetworkConnections<N, E>
 
   @Override
   @CheckForNull
-  public N removeInEdge(E edge, boolean isSelfLoop) {
+  public N removeInEdge(@Mutable UndirectedMultiNetworkConnections<N, E> this, E edge, boolean isSelfLoop) {
     if (!isSelfLoop) {
       return removeOutEdge(edge);
     }
@@ -93,7 +99,7 @@ final class UndirectedMultiNetworkConnections<N, E>
   }
 
   @Override
-  public N removeOutEdge(E edge) {
+  public N removeOutEdge(@Mutable UndirectedMultiNetworkConnections<N, E> this, E edge) {
     N node = super.removeOutEdge(edge);
     Multiset<N> adjacentNodes = getReference(adjacentNodesReference);
     if (adjacentNodes != null) {
@@ -103,14 +109,14 @@ final class UndirectedMultiNetworkConnections<N, E>
   }
 
   @Override
-  public void addInEdge(E edge, N node, boolean isSelfLoop) {
+  public void addInEdge(@Mutable UndirectedMultiNetworkConnections<N, E> this, E edge, N node, boolean isSelfLoop) {
     if (!isSelfLoop) {
       addOutEdge(edge, node);
     }
   }
 
   @Override
-  public void addOutEdge(E edge, N node) {
+  public void addOutEdge(@Mutable UndirectedMultiNetworkConnections<N, E> this, E edge, N node) {
     super.addOutEdge(edge, node);
     Multiset<N> adjacentNodes = getReference(adjacentNodesReference);
     if (adjacentNodes != null) {

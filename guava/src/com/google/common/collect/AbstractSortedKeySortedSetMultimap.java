@@ -41,7 +41,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
 abstract class AbstractSortedKeySortedSetMultimap<
-        K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+        K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends AbstractSortedSetMultimap<K, V> {
 
   AbstractSortedKeySortedSetMultimap(@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> map) {
@@ -49,22 +49,22 @@ abstract class AbstractSortedKeySortedSetMultimap<
   }
 
   @Override
-  public @PolyMutable SortedMap<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
-    return (@PolyMutable SortedMap<K, @PolyMutable Collection<V>>) super.asMap();
+  public @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
+    return (@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>>) super.asMap();
   }
 
   @Override
-  @PolyMutable SortedMap<K, @PolyMutable Collection<V>> backingMap(@PolyMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
-    return (@PolyMutable SortedMap<K, @PolyMutable Collection<V>>) super.backingMap();
+  @ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>> backingMap(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
+    return (@ReceiverDependentMutable SortedMap<K, @ReceiverDependentMutable Collection<V>>) super.backingMap();
   }
 
   @Override
-  public @PolyMutable SortedSet<K> keySet(@PolyMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
-    return (@PolyMutable SortedSet<K>) super.keySet();
+  public @ReceiverDependentMutable SortedSet<K> keySet(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
+    return (@ReceiverDependentMutable SortedSet<K>) super.keySet();
   }
 
   @Override
-  @PolyMutable Set<K> createKeySet(@PolyMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable AbstractSortedKeySortedSetMultimap<K, V> this) {
     return createMaybeNavigableKeySet();
   }
 }

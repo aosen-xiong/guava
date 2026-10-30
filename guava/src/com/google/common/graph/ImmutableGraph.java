@@ -46,20 +46,21 @@ import com.google.errorprone.annotations.Immutable;
 @Beta
 @Immutable(containerOf = {"N"})
 @ElementTypesAreNonnullByDefault
-public class ImmutableGraph<N> extends ForwardingGraph<N> {
+@org.checkerframework.checker.mutability.qual.Immutable
+public class ImmutableGraph<N extends @org.checkerframework.checker.mutability.qual.Immutable Object> extends ForwardingGraph<N> {
   @SuppressWarnings("Immutable") // The backing graph must be immutable.
   private final BaseGraph<N> backingGraph;
 
-  ImmutableGraph(BaseGraph<N> backingGraph) {
+  ImmutableGraph(@org.checkerframework.checker.mutability.qual.Immutable BaseGraph<N> backingGraph) {
     this.backingGraph = backingGraph;
   }
 
   /** Returns an immutable copy of {@code graph}. */
-  public static <N> ImmutableGraph<N> copyOf(Graph<N> graph) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object> ImmutableGraph<N> copyOf(Graph<N> graph) {
     return (graph instanceof ImmutableGraph)
         ? (ImmutableGraph<N>) graph
         : new ImmutableGraph<N>(
-            new StandardValueGraph<N, Presence>(
+            new @org.checkerframework.checker.mutability.qual.Immutable StandardValueGraph<N, Presence>(
                 GraphBuilder.from(graph), getNodeConnections(graph), graph.edges().size()));
   }
 
@@ -69,7 +70,7 @@ public class ImmutableGraph<N> extends ForwardingGraph<N> {
    * @deprecated no need to use this
    */
   @Deprecated
-  public static <N> ImmutableGraph<N> copyOf(ImmutableGraph<N> graph) {
+  public static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object> ImmutableGraph<N> copyOf(ImmutableGraph<N> graph) {
     return checkNotNull(graph);
   }
 
@@ -78,12 +79,12 @@ public class ImmutableGraph<N> extends ForwardingGraph<N> {
     return ElementOrder.stable();
   }
 
-  private static <N> ImmutableMap<N, GraphConnections<N, Presence>> getNodeConnections(
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object> ImmutableMap<N, @org.checkerframework.checker.mutability.qual.Immutable GraphConnections<N, Presence>> getNodeConnections(
       Graph<N> graph) {
     // ImmutableMap.Builder maintains the order of the elements as inserted, so the map will have
     // whatever ordering the graph's nodes do, so ImmutableSortedMap is unnecessary even if the
     // input nodes are sorted.
-    ImmutableMap.Builder<N, GraphConnections<N, Presence>> nodeConnections = ImmutableMap.builder();
+    ImmutableMap.Builder<N, @org.checkerframework.checker.mutability.qual.Immutable GraphConnections<N, Presence>> nodeConnections = ImmutableMap.builder();
     for (N node : graph.nodes()) {
       nodeConnections.put(node, connectionsOf(graph, node));
     }
@@ -91,7 +92,7 @@ public class ImmutableGraph<N> extends ForwardingGraph<N> {
   }
 
   @SuppressWarnings("unchecked")
-  private static <N> GraphConnections<N, Presence> connectionsOf(Graph<N> graph, N node) {
+  private static <N extends @org.checkerframework.checker.mutability.qual.Immutable Object> @org.checkerframework.checker.mutability.qual.Immutable GraphConnections<N, Presence> connectionsOf(Graph<N> graph, N node) {
     Function<N, Presence> edgeValueFn =
         (Function<N, Presence>) Functions.constant(Presence.EDGE_EXISTS);
     return graph.isDirected()
@@ -101,7 +102,7 @@ public class ImmutableGraph<N> extends ForwardingGraph<N> {
   }
 
   @Override
-  BaseGraph<N> delegate() {
+  @org.checkerframework.checker.mutability.qual.Immutable BaseGraph<N> delegate() {
     return backingGraph;
   }
 
@@ -126,7 +127,7 @@ public class ImmutableGraph<N> extends ForwardingGraph<N> {
    *
    * @since 28.0
    */
-  public static class Builder<N> {
+  public static class Builder<N extends @org.checkerframework.checker.mutability.qual.Immutable Object> {
 
     private final MutableGraph<N> mutableGraph;
 

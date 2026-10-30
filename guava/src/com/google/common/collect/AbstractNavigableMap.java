@@ -53,25 +53,25 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   @CheckForNull
-  public Entry<K, V> firstEntry() {
-    return Iterators.<@Nullable Entry<K, V>>getNext(entryIterator(), null);
+  public @Readonly Entry<K, V> firstEntry() {
+    return Iterators.<@Nullable @Readonly Entry<K, V>>getNext(entryIterator(), null);
   }
 
   @Override
   @CheckForNull
-  public Entry<K, V> lastEntry() {
-    return Iterators.<@Nullable Entry<K, V>>getNext(descendingEntryIterator(), null);
+  public @Readonly Entry<K, V> lastEntry() {
+    return Iterators.<@Nullable @Readonly Entry<K, V>>getNext(descendingEntryIterator(), null);
   }
 
   @Override
   @CheckForNull
-  public Entry<K, V> pollFirstEntry(@Mutable AbstractNavigableMap<K,V> this) {
+  public @Readonly Entry<K, V> pollFirstEntry(@Mutable AbstractNavigableMap<K,V> this) {
     return Iterators.pollNext(entryIterator());
   }
 
   @Override
   @CheckForNull
-  public Entry<K, V> pollLastEntry(@Mutable AbstractNavigableMap<K,V> this) {
+  public @Readonly Entry<K, V> pollLastEntry(@Mutable AbstractNavigableMap<K,V> this) {
     return Iterators.pollNext(descendingEntryIterator());
   }
 
@@ -99,25 +99,25 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> lowerEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> lowerEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return headMap(key, false).lastEntry();
   }
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> floorEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> floorEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return headMap(key, true).lastEntry();
   }
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> ceilingEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> ceilingEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return tailMap(key, true).firstEntry();
   }
 
   @Override
   @CheckForNull
-  public @PolyMutable Entry<K, V> higherEntry(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
+  public @Readonly Entry<K, V> higherEntry(@Readonly AbstractNavigableMap<K,V> this, @ParametricNullness K key) {
     return tailMap(key, false).firstEntry();
   }
 
@@ -145,52 +145,52 @@ abstract class AbstractNavigableMap<K extends @Nullable @Immutable Object, V ext
     return Maps.keyOrNull(higherEntry(key));
   }
 
-  abstract Iterator<@PolyMutable Entry<K, V>> descendingEntryIterator(@PolyMutable AbstractNavigableMap<K,V> this);
+  abstract Iterator<@ReceiverDependentMutable Entry<K, V>> descendingEntryIterator(@ReceiverDependentMutable AbstractNavigableMap<K,V> this);
 
   @Override
-  public @PolyMutable SortedMap<K, V> subMap(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
     return subMap(fromKey, true, toKey, false);
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> headMap(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this, @ParametricNullness K toKey) {
     return headMap(toKey, false);
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this, @ParametricNullness K fromKey) {
     return tailMap(fromKey, true);
   }
 
   @Override
-  public @PolyMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@PolyMutable AbstractNavigableMap<K,V> this) {
-    return new Maps.NavigableKeySet<>(this);
+  public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> navigableKeySet(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
+    return new Maps.@ReceiverDependentMutable NavigableKeySet<>(this);
   }
 
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AbstractNavigableMap<K,V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
     return navigableKeySet();
   }
 
   @Override
-  public @PolyMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@PolyMutable AbstractNavigableMap<K,V> this) {
+  public @ReceiverDependentMutable NavigableSet<@KeyFor({"this"}) K> descendingKeySet(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
     return descendingMap().navigableKeySet();
   }
 
   @Override
-  public @PolyMutable NavigableMap<K, V> descendingMap(@PolyMutable AbstractNavigableMap<K,V> this) {
-    return new @PolyMutable DescendingMap();
+  public @ReceiverDependentMutable NavigableMap<K, V> descendingMap(@ReceiverDependentMutable AbstractNavigableMap<K,V> this) {
+    return new @ReceiverDependentMutable DescendingMap();
   }
 
   @ReceiverDependentMutable
   private final class DescendingMap extends Maps.DescendingMap<K, V> {
     @Override
-    @PolyMutable NavigableMap<K, V> forward(@PolyMutable AbstractNavigableMap<K, V>.DescendingMap this) {
+    @ReceiverDependentMutable NavigableMap<K, V> forward(@ReceiverDependentMutable AbstractNavigableMap<K, V>.DescendingMap this) {
       return AbstractNavigableMap.this;
     }
 
     @Override
-    Iterator<@PolyMutable Entry<K, V>> entryIterator(@PolyMutable AbstractNavigableMap<K, V>.DescendingMap this) {
+    Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable AbstractNavigableMap<K, V>.DescendingMap this) {
       return descendingEntryIterator();
     }
   }

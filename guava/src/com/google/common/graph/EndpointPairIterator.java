@@ -25,7 +25,10 @@ import com.google.common.collect.Sets;
 import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A class to facilitate the set returned by {@link Graph#edges()}.
@@ -33,16 +36,16 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  * @author James Sexton
  */
 @ElementTypesAreNonnullByDefault
-abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>> {
+abstract class EndpointPairIterator<N extends @Immutable Object> extends AbstractIterator<EndpointPair<N>> {
   private final BaseGraph<N> graph;
   private final Iterator<N> nodeIterator;
 
   @CheckForNull
   N node = null; // null is safe as an initial value because graphs don't allow null nodes
 
-  Iterator<N> successorIterator = ImmutableSet.<N>of().iterator();
+  @Mutable Iterator<N> successorIterator = ImmutableSet.<N>of().iterator();
 
-  static <N> EndpointPairIterator<N> of(BaseGraph<N> graph) {
+  static <N extends @Immutable Object> EndpointPairIterator<N> of(BaseGraph<N> graph) {
     return graph.isDirected() ? new Directed<N>(graph) : new Undirected<N>(graph);
   }
 
@@ -69,7 +72,7 @@ abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>>
    * If the graph is directed, each ordered [source, target] pair will be visited once if there is
    * an edge connecting them.
    */
-  private static final class Directed<N> extends EndpointPairIterator<N> {
+  private static final class Directed<N extends @Immutable Object> extends EndpointPairIterator<N> {
     private Directed(BaseGraph<N> graph) {
       super(graph);
     }
@@ -115,7 +118,7 @@ abstract class EndpointPairIterator<N> extends AbstractIterator<EndpointPair<N>>
    * Visited Nodes = {N1, N2, N3, N4}
    * </pre>
    */
-  private static final class Undirected<N> extends EndpointPairIterator<N> {
+  private static final class Undirected<N extends @Immutable Object> extends EndpointPairIterator<N> {
     // It's a little weird that we add `null` to this set, but it makes for slightly simpler code.
     @CheckForNull private Set<@Nullable N> visitedNodes;
 

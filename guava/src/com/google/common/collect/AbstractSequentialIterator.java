@@ -22,6 +22,8 @@ import javax.annotation.CheckForNull;
 
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * This class provides a skeletal implementation of the {@code Iterator} interface for sequences
@@ -45,7 +47,7 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @CFComment("AOSEN: Is this a design issue?")
-@ReceiverDependentMutable
+@Mutable
 public abstract class AbstractSequentialIterator<T> extends UnmodifiableIterator<T> {
   @CheckForNull private T nextOrNull;
 

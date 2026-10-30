@@ -19,6 +19,9 @@ package com.google.common.graph;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An interface for representing and manipulating an origin node's adjacent nodes and incident edges
@@ -29,32 +32,33 @@ import javax.annotation.CheckForNull;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 interface NetworkConnections<N, E> {
 
-  Set<N> adjacentNodes();
+  @Readonly Set<N> adjacentNodes(@ReceiverDependentMutable NetworkConnections<N, E> this);
 
-  Set<N> predecessors();
+  @Readonly Set<N> predecessors(@ReceiverDependentMutable NetworkConnections<N, E> this);
 
-  Set<N> successors();
+  @Readonly Set<N> successors(@ReceiverDependentMutable NetworkConnections<N, E> this);
 
-  Set<E> incidentEdges();
+  @Readonly Set<E> incidentEdges(@ReceiverDependentMutable NetworkConnections<N, E> this);
 
-  Set<E> inEdges();
+  @Readonly Set<E> inEdges(@ReceiverDependentMutable NetworkConnections<N, E> this);
 
-  Set<E> outEdges();
+  @Readonly Set<E> outEdges(@ReceiverDependentMutable NetworkConnections<N, E> this);
 
   /**
    * Returns the set of edges connecting the origin node to {@code node}. For networks without
    * parallel edges, this set cannot be of size greater than one.
    */
-  Set<E> edgesConnecting(N node);
+  @Readonly Set<E> edgesConnecting(@ReceiverDependentMutable NetworkConnections<N, E> this, N node);
 
   /**
    * Returns the node that is adjacent to the origin node along {@code edge}.
    *
    * <p>In the directed case, {@code edge} is assumed to be an outgoing edge.
    */
-  N adjacentNode(E edge);
+  N adjacentNode(@ReceiverDependentMutable NetworkConnections<N, E> this, E edge);
 
   /**
    * Remove {@code edge} from the set of incoming edges. Returns the former predecessor node.
@@ -63,17 +67,17 @@ interface NetworkConnections<N, E> {
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  N removeInEdge(E edge, boolean isSelfLoop);
+  N removeInEdge(@Mutable NetworkConnections<N, E> this, E edge, boolean isSelfLoop);
 
   /** Remove {@code edge} from the set of outgoing edges. Returns the former successor node. */
   @CanIgnoreReturnValue
-  N removeOutEdge(E edge);
+  N removeOutEdge(@Mutable NetworkConnections<N, E> this, E edge);
 
   /**
    * Add {@code edge} to the set of incoming edges. Implicitly adds {@code node} as a predecessor.
    */
-  void addInEdge(E edge, N node, boolean isSelfLoop);
+  void addInEdge(@Mutable NetworkConnections<N, E> this, E edge, N node, boolean isSelfLoop);
 
   /** Add {@code edge} to the set of outgoing edges. Implicitly adds {@code node} as a successor. */
-  void addOutEdge(E edge, N node);
+  void addOutEdge(@Mutable NetworkConnections<N, E> this, E edge, N node);
 }

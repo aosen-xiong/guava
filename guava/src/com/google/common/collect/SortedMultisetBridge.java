@@ -34,5 +34,5 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @ReceiverDependentMutable
 interface SortedMultisetBridge<E extends @Nullable @Readonly Object> extends Multiset<E> {
   @Override
-  SortedSet<E> elementSet();
+  @ReceiverDependentMutable SortedSet<E> elementSet(@ReceiverDependentMutable SortedMultisetBridge<E> this);
 }

@@ -129,7 +129,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * undocumented and subject to change.
    */
   public static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> copyOf(
-      Table<? extends R, ? extends C, ? extends V> table) {
+      @Readonly Table<? extends R, ? extends C, ? extends V> table) {
     if (table instanceof ImmutableTable) {
       @SuppressWarnings("unchecked")
       ImmutableTable<R, C, V> parameterizedTable = (ImmutableTable<R, C, V>) table;
@@ -140,9 +140,9 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   }
 
   static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> copyOf(
-      Iterable<? extends Cell<? extends R, ? extends C, ? extends V>> cells) {
+      @Readonly Iterable<? extends @Readonly Cell<? extends R, ? extends C, ? extends V>> cells) {
     ImmutableTable.Builder<R, C, V> builder = ImmutableTable.builder();
-    for (Cell<? extends R, ? extends C, ? extends V> cell : cells) {
+    for (@Readonly Cell<? extends R, ? extends C, ? extends V> cell : cells) {
       builder.put(cell);
     }
     return builder.build();
@@ -160,7 +160,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * Verifies that {@code rowKey}, {@code columnKey} and {@code value} are non-null, and returns a
    * new entry with those values.
    */
-  static <R extends @Immutable Object, C extends @Immutable Object, V> Cell<R, C, V> cellOf(R rowKey, C columnKey, V value) {
+  static <R extends @Immutable Object, C extends @Immutable Object, V> @Immutable Cell<R, C, V> cellOf(R rowKey, C columnKey, V value) {
     return Tables.immutableCell(
         checkNotNull(rowKey, "rowKey"),
         checkNotNull(columnKey, "columnKey"),
@@ -195,7 +195,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    */
   @DoNotMock
   public static final @Mutable class Builder<R extends @Immutable Object, C extends @Immutable Object, V> {
-    private final List<Cell<R, C, V>> cells = Lists.newArrayList();
+    private final List<@Immutable Cell<R, C, V>> cells = Lists.newArrayList();
     @CheckForNull private Comparator<? super R> rowComparator;
     @CheckForNull private Comparator<? super C> columnComparator;
 
@@ -234,13 +234,13 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
      * pairs are not allowed and will cause {@link #build} to fail.
      */
     @CanIgnoreReturnValue
-    public Builder<R, C, V> put(Cell<? extends R, ? extends C, ? extends V> cell) {
+    public Builder<R, C, V> put(@Readonly Cell<? extends R, ? extends C, ? extends V> cell) {
       if (cell instanceof Tables.ImmutableCell) {
         checkNotNull(cell.getRowKey(), "row");
         checkNotNull(cell.getColumnKey(), "column");
         checkNotNull(cell.getValue(), "value");
         @SuppressWarnings("unchecked") // all supported methods are covariant
-        Cell<R, C, V> immutableCell = (Cell<R, C, V>) cell;
+        @Immutable Cell<R, C, V> immutableCell = (@Immutable Cell<R, C, V>) cell;
         cells.add(immutableCell);
       } else {
         put(cell.getRowKey(), cell.getColumnKey(), cell.getValue());
@@ -255,7 +255,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
      * @throws NullPointerException if any key or value in {@code table} is null
      */
     @CanIgnoreReturnValue
-    public Builder<R, C, V> putAll(Table<? extends R, ? extends C, ? extends V> table) {
+    public Builder<R, C, V> putAll(@Readonly Table<? extends R, ? extends C, ? extends V> table) {
       for (Cell<? extends R, ? extends C, ? extends V> cell : table.cellSet()) {
         put(cell);
       }
@@ -304,20 +304,20 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   ImmutableTable() {}
 
   @Override
-  public ImmutableSet<Cell<R, C, V>> cellSet() {
-    return (ImmutableSet<Cell<R, C, V>>) super.cellSet();
+  public ImmutableSet<@Immutable Cell<R, C, V>> cellSet() {
+    return (ImmutableSet<@Immutable Cell<R, C, V>>) super.cellSet();
   }
 
   @Override
-  abstract ImmutableSet<Cell<R, C, V>> createCellSet();
+  abstract ImmutableSet<@Immutable Cell<R, C, V>> createCellSet();
 
   @Override
-  final UnmodifiableIterator<Cell<R, C, V>> cellIterator() {
+  final @Mutable UnmodifiableIterator<@Immutable Cell<R, C, V>> cellIterator() {
     throw new AssertionError("should never be called");
   }
 
   @Override
-  final Spliterator<Cell<R, C, V>> cellSpliterator() {
+  final Spliterator<@Immutable Cell<R, C, V>> cellSpliterator() {
     throw new AssertionError("should never be called");
   }
 
@@ -330,7 +330,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   abstract ImmutableCollection<V> createValues();
 
   @Override
-  final Iterator<V> valuesIterator() {
+  final @Mutable Iterator<V> valuesIterator() {
     throw new AssertionError("should never be called");
   }
 
@@ -358,7 +358,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * as well.
    */
   @Override
-  public abstract ImmutableMap<C, Map<R, V>> columnMap();
+  public abstract ImmutableMap<C, @Immutable Map<R, V>> columnMap();
 
   /**
    * {@inheritDoc}
@@ -384,7 +384,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    * as well.
    */
   @Override
-  public abstract ImmutableMap<R, Map<C, V>> rowMap();
+  public abstract ImmutableMap<R, @Immutable Map<C, V>> rowMap();
 
   @Override
   public boolean contains(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
@@ -433,7 +433,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final void putAll(Table<? extends R, ? extends C, ? extends V> table) {
+  public final void putAll(@Readonly Table<? extends R, ? extends C, ? extends V> table) {
     throw new UnsupportedOperationException();
   }
 
@@ -448,7 +448,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
   @CheckForNull
-  public final V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+  public final V remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
     throw new UnsupportedOperationException();
   }
 
@@ -458,19 +458,20 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
    */
   @Immutable
   static final class SerializedForm implements Serializable {
-    private final Object[] rowKeys;
-    private final Object[] columnKeys;
+    private final @Immutable Object[] rowKeys;
+    private final @Immutable Object[] columnKeys;
 
-    private final Object[] cellValues;
+    private final @Readonly Object[] cellValues;
     private final int[] cellRowIndices;
     private final int[] cellColumnIndices;
 
+    @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
     private SerializedForm(
-        Object[] rowKeys,
-        Object[] columnKeys,
-        Object[] cellValues,
-        int[] cellRowIndices,
-        int[] cellColumnIndices) {
+        @Immutable Object @Readonly [] rowKeys,
+        @Immutable Object @Readonly [] columnKeys,
+        @Readonly Object @Readonly [] cellValues,
+        int @Readonly [] cellRowIndices,
+        int @Readonly [] cellColumnIndices) {
       this.rowKeys = rowKeys;
       this.columnKeys = columnKeys;
       this.cellValues = cellValues;
@@ -479,7 +480,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
     }
 
     static SerializedForm create(
-        ImmutableTable<?, ?, ?> table, int[] cellRowIndices, int[] cellColumnIndices) {
+        ImmutableTable<?, ?, ?> table, int @Readonly [] cellRowIndices, int @Readonly [] cellColumnIndices) {
       return new SerializedForm(
           table.rowKeySet().toArray(),
           table.columnKeySet().toArray(),
@@ -495,7 +496,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
       if (cellValues.length == 1) {
         return of(rowKeys[0], columnKeys[0], cellValues[0]);
       }
-      ImmutableList.Builder<Cell<@Immutable Object, @Immutable Object, @Readonly Object>> cellListBuilder =
+      ImmutableList.Builder<@Immutable Cell<@Immutable Object, @Immutable Object, @Readonly Object>> cellListBuilder =
           new ImmutableList.Builder<>(cellValues.length);
       for (int i = 0; i < cellValues.length; i++) {
         cellListBuilder.add(
@@ -510,7 +511,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
 
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  abstract Object writeReplace();
+  abstract @Readonly Object writeReplace();
 
   @GwtIncompatible // serialization
   @J2ktIncompatible

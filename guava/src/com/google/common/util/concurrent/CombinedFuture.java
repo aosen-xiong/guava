@@ -28,12 +28,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /** Aggregate future that computes its value by calling a callable. */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class CombinedFuture<V extends @Nullable Object>
-    extends AggregateFuture<@Nullable Object, V> {
+final class CombinedFuture<V extends @Nullable @Readonly Object>
+    extends AggregateFuture<@Nullable @Readonly Object, V> {
   @CheckForNull @LazyInit private CombinedFutureInterruptibleTask<?> task;
 
   CombinedFuture(
@@ -57,7 +58,7 @@ final class CombinedFuture<V extends @Nullable Object>
   }
 
   @Override
-  void collectOneValue(int index, @CheckForNull Object returnValue) {}
+  void collectOneValue(int index, @CheckForNull @Readonly Object returnValue) {}
 
   @Override
   void handleAllCompleted() {
@@ -91,7 +92,7 @@ final class CombinedFuture<V extends @Nullable Object>
   }
 
   @WeakOuter
-  private abstract class CombinedFutureInterruptibleTask<T extends @Nullable Object>
+  private abstract class CombinedFutureInterruptibleTask<T extends @Nullable @Readonly Object>
       extends InterruptibleTask<T> {
     private final Executor listenerExecutor;
 

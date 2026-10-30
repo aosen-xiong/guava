@@ -26,7 +26,6 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.dataflow.qual.Pure;
@@ -62,7 +61,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"nullness", "mutability"})
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @Readonly @Nullable Object>
+public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @Immutable @Nullable Object>
     extends Multimap<K, V> {
   /**
    * {@inheritDoc}
@@ -72,7 +71,7 @@ public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @R
    * interface.
    */
   @Override
-  @PolyMutable Set<V> get(@PolyMutable SetMultimap<K, V> this, @ParametricNullness K key);
+  @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable SetMultimap<K, V> this, @ParametricNullness K key);
 
   /**
    * {@inheritDoc}
@@ -96,7 +95,7 @@ public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @R
    */
   @CanIgnoreReturnValue
   @Override
-  @Readonly Set<V> replaceValues(@Mutable SetMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values);
+  @Readonly Set<V> replaceValues(@Mutable SetMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values);
 
   /**
    * {@inheritDoc}
@@ -106,7 +105,7 @@ public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @R
    * interface.
    */
   @Override
-  @PolyMutable Set<@PolyMutable Entry<K, V>> entries(@PolyMutable SetMultimap<K, V> this);
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable SetMultimap<K, V> this);
 
   /**
    * {@inheritDoc}
@@ -116,7 +115,7 @@ public interface SetMultimap<K extends @Nullable @Immutable Object, V extends @R
    * Multimaps#asMap(SetMultimap)} instead.
    */
   @Override
-  @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable SetMultimap<K, V> this);
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable SetMultimap<K, V> this);
 
   /**
    * Compares the specified object to this multimap for equality.

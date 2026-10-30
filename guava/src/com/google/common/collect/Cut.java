@@ -141,12 +141,12 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    Comparable<?> endpoint() {
+    @Readonly Comparable<?> endpoint() {
       throw new IllegalStateException("range unbounded on this side");
     }
 
     @Override
-    boolean isLessThan(Comparable<?> value) {
+    boolean isLessThan(@Readonly Comparable<?> value) {
       return true;
     }
 
@@ -161,14 +161,14 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    Cut<Comparable<?>> withLowerBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withLowerBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new IllegalStateException();
     }
 
     @Override
-    Cut<Comparable<?>> withUpperBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withUpperBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError("this statement should be unreachable");
     }
 
@@ -183,12 +183,12 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    Comparable<?> leastValueAbove(DiscreteDomain<@Readonly Comparable<?>> domain) {
+    @Readonly Comparable<?> leastValueAbove(DiscreteDomain<@Readonly Comparable<?>> domain) {
       return domain.minValue();
     }
 
     @Override
-    Comparable<?> greatestValueBelow(DiscreteDomain<@Readonly Comparable<?>> domain) {
+    @Readonly Comparable<?> greatestValueBelow(DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError();
     }
 
@@ -207,7 +207,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    public int hashCode(@UnknownSignedness @Readonly BelowAll this) {
+    public int hashCode(@UnknownSignedness BelowAll this) {
       return System.identityHashCode(this);
     }
 
@@ -216,7 +216,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
       return "-\u221e";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -242,12 +242,12 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    Comparable<?> endpoint() {
+    @Readonly Comparable<?> endpoint() {
       throw new IllegalStateException("range unbounded on this side");
     }
 
     @Override
-    boolean isLessThan(Comparable<?> value) {
+    boolean isLessThan(@Readonly Comparable<?> value) {
       return false;
     }
 
@@ -262,14 +262,14 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    Cut<Comparable<?>> withLowerBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withLowerBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError("this statement should be unreachable");
     }
 
     @Override
-    Cut<Comparable<?>> withUpperBoundType(
-        BoundType boundType, DiscreteDomain<Comparable<?>> domain) {
+    Cut<@Readonly Comparable<?>> withUpperBoundType(
+        BoundType boundType, DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new IllegalStateException();
     }
 
@@ -284,17 +284,17 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    Comparable<?> leastValueAbove(DiscreteDomain<Comparable<?>> domain) {
+    @Readonly Comparable<?> leastValueAbove(DiscreteDomain<@Readonly Comparable<?>> domain) {
       throw new AssertionError();
     }
 
     @Override
-    Comparable<?> greatestValueBelow(DiscreteDomain<Comparable<?>> domain) {
+    @Readonly Comparable<?> greatestValueBelow(DiscreteDomain<@Readonly Comparable<?>> domain) {
       return domain.maxValue();
     }
 
     @Override
-    public int compareTo(Cut<Comparable<?>> o) {
+    public int compareTo(Cut<@Readonly Comparable<?>> o) {
       return (o == this) ? 0 : 1;
     }
 
@@ -308,7 +308,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
       return "+\u221e";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -479,7 +479,7 @@ abstract class Cut<C extends @Readonly Comparable> implements Comparable<Cut<C>>
     }
 
     @Override
-    public int hashCode(@UnknownSignedness @Readonly AboveValue<C> this) {
+    public int hashCode(@UnknownSignedness AboveValue<C> this) {
       return ~endpoint.hashCode();
     }
 

@@ -22,6 +22,8 @@ import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
 import java.util.Comparator;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A utility for performing a chained comparison statement. <b>Note:</b> Java 8+ users should
@@ -92,6 +94,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
+@Immutable // "ComparisonChain instances are immutable" (class Javadoc)
 public abstract class ComparisonChain {
   private ComparisonChain() {}
 
@@ -104,12 +107,12 @@ public abstract class ComparisonChain {
       new ComparisonChain() {
         @SuppressWarnings("unchecked") // unsafe; see discussion on supertype
         @Override
-        public ComparisonChain compare(Comparable<?> left, Comparable<?> right) {
-          return classify(((Comparable<Object>) left).compareTo(right));
+        public ComparisonChain compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right) {
+          return classify(((@Readonly Comparable<@Readonly Object>) left).compareTo(right));
         }
 
         @Override
-        public <T extends @Nullable Object> ComparisonChain compare(
+        public <T extends @Nullable @Readonly Object> ComparisonChain compare(
             @ParametricNullness T left, @ParametricNullness T right, Comparator<T> comparator) {
           return classify(comparator.compare(left, right));
         }
@@ -158,6 +161,7 @@ public abstract class ComparisonChain {
 
   private static final ComparisonChain GREATER = new InactiveComparisonChain(1);
 
+  @Immutable
   private static final class InactiveComparisonChain extends ComparisonChain {
     final int result;
 
@@ -166,12 +170,12 @@ public abstract class ComparisonChain {
     }
 
     @Override
-    public ComparisonChain compare(Comparable<?> left, Comparable<?> right) {
+    public ComparisonChain compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right) {
       return this;
     }
 
     @Override
-    public <T extends @Nullable Object> ComparisonChain compare(
+    public <T extends @Nullable @Readonly Object> ComparisonChain compare(
         @ParametricNullness T left, @ParametricNullness T right, Comparator<T> comparator) {
       return this;
     }
@@ -228,13 +232,13 @@ public abstract class ComparisonChain {
    *
    * @throws ClassCastException if the parameters are not mutually comparable
    */
-  public abstract ComparisonChain compare(Comparable<?> left, Comparable<?> right);
+  public abstract ComparisonChain compare(@Readonly Comparable<?> left, @Readonly Comparable<?> right);
 
   /**
    * Compares two objects using a comparator, <i>if</i> the result of this comparison chain has not
    * already been determined.
    */
-  public abstract <T extends @Nullable Object> ComparisonChain compare(
+  public abstract <T extends @Nullable @Readonly Object> ComparisonChain compare(
       @ParametricNullness T left, @ParametricNullness T right, Comparator<T> comparator);
 
   /**

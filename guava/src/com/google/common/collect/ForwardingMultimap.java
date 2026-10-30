@@ -57,10 +57,10 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
   protected ForwardingMultimap() {}
 
   @Override
-  protected abstract @PolyMutable Multimap<K, V> delegate(@PolyMutable ForwardingMultimap<K, V> this);
+  protected abstract @ReceiverDependentMutable Multimap<K, V> delegate(@ReceiverDependentMutable ForwardingMultimap<K, V> this);
 
   @Override
-  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable ForwardingMultimap<K, V> this) {
+  public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable ForwardingMultimap<K, V> this) {
     return delegate().asMap();
   }
 
@@ -89,12 +89,12 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
 
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<@PolyMutable Entry<K, V>> entries(@PolyMutable ForwardingMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable ForwardingMultimap<K, V> this) {
     return delegate().entries();
   }
 
   @Override
-  public @PolyMutable Collection<V> get(@PolyMutable ForwardingMultimap<K, V> this, @ParametricNullness K key) {
+  public @ReceiverDependentMutable Collection<V> get(@ReceiverDependentMutable ForwardingMultimap<K, V> this, @ParametricNullness K key) {
     return delegate().get(key);
   }
 
@@ -105,13 +105,13 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
   }
 
   @Override
-  public @PolyMutable Multiset<K> keys(@PolyMutable ForwardingMultimap<K, V> this) {
+  public @ReceiverDependentMutable Multiset<K> keys(@ReceiverDependentMutable ForwardingMultimap<K, V> this) {
     return delegate().keys();
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<K> keySet(@PolyMutable ForwardingMultimap<K, V> this) {
+  public @ReceiverDependentMutable Set<K> keySet(@ReceiverDependentMutable ForwardingMultimap<K, V> this) {
     return delegate().keySet();
   }
 
@@ -123,7 +123,7 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
 
   @CanIgnoreReturnValue
   @Override
-  public boolean putAll(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public boolean putAll(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return delegate().putAll(key, values);
   }
 
@@ -147,7 +147,7 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
 
   @CanIgnoreReturnValue
   @Override
-  public @Readonly Collection<V> replaceValues(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly Collection<V> replaceValues(@Mutable ForwardingMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return delegate().replaceValues(key, values);
   }
 
@@ -159,7 +159,7 @@ public abstract class ForwardingMultimap<K extends @Nullable @Immutable Object, 
 
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable ForwardingMultimap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable ForwardingMultimap<K, V> this) {
     return delegate().values();
   }
 

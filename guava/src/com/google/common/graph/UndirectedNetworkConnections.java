@@ -24,6 +24,10 @@ import com.google.common.collect.ImmutableBiMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An implementation of {@link NetworkConnections} for undirected networks.
@@ -33,27 +37,28 @@ import java.util.Set;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class UndirectedNetworkConnections<N, E> extends AbstractUndirectedNetworkConnections<N, E> {
+@ReceiverDependentMutable
+final class UndirectedNetworkConnections<N extends @Immutable Object, E extends @Immutable Object> extends AbstractUndirectedNetworkConnections<N, E> {
 
-  UndirectedNetworkConnections(Map<E, N> incidentEdgeMap) {
+  UndirectedNetworkConnections(@ReceiverDependentMutable Map<E, N> incidentEdgeMap) {
     super(incidentEdgeMap);
   }
 
-  static <N, E> UndirectedNetworkConnections<N, E> of() {
-    return new UndirectedNetworkConnections<>(HashBiMap.<E, N>create(EXPECTED_DEGREE));
+  static <N extends @Immutable Object, E extends @Immutable Object> @Mutable UndirectedNetworkConnections<N, E> of() {
+    return new @Mutable UndirectedNetworkConnections<>(HashBiMap.<E, N>create(EXPECTED_DEGREE));
   }
 
-  static <N, E> UndirectedNetworkConnections<N, E> ofImmutable(Map<E, N> incidentEdges) {
-    return new UndirectedNetworkConnections<>(ImmutableBiMap.copyOf(incidentEdges));
+  static <N extends @Immutable Object, E extends @Immutable Object> @Immutable UndirectedNetworkConnections<N, E> ofImmutable(@Readonly Map<E, N> incidentEdges) {
+    return new @Immutable UndirectedNetworkConnections<>(ImmutableBiMap.copyOf(incidentEdges));
   }
 
   @Override
-  public Set<N> adjacentNodes() {
+  public @Readonly Set<N> adjacentNodes(@ReceiverDependentMutable UndirectedNetworkConnections<N, E> this) {
     return Collections.unmodifiableSet(((BiMap<E, N>) incidentEdgeMap).values());
   }
 
   @Override
-  public Set<E> edgesConnecting(N node) {
+  public @Readonly Set<E> edgesConnecting(@ReceiverDependentMutable UndirectedNetworkConnections<N, E> this, N node) {
     return new EdgesConnecting<>(((BiMap<E, N>) incidentEdgeMap).inverse(), node);
   }
 }

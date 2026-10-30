@@ -25,6 +25,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.errorprone.annotations.Immutable;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -41,6 +42,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @Beta
 @Immutable(containerOf = {"N"})
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public abstract class EndpointPair<N> implements Iterable<N> {
   private final N nodeU;
   private final N nodeV;
@@ -67,7 +69,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
   }
 
   /** Returns an {@link EndpointPair} representing the endpoints of an edge in {@code network}. */
-  static <N> EndpointPair<N> of(Network<?, ?> network, N nodeU, N nodeV) {
+  static <N> EndpointPair<N> of(@Readonly Network<?, ?> network, N nodeU, N nodeV) {
     return network.isDirected() ? ordered(nodeU, nodeV) : unordered(nodeU, nodeV);
   }
 
@@ -135,7 +137,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
    * ordered {@link EndpointPair} is never equal to an unordered {@link EndpointPair}.
    */
   @Override
-  public abstract boolean equals(@CheckForNull Object obj);
+  public abstract boolean equals(@CheckForNull @Readonly Object obj);
 
   /**
    * The hashcode of an ordered {@link EndpointPair} is equal to {@code Objects.hashCode(source(),
@@ -145,6 +147,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
   @Override
   public abstract int hashCode(@UnknownSignedness EndpointPair<N> this);
 
+  @org.checkerframework.checker.mutability.qual.Immutable
   private static final class Ordered<N> extends EndpointPair<N> {
     private Ordered(N source, N target) {
       super(source, target);
@@ -166,7 +169,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj == this) {
         return true;
       }
@@ -193,6 +196,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
     }
   }
 
+  @org.checkerframework.checker.mutability.qual.Immutable
   private static final class Unordered<N> extends EndpointPair<N> {
     private Unordered(N nodeU, N nodeV) {
       super(nodeU, nodeV);
@@ -214,7 +218,7 @@ public abstract class EndpointPair<N> implements Iterable<N> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj == this) {
         return true;
       }

@@ -22,6 +22,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.Serializable;
 import java.math.BigInteger;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.Signed;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -29,6 +30,7 @@ import org.checkerframework.checker.signedness.qual.Unsigned;
 import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.PolyValue;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A wrapper class for unsigned {@code long} values, supporting arithmetic operations.
@@ -47,6 +49,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @AnnotatedFor({"signedness"})
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class UnsignedLong extends Number implements Comparable<UnsignedLong>, Serializable {
 
   private static final long UNSIGNED_MASK = 0x7fffffffffffffffL;
@@ -263,7 +266,7 @@ public final class UnsignedLong extends Number implements Comparable<UnsignedLon
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj instanceof UnsignedLong) {
       UnsignedLong other = (UnsignedLong) obj;
       return value == other.value;

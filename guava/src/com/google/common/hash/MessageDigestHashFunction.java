@@ -29,6 +29,8 @@ import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * {@link HashFunction} adapter for {@link MessageDigest} instances.
@@ -38,10 +40,11 @@ import java.util.Arrays;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 final class MessageDigestHashFunction extends AbstractHashFunction implements Serializable {
 
   @SuppressWarnings("Immutable") // cloned before each use
-  private final MessageDigest prototype;
+  private final @Mutable MessageDigest prototype;
 
   private final @Positive int bytes;
   private final boolean supportsClone;
@@ -117,14 +120,14 @@ final class MessageDigestHashFunction extends AbstractHashFunction implements Se
       this.toString = toString;
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return new MessageDigestHashFunction(algorithmName, bytes, toString);
     }
 
     private static final long serialVersionUID = 0;
   }
 
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm(prototype.getAlgorithm(), bytes, toString);
   }
 

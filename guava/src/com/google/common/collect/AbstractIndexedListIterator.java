@@ -28,6 +28,7 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * This class provides a skeletal implementation of the {@link ListIterator} interface across a
@@ -40,7 +41,7 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 @CFComment("AOSEN: Is this a design issue?")
-@ReceiverDependentMutable
+@Mutable
 abstract class AbstractIndexedListIterator<E extends @Nullable @Readonly Object>
     extends UnmodifiableListIterator<E> {
   private final int size;

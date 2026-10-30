@@ -42,6 +42,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -195,7 +196,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   /** Returns an unmodifiable iterator across the elements in this collection. */
   @Override
-  public abstract UnmodifiableIterator<E> iterator();
+  public abstract @Mutable UnmodifiableIterator<E> iterator();
 
   @Override
   public Spliterator<E> spliterator() {
@@ -206,7 +207,8 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
-  public final @PolyNull @PolySigned Object[] toArray() {
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // toArray(T[]) fills the array with this collection's elements, of the receiver's @PolyMutable E, but infers its T from EMPTY_ARRAY
+  public final @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly ImmutableCollection<@PolyMutable E> this) {
     return toArray(EMPTY_ARRAY);
   }
 
@@ -230,7 +232,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
     int size = size();
 
     if (other.length < size) {
-      Object[] internal = internalArray();
+      @Readonly Object @Readonly [] internal = internalArray();
       if (internal != null) {
         return Platform.copy(internal, internalArrayStart(), internalArrayEnd(), other);
       }
@@ -244,7 +246,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   /** If this collection is backed by an array of its elements in insertion order, returns it. */
   @CheckForNull
-  Object[] internalArray() {
+  @Readonly Object @Readonly [] internalArray() {
     return null;
   }
 
@@ -306,7 +308,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean addAll(Collection<? extends E> newElements) {
+  public final boolean addAll(@Readonly Collection<? extends E> newElements) {
     throw new UnsupportedOperationException();
   }
 
@@ -320,7 +322,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean removeAll(Collection<?> oldElements) {
+  public final boolean removeAll(@Readonly Collection<?> oldElements) {
     throw new UnsupportedOperationException();
   }
 
@@ -334,7 +336,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean removeIf(Predicate<? super E> filter) {
+  public final boolean removeIf(@Readonly Predicate<? super E> filter) {
     throw new UnsupportedOperationException();
   }
 
@@ -347,7 +349,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean retainAll(Collection<?> elementsToKeep) {
+  public final boolean retainAll(@Readonly Collection<?> elementsToKeep) {
     throw new UnsupportedOperationException();
   }
 
@@ -407,7 +409,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
 
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     // We serialize by default to ImmutableList, the simplest thing that works.
     return new ImmutableList.SerializedForm(toArray());
   }
@@ -485,7 +487,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       for (E element : elements) {
         add(element);
       }
@@ -503,7 +505,7 @@ public abstract class ImmutableCollection<E extends @NonNull @Readonly Object> e
      * @throws NullPointerException if {@code elements} is null or contains a null element
      */
     @CanIgnoreReturnValue
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Mutable Iterator<? extends E> elements) {
       while (elements.hasNext()) {
         add(elements.next());
       }

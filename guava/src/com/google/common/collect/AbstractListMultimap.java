@@ -56,7 +56,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
   }
 
   @Override
-  abstract List<V> createCollection();
+  abstract @PolyMutable List<V> createCollection(@PolyMutable AbstractListMultimap<K, V> this);
 
   @Override
   @Immutable List<V> createUnmodifiableEmptyCollection() {
@@ -64,14 +64,14 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
   }
 
   @Override
-  <E extends @Nullable @Readonly Object> @Immutable Collection<E> unmodifiableCollectionSubclass(
-      Collection<E> collection) {
+  <E extends @Nullable @Readonly Object> @Readonly Collection<E> unmodifiableCollectionSubclass(
+      @Readonly Collection<E> collection) {
     return Collections.unmodifiableList((List<E>) collection);
   }
 
   @Override
-  Collection<V> wrapCollection(@ParametricNullness K key, Collection<V> collection) {
-    return wrapList(key, (List<V>) collection, null);
+  @ReceiverDependentMutable Collection<V> wrapCollection(@ParametricNullness K key, @ReceiverDependentMutable Collection<V> collection) {
+    return wrapList(key, (@ReceiverDependentMutable List<V>) collection, null);
   }
 
   // Following Javadoc copied from ListMultimap.
@@ -84,8 +84,8 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
    * Multimap} interface.
    */
   @Override
-  public @PolyMutable List<V> get(@PolyMutable AbstractListMultimap<K,V> this, @ParametricNullness K key) {
-    return (@PolyMutable List<V>) super.get(key);
+  public @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable AbstractListMultimap<K,V> this, @ParametricNullness K key) {
+    return (@ReceiverDependentMutable List<V>) super.get(key);
   }
 
   /**
@@ -110,7 +110,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
    */
   @CanIgnoreReturnValue
   @Override
-  public @Readonly List<V> replaceValues(@Mutable AbstractListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
+  public @Readonly List<V> replaceValues(@Mutable AbstractListMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
     return (@Readonly List<V>) super.replaceValues(key, values);
   }
 
@@ -134,7 +134,7 @@ abstract class AbstractListMultimap<K extends @Nullable @Immutable Object, V ext
    * values.
    */
   @Override
-  public @PolyMutable Map<K, @PolyMutable Collection<V>> asMap(@PolyMutable AbstractListMultimap<K,V> this) {
+  public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap(@ReceiverDependentMutable AbstractListMultimap<K,V> this) {
     return super.asMap();
   }
 

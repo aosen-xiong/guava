@@ -26,6 +26,8 @@ import com.google.common.util.concurrent.ListenableFutureTask;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Computes or retrieves values, based on a key, for use in populating a {@link LoadingCache}.
@@ -56,7 +58,7 @@ import java.util.concurrent.Executor;
  */
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
-public abstract class CacheLoader<K, V> {
+public abstract class CacheLoader<K extends @Immutable Object, V> {
   /** Constructor for use by subclasses. */
   protected CacheLoader() {}
 
@@ -137,7 +139,7 @@ public abstract class CacheLoader<K, V> {
    * @param function the function to be used for loading values; must never return {@code null}
    * @return a cache loader that loads values by passing each key to {@code function}
    */
-  public static <K, V> CacheLoader<K, V> from(Function<K, V> function) {
+  public static <K extends @Immutable Object, V> CacheLoader<K, V> from(Function<K, V> function) {
     return new FunctionToCacheLoader<>(function);
   }
 
@@ -152,11 +154,11 @@ public abstract class CacheLoader<K, V> {
    * @return a cache loader that loads values by calling {@link Supplier#get}, irrespective of the
    *     key
    */
-  public static <V> CacheLoader<Object, V> from(Supplier<V> supplier) {
+  public static <V> CacheLoader<@Immutable Object, V> from(Supplier<V> supplier) {
     return new SupplierToCacheLoader<>(supplier);
   }
 
-  private static final class FunctionToCacheLoader<K, V> extends CacheLoader<K, V>
+  private static final class FunctionToCacheLoader<K extends @Immutable Object, V> extends CacheLoader<K, V>
       implements Serializable {
     private final Function<K, V> computingFunction;
 
@@ -182,7 +184,7 @@ public abstract class CacheLoader<K, V> {
    * @since 17.0
    */
   @GwtIncompatible // Executor + Futures
-  public static <K, V> CacheLoader<K, V> asyncReloading(
+  public static <K extends @Immutable Object, V> CacheLoader<K, V> asyncReloading(
       final CacheLoader<K, V> loader, final Executor executor) {
     checkNotNull(loader);
     checkNotNull(executor);
@@ -207,7 +209,7 @@ public abstract class CacheLoader<K, V> {
     };
   }
 
-  private static final class SupplierToCacheLoader<V> extends CacheLoader<Object, V>
+  private static final class SupplierToCacheLoader<V> extends CacheLoader<@Immutable Object, V>
       implements Serializable {
     private final Supplier<V> computingSupplier;
 
@@ -216,7 +218,7 @@ public abstract class CacheLoader<K, V> {
     }
 
     @Override
-    public V load(Object key) {
+    public V load(@Readonly Object key) {
       checkNotNull(key);
       return computingSupplier.get();
     }
