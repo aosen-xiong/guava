@@ -329,19 +329,21 @@ public final class Tables {
     }
 
     @Override
-    @Mutable Iterator<Cell<C, R, V>> cellIterator(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    @Mutable Iterator<@ReceiverDependentMutable Cell<C, R, V>> cellIterator(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return Iterators.transform(original.cellSet().iterator(), Tables::transposeCell);
     }
 
     @Override
-    Spliterator<Cell<C, R, V>> cellSpliterator() {
+    @SuppressWarnings("mutability:methodref.return.invalid") // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    Spliterator<@ReceiverDependentMutable Cell<C, R, V>> cellSpliterator(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return CollectSpliterators.map(original.cellSet().spliterator(), Tables::transposeCell);
     }
   }
 
   private static <
           R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Cell<C, R, V> transposeCell(Cell<R, C, V> cell) {
+      @Immutable Cell<C, R, V> transposeCell(@Readonly Cell<R, C, V> cell) {
     return immutableCell(cell.getColumnKey(), cell.getRowKey(), cell.getValue());
   }
 
@@ -497,10 +499,10 @@ public final class Tables {
       return Maps.transformValues(fromTable.column(columnKey), function);
     }
 
-    Function<Cell<R, C, V1>, Cell<R, C, V2>> cellFunction() {
-      return new Function<Cell<R, C, V1>, Cell<R, C, V2>>() {
+    Function<@Readonly Cell<R, C, V1>, @Immutable Cell<R, C, V2>> cellFunction() {
+      return new Function<@Readonly Cell<R, C, V1>, @Immutable Cell<R, C, V2>>() {
         @Override
-        public @Immutable Cell<R, C, V2> apply(Cell<R, C, V1> cell) {
+        public @Immutable Cell<R, C, V2> apply(@Readonly Cell<R, C, V1> cell) {
           return immutableCell(
               cell.getRowKey(), cell.getColumnKey(), function.apply(cell.getValue()));
         }
@@ -508,12 +510,14 @@ public final class Tables {
     }
 
     @Override
-    @Mutable Iterator<Cell<R, C, V2>> cellIterator(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    @Mutable Iterator<@ReceiverDependentMutable Cell<R, C, V2>> cellIterator(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return Iterators.transform(fromTable.cellSet().iterator(), cellFunction());
     }
 
     @Override
-    Spliterator<Cell<R, C, V2>> cellSpliterator(@Readonly TransformedTable<R, C, V1, V2> this) {
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    Spliterator<@ReceiverDependentMutable Cell<R, C, V2>> cellSpliterator(@Readonly TransformedTable<R, C, V1, V2> this) {
       return CollectSpliterators.map(fromTable.cellSet().spliterator(), cellFunction());
     }
 
@@ -594,7 +598,7 @@ public final class Tables {
     }
 
     @Override
-    public @ReceiverDependentMutable Set<@Readonly Cell<R, C, V>> cellSet() {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet() {
       return Collections.unmodifiableSet(super.cellSet());
     }
 

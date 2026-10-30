@@ -140,9 +140,9 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   }
 
   static <R extends @Immutable Object, C extends @Immutable Object, V> ImmutableTable<R, C, V> copyOf(
-      @Readonly Iterable<? extends Cell<? extends R, ? extends C, ? extends V>> cells) {
+      @Readonly Iterable<? extends @Readonly Cell<? extends R, ? extends C, ? extends V>> cells) {
     ImmutableTable.Builder<R, C, V> builder = ImmutableTable.builder();
-    for (Cell<? extends R, ? extends C, ? extends V> cell : cells) {
+    for (@Readonly Cell<? extends R, ? extends C, ? extends V> cell : cells) {
       builder.put(cell);
     }
     return builder.build();
@@ -234,7 +234,7 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
      * pairs are not allowed and will cause {@link #build} to fail.
      */
     @CanIgnoreReturnValue
-    public Builder<R, C, V> put(Cell<? extends R, ? extends C, ? extends V> cell) {
+    public Builder<R, C, V> put(@Readonly Cell<? extends R, ? extends C, ? extends V> cell) {
       if (cell instanceof Tables.ImmutableCell) {
         checkNotNull(cell.getRowKey(), "row");
         checkNotNull(cell.getColumnKey(), "column");
@@ -304,22 +304,20 @@ public abstract class ImmutableTable<R extends @Immutable Object, C extends @Imm
   ImmutableTable() {}
 
   @Override
-  @SuppressWarnings("mutability:override.return.invalid") // Table.cellSet types its cells @Mutable, but Cell has no mutators and an immutable table's cells are Tables.immutableCell instances
   public ImmutableSet<@Immutable Cell<R, C, V>> cellSet() {
     return (ImmutableSet<@Immutable Cell<R, C, V>>) super.cellSet();
   }
 
   @Override
-  @SuppressWarnings("mutability:override.return.invalid") // Table.cellSet types its cells @Mutable, but Cell has no mutators and an immutable table's cells are Tables.immutableCell instances
   abstract ImmutableSet<@Immutable Cell<R, C, V>> createCellSet();
 
   @Override
-  final @Mutable UnmodifiableIterator<Cell<R, C, V>> cellIterator() {
+  final @Mutable UnmodifiableIterator<@Immutable Cell<R, C, V>> cellIterator() {
     throw new AssertionError("should never be called");
   }
 
   @Override
-  final Spliterator<Cell<R, C, V>> cellSpliterator() {
+  final Spliterator<@Immutable Cell<R, C, V>> cellSpliterator() {
     throw new AssertionError("should never be called");
   }
 

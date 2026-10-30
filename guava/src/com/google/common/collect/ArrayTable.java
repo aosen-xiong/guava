@@ -568,28 +568,29 @@ public final class ArrayTable<R extends @Immutable Object, C extends @Immutable 
    * @return set of table cells consisting of row key / column key / value triplets
    */
   @Override
-  public @ReceiverDependentMutable Set<Cell<R, C, @Nullable V>> cellSet(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, @Nullable V>> cellSet(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
     return super.cellSet();
   }
 
   @Override
-  @Mutable Iterator<Cell<R, C, @Nullable V>> cellIterator(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
-    return new @Mutable AbstractIndexedListIterator<Cell<R, C, @Nullable V>>(size()) {
+  @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the cells have the table's mutability, but in the anonymous iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+  @Mutable Iterator<@ReceiverDependentMutable Cell<R, C, @Nullable V>> cellIterator(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
+    return new @Mutable AbstractIndexedListIterator<@ReceiverDependentMutable Cell<R, C, @Nullable V>>(size()) {
       @Override
-      protected Cell<R, C, @Nullable V> get(final int index) {
+      protected @ReceiverDependentMutable Cell<R, C, @Nullable V> get(final int index) {
         return getCell(index);
       }
     };
   }
 
   @Override
-  Spliterator<Cell<R, C, @Nullable V>> cellSpliterator() {
-    return CollectSpliterators.<Cell<R, C, @Nullable V>>indexed(
+  Spliterator<@ReceiverDependentMutable Cell<R, C, @Nullable V>> cellSpliterator(@ReceiverDependentMutable ArrayTable<R, C, V> this) {
+    return CollectSpliterators.<@ReceiverDependentMutable Cell<R, C, @Nullable V>>indexed(
         size(), Spliterator.ORDERED | Spliterator.NONNULL | Spliterator.DISTINCT, this::getCell);
   }
 
-  private Cell<R, C, @Nullable V> getCell(final int index) {
-    return new Tables.@Mutable AbstractCell<R, C, @Nullable V>() {
+  private @ReceiverDependentMutable Cell<R, C, @Nullable V> getCell(@ReceiverDependentMutable ArrayTable<R, C, V> this, final int index) {
+    return new Tables.@ReceiverDependentMutable AbstractCell<R, C, @Nullable V>() {
       final int rowIndex = index / columnList.size();
       final int columnIndex = index % columnList.size();
 

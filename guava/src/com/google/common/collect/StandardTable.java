@@ -244,17 +244,18 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
    * time the cell is returned by a method call to the set or its iterator.
    */
   @Override
-  public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return super.cellSet();
   }
 
   @Override
-  @Mutable Iterator<Cell<R, C, V>> cellIterator(@ReceiverDependentMutable StandardTable<R, C, V> this) {
+  @SuppressWarnings("mutability:return.type.incompatible") // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+  @Mutable Iterator<@ReceiverDependentMutable Cell<R, C, V>> cellIterator(@ReceiverDependentMutable StandardTable<R, C, V> this) {
     return new @Mutable CellIterator();
   }
 
   @Mutable
-  private class CellIterator implements Iterator<Cell<R, C, V>> {
+  private class CellIterator implements Iterator<@Readonly Cell<R, C, V>> {
     final Iterator<Entry<R, Map<C, V>>> rowIterator = backingMap.entrySet().iterator();
     @CheckForNull Entry<R, Map<C, V>> rowEntry;
     Iterator<Entry<C, V>> columnIterator = Iterators.emptyModifiableIterator();
@@ -309,7 +310,8 @@ class StandardTable<R extends @Immutable Object, C extends @Immutable Object, V>
   }
 
   @Override
-  Spliterator<Cell<R, C, V>> cellSpliterator(@Readonly StandardTable<R, C, V> this) {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+  Spliterator<@ReceiverDependentMutable Cell<R, C, V>> cellSpliterator(@Readonly StandardTable<R, C, V> this) {
     return CollectSpliterators.flatMap(
         backingMap.entrySet().spliterator(),
         (Entry<R, Map<C, V>> rowEntry) ->

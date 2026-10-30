@@ -219,7 +219,7 @@ public interface Table<
    *
    * @return set of table cells consisting of row key / column key / value triplets
    */
-  @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable Table<R, C, V> this);
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet(@ReceiverDependentMutable Table<R, C, V> this);
 
   /**
    * Returns a set of row keys that have one or more values in the table. Changes to the set will

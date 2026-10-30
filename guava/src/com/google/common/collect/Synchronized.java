@@ -2320,7 +2320,7 @@ final class Synchronized {
     }
 
     @Override
-    public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet(@ReceiverDependentMutable SynchronizedTable<R, C, V> this) {
       synchronized (mutex) {
         return set(delegate().cellSet(), mutex);
       }

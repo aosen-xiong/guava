@@ -50,7 +50,7 @@ public abstract class ForwardingTable<
   protected abstract @ReceiverDependentMutable Table<R, C, V> delegate();
 
   @Override
-  public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet() {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet() {
     return delegate().cellSet();
   }
 

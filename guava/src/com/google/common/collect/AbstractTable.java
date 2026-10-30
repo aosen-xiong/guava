@@ -128,25 +128,25 @@ abstract class AbstractTable<
     }
   }
   @CFComment("Change to @LazyFinal later")
-  @LazyInit @CheckForNull private transient @Assignable Set<Cell<R, C, V>> cellSet;
+  @LazyInit @CheckForNull private transient @Assignable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet;
 
   @Override
-  public @ReceiverDependentMutable Set<Cell<R, C, V>> cellSet(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
-    Set<Cell<R, C, V>> result = cellSet;
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
+    Set<@ReceiverDependentMutable Cell<R, C, V>> result = cellSet;
     return (result == null) ? cellSet = createCellSet() : result;
   }
 
-  @ReceiverDependentMutable Set<Cell<R, C, V>> createCellSet(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> createCellSet(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
     return new @ReceiverDependentMutable CellSet();
   }
 
-  abstract @Mutable Iterator<Table.Cell<R, C, V>> cellIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this);
+  abstract @Mutable Iterator<Table.@ReceiverDependentMutable Cell<R, C, V>> cellIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this);
 
-  abstract Spliterator<Table.Cell<R, C, V>> cellSpliterator(@Readonly AbstractTable<R, C, V> this);
+  abstract Spliterator<Table.@ReceiverDependentMutable Cell<R, C, V>> cellSpliterator(@ReceiverDependentMutable AbstractTable<R, C, V> this);
 
   @WeakOuter
   @ReceiverDependentMutable 
-  class CellSet extends AbstractSet<Cell<R, C, V>> {
+  class CellSet extends AbstractSet<@ReceiverDependentMutable Cell<R, C, V>> {
     @Override
     public boolean contains(@Readonly CellSet this, @CheckForNull @UnknownSignedness @Readonly Object o) {
       if (o instanceof Cell) {
@@ -177,12 +177,12 @@ abstract class AbstractTable<
     }
 
     @Override
-    public @Mutable Iterator<Table.Cell<R, C, V>> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable CellSet this) {
+    public @Mutable Iterator<Table.@ReceiverDependentMutable Cell<R, C, V>> iterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable CellSet this) {
       return cellIterator();
     }
 
     @Override
-    public Spliterator<Cell<R, C, V>> spliterator() {
+    public Spliterator<@ReceiverDependentMutable Cell<R, C, V>> spliterator(@ReceiverDependentMutable AbstractTable<R, C, V>.@ReceiverDependentMutable CellSet this) {
       return cellSpliterator();
     }
 
@@ -206,16 +206,16 @@ abstract class AbstractTable<
   }
 
   @Mutable Iterator<V> valuesIterator(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
-    return new @Mutable TransformedIterator<Cell<R, C, V>, V>(cellSet().iterator()) {
+    return new @Mutable TransformedIterator<@Readonly Cell<R, C, V>, V>(cellSet().iterator()) {
       @Override
       @ParametricNullness
-      V transform(Cell<R, C, V> cell) {
+      V transform(@Readonly Cell<R, C, V> cell) {
         return cell.getValue();
       }
     };
   }
 
-  Spliterator<V> valuesSpliterator(@Readonly AbstractTable<R, C, V> this) {
+  Spliterator<V> valuesSpliterator(@ReceiverDependentMutable AbstractTable<R, C, V> this) {
     return CollectSpliterators.map(cellSpliterator(), Table.Cell::getValue);
   }
 

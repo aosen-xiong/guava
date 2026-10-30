@@ -77,7 +77,6 @@ class SingletonImmutableTable<R extends @Immutable Object, C extends @Immutable 
   }
 
   @Override
-  @SuppressWarnings("mutability:override.return.invalid") // Table.cellSet types its cells @Mutable, but Cell has no mutators and an immutable table's cells are Tables.immutableCell instances
   ImmutableSet<@Immutable Cell<R, C, V>> createCellSet() {
     return ImmutableSet.of(cellOf(singleRowKey, singleColumnKey, singleValue));
   }

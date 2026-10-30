@@ -49,7 +49,6 @@ abstract class RegularImmutableTable<R extends @Immutable Object, C extends @Imm
   abstract @Immutable Cell<R, C, V> getCell(int iterationIndex);
 
   @Override
-  @SuppressWarnings("mutability:override.return.invalid") // Table.cellSet types its cells @Mutable, but Cell has no mutators and an immutable table's cells are Tables.immutableCell instances
   final ImmutableSet<@Immutable Cell<R, C, V>> createCellSet() {
     return isEmpty() ? ImmutableSet.<@Immutable Cell<R, C, V>>of() : new CellSet();
   }
