@@ -17,10 +17,22 @@
 # rebuilt after every JDK change. java.base is not patched from source: doing
 # so makes the checker see AbstractCollection's Collection supertype as raw,
 # which gave order-dependent errors and an AsSuperVisitor crash.
+#
+# The counts in TypecheckedList.txt come from checker aosen-xiong/checker-framework
+# ffb75181e (branch gait) built against aosen-xiong/jdk 96fbe6402d4 (branch
+# gait-jdk-annotations, PR #4), with JDK 21 for the build and JDK 17 for the run:
+#
+#   git clone --branch gait git@github.com:aosen-xiong/checker-framework.git ~/cf-gait
+#   git -C ~/jdk checkout 96fbe6402d4
+#   cd ~/cf-gait && git checkout ffb75181e
+#   ./gradlew -PannotatedJdkHome=$HOME/jdk -x :framework:cloneAnnotatedJdk assembleForJavac
+#
+# Keep the checkout outside /tmp: macOS deletes files there that have not been
+# used for a few days.
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-: "${CHECKERFRAMEWORK:=/Users/aosenxiong/cf-pico-move}"
+: "${CHECKERFRAMEWORK:=${HOME}/cf-gait}"
 : "${JAVA_HOME:=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home}"
 export JAVA_HOME
 
