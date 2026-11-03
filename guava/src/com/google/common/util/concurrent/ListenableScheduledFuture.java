@@ -17,6 +17,7 @@ package com.google.common.util.concurrent;
 import com.google.common.annotations.GwtCompatible;
 import java.util.concurrent.ScheduledFuture;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Helper interface to implement both {@link ListenableFuture} and {@link ScheduledFuture}.
@@ -26,5 +27,5 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public interface ListenableScheduledFuture<V extends @Nullable Object>
+public interface ListenableScheduledFuture<V extends @Nullable @Readonly Object>
     extends ScheduledFuture<V>, ListenableFuture<V> {}

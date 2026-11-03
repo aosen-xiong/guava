@@ -20,6 +20,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.concurrent.ConcurrentMap;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -53,32 +54,32 @@ public abstract class ForwardingConcurrentMap<K extends @Immutable Object, V> ex
 
   @Override
   @SuppressWarnings("nullness:type.argument")
-  protected abstract ConcurrentMap<K, V> delegate();
+  protected abstract @ReceiverDependentMutable ConcurrentMap<K, V> delegate();
 
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V putIfAbsent(K key, V value) {
+  public V putIfAbsent(@Mutable ForwardingConcurrentMap<K, V> this, K key, V value) {
     return delegate().putIfAbsent(key, value);
   }
 
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:argument")
-  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
+  public boolean remove(@Mutable ForwardingConcurrentMap<K, V> this, @CheckForNull @UnknownSignedness @Readonly Object key, @CheckForNull @UnknownSignedness @Readonly Object value) {
     return delegate().remove(key, value);
   }
 
   @CanIgnoreReturnValue
   @Override
   @CheckForNull
-  public V replace(K key, V value) {
+  public V replace(@Mutable ForwardingConcurrentMap<K, V> this, K key, V value) {
     return delegate().replace(key, value);
   }
 
   @CanIgnoreReturnValue
   @Override
-  public boolean replace(K key, V oldValue, V newValue) {
+  public boolean replace(@Mutable ForwardingConcurrentMap<K, V> this, K key, V oldValue, V newValue) {
     return delegate().replace(key, oldValue, newValue);
   }
 }

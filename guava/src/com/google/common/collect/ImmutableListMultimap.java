@@ -38,6 +38,8 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -86,7 +88,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableListMultimap<K, V>> toImmutableListMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends V> valueFunction) {
@@ -124,7 +126,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
    *
    * @since 21.0
    */
-  public static <T extends @Nullable Object, K extends @Immutable Object, V extends @Immutable Object>
+  public static <T extends @Nullable @Readonly Object, K extends @Immutable Object, V extends @Immutable Object>
       Collector<T, ?, ImmutableListMultimap<K, V>> flatteningToImmutableListMultimap(
           Function<? super T, ? extends K> keyFunction,
           Function<? super T, ? extends Stream<? extends V>> valuesFunction) {
@@ -239,7 +241,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> put(Entry<? extends K, ? extends V> entry) {
+    public Builder<K, V> put(@Readonly Entry<? extends K, ? extends V> entry) {
       super.put(entry);
       return this;
     }
@@ -258,7 +260,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(K key, Iterable<? extends V> values) {
+    public Builder<K, V> putAll(K key, @Readonly Iterable<? extends V> values) {
       super.putAll(key, values);
       return this;
     }
@@ -272,7 +274,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> putAll(Multimap<? extends K, ? extends V> multimap) {
+    public Builder<K, V> putAll(@Readonly Multimap<? extends K, ? extends V> multimap) {
       super.putAll(multimap);
       return this;
     }
@@ -291,7 +293,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> orderKeysBy(Comparator<? super K> keyComparator) {
+    public Builder<K, V> orderKeysBy(@Readonly Comparator<? super K> keyComparator) {
       super.orderKeysBy(keyComparator);
       return this;
     }
@@ -303,7 +305,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<K, V> orderValuesBy(Comparator<? super V> valueComparator) {
+    public Builder<K, V> orderValuesBy(@Readonly Comparator<? super V> valueComparator) {
       super.orderValuesBy(valueComparator);
       return this;
     }
@@ -327,7 +329,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
    * @throws NullPointerException if any key or value in {@code multimap} is null
    */
   public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> copyOf(
-      Multimap<? extends K, ? extends V> multimap) {
+      @Readonly Multimap<? extends K, ? extends V> multimap) {
     if (multimap.isEmpty()) {
       return of();
     }
@@ -352,15 +354,15 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
    * @throws NullPointerException if any key, value, or entry is null
    * @since 19.0
    */
-  public static <K, V> ImmutableListMultimap<K, V> copyOf(
+  public static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> copyOf(
       Iterable<? extends Entry<? extends K, ? extends V>> entries) {
     return new Builder<K, V>().putAll(entries).build();
   }
 
   /** Creates an ImmutableListMultimap from an asMap.entrySet. */
   static <K extends @Immutable Object, V extends @Immutable Object> ImmutableListMultimap<K, V> fromMapEntries(
-      Collection<? extends Map.Entry<? extends K, ? extends Collection<? extends V>>> mapEntries,
-      @CheckForNull Comparator<? super V> valueComparator) {
+      @Readonly Collection<? extends Map.@Readonly Entry<? extends K, ? extends @Readonly Collection<? extends V>>> mapEntries,
+      @CheckForNull @Readonly Comparator<? super V> valueComparator) {
     if (mapEntries.isEmpty()) {
       return of();
     }
@@ -368,9 +370,9 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
         new ImmutableMap.Builder<>(mapEntries.size());
     int size = 0;
 
-    for (Entry<? extends K, ? extends Collection<? extends V>> entry : mapEntries) {
+    for (@Readonly Entry<? extends K, ? extends @Readonly Collection<? extends V>> entry : mapEntries) {
       K key = entry.getKey();
-      Collection<? extends V> values = entry.getValue();
+      @Readonly Collection<? extends V> values = entry.getValue();
       ImmutableList<V> list =
           (valueComparator == null)
               ? ImmutableList.copyOf(values)
@@ -402,7 +404,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
     return (list == null) ? ImmutableList.<V>of() : list;
   }
 
-  @LazyInit @RetainedWith @CheckForNull private transient ImmutableListMultimap<V, K> inverse;
+  @LazyInit @RetainedWith @CheckForNull private transient @Assignable ImmutableListMultimap<V, K> inverse;
 
   /**
    * {@inheritDoc}
@@ -421,7 +423,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
   private ImmutableListMultimap<V, K> invert() {
     Builder<V, K> builder = builder();
-    for (Entry<K, V> entry : entries()) {
+    for (@Immutable Entry<K, V> entry : entries()) {
       builder.put(entry.getValue(), entry.getKey());
     }
     ImmutableListMultimap<V, K> invertedMultimap = builder.build();
@@ -439,7 +441,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final ImmutableList<V> removeAll(@CheckForNull Object key) {
+  public final ImmutableList<V> removeAll(@CheckForNull @Readonly Object key) {
     throw new UnsupportedOperationException();
   }
 
@@ -453,7 +455,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final ImmutableList<V> replaceValues(K key, Iterable<? extends V> values) {
+  public final ImmutableList<V> replaceValues(K key, @Readonly Iterable<? extends V> values) {
     throw new UnsupportedOperationException();
   }
 
@@ -470,6 +472,7 @@ public class ImmutableListMultimap<K extends @Immutable Object, V extends @Immut
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
+  @SuppressWarnings("mutability:argument.type.incompatible") // deserialized keys were this multimap's @Immutable keys when written
   private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int keyCount = stream.readInt();

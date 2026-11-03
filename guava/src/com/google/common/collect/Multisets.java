@@ -94,7 +94,7 @@ public final class Multisets {
    *
    * @since 22.0
    */
-  public static <T extends @Nullable @Readonly Object, E extends @Nullable @Readonly Object, M extends @Readonly Multiset<E>>
+  public static <T extends @Nullable @Readonly Object, E extends @Nullable @Readonly Object, M extends @Mutable Multiset<E>>
       Collector<T, ?, M> toMultiset(
           Function<? super T, E> elementFunction,
           ToIntFunction<? super T> countFunction,
@@ -112,14 +112,15 @@ public final class Multisets {
    * @param multiset the multiset for which an unmodifiable view is to be generated
    * @return an unmodifiable view of the multiset
    */
-  public static <E extends @Nullable @Readonly Object> @Readonly Multiset<E> unmodifiableMultiset(
-      Multiset<? extends E> multiset) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the backing multiset and the view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
+  public static <E extends @Nullable @Readonly Object> @PolyMutable Multiset<E> unmodifiableMultiset(
+      @PolyMutable Multiset<? extends E> multiset) {
     if (multiset instanceof UnmodifiableMultiset || multiset instanceof ImmutableMultiset) {
       @SuppressWarnings("unchecked") // Since it's unmodifiable, the covariant cast is safe
-      Multiset<E> result = (Multiset<E>) multiset;
+      @PolyMutable Multiset<E> result = (@PolyMutable Multiset<E>) multiset;
       return result;
     }
-    return new UnmodifiableMultiset<E>(checkNotNull(multiset));
+    return new @PolyMutable UnmodifiableMultiset<E>(checkNotNull(multiset));
   }
 
   /**
@@ -129,55 +130,55 @@ public final class Multisets {
    * @since 10.0
    */
   @Deprecated
-  public static <E> Multiset<E> unmodifiableMultiset(ImmutableMultiset<E> multiset) {
+  public static <E extends @Immutable Object> @Immutable Multiset<E> unmodifiableMultiset(ImmutableMultiset<E> multiset) {
     return checkNotNull(multiset);
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   static class UnmodifiableMultiset<E extends @Nullable @Readonly Object> extends ForwardingMultiset<E>
       implements Serializable {
-    final @Readonly Multiset<? extends E> delegate;
+    final @ReceiverDependentMutable Multiset<? extends E> delegate;
 
-    UnmodifiableMultiset(@Readonly Multiset<? extends E> delegate) {
+    UnmodifiableMultiset(@ReceiverDependentMutable Multiset<? extends E> delegate) {
       this.delegate = delegate;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected @Readonly Multiset<E> delegate() {
+    protected @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       // This is safe because all non-covariant methods are overridden
-      return (Multiset<E>) delegate;
+      return (@ReceiverDependentMutable Multiset<E>) delegate;
     }
 
-    @LazyInit @CheckForNull transient Set<E> elementSet;
+    @LazyInit @CheckForNull transient @Assignable Set<E> elementSet;
 
-    Set<E> createElementSet() {
+    @ReceiverDependentMutable Set<E> createElementSet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       return Collections.<E>unmodifiableSet(delegate.elementSet());
     }
 
     @SideEffectFree
     @Override
-    public @PolyMutable Set<E> elementSet(@PolyMutable UnmodifiableMultiset<E> this) {
+    public @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       Set<E> es = elementSet;
       return (es == null) ? elementSet = createElementSet() : es;
     }
 
-    @LazyInit @CheckForNull transient Set<Multiset.Entry<E>> entrySet;
+    @LazyInit @CheckForNull transient @Assignable Set<Multiset.@Readonly Entry<E>> entrySet;
 
     @SideEffectFree
     @SuppressWarnings("unchecked")
     @Override
-    public @PolyMutable Set<Multiset.Entry<E>> entrySet(@PolyMutable UnmodifiableMultiset<E> this) {
-      Set<Multiset.Entry<E>> es = entrySet;
+    public @ReceiverDependentMutable Set<Multiset.@Readonly Entry<E>> entrySet(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
+      Set<Multiset.@Readonly Entry<E>> es = entrySet;
       return (es == null)
           // Safe because the returned set is made unmodifiable and Entry
           // itself is readonly
-          ? entrySet = (Set) Collections.unmodifiableSet(delegate.entrySet())
+          ? entrySet = (@ReceiverDependentMutable Set) Collections.unmodifiableSet(delegate.entrySet())
           : es;
     }
 
     @Override
-    public @Readonly Iterator<E> iterator() {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable UnmodifiableMultiset<E> this) {
       return Iterators.<E>unmodifiableIterator(delegate.iterator());
     }
 
@@ -192,7 +193,7 @@ public final class Multisets {
     }
 
     @Override
-    public boolean addAll(Collection<? extends E> elementsToAdd) {
+    public boolean addAll(@Readonly Collection<? extends E> elementsToAdd) {
       throw new UnsupportedOperationException();
     }
 
@@ -212,12 +213,12 @@ public final class Multisets {
     }
 
     @Override
-    public boolean removeIf(java.util.function.Predicate<? super E> filter) {
+    public boolean removeIf(java.util.function.@Readonly Predicate<? super E> filter) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public boolean retainAll(Collection<?> elementsToRetain) {
+    public boolean retainAll(@Readonly Collection<?> elementsToRetain) {
       throw new UnsupportedOperationException();
     }
 
@@ -250,10 +251,11 @@ public final class Multisets {
    * @return an unmodifiable view of the multiset
    * @since 11.0
    */
-  public static <E extends @Nullable Object> SortedMultiset<E> unmodifiableSortedMultiset(
-      SortedMultiset<E> sortedMultiset) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:type.arguments.not.inferred"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection. checkNotNull reports the same argument again as an inference failure
+  public static <E extends @Nullable @Readonly Object> @PolyMutable SortedMultiset<E> unmodifiableSortedMultiset(
+      @PolyMutable SortedMultiset<E> sortedMultiset) {
     // it's in its own file so it can be emulated for GWT
-    return new UnmodifiableSortedMultiset<E>(checkNotNull(sortedMultiset));
+    return new @PolyMutable UnmodifiableSortedMultiset<E>(checkNotNull(sortedMultiset));
   }
 
   /**
@@ -325,35 +327,36 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> filter(
-      Multiset<E> unfiltered, Predicate<? super E> predicate) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the unfiltered collection and the filtered view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <E extends @Nullable @Readonly Object> @PolyMutable Multiset<E> filter(
+      @PolyMutable Multiset<E> unfiltered, @Readonly Predicate<? super E> predicate) {
     if (unfiltered instanceof FilteredMultiset) {
       // Support clear(), removeAll(), and retainAll() when filtering a filtered
       // collection.
-      FilteredMultiset<E> filtered = (FilteredMultiset<E>) unfiltered;
+      @PolyMutable FilteredMultiset<E> filtered = (@PolyMutable FilteredMultiset<E>) unfiltered;
       Predicate<E> combinedPredicate = Predicates.<E>and(filtered.predicate, predicate);
-      return new FilteredMultiset<E>(filtered.unfiltered, combinedPredicate);
+      return new @PolyMutable FilteredMultiset<E>(filtered.unfiltered, combinedPredicate);
     }
-    return new FilteredMultiset<E>(unfiltered, predicate);
+    return new @PolyMutable FilteredMultiset<E>(unfiltered, predicate);
   }
 
   @ReceiverDependentMutable
   private static final class FilteredMultiset<E extends @Nullable @Readonly Object> extends ViewMultiset<E> {
     final Multiset<E> unfiltered;
-    final Predicate<? super E> predicate;
+    final @Readonly Predicate<? super E> predicate;
 
-    FilteredMultiset(@ReceiverDependentMutable Multiset<E> unfiltered, Predicate<? super E> predicate) {
+    FilteredMultiset(@ReceiverDependentMutable Multiset<E> unfiltered, @Readonly Predicate<? super E> predicate) {
       this.unfiltered = checkNotNull(unfiltered);
       this.predicate = checkNotNull(predicate);
     }
 
     @Override
-    public @Readonly UnmodifiableIterator<E> iterator(@Readonly FilteredMultiset<E> this) {
+    public @Mutable UnmodifiableIterator<E> iterator(@ReceiverDependentMutable FilteredMultiset<E> this) {
       return Iterators.filter(unfiltered.iterator(), predicate);
     }
 
     @Override
-    Set<E> createElementSet() {
+    @ReceiverDependentMutable Set<E> createElementSet() {
       return Sets.filter(unfiltered.elementSet(), predicate);
     }
 
@@ -363,19 +366,19 @@ public final class Multisets {
     }
 
     @Override
-    Set<Entry<E>> createEntrySet() {
+    @ReceiverDependentMutable Set<@Readonly Entry<E>> createEntrySet() {
       return Sets.filter(
           unfiltered.entrySet(),
-          new Predicate<Entry<E>>() {
+          new Predicate<@Readonly Entry<E>>() {
             @Override
-            public boolean apply(Entry<E> entry) {
+            public boolean apply(@Readonly Entry<E> entry) {
               return predicate.apply(entry.getElement());
             }
           });
     }
 
     @Override
-    Iterator<Entry<E>> entryIterator() {
+    Iterator<@Readonly Entry<E>> entryIterator() {
       throw new AssertionError("should never be called");
     }
 
@@ -391,14 +394,14 @@ public final class Multisets {
     }
 
     @Override
-    public int add(@ParametricNullness E element, int occurrences) {
+    public int add(@Mutable FilteredMultiset<E> this, @ParametricNullness E element, int occurrences) {
       checkArgument(
           predicate.apply(element), "Element %s does not match predicate %s", element, predicate);
       return unfiltered.add(element, occurrences);
     }
 
     @Override
-    public int remove(@CheckForNull @Readonly Object element, int occurrences) {
+    public int remove(@Mutable FilteredMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
       checkNonnegative(occurrences, "occurrences");
       if (occurrences == 0) {
         return count(element);
@@ -413,9 +416,9 @@ public final class Multisets {
    * distinct elements is only computed if {@code elements} is an instance of {@code Multiset};
    * otherwise the default value of 11 is returned.
    */
-  static int inferDistinctElements(Iterable<?> elements) {
+  static int inferDistinctElements(@Readonly Iterable<?> elements) {
     if (elements instanceof Multiset) {
-      return ((Multiset<?>) elements).elementSet().size();
+      return ((@Readonly Multiset<?>) elements).elementSet().size();
     }
     return 11; // initial capacity will be rounded up to 16
   }
@@ -432,14 +435,14 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> union(
+  public static <E extends @Nullable @Readonly Object> Multiset<E> union(
       final Multiset<? extends E> multiset1, final Multiset<? extends E> multiset2) {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
 
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object element) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.contains(element) || multiset2.contains(element);
       }
 
@@ -449,7 +452,7 @@ public final class Multisets {
       }
 
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return Math.max(multiset1.count(element), multiset2.count(element));
       }
 
@@ -464,14 +467,14 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<? extends Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
-        final Iterator<? extends Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
         // TODO(lowasser): consider making the entries live views
-        return new AbstractIterator<Entry<E>>() {
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -509,9 +512,9 @@ public final class Multisets {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
 
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         int count1 = multiset1.count(element);
         return (count1 == 0) ? 0 : Math.min(count1, multiset2.count(element));
       }
@@ -527,13 +530,13 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<Entry<E>> iterator1 = multiset1.entrySet().iterator();
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<@Readonly Entry<E>> iterator1 = multiset1.entrySet().iterator();
         // TODO(lowasser): consider making the entries live views
-        return new AbstractIterator<Entry<E>>() {
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             while (iterator1.hasNext()) {
               Entry<E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -561,15 +564,15 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> sum(
+  public static <E extends @Nullable @Readonly Object> Multiset<E> sum(
       final Multiset<? extends E> multiset1, final Multiset<? extends E> multiset2) {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
 
     // TODO(lowasser): consider making the entries live views
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object element) {
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.contains(element) || multiset2.contains(element);
       }
 
@@ -584,7 +587,7 @@ public final class Multisets {
       }
 
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         return multiset1.count(element) + multiset2.count(element);
       }
 
@@ -599,13 +602,13 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<? extends Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
-        final Iterator<? extends Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
-        return new AbstractIterator<Entry<E>>() {
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator1 = multiset1.entrySet().iterator();
+        final Iterator<? extends @Readonly Entry<? extends E>> iterator2 = multiset2.entrySet().iterator();
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             if (iterator1.hasNext()) {
               Entry<? extends E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -638,15 +641,15 @@ public final class Multisets {
    *
    * @since 14.0
    */
-  public static <E extends @Nullable Object> Multiset<E> difference(
+  public static <E extends @Nullable @Readonly Object> Multiset<E> difference(
       final Multiset<E> multiset1, final Multiset<?> multiset2) {
     checkNotNull(multiset1);
     checkNotNull(multiset2);
 
     // TODO(lowasser): consider making the entries live views
-    return new ViewMultiset<E>() {
+    return new @Mutable ViewMultiset<E>() {
       @Override
-      public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+      public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
         int count1 = multiset1.count(element);
         return (count1 == 0) ? 0 : Math.max(0, count1 - multiset2.count(element));
       }
@@ -658,8 +661,8 @@ public final class Multisets {
 
       @Override
       Iterator<E> elementIterator() {
-        final Iterator<Entry<E>> iterator1 = multiset1.entrySet().iterator();
-        return new AbstractIterator<E>() {
+        final Iterator<@Readonly Entry<E>> iterator1 = multiset1.entrySet().iterator();
+        return new @Mutable AbstractIterator<E>() {
           @Override
           @CheckForNull
           protected E computeNext() {
@@ -676,12 +679,12 @@ public final class Multisets {
       }
 
       @Override
-      Iterator<Entry<E>> entryIterator() {
-        final Iterator<Entry<E>> iterator1 = multiset1.entrySet().iterator();
-        return new AbstractIterator<Entry<E>>() {
+      Iterator<@Readonly Entry<E>> entryIterator() {
+        final Iterator<@Readonly Entry<E>> iterator1 = multiset1.entrySet().iterator();
+        return new @Mutable AbstractIterator<@Readonly Entry<E>>() {
           @Override
           @CheckForNull
-          protected Entry<E> computeNext() {
+          protected @Readonly Entry<E> computeNext() {
             while (iterator1.hasNext()) {
               Entry<E> entry1 = iterator1.next();
               E element = entry1.getElement();
@@ -749,7 +752,7 @@ public final class Multisets {
     checkNotNull(multisetToModify);
     checkNotNull(occurrencesToRetain);
     // Avoiding ConcurrentModificationExceptions is tricky.
-    Iterator<Entry<E>> entryIterator = multisetToModify.entrySet().iterator();
+    Iterator<@Readonly Entry<E>> entryIterator = multisetToModify.entrySet().iterator();
     boolean changed = false;
     while (entryIterator.hasNext()) {
       Entry<E> entry = entryIterator.next();
@@ -833,7 +836,7 @@ public final class Multisets {
     checkNotNull(occurrencesToRemove);
 
     boolean changed = false;
-    Iterator<? extends Entry<?>> entryIterator = multisetToModify.entrySet().iterator();
+    Iterator<? extends @Readonly Entry<?>> entryIterator = multisetToModify.entrySet().iterator();
     while (entryIterator.hasNext()) {
       Entry<?> entry = entryIterator.next();
       int removeCount = occurrencesToRemove.count(entry.getElement());
@@ -993,12 +996,12 @@ public final class Multisets {
     }
   }
 
-  static <E extends @Nullable @Readonly Object> Iterator<E> elementIterator(
-      Iterator<Entry<E>> entryIterator) {
-    return new TransformedIterator<Entry<E>, E>(entryIterator) {
+  static <E extends @Nullable @Readonly Object> @Mutable Iterator<E> elementIterator(
+      @Mutable Iterator<@Readonly Entry<E>> entryIterator) {
+    return new @Mutable TransformedIterator<@Readonly Entry<E>, E>(entryIterator) {
       @Override
       @ParametricNullness
-      E transform(Entry<E> entry) {
+      E transform(@Readonly Entry<E> entry) {
         return entry.getElement();
       }
     };
@@ -1006,7 +1009,7 @@ public final class Multisets {
 
   @ReceiverDependentMutable
   abstract static class ElementSet<E extends @Nullable @Readonly Object> extends Sets.ImprovedAbstractSet<E> {
-    abstract Multiset<E> multiset();
+    abstract @ReceiverDependentMutable Multiset<E> multiset();
 
     @Override
     public void clear(@Mutable ElementSet<E> this) {
@@ -1029,7 +1032,7 @@ public final class Multisets {
     }
 
     @Override
-    public abstract Iterator<E> iterator(@Readonly ElementSet<E> this);
+    public abstract @Mutable Iterator<E> iterator(@ReceiverDependentMutable ElementSet<E> this);
 
     @Override
     public boolean remove(@Mutable ElementSet<E> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
@@ -1044,8 +1047,8 @@ public final class Multisets {
 
   @ReceiverDependentMutable
   abstract static class EntrySet<E extends @Nullable @Readonly Object>
-      extends Sets.ImprovedAbstractSet<Entry<E>> {
-    abstract Multiset<E> multiset();
+      extends Sets.ImprovedAbstractSet<@Readonly Entry<E>> {
+    abstract @ReceiverDependentMutable Multiset<E> multiset();
 
     @Override
     public boolean contains(@Readonly EntrySet<E> this, @CheckForNull @UnknownSignedness @Readonly Object o) {
@@ -1070,7 +1073,7 @@ public final class Multisets {
           // Safe as long as we never add a new entry, which we won't.
           // (Presumably it can still throw CCE/NPE but only if the underlying Multiset does.)
           @SuppressWarnings({"unchecked", "nullness"})
-          Multiset<@Nullable Object> multiset = (Multiset<@Nullable Object>) multiset();
+          Multiset<@Nullable @Readonly Object> multiset = (Multiset<@Nullable @Readonly Object>) multiset();
           return multiset.setCount(element, entryCount, 0);
         }
       }
@@ -1088,11 +1091,11 @@ public final class Multisets {
     return new MultisetIteratorImpl<E>(multiset, multiset.entrySet().iterator());
   }
 
-  @ReceiverDependentMutable
+  @Mutable
   static final class MultisetIteratorImpl<E extends @Nullable @Readonly Object> implements Iterator<E> {
-    private final Multiset<E> multiset;
-    private final Iterator<@Readonly Entry<E>> entryIterator;
-    @CheckForNull private Entry<E> currentEntry;
+    private final @Readonly Multiset<E> multiset;
+    private final @Mutable Iterator<@Readonly Entry<E>> entryIterator;
+    @CheckForNull private @Readonly Entry<E> currentEntry;
 
     /** Count of subsequent elements equal to current element */
     private int laterCount;
@@ -1102,7 +1105,7 @@ public final class Multisets {
 
     private boolean canRemove;
 
-    MultisetIteratorImpl(@ReceiverDependentMutable Multiset<E> multiset, @ReceiverDependentMutable Iterator<@Readonly Entry<E>> entryIterator) {
+    MultisetIteratorImpl(@Readonly Multiset<E> multiset, @Mutable Iterator<@Readonly Entry<E>> entryIterator) {
       this.multiset = multiset;
       this.entryIterator = entryIterator;
     }
@@ -1132,6 +1135,7 @@ public final class Multisets {
     }
 
     @Override
+    @SuppressWarnings("mutability:method.invocation.invalid") // Iterator<E> cannot name the collection it was created from, so the cursor holds it @Readonly and remove() through an iterator over a non-mutable multiset is not rejected: see the note on java.util.Iterator.remove
     public void remove(@Mutable MultisetIteratorImpl<E> this) {
       checkRemove(canRemove);
       if (totalCount == 1) {
@@ -1148,8 +1152,8 @@ public final class Multisets {
     }
   }
 
-  static <E extends @Nullable @Readonly Object> Spliterator<E> spliteratorImpl(Multiset<E> multiset) {
-    Spliterator<Entry<E>> entrySpliterator = multiset.entrySet().spliterator();
+  static <E extends @Nullable @Readonly Object> Spliterator<E> spliteratorImpl(@Readonly Multiset<E> multiset) {
+    Spliterator<@Readonly Entry<E>> entrySpliterator = multiset.entrySet().spliterator();
     return CollectSpliterators.flatMap(
         entrySpliterator,
         entry -> Collections.nCopies(entry.getCount(), entry.getElement()).spliterator(),
@@ -1169,7 +1173,7 @@ public final class Multisets {
   }
 
   /** Used to avoid http://bugs.sun.com/view_bug.do?bug_id=6558557 */
-  static <T extends @Nullable @Readonly Object> Multiset<T> cast(Iterable<T> iterable) {
+  static <T extends @Nullable @Readonly Object> Multiset<T> cast(@Readonly Iterable<T> iterable) {
     return (Multiset<T>) iterable;
   }
 
@@ -1179,7 +1183,7 @@ public final class Multisets {
    *
    * @since 11.0
    */
-  public static <E> ImmutableMultiset<E> copyHighestCountFirst(Multiset<E> multiset) {
+  public static <E extends @Immutable Object> ImmutableMultiset<E> copyHighestCountFirst(Multiset<E> multiset) {
     @SuppressWarnings("unchecked") // generics+arrays
     // TODO(cpovirk): Consider storing an Entry<?> instead of Entry<E>.
     Entry<E>[] entries = (Entry<E>[]) multiset.entrySet().toArray((Entry<E>[]) new Entry<?>[0]);
@@ -1189,7 +1193,7 @@ public final class Multisets {
 
   @Immutable
   private static final class DecreasingCount implements Comparator<Entry<?>> {
-    static final Comparator<Entry<?>> INSTANCE = new DecreasingCount();
+    static final @Immutable Comparator<Entry<?>> INSTANCE = new DecreasingCount();
 
     @Override
     public int compare(Entry<?> entry1, Entry<?> entry2) {

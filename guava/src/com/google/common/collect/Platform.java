@@ -54,12 +54,12 @@ final class Platform {
   }
 
   /** Returns the platform preferred implementation of a set based on a hash table. */
-  static <E extends @Nullable @Readonly Object> Set<E> newHashSetWithExpectedSize(int expectedSize) {
+  static <E extends @Nullable @Immutable Object> Set<E> newHashSetWithExpectedSize(int expectedSize) {
     return Sets.newHashSetWithExpectedSize(expectedSize);
   }
 
   /** Returns the platform preferred implementation of a thread-safe hash set. */
-  static <E> Set<E> newConcurrentHashSet() {
+  static <E extends @Immutable Object> Set<E> newConcurrentHashSet() {
     return ConcurrentHashMap.newKeySet();
   }
 
@@ -67,7 +67,7 @@ final class Platform {
    * Returns the platform preferred implementation of an insertion ordered set based on a hash
    * table.
    */
-  static <E extends @Nullable @Readonly Object> Set<E> newLinkedHashSetWithExpectedSize(int expectedSize) {
+  static <E extends @Nullable @Immutable Object> Set<E> newLinkedHashSetWithExpectedSize(int expectedSize) {
     return Sets.newLinkedHashSetWithExpectedSize(expectedSize);
   }
 
@@ -84,7 +84,7 @@ final class Platform {
    * Returns the platform preferred set implementation that preserves insertion order when used only
    * for insertions.
    */
-  static <E extends @Nullable Object> Set<E> preservesInsertionOrderOnAddsSet() {
+  static <E extends @Nullable @Immutable Object> Set<E> preservesInsertionOrderOnAddsSet() {
     return CompactHashSet.create();
   }
 
@@ -100,8 +100,8 @@ final class Platform {
    * about arrays for now, as they're a mess. (We previously discussed this in the review of
    * ObjectArrays, which is the main caller of this method.)
    */
-  static <T extends @Nullable Object> T[] newArray(T[] reference, int length) {
-    T[] empty = reference.length == 0 ? reference : Arrays.copyOf(reference, 0);
+  static <T extends @Nullable @Readonly Object> T[] newArray(T @Readonly [] reference, int length) {
+    T @Readonly [] empty = reference.length == 0 ? reference : Arrays.copyOf(reference, 0);
     return Arrays.copyOf(empty, length);
   }
 
@@ -119,7 +119,7 @@ final class Platform {
    * likewise not type-checked)? Could our single caller do something different?
    */
   @SuppressWarnings({"nullness", "unchecked"})
-  static <T extends @Nullable Object> T[] copy(Object[] source, int from, int to, T[] arrayOfType) {
+  static <T extends @Nullable @Readonly Object> T[] copy(@Readonly Object @Readonly [] source, int from, int to, T[] arrayOfType) {
     return Arrays.copyOfRange(source, from, to, (Class<? extends T[]>) arrayOfType.getClass());
   }
 

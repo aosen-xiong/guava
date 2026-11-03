@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.annotations.GwtCompatible;
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.GTENegativeOne;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LengthOf;
@@ -181,7 +182,7 @@ public abstract class ArrayBasedUnicodeEscaper extends UnicodeEscaper {
 
   /* Overridden for performance. */
   @Override
-  protected final @IndexOrHigh("#1") int nextEscapeIndex(CharSequence csq, @IndexOrHigh("#1") int index, @IndexOrHigh("#1") int end) {
+  protected final @IndexOrHigh("#1") int nextEscapeIndex(@Readonly CharSequence csq, @IndexOrHigh("#1") int index, @IndexOrHigh("#1") int end) {
     while (index < end) {
       char c = csq.charAt(index);
       if ((c < replacementsLength && replacements[c] != null)

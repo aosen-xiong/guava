@@ -36,7 +36,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible(serializable = true)
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class JdkBackedImmutableSet<E> extends IndexedImmutableSet<E> {
+final class JdkBackedImmutableSet<E extends @Immutable Object> extends IndexedImmutableSet<E> {
   private final @Immutable Set<?> delegate;
   private final ImmutableList<E> delegateList;
 
@@ -70,7 +70,7 @@ final class JdkBackedImmutableSet<E> extends IndexedImmutableSet<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

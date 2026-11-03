@@ -35,7 +35,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * An object of this class encapsulates type mappings from type variables. Mappings are established
@@ -52,6 +54,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @since 15.0
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class TypeResolver {
 
   private final TypeTable typeTable;
@@ -117,7 +120,7 @@ public final class TypeResolver {
   }
 
   /** Returns a new {@code TypeResolver} with {@code variable} mapping to {@code type}. */
-  TypeResolver where(Map<TypeVariableKey, ? extends Type> mappings) {
+  TypeResolver where(@Readonly Map<TypeVariableKey, ? extends Type> mappings) {
     return new TypeResolver(typeTable.where(mappings));
   }
 
@@ -265,7 +268,7 @@ public final class TypeResolver {
         resolvedOwner, (Class<?>) resolvedRawType, resolvedArgs);
   }
 
-  private static <T> T expectArgument(Class<T> type, Object arg) {
+  private static <T> T expectArgument(Class<T> type, @Immutable Object arg) {
     try {
       return type.cast(arg);
     } catch (ClassCastException e) {
@@ -274,6 +277,7 @@ public final class TypeResolver {
   }
 
   /** A TypeTable maintains mapping from {@link TypeVariable} to types. */
+  @Immutable
   private static class TypeTable {
     private final ImmutableMap<TypeVariableKey, Type> map;
 
@@ -286,7 +290,7 @@ public final class TypeResolver {
     }
 
     /** Returns a new {@code TypeResolver} with {@code variable} mapping to {@code type}. */
-    final TypeTable where(Map<TypeVariableKey, ? extends Type> mappings) {
+    final TypeTable where(@Readonly Map<TypeVariableKey, ? extends Type> mappings) {
       ImmutableMap.Builder<TypeVariableKey, Type> builder = ImmutableMap.builder();
       builder.putAll(map);
       for (Entry<TypeVariableKey, ? extends Type> mapping : mappings.entrySet()) {
@@ -549,10 +553,11 @@ public final class TypeResolver {
    * List<A extends String>}, we need to compare that {@code <A extends B>} is unequal to {@code <A
    * extends String>} in order to decide to use the transformed type instead of the original type.
    */
+  @Immutable
   static final class TypeVariableKey {
-    private final TypeVariable<?> var;
+    private final @Immutable TypeVariable<?> var;
 
-    TypeVariableKey(TypeVariable<?> var) {
+    TypeVariableKey(@Immutable TypeVariable<?> var) {
       this.var = checkNotNull(var);
     }
 
@@ -562,7 +567,7 @@ public final class TypeResolver {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof TypeVariableKey) {
         TypeVariableKey that = (TypeVariableKey) obj;
         return equalsTypeVariable(that.var);

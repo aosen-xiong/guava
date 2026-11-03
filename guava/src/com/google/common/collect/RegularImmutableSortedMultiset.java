@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.function.ObjIntConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -40,7 +41,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E> {
+final class RegularImmutableSortedMultiset<E extends @Immutable Object> extends ImmutableSortedMultiset<E> {
   private static final long[] ZERO_CUMULATIVE_COUNTS = {0};
 
   static final ImmutableSortedMultiset<?> NATURAL_EMPTY_MULTISET =
@@ -51,15 +52,17 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   private final transient int offset;
   private final transient int length;
 
-  RegularImmutableSortedMultiset(Comparator<? super E> comparator) {
+  @SuppressWarnings("mutability:assignment.type.incompatible") // every empty instance shares the static ZERO_CUMULATIVE_COUNTS array, which nothing ever writes
+  RegularImmutableSortedMultiset(@Readonly Comparator<? super E> comparator) {
     this.elementSet = ImmutableSortedSet.emptySet(comparator);
     this.cumulativeCounts = ZERO_CUMULATIVE_COUNTS;
     this.offset = 0;
     this.length = 0;
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // callers pass a freshly built counts array or, for a sub-multiset, the parent's, which is never written after construction
   RegularImmutableSortedMultiset(
-      RegularImmutableSortedSet<E> elementSet, long[] cumulativeCounts, int offset, int length) {
+      RegularImmutableSortedSet<E> elementSet, long @Readonly [] cumulativeCounts, int offset, int length) {
     this.elementSet = elementSet;
     this.cumulativeCounts = cumulativeCounts;
     this.offset = offset;
@@ -71,7 +74,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   }
 
   @Override
-  Entry<E> getEntry(int index) {
+  @Immutable Entry<E> getEntry(int index) {
     return Multisets.immutableEntry(elementSet.asList().get(index), getCount(index));
   }
 
@@ -85,18 +88,18 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
 
   @Override
   @CheckForNull
-  public Entry<E> firstEntry() {
+  public @Immutable Entry<E> firstEntry() {
     return isEmpty() ? null : getEntry(0);
   }
 
   @Override
   @CheckForNull
-  public Entry<E> lastEntry() {
+  public @Immutable Entry<E> lastEntry() {
     return isEmpty() ? null : getEntry(length - 1);
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     int index = elementSet.indexOf(element);
     return (index >= 0) ? getCount(index) : 0;
   }
@@ -145,7 +148,7 @@ final class RegularImmutableSortedMultiset<E> extends ImmutableSortedMultiset<E>
   @SuppressWarnings("RedundantOverride")
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

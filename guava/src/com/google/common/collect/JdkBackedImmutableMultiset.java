@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -43,16 +45,16 @@ import org.checkerframework.framework.qual.CFComment;
 @Immutable
 final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends ImmutableMultiset<E> {
   private final @Immutable Map<E, Integer> delegateMap;
-  private final ImmutableList<Entry<E>> entries;
+  private final ImmutableList<@Immutable Entry<E>> entries;
   private final long size;
 
-  static <E extends @Immutable Object> ImmutableMultiset<E> create(Collection<? extends Entry<? extends E>> entries) {
+  static <E extends @Immutable Object> ImmutableMultiset<E> create(@Readonly Collection<? extends @Readonly Entry<? extends E>> entries) {
     @SuppressWarnings("unchecked")
-    Entry<E>[] entriesArray = entries.toArray((Entry<E>[]) new Entry<?>[0]);
+    @Readonly Entry<E>[] entriesArray = entries.toArray((@Readonly Entry<E>[]) new Entry<?>[0]);
     Map<E, Integer> delegateMap = Maps.newHashMapWithExpectedSize(entriesArray.length);
     long size = 0;
     for (int i = 0; i < entriesArray.length; i++) {
-      Entry<E> entry = entriesArray[i];
+      @Readonly Entry<E> entry = entriesArray[i];
       int count = entry.getCount();
       size += count;
       E element = checkNotNull(entry.getElement());
@@ -65,19 +67,20 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
         delegateMap, ImmutableList.asImmutableList(entriesArray), size);
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private JdkBackedImmutableMultiset(
-      Map<E, Integer> delegateMap, ImmutableList<Entry<E>> entries, long size) {
+      Map<E, Integer> delegateMap, ImmutableList<@Immutable Entry<E>> entries, long size) {
     this.delegateMap = delegateMap;
     this.entries = entries;
     this.size = size;
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     return delegateMap.getOrDefault(element, 0);
   }
 
-  @LazyInit @CheckForNull private transient ImmutableSet<E> elementSet;
+  @LazyInit @CheckForNull private transient @Assignable ImmutableSet<E> elementSet;
 
   @Override
   public ImmutableSet<E> elementSet() {
@@ -86,7 +89,7 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
   }
 
   @Override
-  Entry<E> getEntry(int index) {
+  @Immutable Entry<E> getEntry(int index) {
     return entries.get(index);
   }
 
@@ -105,7 +108,7 @@ final class JdkBackedImmutableMultiset<E extends @Immutable Object> extends Immu
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

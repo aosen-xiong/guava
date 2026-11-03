@@ -27,6 +27,7 @@ import static java.util.Objects.requireNonNull;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Standard implementation of {@link MutableValueGraph} that supports both directed and undirected
@@ -42,7 +43,7 @@ import javax.annotation.CheckForNull;
  * @param <V> Value parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class StandardMutableValueGraph<N, V> extends StandardValueGraph<N, V>
+final class StandardMutableValueGraph<N extends @Immutable Object, V> extends StandardValueGraph<N, V>
     implements MutableValueGraph<N, V> {
 
   private final ElementOrder<N> incidentEdgeOrder;

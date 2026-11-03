@@ -57,8 +57,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @Immutable
 final class RegularImmutableMap<K extends @Immutable Object, V> extends ImmutableMap<K, V> {
   @SuppressWarnings("unchecked")
-  static final ImmutableMap<Object, Object> EMPTY =
-      new RegularImmutableMap<>((Entry<Object, Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, null, 0);
+  static final ImmutableMap<@Immutable Object, Object> EMPTY =
+      new RegularImmutableMap<>((@Immutable Entry<@Immutable Object, Object>[]) ImmutableMap.EMPTY_ENTRY_ARRAY, null, 0);
 
   /**
    * Closed addressing tends to perform well even with high load factors. Being conservative here
@@ -80,7 +80,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   @VisibleForTesting static final int MAX_HASH_BUCKET_LENGTH = 8;
 
   // entries in insertion order
-  @VisibleForTesting final transient Entry<K, V>[] entries;
+  @VisibleForTesting final transient @Immutable Entry<K, V>[] entries;
   // array of linked lists of entries
   @CheckForNull private final transient @Nullable ImmutableMapEntry<K, V>[] table;
   // 'and' with an int to get a table index
@@ -96,7 +96,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    * contents), and may take ownership of entryArray.
    */
   static <K extends @Immutable Object, V> ImmutableMap<K, V> fromEntryArray(
-      int n, @Nullable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys) {
+      int n, @Nullable @Immutable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys) {
     checkPositionIndex(n, entryArray.length);
     if (n == 0) {
       @SuppressWarnings("unchecked") // it has no entries so the type variables don't matter
@@ -113,7 +113,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   }
 
   private static <K extends @Immutable Object, V> ImmutableMap<K, V> fromEntryArrayCheckingBucketOverflow(
-      int n, @Nullable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys)
+      int n, @Nullable @Immutable Entry<K, V>[] entryArray, boolean throwIfDuplicateKeys)
       throws BucketOverflowException {
     /*
      * The cast is safe: n==entryArray.length means that we have filled the whole array with Entry
@@ -121,8 +121,8 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
      * of non-null entries.
      */
     @SuppressWarnings("nullness")
-    Entry<K, V>[] entries =
-        (n == entryArray.length) ? (Entry<K, V>[]) entryArray : createEntryArray(n);
+    @Immutable Entry<K, V>[] entries =
+        (n == entryArray.length) ? (@Immutable Entry<K, V>[]) entryArray : createEntryArray(n);
     int tableSize = Hashing.closedTableSize(n, MAX_LOAD_FACTOR);
     @Nullable ImmutableMapEntry<K, V>[] table = createEntryArray(tableSize);
     int mask = tableSize - 1;
@@ -131,11 +131,11 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     // that have the same key. Then a second pass will remove all but the first of the slots that
     // have this Entry. The value in the map becomes false when this first entry has been copied, so
     // we know not to copy the remaining ones.
-    IdentityHashMap<Entry<K, V>, Boolean> duplicates = null;
+    IdentityHashMap<@Immutable Entry<K, V>, Boolean> duplicates = null;
     int dupCount = 0;
     for (int entryIndex = n - 1; entryIndex >= 0; entryIndex--) {
       // requireNonNull is safe because the first `n` elements have been filled in.
-      Entry<K, V> entry = requireNonNull(entryArray[entryIndex]);
+      @Immutable Entry<K, V> entry = requireNonNull(entryArray[entryIndex]);
       K key = entry.getKey();
       V value = entry.getValue();
       checkEntryNotNull(key, value);
@@ -164,7 +164,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
         if (entries == entryArray) {
           // Temporary variable is necessary to defeat bad smartcast (entries adopting the type of
           // entryArray) in the Kotlin translation.
-          Entry<K, V>[] originalEntries = entries;
+          @Immutable Entry<K, V>[] originalEntries = entries;
           entries = originalEntries.clone();
         }
       }
@@ -194,11 +194,11 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    *     been included in the new entry array.
    * @return an array of {@code newN} entries where no key appears more than once.
    */
-  static <K extends @Immutable Object, V> Entry<K, V>[] removeDuplicates(
-      Entry<K, V>[] entries, int n, int newN, IdentityHashMap<@Immutable Entry<K, V>, Boolean> duplicates) {
-    Entry<K, V>[] newEntries = createEntryArray(newN);
+  static <K extends @Immutable Object, V> @Immutable Entry<K, V>[] removeDuplicates(
+      @Immutable Entry<K, V>[] entries, int n, int newN, IdentityHashMap<@Immutable Entry<K, V>, Boolean> duplicates) {
+    @Immutable Entry<K, V>[] newEntries = createEntryArray(newN);
     for (int in = 0, out = 0; in < n; in++) {
-      Entry<K, V> entry = entries[in];
+      @Immutable Entry<K, V> entry = entries[in];
       Boolean status = duplicates.get(entry);
       // null=>not dup'd; true=>dup'd, first; false=>dup'd, not first
       if (status != null) {
@@ -225,8 +225,9 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     return makeImmutable(entry, entry.getKey(), entry.getValue());
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // freeze: @Unique @Mutable to @Immutable
   private RegularImmutableMap(
-      Entry<K, V>[] entries, @CheckForNull @Nullable ImmutableMapEntry<K, V>[] table, int mask) {
+      @Immutable Entry<K, V>[] entries, @CheckForNull @Nullable ImmutableMapEntry<K, V>[] table, int mask) {
     this.entries = entries;
     this.table = table;
     this.mask = mask;
@@ -245,9 +246,9 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
    */
   @CanIgnoreReturnValue
   @CheckForNull
-  static <K, V> ImmutableMapEntry<K, V> checkNoConflictInKeyBucket(
-      Object key,
-      Object newValue,
+  static <K extends @Immutable Object, V> ImmutableMapEntry<K, V> checkNoConflictInKeyBucket(
+      @Readonly Object key,
+      @Readonly Object newValue,
       @CheckForNull ImmutableMapEntry<K, V> keyBucketHead,
       boolean throwIfDuplicateKeys)
       throws BucketOverflowException {
@@ -278,7 +279,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   @CheckForNull
   static <V> V get(
       @CheckForNull @Readonly Object key,
-      @CheckForNull @Nullable ImmutableMapEntry<?, V>[] keyTable,
+      @CheckForNull @Nullable ImmutableMapEntry<?, V> @Readonly [] keyTable,
       int mask) {
     if (key == null || keyTable == null) {
       return null;
@@ -306,7 +307,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   @Override
   public void forEach(BiConsumer<? super K, ? super V> action) {
     checkNotNull(action);
-    for (Entry<K, V> entry : entries) {
+    for (@Immutable Entry<K, V> entry : entries) {
       action.accept(entry.getKey(), entry.getValue());
     }
   }
@@ -322,7 +323,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   }
 
   @Override
-  ImmutableSet<Entry<K, V>> createEntrySet() {
+  ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     return new ImmutableMapEntrySet.RegularEntrySet<>(this, entries);
   }
 
@@ -346,7 +347,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     }
 
     @Override
-    public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
       return map.containsKey(object);
     }
 
@@ -365,7 +366,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
 
@@ -380,7 +381,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
         this.map = map;
       }
 
-      Object readResolve() {
+      @Readonly Object readResolve() {
         return map.keySet();
       }
 
@@ -423,7 +424,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
 
@@ -452,7 +453,7 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 
@@ -463,13 +464,13 @@ final class RegularImmutableMap<K extends @Immutable Object, V> extends Immutabl
 
   @Pure
   @Override
-  public boolean containsValue(@Nullable @UnknownSignedness Object arg0) {
+  public boolean containsValue(@Nullable @UnknownSignedness @Readonly Object arg0) {
     return super.containsValue(arg0);
   }
 
   @SideEffectFree
   @Override
-  public ImmutableSet<Map.Entry<@KeyFor({"this"}) K, V>> entrySet() {
+  public ImmutableSet<Map.@Immutable Entry<@KeyFor({"this"}) K, V>> entrySet() {
     return super.entrySet();
   }
 

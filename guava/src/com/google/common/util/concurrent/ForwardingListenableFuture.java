@@ -18,6 +18,7 @@ import com.google.common.annotations.GwtCompatible;
 import com.google.common.base.Preconditions;
 import java.util.concurrent.Executor;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A {@link ListenableFuture} which forwards all its method calls to another future. Subclasses
@@ -31,7 +32,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-public abstract class ForwardingListenableFuture<V extends @Nullable Object>
+public abstract class ForwardingListenableFuture<V extends @Nullable @Readonly Object>
     extends ForwardingFuture<V> implements ListenableFuture<V> {
 
   /** Constructor for use by subclasses. */
@@ -52,7 +53,7 @@ public abstract class ForwardingListenableFuture<V extends @Nullable Object>
    *
    * @since 9.0
    */
-  public abstract static class SimpleForwardingListenableFuture<V extends @Nullable Object>
+  public abstract static class SimpleForwardingListenableFuture<V extends @Nullable @Readonly Object>
       extends ForwardingListenableFuture<V> {
     private final ListenableFuture<V> delegate;
 

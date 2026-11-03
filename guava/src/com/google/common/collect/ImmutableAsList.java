@@ -92,7 +92,7 @@ abstract class ImmutableAsList<E> extends ImmutableList<E> {
   @GwtIncompatible // serialization
   @J2ktIncompatible
   @Override
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm(delegateCollection());
   }
 }

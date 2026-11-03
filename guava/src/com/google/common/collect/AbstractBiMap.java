@@ -92,7 +92,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   }
 
   @Override
-  protected @PolyMutable Map<K, V> delegate(@PolyMutable AbstractBiMap<K,V> this) {
+  protected @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable AbstractBiMap<K,V> this) {
     return delegate;
   }
 
@@ -248,24 +248,24 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   // Views
 
   @Override
-  public @PolyMutable BiMap<V, K> inverse(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable BiMap<V, K> inverse(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     return inverse;
   }
 
-  @LazyInit @CheckForNull private transient Set<K> keySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<K> keySet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<K> result = keySet;
-    return (result == null) ? keySet = new KeySet() : result;
+    return (result == null) ? keySet = new @ReceiverDependentMutable KeySet() : result;
   }
 
   @WeakOuter
   @ReceiverDependentMutable
   private class KeySet extends ForwardingSet<K> {
     @Override
-    protected @PolyMutable Set<K> delegate(@PolyMutable KeySet this) {
+    protected @ReceiverDependentMutable Set<K> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable KeySet this) {
       return delegate.keySet();
     }
 
@@ -294,42 +294,44 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    public Iterator<K> iterator(@Readonly KeySet this) {
+    public @Mutable Iterator<K> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable KeySet this) {
       return Maps.keyIterator(entrySet().iterator());
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<V> valueSet;
+  @LazyInit @CheckForNull private transient @Assignable Set<V> valueSet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<V> values(@PolyMutable AbstractBiMap<K, V> this) {
+  public @ReceiverDependentMutable Set<V> values(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     /*
      * We can almost reuse the inverse's keySet, except we have to fix the
      * iteration order so that it is consistent with the forward map.
      */
     Set<V> result = valueSet;
-    return (result == null) ? valueSet = new ValueSet() : result;
+    return (result == null) ? valueSet = new @ReceiverDependentMutable ValueSet() : result;
   }
 
   @WeakOuter
   @ReceiverDependentMutable
   private class ValueSet extends ForwardingSet<V> {
+    @SuppressWarnings("mutability:assignment.type.incompatible") // Outer.this in a field initializer is @Mutable, not the enclosing instance's qualifier, and an initializer has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
     final Set<V> valuesDelegate = inverse.keySet();
 
     @Override
-    protected @PolyMutable Set<V> delegate(@PolyMutable ValueSet this) {
+    protected @ReceiverDependentMutable Set<V> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return valuesDelegate;
     }
 
     @Override
-    public Iterator<V> iterator(@Readonly ValueSet this) {
+    public @Mutable Iterator<V> iterator(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable ValueSet this) {
       return Maps.valueIterator(entrySet().iterator());
     }
 
     @CFComment("signedness: is same as signedness of V, which this method doesn't know")
     @Override
-    public @PolyNull @PolySigned Object[] toArray(ValueSet this) {
+    @SuppressWarnings("mutability:override.return.invalid") // V extends @Immutable Object, so every value is @Immutable. That is the precise return, which an override of a @PolyMutable return cannot state
+    public @PolyNull @PolySigned @Immutable Object[] toArray(ValueSet this) {
       return standardToArray();
     }
 
@@ -346,13 +348,14 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
-  @LazyInit @CheckForNull private transient Set<Entry<K, V>> entrySet;
+  @LazyInit @CheckForNull private transient @Assignable Set<Entry<K, V>> entrySet;
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable AbstractBiMap<K, V> this) {
+  @SuppressWarnings("mutability:return.type.incompatible") // EntrySet's element type is @Mutable Entry, as its toArray states, where the contract states receiver-dependent entries. Its BiMapEntry wrappers write through to the bimap
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable AbstractBiMap<K, V> this) {
     Set<Entry<K, V>> result = entrySet;
-    return (result == null) ? entrySet = new EntrySet() : result;
+    return (result == null) ? entrySet = new @ReceiverDependentMutable EntrySet() : result;
   }
 
   @ReceiverDependentMutable
@@ -364,7 +367,7 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
 
     @Override
-    protected @PolyMutable Entry<K, V> delegate(@PolyMutable BiMapEntry this) {
+    protected @ReceiverDependentMutable Entry<K, V> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable BiMapEntry this) {
       return delegate;
     }
 
@@ -385,9 +388,10 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     }
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // lost-in-type-argument: @MutabilityLost inside Iterator<@MutabilityLost Entry>, reached through the @Readonly receiver. The iterator wraps each entry in a BiMapEntry, typed @Mutable as EntrySet's element type is
   Iterator<Entry<K, V>> entrySetIterator(@Readonly AbstractBiMap<K, V> this) {
     final Iterator<Entry<K, V>> iterator = delegate.entrySet().iterator();
-    return new Iterator<Entry<K, V>>() {
+    return new @Mutable Iterator<Entry<K, V>>() {
       @CheckForNull Entry<K, V> entry;
 
       @Override
@@ -417,10 +421,11 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
   @WeakOuter
   @ReceiverDependentMutable
   private class EntrySet extends ForwardingSet<Entry<K, V>> {
+    @SuppressWarnings("mutability:assignment.type.incompatible") // Outer.this in a field initializer is @Mutable, not the enclosing instance's qualifier, and an initializer has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
     final Set<Entry<K, V>> esDelegate = delegate.entrySet();
 
     @Override
-    protected Set<Entry<K, V>> delegate(@PolyMutable EntrySet this) {
+    protected @ReceiverDependentMutable Set<Entry<K, V>> delegate(@ReceiverDependentMutable AbstractBiMap<K, V>.@ReceiverDependentMutable EntrySet this) {
       return esDelegate;
     }
 
@@ -462,9 +467,9 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
      * be used with collections that may contain null. This collection never contains nulls, so we
      * can treat it as a plain `Object[]`.
      */
-    @SuppressWarnings("nullness")
     @CFComment("signedeness: is same as V, which this method does not know")
     @Override
+    @SuppressWarnings({"nullness", "mutability:override.return.invalid"}) // the set's element type is @Mutable Entry, so the precise return is @Mutable Object[], which an override of a @PolyMutable return cannot state
     public @PolyNull @PolySigned Object[] toArray() {
       return standardToArray();
     }
@@ -540,14 +545,14 @@ abstract class AbstractBiMap<K extends @Nullable @Immutable Object, V extends @N
     @GwtIncompatible // java.io.ObjectInputStream
     @J2ktIncompatible
     @SuppressWarnings("unchecked") // reading data stored by writeObject
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+    private void readObject(@Mutable Inverse<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
       stream.defaultReadObject();
       setInverse((AbstractBiMap<V, K>) requireNonNull(stream.readObject()));
     }
 
     @GwtIncompatible // Not needed in the emulated source.
     @J2ktIncompatible
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return inverse().inverse();
     }
 

@@ -25,6 +25,7 @@ import java.util.concurrent.locks.AbstractOwnableSynchronizer;
 import java.util.concurrent.locks.LockSupport;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 @GwtCompatible(emulated = true)
 @ReflectionSupport(value = ReflectionSupport.Level.FULL)
@@ -34,7 +35,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 // Since this class only needs CAS on one field, we can avoid this bug by extending AtomicReference
 // instead of using an AtomicReferenceFieldUpdater. This reference stores Thread instances
 // and DONE/INTERRUPTED - they have a common ancestor of Runnable.
-abstract class InterruptibleTask<T extends @Nullable Object>
+abstract class InterruptibleTask<T extends @Nullable @Readonly Object>
     extends AtomicReference<@Nullable Runnable> implements Runnable {
   static {
     // Prevent rare disastrous classloading in first call to LockSupport.park.

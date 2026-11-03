@@ -28,10 +28,13 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link ImmutableSet} backed by a non-empty {@link java.util.EnumSet}.
@@ -44,6 +47,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @ElementTypesAreNonnullByDefault
 @Immutable
 final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
+  @SuppressWarnings("mutability:argument.type.incompatible") // freeze: every caller hands over a fresh EnumSet that no one else references
   static <E extends Enum<E>> ImmutableSet<E> asImmutable(EnumSet<E> set) {
     switch (set.size()) {
       case 0:
@@ -75,7 +79,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return Iterators.unmodifiableIterator(delegate.iterator());
   }
 
@@ -97,13 +101,13 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
 
   @Pure
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object object) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object object) {
     return delegate.contains(object);
   }
 
   @Pure
   @Override
-  public boolean containsAll(Collection<?> collection) {
+  public boolean containsAll(@Readonly Collection<?> collection) {
     if (collection instanceof ImmutableEnumSet<?>) {
       collection = ((ImmutableEnumSet<?>) collection).delegate;
     }
@@ -118,7 +122,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -133,7 +137,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
     return true;
   }
 
-  @LazyInit private transient int hashCode;
+  @LazyInit private transient @Assignable int hashCode;
 
   @Pure
   @Override
@@ -151,7 +155,7 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
   // All callers of the constructor are restricted to <E extends Enum<E>>.
   @Override
   @J2ktIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new EnumSerializedForm<E>(delegate);
   }
 
@@ -165,13 +169,13 @@ final class ImmutableEnumSet<E extends Enum<E>> extends ImmutableSet<E> {
    */
   @J2ktIncompatible // serialization
   private static class EnumSerializedForm<E extends Enum<E>> implements Serializable {
-    final EnumSet<E> delegate;
+    final @Immutable EnumSet<E> delegate;
 
-    EnumSerializedForm(EnumSet<E> delegate) {
+    EnumSerializedForm(@Immutable EnumSet<E> delegate) {
       this.delegate = delegate;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       // EJ2 #76: Write readObject() methods defensively.
       return new ImmutableEnumSet<E>(delegate.clone());
     }

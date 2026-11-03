@@ -22,6 +22,7 @@ import com.google.common.annotations.J2ktIncompatible;
 import com.google.common.base.Supplier;
 import java.util.concurrent.Callable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to the {@link Callable} interface.
@@ -35,7 +36,7 @@ public final class Callables {
   private Callables() {}
 
   /** Creates a {@code Callable} which immediately returns a preset value each time it is called. */
-  public static <T extends @Nullable Object> Callable<T> returning(@ParametricNullness T value) {
+  public static <T extends @Nullable @Readonly Object> Callable<T> returning(@ParametricNullness T value) {
     return () -> value;
   }
 
@@ -49,7 +50,7 @@ public final class Callables {
    */
   @J2ktIncompatible
   @GwtIncompatible
-  public static <T extends @Nullable Object> AsyncCallable<T> asAsyncCallable(
+  public static <T extends @Nullable @Readonly Object> AsyncCallable<T> asAsyncCallable(
       Callable<T> callable, ListeningExecutorService listeningExecutorService) {
     checkNotNull(callable);
     checkNotNull(listeningExecutorService);
@@ -66,7 +67,7 @@ public final class Callables {
    */
   @J2ktIncompatible
   @GwtIncompatible // threads
-  static <T extends @Nullable Object> Callable<T> threadRenaming(
+  static <T extends @Nullable @Readonly Object> Callable<T> threadRenaming(
       Callable<T> callable, Supplier<String> nameSupplier) {
     checkNotNull(nameSupplier);
     checkNotNull(callable);

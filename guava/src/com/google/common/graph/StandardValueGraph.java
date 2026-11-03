@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Standard implementation of {@link ValueGraph} that supports the options supplied by {@link
@@ -44,12 +47,13 @@ import javax.annotation.CheckForNull;
  * @param <V> Value parameter type
  */
 @ElementTypesAreNonnullByDefault
-class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
+@ReceiverDependentMutable
+class StandardValueGraph<N extends @Immutable Object, V> extends AbstractValueGraph<N, V> {
   private final boolean isDirected;
   private final boolean allowsSelfLoops;
   private final ElementOrder<N> nodeOrder;
 
-  final MapIteratorCache<N, GraphConnections<N, V>> nodeConnections;
+  final MapIteratorCache<N, @ReceiverDependentMutable GraphConnections<N, V>> nodeConnections;
 
   long edgeCount; // must be updated when edges are added or removed
 
@@ -57,7 +61,7 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
   StandardValueGraph(AbstractGraphBuilder<? super N> builder) {
     this(
         builder,
-        builder.nodeOrder.<N, GraphConnections<N, V>>createMap(
+        builder.nodeOrder.<N, @ReceiverDependentMutable GraphConnections<N, V>>createMap(
             builder.expectedNodeCount.or(DEFAULT_NODE_COUNT)),
         0L);
   }
@@ -68,7 +72,7 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
    */
   StandardValueGraph(
       AbstractGraphBuilder<? super N> builder,
-      Map<N, GraphConnections<N, V>> nodeConnections,
+      @ReceiverDependentMutable Map<N, @ReceiverDependentMutable GraphConnections<N, V>> nodeConnections,
       long edgeCount) {
     this.isDirected = builder.directed;
     this.allowsSelfLoops = builder.allowsSelfLoops;
@@ -76,13 +80,13 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
     // Prefer the heavier "MapRetrievalCache" for nodes if lookup is expensive.
     this.nodeConnections =
         (nodeConnections instanceof TreeMap)
-            ? new MapRetrievalCache<N, GraphConnections<N, V>>(nodeConnections)
-            : new MapIteratorCache<N, GraphConnections<N, V>>(nodeConnections);
+            ? new @ReceiverDependentMutable MapRetrievalCache<N, @ReceiverDependentMutable GraphConnections<N, V>>(nodeConnections)
+            : new @ReceiverDependentMutable MapIteratorCache<N, @ReceiverDependentMutable GraphConnections<N, V>>(nodeConnections);
     this.edgeCount = checkNonNegative(edgeCount);
   }
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return nodeConnections.unmodifiableKeySet();
   }
 
@@ -102,22 +106,22 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
   }
 
   @Override
-  public Set<N> adjacentNodes(N node) {
+  public @Readonly Set<N> adjacentNodes(N node) {
     return nodeInvalidatableSet(checkedConnections(node).adjacentNodes(), node);
   }
 
   @Override
-  public Set<N> predecessors(N node) {
+  public @Readonly Set<N> predecessors(N node) {
     return nodeInvalidatableSet(checkedConnections(node).predecessors(), node);
   }
 
   @Override
-  public Set<N> successors(N node) {
+  public @Readonly Set<N> successors(N node) {
     return nodeInvalidatableSet(checkedConnections(node).successors(), node);
   }
 
   @Override
-  public Set<EndpointPair<N>> incidentEdges(N node) {
+  public @Readonly Set<EndpointPair<N>> incidentEdges(N node) {
     GraphConnections<N, V> connections = checkedConnections(node);
     IncidentEdgeSet<N> incident =
         new IncidentEdgeSet<N>(this, node) {
@@ -159,7 +163,7 @@ class StandardValueGraph<N, V> extends AbstractValueGraph<N, V> {
     return edgeCount;
   }
 
-  private final GraphConnections<N, V> checkedConnections(N node) {
+  private final @ReceiverDependentMutable GraphConnections<N, V> checkedConnections(N node) {
     GraphConnections<N, V> connections = nodeConnections.get(node);
     if (connections == null) {
       checkNotNull(node);

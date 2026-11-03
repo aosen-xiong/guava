@@ -5,31 +5,36 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ForwardingSet;
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A subclass of `ForwardingSet` that throws `IllegalStateException` on invocation of any method
  * (except `hashCode` and `equals`) if the provided `Supplier` returns false.
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 final class InvalidatableSet<E> extends ForwardingSet<E> {
-  private final Supplier<Boolean> validator;
+  private final @Readonly Supplier<Boolean> validator;
   private final Set<E> delegate;
-  private final Supplier<String> errorMessage;
+  private final @Readonly Supplier<String> errorMessage;
 
-  public static final <E> InvalidatableSet<E> of(
-      Set<E> delegate, Supplier<Boolean> validator, Supplier<String> errorMessage) {
-    return new InvalidatableSet<>(
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // one poly: the delegate and the view are the same instantiation, as in Collections.unmodifiableSet
+  public static final <E> @PolyMutable InvalidatableSet<E> of(
+      @PolyMutable Set<E> delegate, @Readonly Supplier<Boolean> validator, @Readonly Supplier<String> errorMessage) {
+    return new @PolyMutable InvalidatableSet<>(
         checkNotNull(delegate), checkNotNull(validator), checkNotNull(errorMessage));
   }
 
   @Override
-  protected Set<E> delegate() {
+  protected @ReceiverDependentMutable Set<E> delegate(@ReceiverDependentMutable InvalidatableSet<E> this) {
     validate();
     return delegate;
   }
 
   private InvalidatableSet(
-      Set<E> delegate, Supplier<Boolean> validator, Supplier<String> errorMessage) {
+      @ReceiverDependentMutable Set<E> delegate, @Readonly Supplier<Boolean> validator, @Readonly Supplier<String> errorMessage) {
     this.delegate = delegate;
     this.validator = validator;
     this.errorMessage = errorMessage;

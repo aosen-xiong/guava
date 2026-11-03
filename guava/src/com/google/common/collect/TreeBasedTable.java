@@ -35,8 +35,10 @@ import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * Implementation of {@code Table} whose row keys and column keys are ordered by their natural
@@ -74,12 +76,13 @@ import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
 public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Object, V> extends StandardRowSortedTable<R, C, V> {
-  private final Comparator<? super C> columnComparator;
+  private final @Readonly Comparator<? super C> columnComparator;
 
+  @ReceiverDependentMutable
   private static class Factory<C extends @Immutable Object, V> implements Supplier<TreeMap<C, V>>, Serializable {
-    final Comparator<? super C> comparator;
+    final @Readonly Comparator<? super C> comparator;
 
-    Factory(Comparator<? super C> comparator) {
+    Factory(@Readonly Comparator<? super C> comparator) {
       this.comparator = comparator;
     }
 
@@ -95,12 +98,12 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    * Creates an empty {@code TreeBasedTable} that uses the natural orderings of both row and column
    * keys.
    *
-   * <p>The method signature specifies {@code R extends Comparable} with a raw {@link Comparable},
-   * instead of {@code R extends Comparable<? super R>}, and the same for {@code C}. That's
+   * <p>The method signature specifies {@code R extends @Immutable Comparable} with a raw {@link Comparable},
+   * instead of {@code R extends @Immutable Comparable<? super R>}, and the same for {@code C}. That's
    * necessary to support classes defined without generics.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <R extends Comparable, C extends Comparable, V> TreeBasedTable<R, C, V> create() {
+  public static <R extends @Immutable Comparable, C extends @Immutable Comparable, V> TreeBasedTable<R, C, V> create() {
     return new TreeBasedTable<>(Ordering.natural(), Ordering.natural());
   }
 
@@ -128,8 +131,8 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     return result;
   }
 
-  TreeBasedTable(Comparator<? super R> rowComparator, Comparator<? super C> columnComparator) {
-    super(new TreeMap<R, Map<C, V>>(rowComparator), new Factory<C, V>(columnComparator));
+  TreeBasedTable(@Readonly Comparator<? super R> rowComparator, @Readonly Comparator<? super C> columnComparator) {
+    super(new @ReceiverDependentMutable TreeMap<R, @ReceiverDependentMutable Map<C, V>>(rowComparator), new @ReceiverDependentMutable Factory<C, V>(columnComparator));
     this.columnComparator = columnComparator;
   }
 
@@ -142,7 +145,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    * @deprecated Use {@code table.rowKeySet().comparator()} instead.
    */
   @Deprecated
-  public Comparator<? super R> rowComparator() {
+  public @Readonly Comparator<? super R> rowComparator() {
     /*
      * requireNonNull is safe because the factories require non-null Comparators, which they pass on
      * to the backing collections.
@@ -159,7 +162,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    *     {@code ((SortedMap<C, V>) table.rowMap().values().iterator().next()).comparator();}.
    */
   @Deprecated
-  public Comparator<? super C> columnComparator() {
+  public @Readonly Comparator<? super C> columnComparator() {
     return columnComparator;
   }
 
@@ -176,8 +179,8 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
    *     source-compatible</a> since 7.0)
    */
   @Override
-  public SortedMap<C, V> row(R rowKey) {
-    return new TreeRow(rowKey);
+  public @ReceiverDependentMutable SortedMap<C, V> row(@ReceiverDependentMutable TreeBasedTable<R, C, V> this, R rowKey) {
+    return new @ReceiverDependentMutable TreeRow(rowKey);
   }
 
   @ReceiverDependentMutable
@@ -198,19 +201,19 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     }
 
     @Override
-    public SortedSet<@KeyFor({"this"}) C> keySet() {
-      return new Maps.SortedKeySet<>(this);
+    public @ReceiverDependentMutable SortedSet<@KeyFor({"this"}) C> keySet(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this) {
+      return new Maps.@ReceiverDependentMutable SortedKeySet<>(this);
     }
 
     @Override
-    public Comparator<? super C> comparator() {
+    public @Readonly Comparator<? super C> comparator() {
       return columnComparator();
     }
 
-    int compare(Object a, Object b) {
+    int compare(@Readonly Object a, @Readonly Object b) {
       // pretend we can compare anything
       @SuppressWarnings("unchecked")
-      Comparator<Object> cmp = (Comparator<Object>) comparator();
+      Comparator<@Readonly Object> cmp = (Comparator<@Readonly Object>) comparator();
       return cmp.compare(a, b);
     }
 
@@ -221,21 +224,21 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     }
 
     @Override
-    public SortedMap<C, V> subMap(C fromKey, C toKey) {
+    public @ReceiverDependentMutable SortedMap<C, V> subMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this, C fromKey, C toKey) {
       checkArgument(rangeContains(checkNotNull(fromKey)) && rangeContains(checkNotNull(toKey)));
-      return new TreeRow(rowKey, fromKey, toKey);
+      return new @ReceiverDependentMutable TreeRow(rowKey, fromKey, toKey);
     }
 
     @Override
-    public SortedMap<C, V> headMap(C toKey) {
+    public @ReceiverDependentMutable SortedMap<C, V> headMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this, C toKey) {
       checkArgument(rangeContains(checkNotNull(toKey)));
-      return new TreeRow(rowKey, lowerBound, toKey);
+      return new @ReceiverDependentMutable TreeRow(rowKey, lowerBound, toKey);
     }
 
     @Override
-    public SortedMap<C, V> tailMap(C fromKey) {
+    public @ReceiverDependentMutable SortedMap<C, V> tailMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this, C fromKey) {
       checkArgument(rangeContains(checkNotNull(fromKey)));
-      return new TreeRow(rowKey, fromKey, upperBound);
+      return new @ReceiverDependentMutable TreeRow(rowKey, fromKey, upperBound);
     }
 
     @Override
@@ -256,18 +259,18 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
       return ((SortedMap<C, V>) backingRowMap).lastKey();
     }
 
-    @CheckForNull transient SortedMap<C, V> wholeRow;
+    @CheckForNull transient @Assignable SortedMap<C, V> wholeRow;
 
     // If the row was previously empty, we check if there's a new row here every time we're queried.
     void updateWholeRowField() {
       if (wholeRow == null || (wholeRow.isEmpty() && backingMap.containsKey(rowKey))) {
-        wholeRow = (SortedMap<C, V>) backingMap.get(rowKey);
+        wholeRow = (@ReceiverDependentMutable SortedMap<C, V>) backingMap.get(rowKey);
       }
     }
 
     @Override
     @CheckForNull
-    SortedMap<C, V> computeBackingRowMap() {
+    @ReceiverDependentMutable SortedMap<C, V> computeBackingRowMap(@ReceiverDependentMutable TreeBasedTable<R, C, V>.@ReceiverDependentMutable TreeRow this) {
       updateWholeRowField();
       SortedMap<C, V> map = wholeRow;
       if (map != null) {
@@ -283,7 +286,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     }
 
     @Override
-    void maintainEmptyInvariant() {
+    void maintainEmptyInvariant(@Mutable TreeRow this) {
       updateWholeRowField();
       if (wholeRow != null && wholeRow.isEmpty()) {
         backingMap.remove(rowKey);
@@ -299,7 +302,7 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
 
     @Override
     @CheckForNull
-    public V put(C key, V value) {
+    public V put(@Mutable TreeRow this, C key, V value) {
       checkArgument(rangeContains(checkNotNull(key)));
       return super.put(key, value);
     }
@@ -308,12 +311,12 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
   // rowKeySet() and rowMap() are defined here so they appear in the Javadoc.
 
   @Override
-  public SortedSet<R> rowKeySet() {
+  public @ReceiverDependentMutable SortedSet<R> rowKeySet(@ReceiverDependentMutable TreeBasedTable<R, C, V> this) {
     return super.rowKeySet();
   }
 
   @Override
-  public SortedMap<R, Map<C, V>> rowMap() {
+  public @ReceiverDependentMutable SortedMap<R, @ReceiverDependentMutable Map<C, V>> rowMap(@ReceiverDependentMutable TreeBasedTable<R, C, V> this) {
     return super.rowMap();
   }
 
@@ -325,10 +328,10 @@ public class TreeBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     Iterator<C> merged =
         Iterators.mergeSorted(
             Iterables.transform(
-                backingMap.values(), (Map<C, V> input) -> input.keySet().iterator()),
+                backingMap.values(), (@Readonly Map<C, V> input) -> input.keySet().iterator()),
             comparator);
 
-    return new AbstractIterator<C>() {
+    return new @Mutable AbstractIterator<C>() {
       @CheckForNull C lastValue;
 
       @Override

@@ -19,6 +19,7 @@ import com.google.common.annotations.J2ktIncompatible;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.io.IOException;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A callback to be used with the streaming {@code readLines} methods.
@@ -32,7 +33,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @J2ktIncompatible
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-public interface LineProcessor<T extends @Nullable Object> {
+public interface LineProcessor<T extends @Nullable @Readonly Object> {
 
   /**
    * This method will be called once for each line.

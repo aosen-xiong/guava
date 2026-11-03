@@ -122,13 +122,15 @@ public final class ArrayListMultimap<K extends @Nullable @Immutable Object, V ex
     this(12, DEFAULT_VALUES_PER_KEY);
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private ArrayListMultimap(int expectedKeys, int expectedValuesPerKey) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newHashMapWithExpectedSize(expectedKeys));
     checkNonnegative(expectedValuesPerKey, "expectedValuesPerKey");
     this.expectedValuesPerKey = expectedValuesPerKey;
   }
 
-  private ArrayListMultimap(@ReceiverDependentMutable Multimap<? extends K, ? extends V> multimap) {
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
+  private ArrayListMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     this(
         multimap.keySet().size(),
         (multimap instanceof ArrayListMultimap)
@@ -173,7 +175,7 @@ public final class ArrayListMultimap<K extends @Nullable @Immutable Object, V ex
 
   @GwtIncompatible // java.io.ObjectOutputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable ArrayListMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     expectedValuesPerKey = DEFAULT_VALUES_PER_KEY;
     int distinctKeys = Serialization.readCount(stream);
@@ -203,7 +205,7 @@ public boolean equals(@Readonly ArrayListMultimap<K, V> this, @Nullable @Readonl
 public boolean isEmpty(@Readonly ArrayListMultimap<K, V> this) { return super.isEmpty(); }
 
 @Override
-public @PolyMutable List<V> get(@PolyMutable ArrayListMultimap<K, V> this, @Nullable K arg0) { return super.get(arg0); }
+public @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable ArrayListMultimap<K, V> this, @Nullable K arg0) { return super.get(arg0); }
 
 @Override
 public boolean remove(@Mutable ArrayListMultimap<K, V> this, @Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.remove(arg0, arg1); }

@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RunnableFuture;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A {@link RunnableFuture} that also implements the {@link ListenableFuture} interface.
@@ -32,15 +33,15 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-class TrustedListenableFutureTask<V extends @Nullable Object> extends FluentFuture.TrustedFuture<V>
+class TrustedListenableFutureTask<V extends @Nullable @Readonly Object> extends FluentFuture.TrustedFuture<V>
     implements RunnableFuture<V> {
 
-  static <V extends @Nullable Object> TrustedListenableFutureTask<V> create(
+  static <V extends @Nullable @Readonly Object> TrustedListenableFutureTask<V> create(
       AsyncCallable<V> callable) {
     return new TrustedListenableFutureTask<>(callable);
   }
 
-  static <V extends @Nullable Object> TrustedListenableFutureTask<V> create(Callable<V> callable) {
+  static <V extends @Nullable @Readonly Object> TrustedListenableFutureTask<V> create(Callable<V> callable) {
     return new TrustedListenableFutureTask<>(callable);
   }
 
@@ -53,7 +54,7 @@ class TrustedListenableFutureTask<V extends @Nullable Object> extends FluentFutu
    *     result, consider using constructions of the form: {@code ListenableFuture<?> f =
    *     ListenableFutureTask.create(runnable, null)}
    */
-  static <V extends @Nullable Object> TrustedListenableFutureTask<V> create(
+  static <V extends @Nullable @Readonly Object> TrustedListenableFutureTask<V> create(
       Runnable runnable, @ParametricNullness V result) {
     return new TrustedListenableFutureTask<>(Executors.callable(runnable, result));
   }

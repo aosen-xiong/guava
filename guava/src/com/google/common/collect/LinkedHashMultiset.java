@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
@@ -78,16 +79,17 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
    * @param elements the elements that the multiset should contain
    */
   public static <E extends @Nullable @Immutable Object> LinkedHashMultiset<E> create(
-      Iterable<? extends E> elements) {
+      @Readonly Iterable<? extends E> elements) {
     LinkedHashMultiset<E> multiset = create(Multisets.inferDistinctElements(elements));
     Iterables.addAll(multiset, elements);
     return multiset;
   }
 
   private LinkedHashMultiset() {
-    super(new LinkedHashMap<E, Count>());
+    super(new @ReceiverDependentMutable LinkedHashMap<E, Count>());
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private LinkedHashMultiset(int distinctElements) {
     super(Maps.<E, Count>newLinkedHashMapWithExpectedSize(distinctElements));
   }
@@ -105,7 +107,7 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable LinkedHashMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     int distinctElements = Serialization.readCount(stream);
     setBackingMap(new LinkedHashMap<E, Count>());
@@ -124,7 +126,7 @@ public final class LinkedHashMultiset<E extends @Nullable @Immutable Object>
   public @NonNegative int count(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.count(arg0); }
 
   @Override
-  public int remove(@Nullable @Readonly Object arg0, int arg1) { return super.remove(arg0, arg1); }
+  public int remove(@Mutable LinkedHashMultiset<E> this, @Nullable @Readonly Object arg0, int arg1) { return super.remove(arg0, arg1); }
 
   @Pure
   @Override

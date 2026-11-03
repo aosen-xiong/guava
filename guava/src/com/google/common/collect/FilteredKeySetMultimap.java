@@ -25,6 +25,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * Implementation of {@link Multimaps#filterKeys(SetMultimap, Predicate)}.
@@ -33,51 +35,53 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class FilteredKeySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+@ReceiverDependentMutable
+final class FilteredKeySetMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends FilteredKeyMultimap<K, V> implements FilteredSetMultimap<K, V> {
 
-  FilteredKeySetMultimap(SetMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
+  FilteredKeySetMultimap(@ReceiverDependentMutable SetMultimap<K, V> unfiltered, Predicate<? super K> keyPredicate) {
     super(unfiltered, keyPredicate);
   }
 
   @Override
-  public SetMultimap<K, V> unfiltered() {
-    return (SetMultimap<K, V>) unfiltered;
+  public @ReceiverDependentMutable SetMultimap<K, V> unfiltered() {
+    return (@ReceiverDependentMutable SetMultimap<K, V>) unfiltered;
   }
 
   @Override
-  public Set<V> get(@ParametricNullness K key) {
-    return (Set<V>) super.get(key);
+  public @ReceiverDependentMutable Set<V> get(@ParametricNullness K key) {
+    return (@ReceiverDependentMutable Set<V>) super.get(key);
   }
 
   @Override
-  public Set<V> removeAll(@CheckForNull @Readonly Object key) {
-    return (Set<V>) super.removeAll(key);
+  public @Readonly Set<V> removeAll(@Mutable FilteredKeySetMultimap<K, V> this, @CheckForNull @Readonly Object key) {
+    return (@Readonly Set<V>) super.removeAll(key);
   }
 
   @Override
-  public Set<V> replaceValues(@ParametricNullness K key, Iterable<? extends V> values) {
-    return (Set<V>) super.replaceValues(key, values);
+  public @Readonly Set<V> replaceValues(@Mutable FilteredKeySetMultimap<K, V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
+    return (@Readonly Set<V>) super.replaceValues(key, values);
   }
 
   @Override
-  public Set<Entry<K, V>> entries() {
-    return (Set<Entry<K, V>>) super.entries();
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> entries() {
+    return (@ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>>) super.entries();
   }
 
   @Override
-  Set<Entry<K, V>> createEntries() {
-    return new EntrySet();
+  @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable FilteredKeySetMultimap<K, V> this) {
+    return new @ReceiverDependentMutable EntrySet();
   }
 
-  class EntrySet extends Entries implements Set<Entry<K, V>> {
+  @ReceiverDependentMutable
+  class EntrySet extends Entries implements Set<@ReceiverDependentMutable Entry<K, V>> {
     @Override
     public int hashCode(@UnknownSignedness EntrySet this) {
       return Sets.hashCodeImpl(this);
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object o) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object o) {
       return Sets.equalsImpl(this, o);
     }
   }

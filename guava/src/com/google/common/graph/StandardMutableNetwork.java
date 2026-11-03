@@ -26,6 +26,7 @@ import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Standard implementation of {@link MutableNetwork} that supports both directed and undirected
@@ -41,7 +42,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class StandardMutableNetwork<N, E> extends StandardNetwork<N, E>
+final class StandardMutableNetwork<N extends @Immutable Object, E extends @Immutable Object> extends StandardNetwork<N, E>
     implements MutableNetwork<N, E> {
 
   /** Constructs a mutable graph with the properties specified in {@code builder}. */

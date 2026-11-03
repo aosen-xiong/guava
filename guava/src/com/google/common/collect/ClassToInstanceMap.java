@@ -22,6 +22,7 @@ import com.google.errorprone.annotations.DoNotMock;
 import java.util.Map;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.framework.qual.AnnotatedFor;
@@ -56,7 +57,8 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @AnnotatedFor({"nullness"})
 @ElementTypesAreNonnullByDefault
-public interface ClassToInstanceMap<B extends @Nullable Object>
+@ReceiverDependentMutable
+public interface ClassToInstanceMap<B extends @Nullable @Readonly Object>
     extends Map<Class<? extends @NonNull B>, B> {
   /**
    * Returns the value the specified class is mapped to, or {@code null} if no entry for this class

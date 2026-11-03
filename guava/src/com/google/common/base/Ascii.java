@@ -19,6 +19,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.annotations.GwtCompatible;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static methods pertaining to ASCII characters (those in the range of values {@code 0x00} through
@@ -554,7 +555,7 @@ public final class Ascii {
    *     truncationIndicator}
    * @since 16.0
    */
-  public static String truncate(CharSequence seq, @NonNegative int maxLength, String truncationIndicator) {
+  public static String truncate(@Readonly CharSequence seq, @NonNegative int maxLength, String truncationIndicator) {
     checkNotNull(seq);
 
     // length to truncate the sequence to, not including the truncation indicator

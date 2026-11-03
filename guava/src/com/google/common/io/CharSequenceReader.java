@@ -30,6 +30,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTEqLengthOf;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A {@link Reader} that reads the characters in a {@link CharSequence}. Like {@code StringReader},
@@ -43,12 +44,12 @@ import org.checkerframework.checker.index.qual.NonNegative;
 @ElementTypesAreNonnullByDefault
 final class CharSequenceReader extends Reader {
 
-  @CheckForNull private CharSequence seq;
+  @CheckForNull private @Readonly CharSequence seq;
   private int pos;
   private int mark;
 
   /** Creates a new reader wrapping the given character sequence. */
-  public CharSequenceReader(CharSequence seq) {
+  public CharSequenceReader(@Readonly CharSequence seq) {
     this.seq = checkNotNull(seq);
   }
 

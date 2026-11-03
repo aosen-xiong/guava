@@ -1057,7 +1057,7 @@ public abstract class CharMatcher implements Predicate<Character> {
      * If length() != 0, then sequence is MinLen(1), so 0 is LTLengthOf(sequence)
      */
     @Override
-    public @IndexOrLow("#1") int indexIn(CharSequence sequence) {
+    public @IndexOrLow("#1") int indexIn(@Readonly CharSequence sequence) {
       return (sequence.length() == 0) ? -1 : 0;
     }
 
@@ -1065,43 +1065,43 @@ public abstract class CharMatcher implements Predicate<Character> {
      * If start != length(), then start is LTLengthOf(sequence)
      */
     @Override
-    public @IndexOrLow("#1") int indexIn(CharSequence sequence, @IndexOrHigh("#1") int start) {
+    public @IndexOrLow("#1") int indexIn(@Readonly CharSequence sequence, @IndexOrHigh("#1") int start) {
       int length = sequence.length();
       checkPositionIndex(start, length);
       return (start == length) ? -1 : start;
     }
 
     @Override
-    public @IndexOrLow("#1") int lastIndexIn(CharSequence sequence) {
+    public @IndexOrLow("#1") int lastIndexIn(@Readonly CharSequence sequence) {
       return sequence.length() - 1;
     }
 
     @Override
-    public boolean matchesAllOf(CharSequence sequence) {
+    public boolean matchesAllOf(@Readonly CharSequence sequence) {
       checkNotNull(sequence);
       return true;
     }
 
     @Override
-    public boolean matchesNoneOf(CharSequence sequence) {
+    public boolean matchesNoneOf(@Readonly CharSequence sequence) {
       return sequence.length() == 0;
     }
 
     @Override
-    public String removeFrom(CharSequence sequence) {
+    public String removeFrom(@Readonly CharSequence sequence) {
       checkNotNull(sequence);
       return "";
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, char replacement) {
+    public String replaceFrom(@Readonly CharSequence sequence, char replacement) {
       char[] array = new char[sequence.length()];
       Arrays.fill(array, replacement);
       return new String(array);
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, CharSequence replacement) {
+    public String replaceFrom(@Readonly CharSequence sequence, @Readonly CharSequence replacement) {
       StringBuilder result = new StringBuilder(sequence.length() * replacement.length());
       for (int i = 0; i < sequence.length(); i++) {
         result.append(replacement);
@@ -1115,13 +1115,13 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public String trimFrom(CharSequence sequence) {
+    public String trimFrom(@Readonly CharSequence sequence) {
       checkNotNull(sequence);
       return "";
     }
 
     @Override
-    public @IndexOrHigh("#1") int countIn(CharSequence sequence) {
+    public @IndexOrHigh("#1") int countIn(@Readonly CharSequence sequence) {
       return sequence.length();
     }
 
@@ -1157,47 +1157,47 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public @IndexOrLow("#1") int indexIn(CharSequence sequence) {
+    public @IndexOrLow("#1") int indexIn(@Readonly CharSequence sequence) {
       checkNotNull(sequence);
       return -1;
     }
 
     @Override
-    public @IndexOrLow("#1") int indexIn(CharSequence sequence, @IndexOrHigh("#1") int start) {
+    public @IndexOrLow("#1") int indexIn(@Readonly CharSequence sequence, @IndexOrHigh("#1") int start) {
       int length = sequence.length();
       checkPositionIndex(start, length);
       return -1;
     }
 
     @Override
-    public @IndexOrLow("#1") int lastIndexIn(CharSequence sequence) {
+    public @IndexOrLow("#1") int lastIndexIn(@Readonly CharSequence sequence) {
       checkNotNull(sequence);
       return -1;
     }
 
     @Override
-    public boolean matchesAllOf(CharSequence sequence) {
+    public boolean matchesAllOf(@Readonly CharSequence sequence) {
       return sequence.length() == 0;
     }
 
     @Override
-    public boolean matchesNoneOf(CharSequence sequence) {
+    public boolean matchesNoneOf(@Readonly CharSequence sequence) {
       checkNotNull(sequence);
       return true;
     }
 
     @Override
-    public String removeFrom(CharSequence sequence) {
+    public String removeFrom(@Readonly CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, char replacement) {
+    public String replaceFrom(@Readonly CharSequence sequence, char replacement) {
       return sequence.toString();
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, CharSequence replacement) {
+    public String replaceFrom(@Readonly CharSequence sequence, @Readonly CharSequence replacement) {
       checkNotNull(replacement);
       return sequence.toString();
     }
@@ -1208,22 +1208,22 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public String trimFrom(CharSequence sequence) {
+    public String trimFrom(@Readonly CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public String trimLeadingFrom(CharSequence sequence) {
+    public String trimLeadingFrom(@Readonly CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public String trimTrailingFrom(CharSequence sequence) {
+    public String trimTrailingFrom(@Readonly CharSequence sequence) {
       return sequence.toString();
     }
 
     @Override
-    public @IndexOrHigh("#1") int countIn(CharSequence sequence) {
+    public @IndexOrHigh("#1") int countIn(@Readonly CharSequence sequence) {
       checkNotNull(sequence);
       return 0;
     }
@@ -1544,17 +1544,17 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public boolean matchesAllOf(CharSequence sequence) {
+    public boolean matchesAllOf(@Readonly CharSequence sequence) {
       return original.matchesNoneOf(sequence);
     }
 
     @Override
-    public boolean matchesNoneOf(CharSequence sequence) {
+    public boolean matchesNoneOf(@Readonly CharSequence sequence) {
       return original.matchesAllOf(sequence);
     }
 
     @Override
-    public @IndexOrHigh("#1") int countIn(CharSequence sequence) {
+    public @IndexOrHigh("#1") int countIn(@Readonly CharSequence sequence) {
       return sequence.length() - original.countIn(sequence);
     }
 
@@ -1657,7 +1657,7 @@ public abstract class CharMatcher implements Predicate<Character> {
     }
 
     @Override
-    public String replaceFrom(CharSequence sequence, char replacement) {
+    public String replaceFrom(@Readonly CharSequence sequence, char replacement) {
       return sequence.toString().replace(match, replacement);
     }
 
@@ -1768,7 +1768,7 @@ public abstract class CharMatcher implements Predicate<Character> {
 
     private final char[] chars;
 
-    public AnyOf(CharSequence chars) {
+    public AnyOf(@Readonly CharSequence chars) {
       this.chars = chars.toString().toCharArray();
       Arrays.sort(this.chars);
     }

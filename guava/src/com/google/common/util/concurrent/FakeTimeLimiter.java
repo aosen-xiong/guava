@@ -24,6 +24,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A TimeLimiter implementation which actually does not attempt to limit time at all. This may be
@@ -52,7 +53,7 @@ public final class FakeTimeLimiter implements TimeLimiter {
   @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
   @ParametricNullness
-  public <T extends @Nullable Object> T callWithTimeout(
+  public <T extends @Nullable @Readonly Object> T callWithTimeout(
       Callable<T> callable, long timeoutDuration, TimeUnit timeoutUnit) throws ExecutionException {
     checkNotNull(callable);
     checkNotNull(timeoutUnit);
@@ -71,7 +72,7 @@ public final class FakeTimeLimiter implements TimeLimiter {
   @CanIgnoreReturnValue // TODO(kak): consider removing this
   @Override
   @ParametricNullness
-  public <T extends @Nullable Object> T callUninterruptiblyWithTimeout(
+  public <T extends @Nullable @Readonly Object> T callUninterruptiblyWithTimeout(
       Callable<T> callable, long timeoutDuration, TimeUnit timeoutUnit) throws ExecutionException {
     return callWithTimeout(callable, timeoutDuration, timeoutUnit);
   }

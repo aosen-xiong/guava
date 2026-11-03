@@ -119,7 +119,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    * ValueForKeyIterator} in constant time.
    */
 
-  static final class Node<K extends @Nullable Object, V extends @Nullable Object>
+  @ReceiverDependentMutable
+  static final class Node<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends AbstractMapEntry<K, V> {
     @ParametricNullness final K key;
     @ParametricNullness V value;
@@ -147,7 +148,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
     @Override
     @ParametricNullness
-    public V setValue(@ParametricNullness V newValue) {
+    public V setValue(@Mutable Node<K, V> this, @ParametricNullness V newValue) {
       V result = value;
       this.value = newValue;
       return result;
@@ -159,7 +160,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     Node<K, V> tail;
     int count;
 
-    KeyList(Node<K, V> firstNode) {
+    @SuppressWarnings("mutability:illegal.field.write") // PICO constructor fix: a KeyList is created only by addNode of a @Mutable multimap, for the node that call has just linked, and the constructor resets that node's sibling links while the KeyList is being initialized
+    KeyList(@ReceiverDependentMutable Node<K, V> firstNode) {
       this.head = firstNode;
       this.tail = firstNode;
       firstNode.previousSibling = null;
@@ -170,7 +172,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @CheckForNull private transient Node<K, V> head; // the head for all keys
   @CheckForNull private transient Node<K, V> tail; // the tail for all keys
-  private transient Map<K, KeyList<K, V>> keyToKeyList;
+  private transient Map<K, @ReceiverDependentMutable KeyList<K, V>> keyToKeyList;
   private transient int size;
 
   /*
@@ -206,7 +208,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    * @param multimap the multimap whose contents are copied to this multimap
    */
   public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      LinkedListMultimap<K, V> create(Multimap<? extends K, ? extends V> multimap) {
+      LinkedListMultimap<K, V> create(@Readonly Multimap<? extends K, ? extends V> multimap) {
     return new LinkedListMultimap<>(multimap);
   }
 
@@ -214,11 +216,13 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     this(12);
   }
 
+  @SuppressWarnings("mutability:assignment.type.incompatible") // PICO constructor fix: the constructor stores a fresh @Mutable map into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do
   private LinkedListMultimap(int expectedKeys) {
     keyToKeyList = Platform.newHashMapWithExpectedSize(expectedKeys);
   }
 
-  private LinkedListMultimap(Multimap<? extends K, ? extends V> multimap) {
+  @SuppressWarnings("mutability:method.invocation.invalid") // PICO constructor fix: the constructor calls its own mutator while the object is being initialized, as jdk#4's collection constructors do
+  private LinkedListMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     this(multimap.keySet().size());
     putAll(multimap);
   }
@@ -288,7 +292,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    * Removes the specified node from the linked list. This method is only intended to be used from
    * the {@code Iterator} classes. See also {@link LinkedListMultimap#removeAllNodes(Object)}.
    */
-  private void removeNode(@Mutable LinkedListMultimap<K,V> this, @Readonly Node<K, V> node) {
+  private void removeNode(@Mutable LinkedListMultimap<K,V> this, Node<K, V> node) {
     if (node.previous != null) {
       node.previous.next = node.next;
     } else { // node was head
@@ -336,12 +340,12 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   /** An {@code Iterator} over all nodes. */
-  @ReceiverDependentMutable
-  private class NodeIterator implements ListIterator<Entry<K, V>> {
+  @Mutable
+  private class NodeIterator implements ListIterator<@ReceiverDependentMutable Entry<K, V>> {
     int nextIndex;
-    @CheckForNull @Assignable Node<K, V> next;
-    @CheckForNull @Assignable Node<K, V> current;
-    @CheckForNull @Assignable Node<K, V> previous;
+    @CheckForNull @Readonly Node<K, V> next;
+    @CheckForNull @Readonly Node<K, V> current;
+    @CheckForNull @Readonly Node<K, V> previous;
     int expectedModCount = modCount;
 
     NodeIterator(int index) {
@@ -376,7 +380,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
     @CanIgnoreReturnValue
     @Override
-    public Node<K, V> next() {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the nodes have the enclosing multimap's mutability, but the cursor holds them @Readonly, and in the iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public @ReceiverDependentMutable Node<K, V> next() {
       checkForConcurrentModification();
       if (next == null) {
         throw new NoSuchElementException();
@@ -388,7 +393,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     }
 
     @Override
-    public void remove(@Mutable NodeIterator this) {
+    @SuppressWarnings("mutability:argument.type.incompatible") // the cursor holds the multimap's nodes @Readonly because it does not own them. The receiver states a @Mutable enclosing multimap, whose nodes are then mutable, but no qualifier ties a node to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public void remove(@Mutable LinkedListMultimap<K, V>.@Mutable NodeIterator this) {
       checkForConcurrentModification();
       checkState(current != null, "no calls to next() since the last call to remove()");
       if (current != next) { // after call to next()
@@ -410,7 +416,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
     @CanIgnoreReturnValue
     @Override
-    public Node<K, V> previous() {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:override.return.invalid"}) // the nodes have the enclosing multimap's mutability, but the cursor holds them @Readonly, and in the iterator's supertype a receiver-dependent qualifier is relative to the iterator, a fresh @Mutable cursor. There is no qualifier relative to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public @ReceiverDependentMutable Node<K, V> previous() {
       checkForConcurrentModification();
       if (previous == null) {
         throw new NoSuchElementException();
@@ -432,26 +439,27 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     }
 
     @Override
-    public void set(@Mutable NodeIterator this, Entry<K, V> e) {
+    public void set(@Mutable NodeIterator this, @Readonly Entry<K, V> e) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public void add(@Mutable NodeIterator this, Entry<K, V> e) {
+    public void add(@Mutable NodeIterator this, @Readonly Entry<K, V> e) {
       throw new UnsupportedOperationException();
     }
 
-    void setValue(@ParametricNullness V value) {
+    @SuppressWarnings("mutability:illegal.field.write") // the cursor holds the multimap's nodes @Readonly because it does not own them. The receiver states a @Mutable enclosing multimap, whose nodes are then mutable, but no qualifier ties a node to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    void setValue(@Mutable LinkedListMultimap<K, V>.@Mutable NodeIterator this, @ParametricNullness V value) {
       checkState(current != null);
       current.value = value;
     }
   }
 
   /** An {@code Iterator} over distinct keys in key head order. */
-  @ReceiverDependentMutable private class DistinctKeyIterator implements Iterator<K> {
-    final Set<K> seenKeys = Sets.<K>newHashSetWithExpectedSize(keySet().size());
-    @CheckForNull @Assignable Node<K, V> next = head;
-    @CheckForNull @Assignable Node<K, V> current;
+  @Mutable private class DistinctKeyIterator implements Iterator<K> {
+    final @Mutable Set<K> seenKeys = Sets.<K>newHashSetWithExpectedSize(keySet().size());
+    @CheckForNull @Readonly Node<K, V> next = head;
+    @CheckForNull @Readonly Node<K, V> current;
     int expectedModCount = modCount;
 
     private void checkForConcurrentModification() {
@@ -482,7 +490,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     }
 
     @Override
-    public void remove() {
+    public void remove(@Mutable LinkedListMultimap<K, V>.@Mutable DistinctKeyIterator this) {
       checkForConcurrentModification();
       checkState(current != null, "no calls to next() since the last call to remove()");
       removeAllNodes(current.key);
@@ -495,9 +503,9 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   private class ValueForKeyIterator implements ListIterator<V> {
     @ParametricNullness final K key;
     int nextIndex;
-    @CheckForNull @Assignable Node<K, V> next;
-    @CheckForNull @Assignable Node<K, V> current;
-    @CheckForNull @Assignable Node<K, V> previous;
+    @CheckForNull @Readonly Node<K, V> next;
+    @CheckForNull @Readonly Node<K, V> current;
+    @CheckForNull @Readonly Node<K, V> previous;
 
     /** Constructs a new iterator over all values for the specified key. */
     ValueForKeyIterator(@ParametricNullness K key) {
@@ -581,7 +589,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     }
 
     @Override
-    public void remove() {
+    @SuppressWarnings("mutability:argument.type.incompatible") // the cursor holds the multimap's nodes @Readonly because it does not own them. The receiver states a @Mutable enclosing multimap, whose nodes are then mutable, but no qualifier ties a node to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public void remove(@Mutable LinkedListMultimap<K, V>.@Mutable ValueForKeyIterator this) {
       checkState(current != null, "no calls to next() since the last call to remove()");
       if (current != next) { // after call to next()
         previous = current.previousSibling;
@@ -594,13 +603,15 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     }
 
     @Override
-    public void set(@ParametricNullness V value) {
+    @SuppressWarnings("mutability:illegal.field.write") // the cursor holds the multimap's nodes @Readonly because it does not own them. The receiver states a @Mutable enclosing multimap, whose nodes are then mutable, but no qualifier ties a node to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public void set(@Mutable LinkedListMultimap<K, V>.@Mutable ValueForKeyIterator this, @ParametricNullness V value) {
       checkState(current != null);
       current.value = value;
     }
 
     @Override
-    public void add(@ParametricNullness V value) {
+    @SuppressWarnings("mutability:argument.type.incompatible") // the cursor holds the multimap's nodes @Readonly because it does not own them. The receiver states a @Mutable enclosing multimap, whose nodes are then mutable, but no qualifier ties a node to the enclosing instance: https://github.com/eisop/checker-framework/issues/2322
+    public void add(@Mutable LinkedListMultimap<K, V>.@Mutable ValueForKeyIterator this, @ParametricNullness V value) {
       previous = addNode(key, value, next);
       nextIndex++;
       current = null;
@@ -623,13 +634,13 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @Pure
   @Override
-  public boolean containsKey(@CheckForNull @UnknownSignedness Object key) {
+  public boolean containsKey(@CheckForNull @UnknownSignedness @Readonly Object key) {
     return keyToKeyList.containsKey(key);
   }
 
   @Pure
   @Override
-  public boolean containsValue(@CheckForNull @UnknownSignedness Object value) {
+  public boolean containsValue(@CheckForNull @UnknownSignedness @Readonly Object value) {
     return values().contains(value);
   }
 
@@ -661,8 +672,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> replaceValues(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, Iterable<? extends V> values) {
-    List<V> oldValues = getCopy(key);
+  public @Readonly List<V> replaceValues(@Mutable LinkedListMultimap<K,V> this, @ParametricNullness K key, @Readonly Iterable<? extends V> values) {
+    @Readonly List<V> oldValues = getCopy(key);
     ListIterator<V> keyValues = new ValueForKeyIterator(key);
     Iterator<? extends V> newValues = values.iterator();
 
@@ -686,7 +697,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
     return oldValues;
   }
 
-  private List<V> getCopy(@ParametricNullness K key) {
+  private @Readonly List<V> getCopy(@ParametricNullness K key) {
     return unmodifiableList(Lists.newArrayList(new ValueForKeyIterator(key)));
   }
 
@@ -697,7 +708,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @CanIgnoreReturnValue
   @Override
-  public List<V> removeAll(@CheckForNull Object key) {
+  public @Readonly List<V> removeAll(@Mutable LinkedListMultimap<K, V> this, @CheckForNull @Readonly Object key) {
     /*
      * Safe because all we do is remove values for the key, not add them. (If we wanted to make sure
      * to call getCopy and removeAllNodes only with a true K, then we could check containsKey first.
@@ -731,8 +742,8 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    * <p>The returned list is not serializable and does not have random access.
    */
   @Override
-  public List<V> get(@ParametricNullness final K key) {
-    return new AbstractSequentialList<V>() {
+  public @ReceiverDependentMutable List<V> get(@ReceiverDependentMutable LinkedListMultimap<K, V> this, @ParametricNullness final K key) {
+    return new @ReceiverDependentMutable AbstractSequentialList<V>() {
       @Pure
       @Override
       public @NonNegative int size() {
@@ -748,8 +759,9 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
   }
 
   @Override
-  Set<K> createKeySet() {
+  @ReceiverDependentMutable Set<K> createKeySet(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class KeySetImpl extends Sets.ImprovedAbstractSet<K> {
       @Override
       public @NonNegative int size() {
@@ -763,21 +775,21 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
       @Pure
       @Override
-      public boolean contains(@CheckForNull @UnknownSignedness Object key) { // for performance
+      public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object key) { // for performance
         return containsKey(key);
       }
 
       @Override
-      public boolean remove(@CheckForNull @UnknownSignedness Object o) { // for performance
+      public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) { // for performance
         return !LinkedListMultimap.this.removeAll(o).isEmpty();
       }
     }
-    return new KeySetImpl();
+    return new @ReceiverDependentMutable KeySetImpl();
   }
 
   @Override
-  Multiset<K> createKeys() {
-    return new Multimaps.Keys<K, V>(this);
+  @ReceiverDependentMutable Multiset<K> createKeys(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+    return new Multimaps.@ReceiverDependentMutable Keys<K, V>(this);
   }
 
   /**
@@ -790,13 +802,14 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @SideEffectFree
   @Override
-  public List<V> values() {
-    return (List<V>) super.values();
+  public @ReceiverDependentMutable List<V> values(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+    return (@ReceiverDependentMutable List<V>) super.values();
   }
 
   @Override
-  List<V> createValues() {
+  @ReceiverDependentMutable List<V> createValues(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
+    @ReceiverDependentMutable
     class ValuesImpl extends AbstractSequentialList<V> {
       @Override
       public @NonNegative int size() {
@@ -804,7 +817,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
       }
 
       @Override
-      public ListIterator<V> listIterator(int index) {
+      public @Mutable ListIterator<V> listIterator(@ReceiverDependentMutable ValuesImpl this, int index) {
         final NodeIterator nodeItr = new NodeIterator(index);
         return new TransformedListIterator<Entry<K, V>, V>(nodeItr) {
           @Override
@@ -820,7 +833,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
         };
       }
     }
-    return new ValuesImpl();
+    return new @ReceiverDependentMutable ValuesImpl();
   }
 
   /**
@@ -841,43 +854,46 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
    */
   @SideEffectFree
   @Override
-  public List<Entry<K, V>> entries() {
-    return (List<Entry<K, V>>) super.entries();
+  public @ReceiverDependentMutable List<@ReceiverDependentMutable Entry<K, V>> entries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+    return (@ReceiverDependentMutable List<@ReceiverDependentMutable Entry<K, V>>) super.entries();
   }
 
   @Override
-  List<Entry<K, V>> createEntries() {
+  @ReceiverDependentMutable List<@ReceiverDependentMutable Entry<K, V>> createEntries(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     @WeakOuter
-    class EntriesImpl extends AbstractSequentialList<Entry<K, V>> {
+    @ReceiverDependentMutable
+    class EntriesImpl extends AbstractSequentialList<@ReceiverDependentMutable Entry<K, V>> {
       @Override
       public @NonNegative int size() {
         return size;
       }
 
       @Override
-      public ListIterator<Entry<K, V>> listIterator(int index) {
+      @SuppressWarnings("mutability:return.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+      public @Mutable ListIterator<@ReceiverDependentMutable Entry<K, V>> listIterator(int index) {
         return new NodeIterator(index);
       }
 
       @Override
-      public void forEach(Consumer<? super Entry<K, V>> action) {
+      @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in a local or anonymous class is @Mutable, not the enclosing instance's qualifier, and the class has no receiver syntax to state it: https://github.com/eisop/checker-framework/issues/2322
+      public void forEach(Consumer<? super @ReceiverDependentMutable Entry<K, V>> action) {
         checkNotNull(action);
         for (Node<K, V> node = head; node != null; node = node.next) {
           action.accept(node);
         }
       }
     }
-    return new EntriesImpl();
+    return new @ReceiverDependentMutable EntriesImpl();
   }
 
   @Override
-  Iterator<Entry<K, V>> entryIterator() {
+  @Mutable Iterator<@ReceiverDependentMutable Entry<K, V>> entryIterator(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
     throw new AssertionError("should never be called");
   }
 
   @Override
-  Map<K, Collection<V>> createAsMap() {
-    return new Multimaps.AsMap<>(this);
+  @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> createAsMap(@ReceiverDependentMutable LinkedListMultimap<K, V> this) {
+    return new Multimaps.@ReceiverDependentMutable AsMap<>(this);
   }
 
   /**
@@ -898,7 +914,7 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable LinkedListMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     keyToKeyList = Maps.newLinkedHashMap();
     int size = stream.readInt();
@@ -917,15 +933,15 @@ public class LinkedListMultimap<K extends @Nullable @Immutable Object, V extends
 
 @Pure
 @Override
-public boolean containsEntry(@Nullable Object arg0, @Nullable Object arg1) { return super.containsEntry(arg0, arg1); }
+public boolean containsEntry(@Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.containsEntry(arg0, arg1); }
 
 @Pure
 @Override
-public boolean equals(@Nullable Object arg0) { return super.equals(arg0); }
+public boolean equals(@Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
 public boolean remove(@Mutable LinkedListMultimap<K,V> this, @Nullable @Readonly Object arg0, @Nullable @Readonly Object arg1) { return super.remove(arg0, arg1); }
 
 @Override
-public @ReceiverDependentMutable Map<K, Collection<V>> asMap() { return super.asMap(); }
+public @ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> asMap() { return super.asMap(); }
 }

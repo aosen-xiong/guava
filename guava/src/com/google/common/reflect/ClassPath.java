@@ -50,6 +50,9 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Logger;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
 /**
@@ -203,11 +206,12 @@ public final class ClassPath {
    *
    * @since 14.0
    */
+  @Immutable
   public static class ResourceInfo {
     private final File file;
     private final String resourceName;
 
-    final ClassLoader loader;
+    final @Mutable ClassLoader loader;
 
     static ResourceInfo of(File file, String resourceName, ClassLoader loader) {
       if (resourceName.endsWith(CLASS_FILE_NAME_EXTENSION)) {
@@ -278,7 +282,7 @@ public final class ClassPath {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof ResourceInfo) {
         ResourceInfo that = (ResourceInfo) obj;
         return resourceName.equals(that.resourceName) && loader == that.loader;
@@ -298,6 +302,7 @@ public final class ClassPath {
    *
    * @since 14.0
    */
+  @Immutable
   public static final class ClassInfo extends ResourceInfo {
     private final String className;
 
@@ -407,9 +412,10 @@ public final class ClassPath {
    * Represents a single location (a directory or a jar file) in the class path and is responsible
    * for scanning resources from this location.
    */
+  @Immutable
   static final class LocationInfo {
     final File home;
-    private final ClassLoader classloader;
+    private final @Mutable ClassLoader classloader;
 
     LocationInfo(File home, ClassLoader classloader) {
       this.home = checkNotNull(home);
@@ -551,7 +557,7 @@ public final class ClassPath {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object obj) {
+    public boolean equals(@CheckForNull @Readonly Object obj) {
       if (obj instanceof LocationInfo) {
         LocationInfo that = (LocationInfo) obj;
         return home.equals(that.home) && classloader.equals(that.classloader);

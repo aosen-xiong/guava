@@ -30,6 +30,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Funnels for common types. All implementations are serializable.
@@ -43,7 +45,7 @@ public final class Funnels {
   private Funnels() {}
 
   /** Returns a funnel that extracts the bytes from a {@code byte} array. */
-  public static Funnel<byte[]> byteArrayFunnel() {
+  public static @Immutable Funnel<byte[]> byteArrayFunnel() {
     return ByteArrayFunnel.INSTANCE;
   }
 
@@ -69,7 +71,7 @@ public final class Funnels {
    *
    * @since 15.0 (since 11.0 as {@code Funnels.stringFunnel()}.
    */
-  public static Funnel<CharSequence> unencodedCharsFunnel() {
+  public static @Immutable Funnel<CharSequence> unencodedCharsFunnel() {
     return UnencodedCharsFunnel.INSTANCE;
   }
 
@@ -116,7 +118,7 @@ public final class Funnels {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof StringCharsetFunnel) {
         StringCharsetFunnel funnel = (StringCharsetFunnel) o;
         return this.charset.equals(funnel.charset);
@@ -129,7 +131,7 @@ public final class Funnels {
       return StringCharsetFunnel.class.hashCode() ^ charset.hashCode();
     }
 
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return new SerializedForm(charset);
     }
 
@@ -144,7 +146,7 @@ public final class Funnels {
         this.charsetCanonicalName = charset.name();
       }
 
-      private Object readResolve() {
+      private @Readonly Object readResolve() {
         return stringFunnel(Charset.forName(charsetCanonicalName));
       }
 
@@ -157,7 +159,7 @@ public final class Funnels {
    *
    * @since 13.0
    */
-  public static Funnel<Integer> integerFunnel() {
+  public static @Immutable Funnel<Integer> integerFunnel() {
     return IntegerFunnel.INSTANCE;
   }
 
@@ -181,12 +183,12 @@ public final class Funnels {
    *
    * @since 15.0
    */
-  public static <E extends @Nullable Object> Funnel<Iterable<? extends E>> sequentialFunnel(
+  public static <E extends @Nullable @Readonly Object> Funnel<Iterable<? extends E>> sequentialFunnel(
       Funnel<E> elementFunnel) {
     return new SequentialFunnel<>(elementFunnel);
   }
 
-  private static class SequentialFunnel<E extends @Nullable Object>
+  private static class SequentialFunnel<E extends @Nullable @Readonly Object>
       implements Funnel<Iterable<? extends E>>, Serializable {
     private final Funnel<E> elementFunnel;
 
@@ -207,7 +209,7 @@ public final class Funnels {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof SequentialFunnel) {
         SequentialFunnel<?> funnel = (SequentialFunnel<?>) o;
         return elementFunnel.equals(funnel.elementFunnel);
@@ -226,7 +228,7 @@ public final class Funnels {
    *
    * @since 13.0
    */
-  public static Funnel<Long> longFunnel() {
+  public static @Immutable Funnel<Long> longFunnel() {
     return LongFunnel.INSTANCE;
   }
 

@@ -62,7 +62,7 @@ public interface Cache<K extends @Immutable Object, V> {
    */
   @CheckForNull
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this?
-  V getIfPresent(@CompatibleWith("K") Object key);
+  V getIfPresent(@CompatibleWith("K") @Readonly Object key);
 
   /**
    * Returns the value associated with {@code key} in this cache, obtaining that value from {@code
@@ -111,7 +111,7 @@ public interface Cache<K extends @Immutable Object, V> {
    * @since 11.0
    */
   @CanIgnoreReturnValue // TODO(b/27479612): consider removing this
-  V get(K key, Callable<? extends V> loader) throws ExecutionException;
+  V get(@Mutable Cache<K, V> this, K key, Callable<? extends V> loader) throws ExecutionException;
 
   /**
    * Returns a map of the values associated with {@code keys} in this cache. The returned map will
@@ -184,7 +184,7 @@ public interface Cache<K extends @Immutable Object, V> {
    * concurrent use, but if the cache is modified (including by eviction) after the iterator is
    * created, it is undefined which of the changes (if any) will be reflected in that iterator.
    */
-  ConcurrentMap<K, V> asMap();
+  @ReceiverDependentMutable ConcurrentMap<K, V> asMap();
 
   /**
    * Performs any pending maintenance operations needed by the cache. Exactly which activities are

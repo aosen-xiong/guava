@@ -98,15 +98,15 @@ public final class MoreCollectors {
   private static final class ToOptionalState {
     static final int MAX_EXTRAS = 4;
 
-    @CheckForNull Object element;
-    List<Object> extras;
+    @CheckForNull @Readonly Object element;
+    List<@Readonly Object> extras;
 
+    @SuppressWarnings("mutability:assignment.type.incompatible") // an empty immutable placeholder: add and combine replace it with a fresh ArrayList before their first write, so nothing is ever written to the empty list
     ToOptionalState() {
       element = null;
       extras = emptyList();
     }
 
-    @SuppressWarnings("mutability") // Replaced as mutable list
     IllegalArgumentException multiples(boolean overflow) {
       StringBuilder sb =
           new StringBuilder().append("expected one element but was: <").append(element);
@@ -120,8 +120,7 @@ public final class MoreCollectors {
       throw new IllegalArgumentException(sb.toString());
     }
 
-    @SuppressWarnings("mutability") // Replaced as mutable list
-    void add(Object o) {
+    void add(@Readonly Object o) {
       checkNotNull(o);
       if (element == null) {
         this.element = o;
@@ -136,7 +135,6 @@ public final class MoreCollectors {
       }
     }
 
-    @SuppressWarnings("mutability") // Replaced as mutable list
     ToOptionalState combine(ToOptionalState other) {
       if (element == null) {
         return other;
@@ -157,7 +155,7 @@ public final class MoreCollectors {
       }
     }
 
-    Optional<Object> getOptional() {
+    Optional<@Readonly Object> getOptional() {
       if (extras.isEmpty()) {
         return Optional.ofNullable(element);
       } else {
@@ -165,7 +163,7 @@ public final class MoreCollectors {
       }
     }
 
-    Object getElement() {
+    @Readonly Object getElement() {
       if (element == null) {
         throw new NoSuchElementException();
       } else if (extras.isEmpty()) {

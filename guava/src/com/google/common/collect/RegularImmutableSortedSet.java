@@ -38,6 +38,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.dataflow.qual.SideEffectFree;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * An immutable sorted set with one or more elements. TODO(jlevy): Consider separate class for a
@@ -51,20 +52,20 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @SuppressWarnings({"serial", "rawtypes"})
 @ElementTypesAreNonnullByDefault
 @Immutable
-final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
-  static final RegularImmutableSortedSet<Comparable> NATURAL_EMPTY_SET =
-      new RegularImmutableSortedSet<>(ImmutableList.<Comparable>of(), Ordering.natural());
+final class RegularImmutableSortedSet<E extends @Immutable Object> extends ImmutableSortedSet<E> {
+  static final RegularImmutableSortedSet<@Immutable Comparable> NATURAL_EMPTY_SET =
+      new RegularImmutableSortedSet<>(ImmutableList.<@Immutable Comparable>of(), Ordering.natural());
 
   private final transient ImmutableList<E> elements;
 
-  RegularImmutableSortedSet(ImmutableList<E> elements, Comparator<? super E> comparator) {
+  RegularImmutableSortedSet(ImmutableList<E> elements, @Readonly Comparator<? super E> comparator) {
     super(comparator);
     this.elements = elements;
   }
 
   @Override
   @CheckForNull
-  Object[] internalArray() {
+  @Readonly Object @Readonly [] internalArray() {
     return elements.internalArray();
   }
 
@@ -79,13 +80,13 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return elements.iterator();
   }
 
   @GwtIncompatible // NavigableSet
   @Override
-  public UnmodifiableIterator<E> descendingIterator() {
+  public @Mutable UnmodifiableIterator<E> descendingIterator() {
     return elements.reverse().iterator();
   }
 
@@ -107,7 +108,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Pure
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object o) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object o) {
     try {
       return o != null && unsafeBinarySearch(o) >= 0;
     } catch (ClassCastException e) {
@@ -117,7 +118,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Pure
   @Override
-  public boolean containsAll(Collection<?> targets) {
+  public boolean containsAll(@Readonly Collection<?> targets) {
     // TODO(jlevy): For optimal performance, use a binary search when
     // targets.size() < size() / log(size())
     // TODO(kevinb): see if we can share code with OrderedIterator after it
@@ -178,13 +179,13 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  int copyIntoArray(@Nullable Object[] dst, int offset) {
+  int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
     return elements.copyIntoArray(dst, offset);
   }
 
   @Pure
   @Override
-  public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+  public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
     if (object == this) {
       return true;
     }
@@ -304,8 +305,8 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   // compare two elements, it'll throw a CCE. Only methods that are specified to
   // throw CCE should call this.
   @SuppressWarnings("unchecked")
-  Comparator<Object> unsafeComparator() {
-    return (Comparator<Object>) comparator;
+  @Readonly Comparator<@Readonly Object> unsafeComparator() {
+    return (@Readonly Comparator<@Readonly Object>) comparator;
   }
 
   RegularImmutableSortedSet<E> getSubSet(int newFromIndex, int newToIndex) {
@@ -320,7 +321,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   }
 
   @Override
-  int indexOf(@CheckForNull Object target) {
+  int indexOf(@CheckForNull @Readonly Object target) {
     if (target == null) {
       return -1;
     }
@@ -340,7 +341,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
 
   @Override
   ImmutableSortedSet<E> createDescendingSet() {
-    Comparator<? super E> reversedOrder = Collections.reverseOrder(comparator);
+    @Readonly Comparator<? super E> reversedOrder = Collections.reverseOrder(comparator);
     return isEmpty()
         ? emptySet(reversedOrder)
         : new RegularImmutableSortedSet<E>(elements.reverse(), reversedOrder);
@@ -351,7 +352,7 @@ final class RegularImmutableSortedSet<E> extends ImmutableSortedSet<E> {
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

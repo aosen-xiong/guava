@@ -51,11 +51,11 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
-import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A {@link List} whose contents will never change, with many other important properties detailed at
@@ -152,7 +152,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6) {
     return construct(e1, e2, e3, e4, e5, e6);
   }
 
@@ -161,7 +161,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
     return construct(e1, e2, e3, e4, e5, e6, e7);
   }
 
@@ -170,7 +170,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
     return construct(e1, e2, e3, e4, e5, e6, e7, e8);
   }
 
@@ -179,7 +179,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if any element is null
    */
-  public static <E extends @NonNull Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> of(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
     return construct(e1, e2, e3, e4, e5, e6, e7, e8, e9);
   }
 
@@ -243,7 +243,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if {@code elements} contains a null element
    */
-  public static <E extends @NonNull Object> ImmutableList<E> copyOf(Iterable<? extends E> elements) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Readonly Iterable<? extends E> elements) {
     checkNotNull(elements); // TODO(kevinb): is this here only for GWT?
     return (elements instanceof Collection)
         ? copyOf((Collection<? extends E>) elements)
@@ -267,7 +267,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if {@code elements} contains a null element
    */
-  public static <E extends @NonNull Object> ImmutableList<E> copyOf(Collection<? extends E> elements) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Readonly Collection<? extends E> elements) {
     if (elements instanceof ImmutableCollection) {
       @SuppressWarnings("unchecked") // all supported methods are covariant
       ImmutableList<E> list = ((ImmutableCollection<E>) elements).asList();
@@ -281,7 +281,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    *
    * @throws NullPointerException if {@code elements} contains a null element
    */
-  public static <E extends @NonNull Object> ImmutableList<E> copyOf(Iterator<? extends E> elements) {
+  public static <E extends @NonNull @Readonly Object> ImmutableList<E> copyOf(@Mutable Iterator<? extends E> elements) {
     // We special-case for 0 or 1 elements, but going further is madness.
     if (!elements.hasNext()) {
       return of();
@@ -326,9 +326,9 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    * @throws NullPointerException if any element in the input is null
    * @since 21.0
    */
-  public static <E extends Comparable<? super E>> ImmutableList<E> sortedCopyOf(
-      Iterable<? extends E> elements) {
-    Comparable<?>[] array = Iterables.toArray(elements, new Comparable<?>[0]);
+  public static <E extends @Immutable Comparable<? super E>> ImmutableList<E> sortedCopyOf(
+      @Readonly Iterable<? extends E> elements) {
+    @Readonly Comparable<?>[] array = Iterables.toArray(elements, new Comparable<?>[0]);
     checkElementsNotNull((Object[]) array);
     Arrays.sort(array);
     return asImmutableList(array);
@@ -350,7 +350,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    * @since 21.0
    */
   public static <E extends @Readonly @NonNull Object> ImmutableList<E> sortedCopyOf(
-      Comparator<? super E> comparator, Iterable<? extends E> elements) {
+      @Readonly Comparator<? super E> comparator, @Readonly Iterable<? extends E> elements) {
     checkNotNull(comparator);
     @SuppressWarnings("unchecked") // all supported methods are covariant
     E[] array = (E[]) Iterables.toArray(elements);
@@ -406,18 +406,18 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   // This declaration is needed to make List.iterator() and
   // ImmutableCollection.iterator() consistent.
   @Override
-  public UnmodifiableIterator<E> iterator() {
+  public @Mutable UnmodifiableIterator<E> iterator() {
     return listIterator();
   }
 
   @Override
-  public UnmodifiableListIterator<E> listIterator() {
+  public @Mutable UnmodifiableListIterator<E> listIterator() {
     return listIterator(0);
   }
 
   @Override
-  public UnmodifiableListIterator<E> listIterator(int index) {
-    return new @Immutable AbstractIndexedListIterator<E>(size(), index) {
+  public @Mutable UnmodifiableListIterator<E> listIterator(int index) {
+    return new @Mutable AbstractIndexedListIterator<E>(size(), index) {
       @Override
       protected E get(int index) {
         return ImmutableList.this.get(index);
@@ -524,7 +524,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -539,7 +539,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final boolean addAll(int index, Collection<? extends E> newElements) {
+  public final boolean addAll(int index, @Readonly Collection<? extends E> newElements) {
     throw new UnsupportedOperationException();
   }
 
@@ -606,7 +606,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   @Deprecated
   @Override
   @DoNotCall("Always throws UnsupportedOperationException")
-  public final void sort(@Nullable Comparator<? super E> c) {
+  public final void sort(@Nullable @Readonly Comparator<? super E> c) {
     throw new UnsupportedOperationException();
   }
 
@@ -715,7 +715,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -726,7 +726,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   }
 
   @Override
-  public int hashCode(@UnknownSignedness @Readonly ImmutableList<E> this) {
+  public int hashCode(@UnknownSignedness ImmutableList<E> this) {
     int hashCode = 1;
     int n = size();
     for (int i = 0; i < n; i++) {
@@ -744,13 +744,13 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
    */
   @J2ktIncompatible // serialization
   static class SerializedForm implements Serializable {
-    final Object @Readonly [] elements;
+    final @Readonly Object @Readonly [] elements;
 
-    SerializedForm(Object @Readonly [] elements) {
+    SerializedForm(@Readonly Object @Readonly [] elements) {
       this.elements = elements;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       return copyOf(elements);
     }
 
@@ -765,7 +765,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm(toArray());
   }
 
@@ -874,7 +874,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
       return this;
     }
 
-    private void add(@Nullable Object[] elements, int n) {
+    private void add(@Nullable @Readonly Object @Readonly [] elements, int n) {
       getReadyToExpandTo(size + n);
       /*
        * The following call is not statically checked, since arraycopy accepts plain Object for its
@@ -897,7 +897,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterable<? extends E> elements) {
+    public Builder<E> addAll(@Readonly Iterable<? extends E> elements) {
       checkNotNull(elements);
       if (elements instanceof Collection) {
         Collection<?> collection = (Collection<?>) elements;
@@ -921,7 +921,7 @@ public abstract class ImmutableList<E extends @Readonly Object> extends Immutabl
      */
     @CanIgnoreReturnValue
     @Override
-    public Builder<E> addAll(Iterator<? extends E> elements) {
+    public Builder<E> addAll(@Mutable Iterator<? extends E> elements) {
       super.addAll(elements);
       return this;
     }

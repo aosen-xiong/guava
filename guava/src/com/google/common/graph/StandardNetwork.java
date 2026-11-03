@@ -28,6 +28,9 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Standard implementation of {@link Network} that supports the options supplied by {@link
@@ -49,14 +52,15 @@ import java.util.TreeMap;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
+@ReceiverDependentMutable
+class StandardNetwork<N extends @Immutable Object, E extends @Immutable Object> extends AbstractNetwork<N, E> {
   private final boolean isDirected;
   private final boolean allowsParallelEdges;
   private final boolean allowsSelfLoops;
   private final ElementOrder<N> nodeOrder;
   private final ElementOrder<E> edgeOrder;
 
-  final MapIteratorCache<N, NetworkConnections<N, E>> nodeConnections;
+  final MapIteratorCache<N, @ReceiverDependentMutable NetworkConnections<N, E>> nodeConnections;
 
   // We could make this a Map<E, EndpointPair<N>>. It would make incidentNodes(edge) slightly
   // faster, but also make Networks consume 5 to 20+% (increasing with average degree) more memory.
@@ -66,7 +70,7 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
   StandardNetwork(NetworkBuilder<? super N, ? super E> builder) {
     this(
         builder,
-        builder.nodeOrder.<N, NetworkConnections<N, E>>createMap(
+        builder.nodeOrder.<N, @ReceiverDependentMutable NetworkConnections<N, E>>createMap(
             builder.expectedNodeCount.or(DEFAULT_NODE_COUNT)),
         builder.edgeOrder.<E, N>createMap(builder.expectedEdgeCount.or(DEFAULT_EDGE_COUNT)));
   }
@@ -77,8 +81,8 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
    */
   StandardNetwork(
       NetworkBuilder<? super N, ? super E> builder,
-      Map<N, NetworkConnections<N, E>> nodeConnections,
-      Map<E, N> edgeToReferenceNode) {
+      @ReceiverDependentMutable Map<N, @ReceiverDependentMutable NetworkConnections<N, E>> nodeConnections,
+      @ReceiverDependentMutable Map<E, N> edgeToReferenceNode) {
     this.isDirected = builder.directed;
     this.allowsParallelEdges = builder.allowsParallelEdges;
     this.allowsSelfLoops = builder.allowsSelfLoops;
@@ -88,18 +92,18 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
     // methods that access the same node(s) repeatedly, such as Graphs.removeEdgesConnecting().
     this.nodeConnections =
         (nodeConnections instanceof TreeMap)
-            ? new MapRetrievalCache<N, NetworkConnections<N, E>>(nodeConnections)
-            : new MapIteratorCache<N, NetworkConnections<N, E>>(nodeConnections);
-    this.edgeToReferenceNode = new MapIteratorCache<>(edgeToReferenceNode);
+            ? new @ReceiverDependentMutable MapRetrievalCache<N, @ReceiverDependentMutable NetworkConnections<N, E>>(nodeConnections)
+            : new @ReceiverDependentMutable MapIteratorCache<N, @ReceiverDependentMutable NetworkConnections<N, E>>(nodeConnections);
+    this.edgeToReferenceNode = new @ReceiverDependentMutable MapIteratorCache<>(edgeToReferenceNode);
   }
 
   @Override
-  public Set<N> nodes() {
+  public @Readonly Set<N> nodes() {
     return nodeConnections.unmodifiableKeySet();
   }
 
   @Override
-  public Set<E> edges() {
+  public @Readonly Set<E> edges() {
     return edgeToReferenceNode.unmodifiableKeySet();
   }
 
@@ -129,7 +133,7 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
   }
 
   @Override
-  public Set<E> incidentEdges(N node) {
+  public @Readonly Set<E> incidentEdges(N node) {
     return nodeInvalidatableSet(checkedConnections(node).incidentEdges(), node);
   }
 
@@ -142,12 +146,12 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
   }
 
   @Override
-  public Set<N> adjacentNodes(N node) {
+  public @Readonly Set<N> adjacentNodes(N node) {
     return nodeInvalidatableSet(checkedConnections(node).adjacentNodes(), node);
   }
 
   @Override
-  public Set<E> edgesConnecting(N nodeU, N nodeV) {
+  public @Readonly Set<E> edgesConnecting(N nodeU, N nodeV) {
     NetworkConnections<N, E> connectionsU = checkedConnections(nodeU);
     if (!allowsSelfLoops && nodeU == nodeV) { // just an optimization, only check reference equality
       return ImmutableSet.of();
@@ -157,26 +161,26 @@ class StandardNetwork<N, E> extends AbstractNetwork<N, E> {
   }
 
   @Override
-  public Set<E> inEdges(N node) {
+  public @Readonly Set<E> inEdges(N node) {
     return nodeInvalidatableSet(checkedConnections(node).inEdges(), node);
   }
 
   @Override
-  public Set<E> outEdges(N node) {
+  public @Readonly Set<E> outEdges(N node) {
     return nodeInvalidatableSet(checkedConnections(node).outEdges(), node);
   }
 
   @Override
-  public Set<N> predecessors(N node) {
+  public @Readonly Set<N> predecessors(N node) {
     return nodeInvalidatableSet(checkedConnections(node).predecessors(), node);
   }
 
   @Override
-  public Set<N> successors(N node) {
+  public @Readonly Set<N> successors(N node) {
     return nodeInvalidatableSet(checkedConnections(node).successors(), node);
   }
 
-  final NetworkConnections<N, E> checkedConnections(N node) {
+  final @ReceiverDependentMutable NetworkConnections<N, E> checkedConnections(N node) {
     NetworkConnections<N, E> connections = nodeConnections.get(node);
     if (connections == null) {
       checkNotNull(node);

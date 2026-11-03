@@ -31,6 +31,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * {@code entrySet()} implementation for {@link ImmutableMap}.
@@ -41,14 +42,14 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @GwtCompatible(emulated = true)
 @ElementTypesAreNonnullByDefault
 @Immutable
-abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends ImmutableSet.CachingAsList<Entry<K, V>> {
+abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends ImmutableSet.CachingAsList<@Immutable Entry<K, V>> {
   @Immutable
   static final class RegularEntrySet<K extends @Immutable Object, V> extends ImmutableMapEntrySet<K, V> {
     private final transient ImmutableMap<K, V> map;
     private final transient ImmutableList<@Immutable Entry<K, V>> entries;
 
-    RegularEntrySet(ImmutableMap<K, V> map, @Immutable Entry<K, V>[] entries) {
-      this(map, ImmutableList.<Entry<K, V>>asImmutableList(entries));
+    RegularEntrySet(ImmutableMap<K, V> map, @Immutable Entry<K, V> @Readonly [] entries) {
+      this(map, ImmutableList.<@Immutable Entry<K, V>>asImmutableList(entries));
     }
 
     RegularEntrySet(ImmutableMap<K, V> map, ImmutableList<@Immutable Entry<K, V>> entries) {
@@ -63,27 +64,27 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
 
     @Override
     @GwtIncompatible("not used in GWT")
-    int copyIntoArray(@Nullable Object[] dst, int offset) {
+    int copyIntoArray(@Nullable @Readonly Object[] dst, int offset) {
       return entries.copyIntoArray(dst, offset);
     }
 
     @Override
-    public UnmodifiableIterator<Entry<K, V>> iterator() {
+    public @Mutable UnmodifiableIterator<@Immutable Entry<K, V>> iterator() {
       return entries.iterator();
     }
 
     @Override
-    public Spliterator<Entry<K, V>> spliterator() {
+    public Spliterator<@Immutable Entry<K, V>> spliterator() {
       return entries.spliterator();
     }
 
     @Override
-    public void forEach(Consumer<? super Entry<K, V>> action) {
+    public void forEach(Consumer<? super @Immutable Entry<K, V>> action) {
       entries.forEach(action);
     }
 
     @Override
-    ImmutableList<Entry<K, V>> createAsList() {
+    ImmutableList<@Immutable Entry<K, V>> createAsList() {
       return new RegularImmutableAsList<>(this, entries);
     }
 
@@ -92,7 +93,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
     @Override
     @J2ktIncompatible // serialization
     @GwtIncompatible // serialization
-    Object writeReplace() {
+    @Readonly Object writeReplace() {
       return super.writeReplace();
     }
   }
@@ -135,7 +136,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
   @GwtIncompatible // serialization
   @J2ktIncompatible
   @Override
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new EntrySetSerializedForm<>(map());
   }
 
@@ -147,7 +148,7 @@ abstract class ImmutableMapEntrySet<K extends @Immutable Object, V> extends Immu
 
   @GwtIncompatible // serialization
   @J2ktIncompatible
-  private static class EntrySetSerializedForm<K, V> implements Serializable {
+  private static class EntrySetSerializedForm<K extends @Immutable Object, V> implements Serializable {
     final ImmutableMap<K, V> map;
 
     EntrySetSerializedForm(ImmutableMap<K, V> map) {

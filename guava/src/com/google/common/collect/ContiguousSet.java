@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
@@ -54,7 +55,7 @@ import org.checkerframework.checker.mutability.qual.Immutable;
 @SuppressWarnings("rawtypes") // allow ungenerified Comparable types
 @ElementTypesAreNonnullByDefault
 @Immutable
-public abstract class ContiguousSet<C extends Comparable> extends ImmutableSortedSet<C> {
+public abstract class ContiguousSet<C extends @Immutable Comparable> extends ImmutableSortedSet<C> {
   /**
    * Returns a {@code ContiguousSet} containing the same values in the given domain {@linkplain
    * Range#contains contained} by the range.
@@ -63,7 +64,7 @@ public abstract class ContiguousSet<C extends Comparable> extends ImmutableSorte
    *     neither has an upper bound
    * @since 13.0
    */
-  public static <C extends Comparable> ContiguousSet<C> create(
+  public static <C extends @Immutable Comparable> ContiguousSet<C> create(
       Range<C> range, DiscreteDomain<C> domain) {
     checkNotNull(range);
     checkNotNull(domain);
@@ -260,7 +261,7 @@ public abstract class ContiguousSet<C extends Comparable> extends ImmutableSorte
    */
   @Deprecated
   @DoNotCall("Always throws UnsupportedOperationException")
-  public static <E> ImmutableSortedSet.Builder<E> builder() {
+  public static <E extends @Immutable Object> ImmutableSortedSet.Builder<E> builder() {
     throw new UnsupportedOperationException();
   }
 
@@ -269,7 +270,7 @@ public abstract class ContiguousSet<C extends Comparable> extends ImmutableSorte
   @J2ktIncompatible // serialization
   @Override
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

@@ -17,6 +17,7 @@ package com.google.common.base;
 import com.google.common.annotations.GwtCompatible;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * The subset of the {@link java.util.regex.Pattern} API which is used by this package, and also
@@ -27,7 +28,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
 abstract class CommonPattern {
-  public abstract CommonMatcher matcher(CharSequence t);
+  public abstract CommonMatcher matcher(@Readonly CharSequence t);
 
   public abstract String pattern();
 

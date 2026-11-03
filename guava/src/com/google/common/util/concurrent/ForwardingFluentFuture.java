@@ -22,6 +22,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * {@link FluentFuture} that forwards all calls to a delegate.
@@ -35,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @GwtCompatible
 @ElementTypesAreNonnullByDefault
-final class ForwardingFluentFuture<V extends @Nullable Object> extends FluentFuture<V> {
+final class ForwardingFluentFuture<V extends @Nullable @Readonly Object> extends FluentFuture<V> {
   private final ListenableFuture<V> delegate;
 
   ForwardingFluentFuture(ListenableFuture<V> delegate) {

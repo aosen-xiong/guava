@@ -29,6 +29,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.EnumMap;
 import java.util.Map;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -170,8 +171,8 @@ public final class EnumBiMap<K extends Enum<K>, V extends Enum<V>> extends Abstr
 
 @Pure
 @Override
-public boolean containsValue(@Nullable @UnknownSignedness Object arg0) { return super.containsValue(arg0); }
+public boolean containsValue(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.containsValue(arg0); }
 
 @Override
-public @Nullable V remove(@Nullable @UnknownSignedness Object arg0) { return super.remove(arg0); }
+public @Nullable V remove(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.remove(arg0); }
 }

@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Imposes a time limit on method calls.
@@ -147,7 +148,7 @@ public interface TimeLimiter {
   @SuppressWarnings("GoodTime") // should accept a java.time.Duration
   @CanIgnoreReturnValue
   @ParametricNullness
-  <T extends @Nullable Object> T callWithTimeout(
+  <T extends @Nullable @Readonly Object> T callWithTimeout(
       Callable<T> callable, long timeoutDuration, TimeUnit timeoutUnit)
       throws TimeoutException, InterruptedException, ExecutionException;
 
@@ -169,7 +170,7 @@ public interface TimeLimiter {
    */
   @CanIgnoreReturnValue
   @ParametricNullness
-  default <T extends @Nullable Object> T callWithTimeout(Callable<T> callable, Duration timeout)
+  default <T extends @Nullable @Readonly Object> T callWithTimeout(Callable<T> callable, Duration timeout)
       throws TimeoutException, InterruptedException, ExecutionException {
     return callWithTimeout(callable, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);
   }
@@ -196,7 +197,7 @@ public interface TimeLimiter {
   @SuppressWarnings("GoodTime") // should accept a java.time.Duration
   @CanIgnoreReturnValue
   @ParametricNullness
-  <T extends @Nullable Object> T callUninterruptiblyWithTimeout(
+  <T extends @Nullable @Readonly Object> T callUninterruptiblyWithTimeout(
       Callable<T> callable, long timeoutDuration, TimeUnit timeoutUnit)
       throws TimeoutException, ExecutionException;
 
@@ -220,7 +221,7 @@ public interface TimeLimiter {
    */
   @CanIgnoreReturnValue
   @ParametricNullness
-  default <T extends @Nullable Object> T callUninterruptiblyWithTimeout(
+  default <T extends @Nullable @Readonly Object> T callUninterruptiblyWithTimeout(
       Callable<T> callable, Duration timeout) throws TimeoutException, ExecutionException {
     return callUninterruptiblyWithTimeout(
         callable, toNanosSaturated(timeout), TimeUnit.NANOSECONDS);

@@ -24,7 +24,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * This class provides a skeletal implementation of {@link ValueGraph}. It is recommended to extend
@@ -40,14 +43,15 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @Beta
 @ElementTypesAreNonnullByDefault
-public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
+@ReceiverDependentMutable
+public abstract class AbstractValueGraph<N extends @Immutable Object, V> extends AbstractBaseGraph<N>
     implements ValueGraph<N, V> {
 
   @Override
-  public Graph<N> asGraph() {
-    return new AbstractGraph<N>() {
+  public @ReceiverDependentMutable Graph<N> asGraph() {
+    return new @ReceiverDependentMutable AbstractGraph<N>() {
       @Override
-      public Set<N> nodes() {
+      public @Readonly Set<N> nodes() {
         return AbstractValueGraph.this.nodes();
       }
 
@@ -77,17 +81,17 @@ public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
       }
 
       @Override
-      public Set<N> adjacentNodes(N node) {
+      public @Readonly Set<N> adjacentNodes(N node) {
         return AbstractValueGraph.this.adjacentNodes(node);
       }
 
       @Override
-      public Set<N> predecessors(N node) {
+      public @Readonly Set<N> predecessors(N node) {
         return AbstractValueGraph.this.predecessors(node);
       }
 
       @Override
-      public Set<N> successors(N node) {
+      public @Readonly Set<N> successors(N node) {
         return AbstractValueGraph.this.successors(node);
       }
 
@@ -119,7 +123,7 @@ public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
   }
 
   @Override
-  public final boolean equals(@CheckForNull Object obj) {
+  public final boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == this) {
       return true;
     }
@@ -151,7 +155,7 @@ public abstract class AbstractValueGraph<N, V> extends AbstractBaseGraph<N>
         + edgeValueMap(this);
   }
 
-  private static <N, V> Map<EndpointPair<N>, V> edgeValueMap(final ValueGraph<N, V> graph) {
+  private static <N, V> Map<EndpointPair<N>, V> edgeValueMap(final @Readonly ValueGraph<N, V> graph) {
     return Maps.asMap(
         graph.edges(),
         edge ->

@@ -19,6 +19,7 @@ import com.google.common.annotations.J2ktIncompatible;
 import java.util.concurrent.Callable;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A listening executor service which forwards all its method calls to another listening executor
@@ -45,7 +46,7 @@ public abstract class ForwardingListeningExecutorService extends ForwardingExecu
   protected abstract ListeningExecutorService delegate();
 
   @Override
-  public <T extends @Nullable @UnknownSignedness Object> ListenableFuture<T> submit(Callable<T> task) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> ListenableFuture<T> submit(Callable<T> task) {
     return delegate().submit(task);
   }
 
@@ -55,7 +56,7 @@ public abstract class ForwardingListeningExecutorService extends ForwardingExecu
   }
 
   @Override
-  public <T extends @Nullable @UnknownSignedness Object> ListenableFuture<T> submit(
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> ListenableFuture<T> submit(
       Runnable task, @ParametricNullness T result) {
     return delegate().submit(task, result);
   }

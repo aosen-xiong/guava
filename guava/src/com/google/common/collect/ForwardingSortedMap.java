@@ -69,12 +69,12 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   protected ForwardingSortedMap() {}
 
   @Override
-  protected abstract @PolyMutable SortedMap<K, V> delegate(@PolyMutable ForwardingSortedMap<K, V> this);
+  protected abstract @ReceiverDependentMutable SortedMap<K, V> delegate(@ReceiverDependentMutable ForwardingSortedMap<K, V> this);
 
   @SideEffectFree
   @Override
   @CheckForNull
-  public Comparator<? super K> comparator(@Readonly ForwardingSortedMap<K, V> this) {
+  public @Readonly Comparator<? super K> comparator(@Readonly ForwardingSortedMap<K, V> this) {
     return delegate().comparator();
   }
 
@@ -85,7 +85,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> headMap(@PolyMutable ForwardingSortedMap<K, V> this, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> headMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, @ParametricNullness K toKey) {
     return delegate().headMap(toKey);
   }
 
@@ -96,12 +96,12 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> subMap(@PolyMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> subMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey, @ParametricNullness K toKey) {
     return delegate().subMap(fromKey, toKey);
   }
 
   @Override
-  public @PolyMutable SortedMap<K, V> tailMap(@PolyMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey) {
+  public @ReceiverDependentMutable SortedMap<K, V> tailMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, @ParametricNullness K fromKey) {
     return delegate().tailMap(fromKey);
   }
 
@@ -112,8 +112,10 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
    *
    * @since 15.0
    */
+  @ReceiverDependentMutable
   protected class StandardKeySet extends Maps.SortedKeySet<K, V> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardKeySet() {
       super(ForwardingSortedMap.this);
     }
@@ -122,7 +124,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
   // unsafe, but worst case is a CCE or NPE is thrown, which callers will be expecting
   @SuppressWarnings({"unchecked", "nullness"})
   static int unsafeCompare(
-      @CheckForNull Comparator<?> comparator, @CheckForNull @Readonly Object o1, @CheckForNull @Readonly Object o2) {
+      @CheckForNull @Readonly Comparator<?> comparator, @CheckForNull @Readonly Object o1, @CheckForNull @Readonly Object o2) {
     if (comparator == null) {
       return ((Comparable<@Nullable @Readonly Object>) o1).compareTo(o2);
     } else {
@@ -142,7 +144,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
     try {
       // any CCE or NPE will be caught
       @SuppressWarnings({"unchecked", "nullness"})
-      SortedMap<@Nullable @Immutable Object, V> self = (@Readonly SortedMap<@Nullable @Immutable Object, V>) this;
+      SortedMap<@Nullable @Readonly Object, V> self = (@Readonly SortedMap<@Nullable @Readonly Object, V>) this;
       Object ceilingKey = self.tailMap(key).firstKey();
       return unsafeCompare(comparator(), ceilingKey, key) == 0;
     } catch (ClassCastException | NoSuchElementException | NullPointerException e) {
@@ -157,7 +159,7 @@ public abstract class ForwardingSortedMap<K extends @Nullable @Immutable Object,
    *
    * @since 7.0
    */
-  protected SortedMap<K, V> standardSubMap(K fromKey, K toKey) {
+  protected @ReceiverDependentMutable SortedMap<K, V> standardSubMap(@ReceiverDependentMutable ForwardingSortedMap<K, V> this, K fromKey, K toKey) {
     checkArgument(unsafeCompare(comparator(), fromKey, toKey) <= 0, "fromKey must be <= toKey");
     return tailMap(fromKey).headMap(toKey);
   }

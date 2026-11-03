@@ -15,6 +15,8 @@
 package com.google.common.cache;
 
 import com.google.common.annotations.GwtCompatible;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Calculates the weights of cache entries.
@@ -25,7 +27,8 @@ import com.google.common.annotations.GwtCompatible;
 @GwtCompatible
 @FunctionalInterface
 @ElementTypesAreNonnullByDefault
-public interface Weigher<K, V> {
+@ReceiverDependentMutable
+public interface Weigher<K extends @Immutable Object, V> {
 
   /**
    * Returns the weight of a cache entry. There is no unit for entry weights; rather they are simply

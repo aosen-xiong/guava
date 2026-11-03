@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A mutable object which accumulates double values and tracks some basic statistics over all the
@@ -80,7 +81,7 @@ public final class StatsAccumulator {
    * @param values a series of values, which will be converted to {@code double} values (this may
    *     cause loss of precision)
    */
-  public void addAll(Iterable<? extends Number> values) {
+  public void addAll(Iterable<? extends @Readonly Number> values) {
     for (Number value : values) {
       add(value.doubleValue());
     }
@@ -92,7 +93,7 @@ public final class StatsAccumulator {
    * @param values a series of values, which will be converted to {@code double} values (this may
    *     cause loss of precision)
    */
-  public void addAll(Iterator<? extends Number> values) {
+  public void addAll(Iterator<? extends @Readonly Number> values) {
     while (values.hasNext()) {
       add(values.next().doubleValue());
     }

@@ -18,6 +18,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * Captures the actual type of {@code T}.
@@ -25,10 +27,11 @@ import java.lang.reflect.Type;
  * @author Ben Yu
  */
 @ElementTypesAreNonnullByDefault
+@ReceiverDependentMutable
 abstract class TypeCapture<T> {
 
   /** Returns the captured type. */
-  final Type capture() {
+  final Type capture(@Readonly TypeCapture<T> this) {
     Type superclass = getClass().getGenericSuperclass();
     checkArgument(superclass instanceof ParameterizedType, "%s isn't parameterized", superclass);
     return ((ParameterizedType) superclass).getActualTypeArguments()[0];
