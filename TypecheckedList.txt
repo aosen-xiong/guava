@@ -10,10 +10,12 @@
 # demand, the checker then sees some of those classes with raw supertypes, and
 # files below report errors that the whole-module run does not.
 #
-# State at gait c3efe775ef (checker gait ffb75181e, annotated JDK jdk#4
+# State at gait c3efe775ef (checker gait 4aed5b663, annotated JDK jdk#4
 # 96fbe6402d4, run on JDK 17): 411 files, 71,498 lines (count_java_annotations.pl),
 # 8,425 PICO annotations (qualcount.py), 305 suppressions. The whole module (625
-# files) has 60 errors, all in files not listed as T1, T2 or T3.
+# files) has 66 errors, all in files not listed as T1, T2 or T3. Checker
+# ffb75181e reported 60. The 6 more are self() calls in MapMakerInternalMap,
+# which now return @Mutable S through a @Mutable receiver (eisop#2516).
 #
 # Not listed: 186 files that are clean but have no PICO annotation, so there is
 # nothing to check, and the 23 other files that still report errors.
