@@ -20,6 +20,6 @@ for f in open(lst).read().split():
         if n == "Immutable" and f"import {PICO}Immutable;" not in s:
             ep += simple; simple = 0
         tot[n] += fq + simple
-    tot["SuppressWarnings:mutability"] += len(re.findall(r'"mutability(?::[^"]*)?"', re.sub(r"@AnnotatedFor\([^)]*\)", "", code)))
+    tot["SuppressWarnings:mutability"] += len(re.findall(r'"mutability(?::[^"]*)?"', re.sub(r"@(AnnotatedFor|CFComment)\((?:[^()\"]|\"(?:\\.|[^\"\\])*\")*\)", "", code)))
 print(f"files {files}", " ".join(f"{n}={tot[n]}" for n in names + ["SuppressWarnings:mutability"]),
       f"total={sum(tot[n] for n in names)}", f"(Error Prone @Immutable excluded: {ep})")
