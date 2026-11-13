@@ -24,6 +24,10 @@ import com.google.common.collect.ImmutableBiMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * An implementation of {@link NetworkConnections} for directed networks.
@@ -33,35 +37,36 @@ import java.util.Set;
  * @param <E> Edge parameter type
  */
 @ElementTypesAreNonnullByDefault
-final class DirectedNetworkConnections<N, E> extends AbstractDirectedNetworkConnections<N, E> {
+@ReceiverDependentMutable
+final class DirectedNetworkConnections<N extends @Immutable Object, E extends @Immutable Object> extends AbstractDirectedNetworkConnections<N, E> {
 
-  DirectedNetworkConnections(Map<E, N> inEdgeMap, Map<E, N> outEdgeMap, int selfLoopCount) {
+  DirectedNetworkConnections(@ReceiverDependentMutable Map<E, N> inEdgeMap, @ReceiverDependentMutable Map<E, N> outEdgeMap, int selfLoopCount) {
     super(inEdgeMap, outEdgeMap, selfLoopCount);
   }
 
-  static <N, E> DirectedNetworkConnections<N, E> of() {
-    return new DirectedNetworkConnections<>(
+  static <N extends @Immutable Object, E extends @Immutable Object> @Mutable DirectedNetworkConnections<N, E> of() {
+    return new @Mutable DirectedNetworkConnections<>(
         HashBiMap.<E, N>create(EXPECTED_DEGREE), HashBiMap.<E, N>create(EXPECTED_DEGREE), 0);
   }
 
-  static <N, E> DirectedNetworkConnections<N, E> ofImmutable(
-      Map<E, N> inEdges, Map<E, N> outEdges, int selfLoopCount) {
-    return new DirectedNetworkConnections<>(
+  static <N extends @Immutable Object, E extends @Immutable Object> @Immutable DirectedNetworkConnections<N, E> ofImmutable(
+      @Readonly Map<E, N> inEdges, @Readonly Map<E, N> outEdges, int selfLoopCount) {
+    return new @Immutable DirectedNetworkConnections<>(
         ImmutableBiMap.copyOf(inEdges), ImmutableBiMap.copyOf(outEdges), selfLoopCount);
   }
 
   @Override
-  public Set<N> predecessors() {
+  public @Readonly Set<N> predecessors(@ReceiverDependentMutable DirectedNetworkConnections<N, E> this) {
     return Collections.unmodifiableSet(((BiMap<E, N>) inEdgeMap).values());
   }
 
   @Override
-  public Set<N> successors() {
+  public @Readonly Set<N> successors(@ReceiverDependentMutable DirectedNetworkConnections<N, E> this) {
     return Collections.unmodifiableSet(((BiMap<E, N>) outEdgeMap).values());
   }
 
   @Override
-  public Set<E> edgesConnecting(N node) {
+  public @Readonly Set<E> edgesConnecting(@ReceiverDependentMutable DirectedNetworkConnections<N, E> this, N node) {
     return new EdgesConnecting<>(((BiMap<E, N>) outEdgeMap).inverse(), node);
   }
 }

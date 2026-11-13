@@ -29,9 +29,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.formatter.qual.FormatMethod;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A specification of a {@link CacheBuilder} configuration.
@@ -168,8 +170,8 @@ public final class CacheBuilderSpec {
   }
 
   /** Returns a CacheBuilder configured according to this instance's specification. */
-  CacheBuilder<Object, Object> toCacheBuilder() {
-    CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
+  CacheBuilder<@Immutable Object, @Readonly Object> toCacheBuilder() {
+    CacheBuilder<@Immutable Object, @Readonly Object> builder = CacheBuilder.newBuilder();
     if (initialCapacity != null) {
       builder.initialCapacity(initialCapacity);
     }
@@ -253,7 +255,7 @@ public final class CacheBuilderSpec {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (this == obj) {
       return true;
     }
@@ -487,7 +489,7 @@ public final class CacheBuilderSpec {
   }
 
   @FormatMethod
-  private static String format(String format, Object... args) {
+  private static String format(String format, @Readonly Object... args) {
     return String.format(Locale.ROOT, format, args);
   }
 }

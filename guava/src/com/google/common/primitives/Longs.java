@@ -489,7 +489,7 @@ public final class Longs {
       return "Longs.stringConverter()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 
@@ -524,7 +524,7 @@ public final class Longs {
    * @return an array containing the values of {@code array}, with guaranteed minimum length {@code
    *     minLength}
    */
-  public static long[] ensureCapacity(long @Readonly [] array, @NonNegative int minLength, @NonNegative int padding) {
+  public static long[] ensureCapacity(long[] array, @NonNegative int minLength, @NonNegative int padding) {
     checkArgument(minLength >= 0, "Invalid minLength: %s", minLength);
     checkArgument(padding >= 0, "Invalid padding: %s", padding);
     return (array.length < minLength) ? Arrays.copyOf(array, minLength + padding) : array;
@@ -570,7 +570,7 @@ public final class Longs {
     return LexicographicalComparator.INSTANCE;
   }
 
-  private enum LexicographicalComparator implements Comparator<long @Readonly []> {
+  private enum LexicographicalComparator implements Comparator<long[]> {
     INSTANCE;
 
     @Override
@@ -708,12 +708,12 @@ public final class Longs {
    * @throws NullPointerException if {@code collection} or any of its elements is null
    * @since 1.0 (parameter was {@code Collection<Long>} before 12.0)
    */
-  public static long[] toArray(Collection<? extends Number> collection) {
+  public static long[] toArray(Collection<? extends @Readonly Number> collection) {
     if (collection instanceof LongArrayAsList) {
       return ((LongArrayAsList) collection).toLongArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     long[] array = new long[len];
     for (int i = 0; i < len; i++) {
@@ -740,6 +740,7 @@ public final class Longs {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
+  @SuppressWarnings("mutability:return.type.incompatible") // an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
   public static List<Long> asList(long... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
@@ -837,14 +838,14 @@ public final class Longs {
     }
 
     @Override
-    @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
-    public @PolyMutable List<Long> subList(@PolyMutable LongArrayAsList this, @IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
+    @SuppressWarnings({"index", "mutability:return.type.incompatible"}) // index: needs https://github.com/kelloggm/checker-framework/issues/229. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
+    public @ReceiverDependentMutable List<Long> subList(@ReceiverDependentMutable LongArrayAsList this, @IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
       if (fromIndex == toIndex) {
         return Collections.emptyList();
       }
-      return new LongArrayAsList(array, start + fromIndex, start + toIndex);
+      return new @ReceiverDependentMutable LongArrayAsList(array, start + fromIndex, start + toIndex);
     }
 
     @Override

@@ -30,6 +30,7 @@ import org.checkerframework.checker.signedness.qual.Unsigned;
 import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code long} primitives that interpret values as
@@ -164,7 +165,7 @@ public final class UnsignedLongs {
    * support only identity equality), but it is consistent with {@link Arrays#equals(long[],
    * long[])}.
    */
-  public static Comparator<@Unsigned long[]> lexicographicalComparator() {
+  public static @Immutable Comparator<@Unsigned long[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 

@@ -32,7 +32,9 @@ import com.google.thirdparty.publicsuffix.PublicSuffixPatterns;
 import com.google.thirdparty.publicsuffix.PublicSuffixType;
 import java.util.List;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Assignable;
 
 /**
  * An immutable well-formed internet domain name, such as {@code com} or {@code foo.co.uk}. Only
@@ -76,6 +78,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @GwtCompatible(emulated = true)
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 public final class InternetDomainName {
 
   private static final CharMatcher DOTS_MATCHER = CharMatcher.anyOf(".\u3002\uFF0E\uFF61");
@@ -129,7 +132,7 @@ public final class InternetDomainName {
    */
   @SuppressWarnings("Immutable")
   @LazyInit
-  private int publicSuffixIndexCache = SUFFIX_NOT_INITIALIZED;
+  private @Assignable int publicSuffixIndexCache = SUFFIX_NOT_INITIALIZED;
 
   /**
    * Cached value of #registrySuffixIndex(). Do not use directly.
@@ -140,7 +143,7 @@ public final class InternetDomainName {
    */
   @SuppressWarnings("Immutable")
   @LazyInit
-  private int registrySuffixIndexCache = SUFFIX_NOT_INITIALIZED;
+  private @Assignable int registrySuffixIndexCache = SUFFIX_NOT_INITIALIZED;
 
   /** Constructor used to implement {@link #from(String)}, and from subclasses. */
   InternetDomainName(String name) {
@@ -269,7 +272,7 @@ public final class InternetDomainName {
    *
    * @return Is the domain name syntactically valid?
    */
-  private static boolean validateSyntax(List<String> parts) {
+  private static boolean validateSyntax(@Readonly List<String> parts) {
     int lastIndex = parts.size() - 1;
 
     // Validate the last part specially, as it has different syntax rules.
@@ -675,7 +678,7 @@ public final class InternetDomainName {
    * version of the same domain name would not be considered equal.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

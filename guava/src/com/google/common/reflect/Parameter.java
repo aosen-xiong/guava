@@ -23,6 +23,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.AnnotatedType;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -33,6 +35,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  * @since 14.0
  */
 @ElementTypesAreNonnullByDefault
+@Immutable
 public final class Parameter implements AnnotatedElement {
 
   private final Invokable<?, ?> declaration;
@@ -47,14 +50,14 @@ public final class Parameter implements AnnotatedElement {
    * more specific return type as long as users are careful to guard calls to it with version checks
    * or reflection: Android VMs ignore the types of elements that aren't used.
    */
-  private final @Nullable Object annotatedType;
+  private final @Nullable @Readonly Object annotatedType;
 
   Parameter(
       Invokable<?, ?> declaration,
       int position,
       TypeToken<?> type,
       Annotation[] annotations,
-      @Nullable Object annotatedType) {
+      @Nullable @Readonly Object annotatedType) {
     this.declaration = declaration;
     this.position = position;
     this.type = type;
@@ -141,7 +144,7 @@ public final class Parameter implements AnnotatedElement {
   }
 
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj instanceof Parameter) {
       Parameter that = (Parameter) obj;
       return position == that.position && declaration.equals(that.declaration);

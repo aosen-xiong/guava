@@ -47,7 +47,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Registry of subscribers to a single event bus.
@@ -117,7 +119,7 @@ final class SubscriberRegistry {
   }
 
   @VisibleForTesting
-  Set<Subscriber> getSubscribersForTesting(Class<?> eventType) {
+  @Readonly Set<Subscriber> getSubscribersForTesting(Class<?> eventType) {
     return MoreObjects.firstNonNull(subscribers.get(eventType), ImmutableSet.<Subscriber>of());
   }
 
@@ -244,10 +246,11 @@ final class SubscriberRegistry {
     }
   }
 
+  @Immutable
   private static final class MethodIdentifier {
 
     private final String name;
-    private final List<Class<?>> parameterTypes;
+    private final @Readonly List<Class<?>> parameterTypes;
 
     MethodIdentifier(Method method) {
       this.name = method.getName();
@@ -260,7 +263,7 @@ final class SubscriberRegistry {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object o) {
+    public boolean equals(@CheckForNull @Readonly Object o) {
       if (o instanceof MethodIdentifier) {
         MethodIdentifier ident = (MethodIdentifier) o;
         return name.equals(ident.name) && parameterTypes.equals(ident.parameterTypes);

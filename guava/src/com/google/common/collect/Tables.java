@@ -75,9 +75,9 @@ public final class Tables {
    * @since 21.0
    */
   public static <
-          T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -104,9 +104,9 @@ public final class Tables {
    * @since 21.0
    */
   public static <
-          T extends @Nullable Object,
-          R extends @Nullable Object,
-          C extends @Nullable Object,
+          T extends @Nullable @Readonly Object,
+          R extends @Nullable @Immutable Object,
+          C extends @Nullable @Immutable Object,
           V,
           I extends Table<R, C, V>>
       Collector<T, ?, I> toTable(
@@ -218,11 +218,12 @@ public final class Tables {
    * columnKeySet().iterator()} doesn't. With a transposed {@link HashBasedTable}, it's the other
    * way around.
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter", "mutability:return.type.incompatible"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection. A transposed table's original has the transpose's mutability, but the checker types the field read through the poly cast @Readonly
   public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Table<C, R, V> transpose(Table<R, C, V> table) {
+      @PolyMutable Table<C, R, V> transpose(@PolyMutable Table<R, C, V> table) {
     return (table instanceof TransposeTable)
-        ? ((TransposeTable<R, C, V>) table).original
-        : new TransposeTable<C, R, V>(table);
+        ? ((@PolyMutable TransposeTable<R, C, V>) table).original
+        : new @PolyMutable TransposeTable<C, R, V>(table);
   }
 
   @ReceiverDependentMutable
@@ -241,17 +242,17 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<C, V> column(@PolyMutable TransposeTable<C, R, V> this, @ParametricNullness R columnKey) {
+    public @ReceiverDependentMutable Map<C, V> column(@ReceiverDependentMutable TransposeTable<C, R, V> this, @ParametricNullness R columnKey) {
       return original.row(columnKey);
     }
 
     @Override
-    public @PolyMutable Set<R> columnKeySet(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Set<R> columnKeySet(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.rowKeySet();
     }
 
     @Override
-    public @PolyMutable Map<R, Map<C, V>> columnMap(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> columnMap(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.rowMap();
     }
 
@@ -303,17 +304,17 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<R, V> row(@PolyMutable TransposeTable<C, R, V> this, @ParametricNullness C rowKey) {
+    public @ReceiverDependentMutable Map<R, V> row(@ReceiverDependentMutable TransposeTable<C, R, V> this, @ParametricNullness C rowKey) {
       return original.column(rowKey);
     }
 
     @Override
-    public @PolyMutable Set<C> rowKeySet(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Set<C> rowKeySet(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.columnKeySet();
     }
 
     @Override
-    public @PolyMutable Map<C, Map<R, V>> rowMap(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V>> rowMap(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.columnMap();
     }
 
@@ -323,24 +324,26 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Collection<V> values(@PolyMutable TransposeTable<C, R, V> this) {
+    public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return original.values();
     }
 
     @Override
-    Iterator<Cell<C, R, V>> cellIterator() {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    @Mutable Iterator<@ReceiverDependentMutable Cell<C, R, V>> cellIterator(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return Iterators.transform(original.cellSet().iterator(), Tables::transposeCell);
     }
 
     @Override
-    Spliterator<Cell<C, R, V>> cellSpliterator() {
+    @SuppressWarnings("mutability:methodref.return.invalid") // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    Spliterator<@ReceiverDependentMutable Cell<C, R, V>> cellSpliterator(@ReceiverDependentMutable TransposeTable<C, R, V> this) {
       return CollectSpliterators.map(original.cellSet().spliterator(), Tables::transposeCell);
     }
   }
 
   private static <
-          R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
-      Cell<C, R, V> transposeCell(Cell<R, C, V> cell) {
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+      @Immutable Cell<C, R, V> transposeCell(@Readonly Cell<R, C, V> cell) {
     return immutableCell(cell.getColumnKey(), cell.getRowKey(), cell.getValue());
   }
 
@@ -382,7 +385,7 @@ public final class Tables {
    * @throws IllegalArgumentException if {@code backingMap} is not empty
    * @since 10.0
    */
-  public static <R, C, V> Table<R, C, V> newCustomTable(
+  public static <R extends @Immutable Object, C extends @Immutable Object, V> Table<R, C, V> newCustomTable(
       Map<R, Map<C, V>> backingMap, Supplier<? extends Map<C, V>> factory) {
     checkArgument(backingMap.isEmpty());
     checkNotNull(factory);
@@ -411,14 +414,15 @@ public final class Tables {
    *
    * @since 10.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <
           R extends @Nullable @Immutable Object,
           C extends @Nullable @Immutable Object,
           V1 extends @Nullable @Readonly Object,
           V2 extends @Nullable @Readonly Object>
-      Table<R, C, V2> transformValues(
-          Table<R, C, V1> fromTable, Function<? super V1, V2> function) {
-    return new TransformedTable<>(fromTable, function);
+      @PolyMutable Table<R, C, V2> transformValues(
+          @PolyMutable Table<R, C, V1> fromTable, @Readonly Function<? super V1, V2> function) {
+    return new @PolyMutable TransformedTable<>(fromTable, function);
   }
 
   @ReceiverDependentMutable
@@ -429,9 +433,9 @@ public final class Tables {
           V2 extends @Nullable @Readonly Object>
       extends AbstractTable<R, C, V2> {
     final Table<R, C, V1> fromTable;
-    final Function<? super V1, V2> function;
+    final @Readonly Function<? super V1, V2> function;
 
-    TransformedTable(@ReceiverDependentMutable Table<R, C, V1> fromTable, Function<? super V1, V2> function) {
+    TransformedTable(@ReceiverDependentMutable Table<R, C, V1> fromTable, @Readonly Function<? super V1, V2> function) {
       this.fromTable = checkNotNull(fromTable);
       this.function = checkNotNull(function);
     }
@@ -478,7 +482,7 @@ public final class Tables {
 
     @Override
     @CheckForNull
-    public V2 remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
+    public V2 remove(@Mutable TransformedTable<R, C, V1, V2> this, @CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
       return contains(rowKey, columnKey)
           // The cast is safe because of the contains() check.
           ? function.apply(uncheckedCastNullableTToT(fromTable.remove(rowKey, columnKey)))
@@ -486,19 +490,19 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<C, V2> row(@PolyMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness R rowKey) {
+    public @ReceiverDependentMutable Map<C, V2> row(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness R rowKey) {
       return Maps.transformValues(fromTable.row(rowKey), function);
     }
 
     @Override
-    public @PolyMutable Map<R, V2> column(@PolyMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness C columnKey) {
+    public @ReceiverDependentMutable Map<R, V2> column(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this, @ParametricNullness C columnKey) {
       return Maps.transformValues(fromTable.column(columnKey), function);
     }
 
-    Function<Cell<R, C, V1>, Cell<R, C, V2>> cellFunction() {
-      return new Function<Cell<R, C, V1>, Cell<R, C, V2>>() {
+    Function<@Readonly Cell<R, C, V1>, @Immutable Cell<R, C, V2>> cellFunction() {
+      return new Function<@Readonly Cell<R, C, V1>, @Immutable Cell<R, C, V2>>() {
         @Override
-        public Cell<R, C, V2> apply(Cell<R, C, V1> cell) {
+        public @Immutable Cell<R, C, V2> apply(@Readonly Cell<R, C, V1> cell) {
           return immutableCell(
               cell.getRowKey(), cell.getColumnKey(), function.apply(cell.getValue()));
         }
@@ -506,32 +510,35 @@ public final class Tables {
     }
 
     @Override
-    Iterator<Cell<R, C, V2>> cellIterator(@Readonly TransformedTable<R, C, V1, V2> this) {
+    @SuppressWarnings({"mutability:return.type.incompatible", "mutability:type.arguments.not.inferred"}) // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    @Mutable Iterator<@ReceiverDependentMutable Cell<R, C, V2>> cellIterator(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return Iterators.transform(fromTable.cellSet().iterator(), cellFunction());
     }
 
     @Override
-    Spliterator<Cell<R, C, V2>> cellSpliterator(@Readonly TransformedTable<R, C, V1, V2> this) {
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the cells are immutableCell snapshots, @Immutable where the contract states receiver-dependent ones, as AbstractMapBasedMultimap.entryIterator does with immutableEntry
+    Spliterator<@ReceiverDependentMutable Cell<R, C, V2>> cellSpliterator(@Readonly TransformedTable<R, C, V1, V2> this) {
       return CollectSpliterators.map(fromTable.cellSet().spliterator(), cellFunction());
     }
 
     @Override
-    public @PolyMutable Set<R> rowKeySet(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    public @ReceiverDependentMutable Set<R> rowKeySet(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return fromTable.rowKeySet();
     }
 
     @Override
-    public @PolyMutable Set<C> columnKeySet(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    public @ReceiverDependentMutable Set<C> columnKeySet(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return fromTable.columnKeySet();
     }
 
     @Override
-    @PolyMutable Collection<V2> createValues(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    @ReceiverDependentMutable Collection<V2> createValues(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       return Collections2.transform(fromTable.values(), function);
     }
 
     @Override
-    public @PolyMutable Map<R, Map<C, V2>> rowMap(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the row function keeps each row's mutability: it maps a row to a transformed view of that same row. The anonymous Function cannot be typed relative to the table, so its rows are typed @Mutable
+    public @ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V2>> rowMap(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       Function<Map<C, V1>, Map<C, V2>> rowFunction =
           new Function<Map<C, V1>, Map<C, V2>>() {
             @Override
@@ -543,7 +550,8 @@ public final class Tables {
     }
 
     @Override
-    public @PolyMutable Map<C, Map<R, V2>> columnMap(@PolyMutable TransformedTable<R, C, V1, V2> this) {
+    @SuppressWarnings("mutability:type.arguments.not.inferred") // the column function keeps each column's mutability: it maps a column to a transformed view of that same column. The anonymous Function cannot be typed relative to the table, so its columns are typed @Mutable
+    public @ReceiverDependentMutable Map<C, @ReceiverDependentMutable Map<R, V2>> columnMap(@ReceiverDependentMutable TransformedTable<R, C, V1, V2> this) {
       Function<Map<R, V1>, Map<R, V2>> columnFunction =
           new Function<Map<R, V1>, Map<R, V2>>() {
             @Override
@@ -567,29 +575,30 @@ public final class Tables {
    *
    * @since 11.0
    */
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
   public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-    @Readonly Table<R, C, V> unmodifiableTable(Table<? extends R, ? extends C, ? extends V> table) {
-    return new UnmodifiableTable<>(table);
+    @PolyMutable Table<R, C, V> unmodifiableTable(@PolyMutable Table<? extends R, ? extends C, ? extends V> table) {
+    return new @PolyMutable UnmodifiableTable<>(table);
   }
 
-  @Immutable
+  @ReceiverDependentMutable
   private static class UnmodifiableTable<
           R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends ForwardingTable<R, C, V> implements Serializable {
-    final @Readonly Table<? extends R, ? extends C, ? extends V> delegate;
+    final @ReceiverDependentMutable Table<? extends R, ? extends C, ? extends V> delegate;
 
-    UnmodifiableTable(@Readonly Table<? extends R, ? extends C, ? extends V> delegate) {
+    UnmodifiableTable(@ReceiverDependentMutable Table<? extends R, ? extends C, ? extends V> delegate) {
       this.delegate = checkNotNull(delegate);
     }
 
     @SuppressWarnings("unchecked") // safe, covariant cast
     @Override
-    protected @Readonly Table<R, C, V> delegate() {
-      return (Table<R, C, V>) delegate;
+    protected @ReceiverDependentMutable Table<R, C, V> delegate() {
+      return (@ReceiverDependentMutable Table<R, C, V>) delegate;
     }
 
     @Override
-    public @Readonly Set<@Readonly Cell<R, C, V>> cellSet() {
+    public @ReceiverDependentMutable Set<@ReceiverDependentMutable Cell<R, C, V>> cellSet() {
       return Collections.unmodifiableSet(super.cellSet());
     }
 
@@ -599,18 +608,19 @@ public final class Tables {
     }
 
     @Override
-    public @Readonly Map<R, V> column(@ParametricNullness C columnKey) {
+    public @ReceiverDependentMutable Map<R, V> column(@ParametricNullness C columnKey) {
       return Collections.unmodifiableMap(super.column(columnKey));
     }
 
     @Override
-    public @Readonly Set<C> columnKeySet() {
+    public @ReceiverDependentMutable Set<C> columnKeySet() {
       return Collections.unmodifiableSet(super.columnKeySet());
     }
 
     @Override
-    public @Readonly Map<C, @Readonly Map<R, V>> columnMap() {
-      Function<Map<R, V>, Map<R, V>> wrapper = unmodifiableWrapper();
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly column maps where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    public @ReceiverDependentMutable Map<C, @Readonly Map<R, V>> columnMap() {
+      Function<@Readonly Map<R, V>, @Readonly Map<R, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.columnMap(), wrapper));
     }
 
@@ -624,34 +634,35 @@ public final class Tables {
     }
 
     @Override
-    public void putAll(Table<? extends R, ? extends C, ? extends V> table) {
+    public void putAll(@Readonly Table<? extends R, ? extends C, ? extends V> table) {
       throw new UnsupportedOperationException();
     }
 
     @Override
     @CheckForNull
-    public V remove(@CheckForNull Object rowKey, @CheckForNull Object columnKey) {
+    public V remove(@CheckForNull @Readonly Object rowKey, @CheckForNull @Readonly Object columnKey) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public Map<C, V> row(@ParametricNullness R rowKey) {
+    public @ReceiverDependentMutable Map<C, V> row(@ParametricNullness R rowKey) {
       return Collections.unmodifiableMap(super.row(rowKey));
     }
 
     @Override
-    public Set<R> rowKeySet() {
+    public @ReceiverDependentMutable Set<R> rowKeySet() {
       return Collections.unmodifiableSet(super.rowKeySet());
     }
 
     @Override
-    public Map<R, Map<C, V>> rowMap() {
-      Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly row maps where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    public @ReceiverDependentMutable Map<R, @Readonly Map<C, V>> rowMap() {
+      Function<@Readonly Map<C, V>, @Readonly Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableMap(Maps.transformValues(super.rowMap(), wrapper));
     }
 
     @Override
-    public Collection<V> values() {
+    public @ReceiverDependentMutable Collection<V> values() {
       return Collections.unmodifiableCollection(super.values());
     }
 
@@ -670,38 +681,41 @@ public final class Tables {
    * @return an unmodifiable view of the specified table
    * @since 11.0
    */
-  public static <R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
-      RowSortedTable<R, C, V> unmodifiableRowSortedTable(
-          RowSortedTable<R, ? extends C, ? extends V> table) {
+  @SuppressWarnings({"mutability:argument.type.incompatible", "mutability:mutability.lost.parameter"}) // one poly: the backing collection and the view are the same instantiation, as in Collections.unmodifiableCollection
+  public static <R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+      @PolyMutable RowSortedTable<R, C, V> unmodifiableRowSortedTable(
+          @PolyMutable RowSortedTable<R, ? extends C, ? extends V> table) {
     /*
      * It's not ? extends R, because it's technically not covariant in R. Specifically,
      * table.rowMap().comparator() could return a comparator that only works for the ? extends R.
      * Collections.unmodifiableSortedMap makes the same distinction.
      */
-    return new UnmodifiableRowSortedMap<>(table);
+    return new @PolyMutable UnmodifiableRowSortedMap<>(table);
   }
 
+  @ReceiverDependentMutable
   private static final class UnmodifiableRowSortedMap<
-          R extends @Nullable Object, C extends @Nullable Object, V extends @Nullable Object>
+          R extends @Nullable @Immutable Object, C extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
       extends UnmodifiableTable<R, C, V> implements RowSortedTable<R, C, V> {
 
-    public UnmodifiableRowSortedMap(@Readonly RowSortedTable<R, ? extends C, ? extends V> delegate) {
+    public UnmodifiableRowSortedMap(@ReceiverDependentMutable RowSortedTable<R, ? extends C, ? extends V> delegate) {
       super(delegate);
     }
 
     @Override
-    protected @Readonly RowSortedTable<R, C, V> delegate() {
-      return (RowSortedTable<R, C, V>) super.delegate();
+    protected @ReceiverDependentMutable RowSortedTable<R, C, V> delegate() {
+      return (@ReceiverDependentMutable RowSortedTable<R, C, V>) super.delegate();
     }
 
     @Override
-    public @Readonly SortedMap<R, Map<C, V>> rowMap() {
-      Function<Map<C, V>, Map<C, V>> wrapper = unmodifiableWrapper();
+    @SuppressWarnings("mutability:override.return.invalid") // an unmodifiable view hands out @Readonly row maps where the contract states receiver-dependent ones, as Collections.unmodifiableMap does with @Readonly entries
+    public @ReceiverDependentMutable SortedMap<R, @Readonly Map<C, V>> rowMap() {
+      Function<@Readonly Map<C, V>, @Readonly Map<C, V>> wrapper = unmodifiableWrapper();
       return Collections.unmodifiableSortedMap(Maps.transformValues(delegate().rowMap(), wrapper));
     }
 
     @Override
-    public @Readonly SortedSet<R> rowKeySet() {
+    public @ReceiverDependentMutable SortedSet<R> rowKeySet() {
       return Collections.unmodifiableSortedSet(delegate().rowKeySet());
     }
 
@@ -710,14 +724,14 @@ public final class Tables {
 
   @SuppressWarnings("unchecked")
   private static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
-      Function<Map<K, V>, Map<K, V>> unmodifiableWrapper() {
+      Function<@Readonly Map<K, V>, @Readonly Map<K, V>> unmodifiableWrapper() {
     return (Function) UNMODIFIABLE_WRAPPER;
   }
 
-  private static final Function<? extends Map<?, ?>, ? extends Map<?, ?>> UNMODIFIABLE_WRAPPER =
-      new Function<Map<@Immutable Object, @Readonly Object>, Map<@Immutable Object, @Readonly Object>>() {
+  private static final Function<? extends @Readonly Map<?, ?>, ? extends @Readonly Map<?, ?>> UNMODIFIABLE_WRAPPER =
+      new Function<@Readonly Map<@Immutable Object, @Readonly Object>, @Readonly Map<@Immutable Object, @Readonly Object>>() {
         @Override
-        public @Readonly Map<@Immutable Object, @Readonly Object> apply(Map<@Immutable Object, @Readonly Object> input) {
+        public @Readonly Map<@Immutable Object, @Readonly Object> apply(@Readonly Map<@Immutable Object, @Readonly Object> input) {
           return Collections.unmodifiableMap(input);
         }
       };

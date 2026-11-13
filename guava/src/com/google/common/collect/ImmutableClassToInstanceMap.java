@@ -44,12 +44,13 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
 // TODO(b/278589132): Remove the redundant "@NonNull" on B once it's no longer required by J2KT.
+@Immutable
 public final class ImmutableClassToInstanceMap<B>
     extends ForwardingMap<Class<? extends @NonNull B>, B>
     implements ClassToInstanceMap<B>, Serializable {
 
   private static final ImmutableClassToInstanceMap<@Readonly Object> EMPTY =
-      new ImmutableClassToInstanceMap<>(ImmutableMap.<Class<?>, Object>of());
+      new ImmutableClassToInstanceMap<>(ImmutableMap.<Class<?>, @Readonly Object>of());
 
   /**
    * Returns an empty {@code ImmutableClassToInstanceMap}.
@@ -119,7 +120,7 @@ public final class ImmutableClassToInstanceMap<B>
      * @throws ClassCastException if any value is not an instance of the type specified by its key
      */
     @CanIgnoreReturnValue
-    public <T extends B> Builder<B> putAll(Map<? extends Class<? extends T>, ? extends T> map) {
+    public <T extends B> Builder<B> putAll(@Readonly Map<? extends Class<? extends T>, ? extends T> map) {
       for (Entry<? extends Class<? extends T>, ? extends T> entry : map.entrySet()) {
         Class<? extends T> type = entry.getKey();
         T value = entry.getValue();
@@ -128,7 +129,7 @@ public final class ImmutableClassToInstanceMap<B>
       return this;
     }
 
-    private static <T> T cast(Class<T> type, Object value) {
+    private static <T> T cast(Class<T> type, @Readonly Object value) {
       return Primitives.wrap(type).cast(value);
     }
 

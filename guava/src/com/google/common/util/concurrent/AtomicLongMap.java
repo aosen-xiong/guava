@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongUnaryOperator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -63,7 +64,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @GwtCompatible
 @J2ktIncompatible
 @ElementTypesAreNonnullByDefault
-public final class AtomicLongMap<K> implements Serializable {
+public final class AtomicLongMap<K extends @Immutable Object> implements Serializable {
   private final ConcurrentHashMap<K, Long> map;
 
   private AtomicLongMap(ConcurrentHashMap<K, Long> map) {
@@ -71,12 +72,12 @@ public final class AtomicLongMap<K> implements Serializable {
   }
 
   /** Creates an {@code AtomicLongMap}. */
-  public static <K> AtomicLongMap<K> create() {
+  public static <K extends @Immutable Object> AtomicLongMap<K> create() {
     return new AtomicLongMap<K>(new ConcurrentHashMap<>());
   }
 
   /** Creates an {@code AtomicLongMap} with the same mappings as the specified {@code Map}. */
-  public static <K> AtomicLongMap<K> create(Map<? extends K, ? extends Long> m) {
+  public static <K extends @Immutable Object> AtomicLongMap<K> create(Map<? extends K, ? extends Long> m) {
     AtomicLongMap<K> result = create();
     result.putAll(m);
     return result;

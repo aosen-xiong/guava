@@ -24,6 +24,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.DoNotMock;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A builder for constructing instances of {@link MutableGraph} or {@link ImmutableGraph} with
@@ -113,7 +114,8 @@ public final class GraphBuilder<N> extends AbstractGraphBuilder<N> {
    *
    * @since 28.0
    */
-  public <N1 extends N> ImmutableGraph.Builder<N1> immutable() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // N1 is N restricted to @Immutable nodes, which cast() (unchecked) preserves
+  public <N1 extends @Immutable N> ImmutableGraph.Builder<N1> immutable() {
     GraphBuilder<N1> castBuilder = cast();
     return new ImmutableGraph.Builder<>(castBuilder);
   }
@@ -179,7 +181,8 @@ public final class GraphBuilder<N> extends AbstractGraphBuilder<N> {
   }
 
   /** Returns an empty {@link MutableGraph} with the properties of this {@link GraphBuilder}. */
-  public <N1 extends N> MutableGraph<N1> build() {
+  @SuppressWarnings("mutability:type.arguments.not.inferred") // nodes are hash keys, so N1 is @Immutable; inference cannot relate this builder's N to N1 without the cast that immutable() makes
+  public <N1 extends @Immutable N> MutableGraph<N1> build() {
     return new StandardMutableGraph<>(this);
   }
 

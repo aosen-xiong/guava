@@ -44,6 +44,8 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
 
 /**
  * A readable source of bytes, such as a file. Unlike an {@link InputStream}, a {@code ByteSource}
@@ -319,7 +321,7 @@ public abstract class ByteSource {
    */
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
-  public <T extends @Nullable Object> T read(ByteProcessor<T> processor) throws IOException {
+  public <T extends @Nullable @Readonly Object> T read(ByteProcessor<T> processor) throws IOException {
     checkNotNull(processor);
 
     Closer closer = Closer.create();
@@ -387,7 +389,7 @@ public abstract class ByteSource {
    * @return a {@code ByteSource} containing the concatenated data
    * @since 15.0
    */
-  public static ByteSource concat(Iterable<? extends ByteSource> sources) {
+  public static ByteSource concat(@Readonly Iterable<? extends ByteSource> sources) {
     return new ConcatenatedByteSource(sources);
   }
 
@@ -409,7 +411,7 @@ public abstract class ByteSource {
    * @throws NullPointerException if any of {@code sources} is {@code null}
    * @since 15.0
    */
-  public static ByteSource concat(Iterator<? extends ByteSource> sources) {
+  public static ByteSource concat(@Mutable Iterator<? extends ByteSource> sources) {
     return concat(ImmutableList.copyOf(sources));
   }
 
@@ -631,7 +633,7 @@ public abstract class ByteSource {
     @SuppressWarnings("CheckReturnValue") // it doesn't matter what processBytes returns here
     @Override
     @ParametricNullness
-    public <T extends @Nullable Object> T read(ByteProcessor<T> processor) throws IOException {
+    public <T extends @Nullable @Readonly Object> T read(ByteProcessor<T> processor) throws IOException {
       processor.processBytes(bytes, offset, length);
       return processor.getResult();
     }
@@ -693,9 +695,9 @@ public abstract class ByteSource {
 
   private static final class ConcatenatedByteSource extends ByteSource {
 
-    final Iterable<? extends ByteSource> sources;
+    final @Readonly Iterable<? extends ByteSource> sources;
 
-    ConcatenatedByteSource(Iterable<? extends ByteSource> sources) {
+    ConcatenatedByteSource(@Readonly Iterable<? extends ByteSource> sources) {
       this.sources = checkNotNull(sources);
     }
 

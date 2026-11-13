@@ -22,6 +22,7 @@ import org.checkerframework.checker.index.qual.LTLengthOf;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An abstract implementation of {@link Hasher}, which only requires subtypes to implement {@link
@@ -134,7 +135,7 @@ abstract class AbstractHasher implements Hasher {
 
   @Override
   @CanIgnoreReturnValue
-  public <T extends @Nullable Object> Hasher putObject(
+  public <T extends @Nullable @Readonly Object> Hasher putObject(
       @ParametricNullness T instance, Funnel<? super T> funnel) {
     funnel.funnel(instance, this);
     return this;

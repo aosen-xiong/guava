@@ -37,6 +37,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 
@@ -103,7 +104,7 @@ public final class Stats implements Serializable {
    * @param values a series of values, which will be converted to {@code double} values (this may
    *     cause loss of precision)
    */
-  public static Stats of(Iterable<? extends Number> values) {
+  public static Stats of(Iterable<? extends @Readonly Number> values) {
     StatsAccumulator accumulator = new StatsAccumulator();
     accumulator.addAll(values);
     return accumulator.snapshot();
@@ -116,7 +117,7 @@ public final class Stats implements Serializable {
    * @param values a series of values, which will be converted to {@code double} values (this may
    *     cause loss of precision)
    */
-  public static Stats of(Iterator<? extends Number> values) {
+  public static Stats of(Iterator<? extends @Readonly Number> values) {
     StatsAccumulator accumulator = new StatsAccumulator();
     accumulator.addAll(values);
     return accumulator.snapshot();
@@ -419,7 +420,7 @@ public final class Stats implements Serializable {
    * {@code strictfp}-like semantics.)
    */
   @Override
-  public boolean equals(@CheckForNull Object obj) {
+  public boolean equals(@CheckForNull @Readonly Object obj) {
     if (obj == null) {
       return false;
     }
@@ -474,7 +475,7 @@ public final class Stats implements Serializable {
    *     cause loss of precision)
    * @throws IllegalArgumentException if the dataset is empty
    */
-  public static double meanOf(Iterable<? extends Number> values) {
+  public static double meanOf(Iterable<? extends @Readonly Number> values) {
     return meanOf(values.iterator());
   }
 
@@ -488,7 +489,7 @@ public final class Stats implements Serializable {
    *     cause loss of precision)
    * @throws IllegalArgumentException if the dataset is empty
    */
-  public static double meanOf(Iterator<? extends Number> values) {
+  public static double meanOf(Iterator<? extends @Readonly Number> values) {
     checkArgument(values.hasNext());
     long count = 1;
     double mean = values.next().doubleValue();

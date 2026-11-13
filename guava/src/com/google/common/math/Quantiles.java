@@ -35,6 +35,7 @@ import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.index.qual.Positive;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Provides a fluent API for calculating <a
@@ -241,7 +242,7 @@ public final class Quantiles {
      */
     @SuppressWarnings("value:argument") // `dataset` is of mutable length data structures type( `Collection`)
     //if `dataset` is not empty as specified in doc, method `Doubles.toArray()` return a non empty `dataset` as well
-    public double compute(Collection<? extends Number> dataset) {
+    public double compute(Collection<? extends @Readonly Number> dataset) {
       return computeInPlace(Doubles.toArray(dataset));
     }
 
@@ -349,7 +350,7 @@ public final class Quantiles {
 
     @SuppressWarnings("value:argument") // `dataset` is of mutable length data structures type( `Collection`)
     //if `dataset` is not empty as specified in doc, method `Doubles.toArray()` return a non empty `dataset` as well
-    public Map<Integer, Double> compute(Collection<? extends Number> dataset) {
+    public Map<Integer, Double> compute(Collection<? extends @Readonly Number> dataset) {
       return computeInPlace(Doubles.toArray(dataset));
     }
 

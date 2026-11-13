@@ -34,4 +34,4 @@ import org.checkerframework.checker.mutability.qual.Readonly;
 @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
 @GwtCompatible(emulated = true)
 @Immutable
-abstract class RangeGwtSerializationDependencies<C extends @Readonly Comparable> implements Serializable {}
+abstract class RangeGwtSerializationDependencies<C extends @Immutable Comparable> implements Serializable {}

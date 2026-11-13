@@ -20,6 +20,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A {@link MapIteratorCache} that adds additional caching. In addition to the caching provided by
@@ -28,19 +33,20 @@ import javax.annotation.CheckForNull;
  * @author James Sexton
  */
 @ElementTypesAreNonnullByDefault
-final class MapRetrievalCache<K, V> extends MapIteratorCache<K, V> {
+@ReceiverDependentMutable
+final class MapRetrievalCache<K extends @Immutable Object, V> extends MapIteratorCache<K, V> {
   // See the note about volatile in the superclass.
-  @CheckForNull private transient volatile CacheEntry<K, V> cacheEntry1;
-  @CheckForNull private transient volatile CacheEntry<K, V> cacheEntry2;
+  @CheckForNull private transient volatile @Assignable @Mutable CacheEntry<K, V> cacheEntry1;
+  @CheckForNull private transient volatile @Assignable @Mutable CacheEntry<K, V> cacheEntry2;
 
-  MapRetrievalCache(Map<K, V> backingMap) {
+  MapRetrievalCache(@ReceiverDependentMutable Map<K, V> backingMap) {
     super(backingMap);
   }
 
   @SuppressWarnings("unchecked") // Safe because we only cast if key is found in map.
   @Override
   @CheckForNull
-  V get(Object key) {
+  V get(@Readonly Object key) {
     checkNotNull(key);
     V value = getIfCached(key);
     if (value != null) {
@@ -58,7 +64,7 @@ final class MapRetrievalCache<K, V> extends MapIteratorCache<K, V> {
 
   @Override
   @CheckForNull
-  V getIfCached(@CheckForNull Object key) {
+  V getIfCached(@CheckForNull @Readonly Object key) {
     V value = super.getIfCached(key);
     if (value != null) {
       return value;
@@ -84,7 +90,7 @@ final class MapRetrievalCache<K, V> extends MapIteratorCache<K, V> {
   }
 
   @Override
-  void clearCache() {
+  void clearCache(@Mutable MapRetrievalCache<K, V> this) {
     super.clearCache();
     cacheEntry1 = null;
     cacheEntry2 = null;
@@ -100,7 +106,7 @@ final class MapRetrievalCache<K, V> extends MapIteratorCache<K, V> {
     cacheEntry1 = entry;
   }
 
-  private static final class CacheEntry<K, V> {
+  private static final class CacheEntry<K extends @Immutable Object, V> {
     final K key;
     final V value;
 

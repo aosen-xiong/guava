@@ -29,7 +29,6 @@ import org.checkerframework.checker.nullness.qual.KeyFor;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
-import org.checkerframework.checker.mutability.qual.PolyMutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
@@ -77,7 +76,7 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
   protected ForwardingMap() {}
 
   @Override
-  protected abstract @PolyMutable Map<K, V> delegate(@PolyMutable ForwardingMap<K, V> this);
+  protected abstract @ReceiverDependentMutable Map<K, V> delegate(@ReceiverDependentMutable ForwardingMap<K, V> this);
 
   @Pure
   @Override
@@ -140,19 +139,19 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@KeyFor({"this"}) K> keySet(@PolyMutable ForwardingMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@KeyFor({"this"}) K> keySet(@ReceiverDependentMutable ForwardingMap<K, V> this) {
     return delegate().keySet();
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable Collection<V> values(@PolyMutable ForwardingMap<K, V> this) {
+  public @ReceiverDependentMutable Collection<V> values(@ReceiverDependentMutable ForwardingMap<K, V> this) {
     return delegate().values();
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@PolyMutable ForwardingMap<K, V> this) {
+  public @ReceiverDependentMutable Set<@ReceiverDependentMutable Entry<@KeyFor({"this"}) K, V>> entrySet(@ReceiverDependentMutable ForwardingMap<K, V> this) {
     return delegate().entrySet();
   }
 
@@ -223,8 +222,10 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected class StandardKeySet extends Maps.KeySet<K, V> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardKeySet() {
       super(ForwardingMap.this);
     }
@@ -250,8 +251,10 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected class StandardValues extends Maps.Values<K, V> {
     /** Constructor for use by subclasses. */
+    @SuppressWarnings("mutability:argument.type.incompatible") // Outer.this in an inner-class constructor is @Mutable, not the enclosing instance's qualifier: https://github.com/eisop/checker-framework/issues/2322
     public StandardValues() {
       super(ForwardingMap.this);
     }
@@ -277,12 +280,13 @@ public abstract class ForwardingMap<K extends @Nullable @Immutable Object, V ext
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected abstract class StandardEntrySet extends Maps.EntrySet<K, V> {
     /** Constructor for use by subclasses. */
     protected StandardEntrySet() {}
 
     @Override
-    Map<K, V> map() {
+    @ReceiverDependentMutable Map<K, V> map(@ReceiverDependentMutable ForwardingMap<K, V>.@ReceiverDependentMutable StandardEntrySet this) {
       return ForwardingMap.this;
     }
   }

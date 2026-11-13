@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Implementation of {@code Futures#withTimeout}.
@@ -39,8 +40,8 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @J2ktIncompatible
 @GwtIncompatible
 @ElementTypesAreNonnullByDefault
-final class TimeoutFuture<V extends @Nullable Object> extends FluentFuture.TrustedFuture<V> {
-  static <V extends @Nullable Object> ListenableFuture<V> create(
+final class TimeoutFuture<V extends @Nullable @Readonly Object> extends FluentFuture.TrustedFuture<V> {
+  static <V extends @Nullable @Readonly Object> ListenableFuture<V> create(
       ListenableFuture<V> delegate,
       long time,
       TimeUnit unit,
@@ -84,7 +85,7 @@ final class TimeoutFuture<V extends @Nullable Object> extends FluentFuture.Trust
   }
 
   /** A runnable that is called when the delegate or the timer completes. */
-  private static final class Fire<V extends @Nullable Object> implements Runnable {
+  private static final class Fire<V extends @Nullable @Readonly Object> implements Runnable {
     @CheckForNull @LazyInit TimeoutFuture<V> timeoutFutureRef;
 
     Fire(TimeoutFuture<V> timeoutFuture) {

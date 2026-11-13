@@ -67,7 +67,7 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
   protected ForwardingMultiset() {}
 
   @Override
-  protected abstract @PolyMutable Multiset<E> delegate(@PolyMutable ForwardingMultiset<E> this);
+  protected abstract @ReceiverDependentMutable Multiset<E> delegate(@ReceiverDependentMutable ForwardingMultiset<E> this);
 
   @Override
   public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
@@ -82,19 +82,19 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@Mutable ForwardingMultiset<E> this, @CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable ForwardingMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
     return delegate().remove(element, occurrences);
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<E> elementSet(@PolyMutable ForwardingMultiset<E> this) {
+  public @ReceiverDependentMutable Set<E> elementSet(@ReceiverDependentMutable ForwardingMultiset<E> this) {
     return delegate().elementSet();
   }
 
   @SideEffectFree
   @Override
-  public @PolyMutable Set<@PolyMutable Entry<E>> entrySet(@PolyMutable ForwardingMultiset<E> this) {
+  public @ReceiverDependentMutable Set<@Readonly Entry<E>> entrySet(@ReceiverDependentMutable ForwardingMultiset<E> this) {
     return delegate().entrySet();
   }
 
@@ -255,17 +255,18 @@ public abstract class ForwardingMultiset<E extends @Nullable @Readonly Object> e
    *
    * @since 10.0
    */
+  @ReceiverDependentMutable
   protected class StandardElementSet extends Multisets.ElementSet<E> {
     /** Constructor for use by subclasses. */
     public StandardElementSet() {}
 
     @Override
-    Multiset<E> multiset(@PolyMutable ForwardingMultiset<E>.StandardElementSet this) {
+    @ReceiverDependentMutable Multiset<E> multiset(@ReceiverDependentMutable ForwardingMultiset<E>.@ReceiverDependentMutable StandardElementSet this) {
       return ForwardingMultiset.this;
     }
 
     @Override
-    public Iterator<E> iterator(@Readonly StandardElementSet this) {
+    public @Mutable Iterator<E> iterator(@ReceiverDependentMutable ForwardingMultiset<E>.@ReceiverDependentMutable StandardElementSet this) {
       return Multisets.elementIterator(multiset().entrySet().iterator());
     }
   }

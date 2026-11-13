@@ -42,6 +42,7 @@ import java.util.function.ObjIntConsumer;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Assignable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
@@ -83,11 +84,11 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
    * user attempts to add a string element to a set whose elements are integers), the {@code
    * add(Object)} call will throw a {@code ClassCastException}.
    *
-   * <p>The type specification is {@code <E extends Comparable>}, instead of the more specific
-   * {@code <E extends Comparable<? super E>>}, to support classes defined without generics.
+   * <p>The type specification is {@code <E extends @Immutable Comparable>}, instead of the more specific
+   * {@code <E extends @Immutable Comparable<? super E>>}, to support classes defined without generics.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends Comparable> TreeMultiset<E> create() {
+  public static <E extends @Immutable Comparable> TreeMultiset<E> create() {
     return new TreeMultiset<E>(Ordering.natural());
   }
 
@@ -104,7 +105,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
    */
   @SuppressWarnings("unchecked")
   public static <E extends @Nullable @Readonly Object> TreeMultiset<E> create(
-      @CheckForNull Comparator<? super E> comparator) {
+      @CheckForNull @Readonly Comparator<? super E> comparator) {
     return (comparator == null)
         ? new TreeMultiset<E>((Comparator) Ordering.natural())
         : new TreeMultiset<E>(comparator);
@@ -116,11 +117,11 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
    *
    * <p>This implementation is highly efficient when {@code elements} is itself a {@link Multiset}.
    *
-   * <p>The type specification is {@code <E extends Comparable>}, instead of the more specific
-   * {@code <E extends Comparable<? super E>>}, to support classes defined without generics.
+   * <p>The type specification is {@code <E extends @Immutable Comparable>}, instead of the more specific
+   * {@code <E extends @Immutable Comparable<? super E>>}, to support classes defined without generics.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static <E extends Comparable> TreeMultiset<E> create(Iterable<? extends E> elements) {
+  public static <E extends @Immutable Comparable> TreeMultiset<E> create(Iterable<? extends E> elements) {
     TreeMultiset<E> multiset = create();
     Iterables.addAll(multiset, elements);
     return multiset;
@@ -130,19 +131,20 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   private final transient GeneralRange<E> range;
   private final transient AvlNode<E> header;
 
-  TreeMultiset(Reference<AvlNode<E>> rootReference, GeneralRange<E> range, AvlNode<E> endLink) {
+  TreeMultiset(@ReceiverDependentMutable Reference<AvlNode<E>> rootReference, GeneralRange<E> range, @ReceiverDependentMutable AvlNode<E> endLink) {
     super(range.comparator());
     this.rootReference = rootReference;
     this.range = range;
     this.header = endLink;
   }
 
-  TreeMultiset(Comparator<? super E> comparator) {
+  @SuppressWarnings({"mutability:assignment.type.incompatible", "mutability:argument.type.incompatible"}) // PICO constructor fix: the constructor stores a fresh @Mutable header node into its receiver-dependent field while the object is being initialized, as jdk#4's collection constructors do, and links that node to itself
+  TreeMultiset(@Readonly Comparator<? super E> comparator) {
     super(comparator);
     this.range = GeneralRange.all(comparator);
     this.header = new AvlNode<>();
     successor(header, header);
-    this.rootReference = new Reference<>();
+    this.rootReference = new @ReceiverDependentMutable Reference<>();
   }
 
   /** A function which can be summed across a subtree. */
@@ -250,12 +252,12 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     return Ints.saturatedCast(aggregateForEntries(Aggregate.DISTINCT));
   }
 
-  static int distinctElements(@CheckForNull AvlNode<?> node) {
+  static int distinctElements(@CheckForNull @Readonly AvlNode<?> node) {
     return (node == null) ? 0 : node.distinctElements;
   }
 
   @Override
-  public @NonNegative int count(@CheckForNull @UnknownSignedness Object element) {
+  public @NonNegative int count(@CheckForNull @UnknownSignedness @Readonly Object element) {
     try {
       @SuppressWarnings("unchecked")
       E e = (E) element;
@@ -293,7 +295,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   @CanIgnoreReturnValue
   @Override
-  public int remove(@Mutable TreeMultiset<E> this, @CheckForNull Object element, int occurrences) {
+  public int remove(@Mutable TreeMultiset<E> this, @CheckForNull @Readonly Object element, int occurrences) {
     checkNonnegative(occurrences, "occurrences");
     if (occurrences == 0) {
       return count(element);
@@ -385,8 +387,8 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
   }
 
-  private Entry<E> wrapEntry(final AvlNode<E> baseEntry) {
-    return new Multisets.AbstractEntry<E>() {
+  private Entry<E> wrapEntry(final @Readonly AvlNode<E> baseEntry) {
+    return new Multisets.@Mutable AbstractEntry<E>() {
       @Override
       @ParametricNullness
       public E getElement() {
@@ -407,7 +409,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   /** Returns the first node in the tree that is in range. */
   @CheckForNull
-  private AvlNode<E> firstNode() {
+  private @Readonly AvlNode<E> firstNode() {
     AvlNode<E> root = rootReference.get();
     if (root == null) {
       return null;
@@ -431,7 +433,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @CheckForNull
-  private AvlNode<E> lastNode() {
+  private @Readonly AvlNode<E> lastNode() {
     AvlNode<E> root = rootReference.get();
     if (root == null) {
       return null;
@@ -460,9 +462,9 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  Iterator<Entry<E>> entryIterator() {
-    return new Iterator<Entry<E>>() {
-      @CheckForNull AvlNode<E> current = firstNode();
+  Iterator<@Readonly Entry<E>> entryIterator() {
+    return new @Mutable Iterator<Entry<E>>() {
+      @CheckForNull @Readonly AvlNode<E> current = firstNode();
       @CheckForNull Entry<E> prevEntry;
 
       @Override
@@ -503,9 +505,9 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  Iterator<Entry<E>> descendingEntryIterator() {
-    return new Iterator<Entry<E>>() {
-      @CheckForNull AvlNode<E> current = lastNode();
+  Iterator<@Readonly Entry<E>> descendingEntryIterator() {
+    return new @Mutable Iterator<Entry<E>>() {
+      @CheckForNull @Readonly AvlNode<E> current = lastNode();
       @CheckForNull Entry<E> prevEntry = null;
 
       @Override
@@ -557,42 +559,43 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
   }
 
   @Override
-  public Iterator<E> iterator() {
+  public @Mutable Iterator<E> iterator(@ReceiverDependentMutable TreeMultiset<E> this) {
     return Multisets.iteratorImpl(this);
   }
 
   @Override
-  public SortedMultiset<E> headMultiset(@ParametricNullness E upperBound, BoundType boundType) {
-    return new TreeMultiset<E>(
+  public @ReceiverDependentMutable SortedMultiset<E> headMultiset(@ReceiverDependentMutable TreeMultiset<E> this, @ParametricNullness E upperBound, BoundType boundType) {
+    return new @ReceiverDependentMutable TreeMultiset<E>(
         rootReference,
         range.intersect(GeneralRange.upTo(comparator(), upperBound, boundType)),
         header);
   }
 
   @Override
-  public SortedMultiset<E> tailMultiset(@ParametricNullness E lowerBound, BoundType boundType) {
-    return new TreeMultiset<E>(
+  public @ReceiverDependentMutable SortedMultiset<E> tailMultiset(@ReceiverDependentMutable TreeMultiset<E> this, @ParametricNullness E lowerBound, BoundType boundType) {
+    return new @ReceiverDependentMutable TreeMultiset<E>(
         rootReference,
         range.intersect(GeneralRange.downTo(comparator(), lowerBound, boundType)),
         header);
   }
 
+  @ReceiverDependentMutable
   private static final class Reference<T> {
     @CheckForNull private T value;
 
     @CheckForNull
-    public T get() {
+    public T get(@Readonly Reference<T> this) {
       return value;
     }
 
-    public void checkAndSet(@CheckForNull T expected, @CheckForNull T newValue) {
+    public void checkAndSet(@Mutable Reference<T> this, @CheckForNull T expected, @CheckForNull T newValue) {
       if (value != expected) {
         throw new ConcurrentModificationException();
       }
       value = newValue;
     }
 
-    void clear() {
+    void clear(@Mutable Reference<T> this) {
       value = null;
     }
   }
@@ -611,11 +614,11 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     @CheckForNull private final E elem;
 
     // elemCount is 0 iff this node has been deleted.
-    private @Assignable int elemCount;
+    private int elemCount;
 
-    private @Assignable int distinctElements;
-    private @Assignable long totalCount;
-    private @Assignable int height;
+    private int distinctElements;
+    private long totalCount;
+    private int height;
     @CheckForNull private AvlNode<E> left;
     @CheckForNull private AvlNode<E> right;
     /*
@@ -651,15 +654,15 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // For discussion of pred() and succ(), see the comment on the pred and succ fields.
 
-    private AvlNode<E> pred() {
+    private @ReceiverDependentMutable AvlNode<E> pred() {
       return requireNonNull(pred);
     }
 
-    private AvlNode<E> succ() {
+    private @ReceiverDependentMutable AvlNode<E> succ() {
       return requireNonNull(succ);
     }
 
-    int count(Comparator<? super E> comparator, @ParametricNullness E e) {
+    int count(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         return (left == null) ? 0 : left.count(comparator, e);
@@ -670,7 +673,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       }
     }
 
-    private AvlNode<E> addRightChild(@ParametricNullness E e, int count) {
+    private AvlNode<E> addRightChild(@Mutable AvlNode<E> this, @ParametricNullness E e, int count) {
       right = new AvlNode<E>(e, count);
       successor(this, right, succ());
       height = Math.max(2, height);
@@ -679,7 +682,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return this;
     }
 
-    private AvlNode<E> addLeftChild(@ParametricNullness E e, int count) {
+    private AvlNode<E> addLeftChild(@Mutable AvlNode<E> this, @ParametricNullness E e, int count) {
       left = new AvlNode<E>(e, count);
       successor(pred(), left, this);
       height = Math.max(2, height);
@@ -688,8 +691,8 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return this;
     }
 
-    AvlNode<E> add(
-        Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
+    AvlNode<E> add(@Mutable AvlNode<E> this, 
+        @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       /*
        * It speeds things up considerably to unconditionally add count to totalCount here,
        * but that destroys failure atomicity in the case of count overflow. =(
@@ -735,8 +738,8 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    AvlNode<E> remove(
-        Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
+    AvlNode<E> remove(@Mutable AvlNode<E> this, 
+        @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         AvlNode<E> initLeft = left;
@@ -788,8 +791,8 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    AvlNode<E> setCount(
-        Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
+    AvlNode<E> setCount(@Mutable AvlNode<E> this, 
+        @Readonly Comparator<? super E> comparator, @ParametricNullness E e, int count, int[] result) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         AvlNode<E> initLeft = left;
@@ -838,8 +841,8 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    AvlNode<E> setCount(
-        Comparator<? super E> comparator,
+    AvlNode<E> setCount(@Mutable AvlNode<E> this, 
+        @Readonly Comparator<? super E> comparator,
         @ParametricNullness E e,
         int expectedCount,
         int newCount,
@@ -902,7 +905,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    private AvlNode<E> deleteMe() {
+    private AvlNode<E> deleteMe(@Mutable AvlNode<E> this) {
       int oldElemCount = this.elemCount;
       this.elemCount = 0;
       successor(pred(), succ());
@@ -930,7 +933,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the minimum node from this subtree to be reused elsewhere
     @CheckForNull
-    private AvlNode<E> removeMin(AvlNode<E> node) {
+    private AvlNode<E> removeMin(@Mutable AvlNode<E> this, AvlNode<E> node) {
       if (left == null) {
         return right;
       } else {
@@ -943,7 +946,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
     // Removes the maximum node from this subtree to be reused elsewhere
     @CheckForNull
-    private AvlNode<E> removeMax(AvlNode<E> node) {
+    private AvlNode<E> removeMax(@Mutable AvlNode<E> this, AvlNode<E> node) {
       if (right == null) {
         return left;
       } else {
@@ -954,22 +957,22 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       }
     }
 
-    private void recomputeMultiset() {
+    private void recomputeMultiset(@Mutable AvlNode<E> this) {
       this.distinctElements =
           1 + TreeMultiset.distinctElements(left) + TreeMultiset.distinctElements(right);
       this.totalCount = elemCount + totalCount(left) + totalCount(right);
     }
 
-    private void recomputeHeight() {
+    private void recomputeHeight(@Mutable AvlNode<E> this) {
       this.height = 1 + Math.max(height(left), height(right));
     }
 
-    private void recompute() {
+    private void recompute(@Mutable AvlNode<E> this) {
       recomputeMultiset();
       recomputeHeight();
     }
 
-    private AvlNode<E> rebalance() {
+    private AvlNode<E> rebalance(@Mutable AvlNode<E> this) {
       switch (balanceFactor()) {
         case -2:
           // requireNonNull is safe because right must exist in order to get a negative factor.
@@ -995,7 +998,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return height(left) - height(right);
     }
 
-    private AvlNode<E> rotateLeft() {
+    private AvlNode<E> rotateLeft(@Mutable AvlNode<E> this) {
       checkState(right != null);
       AvlNode<E> newTop = right;
       this.right = newTop.left;
@@ -1007,7 +1010,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return newTop;
     }
 
-    private AvlNode<E> rotateRight() {
+    private AvlNode<E> rotateRight(@Mutable AvlNode<E> this) {
       checkState(left != null);
       AvlNode<E> newTop = left;
       this.left = newTop.right;
@@ -1019,16 +1022,16 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
       return newTop;
     }
 
-    private static long totalCount(@CheckForNull AvlNode<?> node) {
+    private static long totalCount(@CheckForNull @Readonly AvlNode<?> node) {
       return (node == null) ? 0 : node.totalCount;
     }
 
-    private static int height(@CheckForNull AvlNode<?> node) {
+    private static int height(@CheckForNull @Readonly AvlNode<?> node) {
       return (node == null) ? 0 : node.height;
     }
 
     @CheckForNull
-    private AvlNode<E> ceiling(Comparator<? super E> comparator, @ParametricNullness E e) {
+    private @ReceiverDependentMutable AvlNode<E> ceiling(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp < 0) {
         return (left == null) ? this : MoreObjects.firstNonNull(left.ceiling(comparator, e), this);
@@ -1040,7 +1043,7 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
     }
 
     @CheckForNull
-    private AvlNode<E> floor(Comparator<? super E> comparator, @ParametricNullness E e) {
+    private @ReceiverDependentMutable AvlNode<E> floor(@Readonly Comparator<? super E> comparator, @ParametricNullness E e) {
       int cmp = comparator.compare(e, getElement());
       if (cmp > 0) {
         return (right == null) ? this : MoreObjects.firstNonNull(right.floor(comparator, e), this);
@@ -1098,11 +1101,11 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
   @J2ktIncompatible
   @GwtIncompatible // java.io.ObjectInputStream
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable TreeMultiset<E> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     @SuppressWarnings("unchecked")
     // reading data stored by writeObject
-    Comparator<? super E> comparator = (Comparator<? super E>) requireNonNull(stream.readObject());
+    @Readonly Comparator<? super E> comparator = (Comparator<? super E>) requireNonNull(stream.readObject());
     Serialization.getFieldSetter(AbstractSortedMultiset.class, "comparator").set(this, comparator);
     Serialization.getFieldSetter(TreeMultiset.class, "range")
         .set(this, GeneralRange.all(comparator));
@@ -1120,9 +1123,9 @@ public final class TreeMultiset<E extends @Readonly @Nullable Object> extends Ab
 
 @Override
 @Pure
-public boolean contains(@Nullable @UnknownSignedness Object arg0) { return super.contains(arg0); }
+public boolean contains(@Nullable @UnknownSignedness @Readonly Object arg0) { return super.contains(arg0); }
 
 @Override
-public boolean containsAll(Collection<?> arg0) { return super.containsAll(arg0); }
+public boolean containsAll(@Readonly Collection<?> arg0) { return super.containsAll(arg0); }
 
 }

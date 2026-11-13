@@ -95,7 +95,7 @@ final class SingletonImmutableBiMap<K extends @Immutable Object, V extends @Immu
   }
 
   @Override
-  ImmutableSet<Entry<K, V>> createEntrySet() {
+  ImmutableSet<@Immutable Entry<K, V>> createEntrySet() {
     return ImmutableSet.of(Maps.immutableEntry(singleKey, singleValue));
   }
 
@@ -128,7 +128,7 @@ final class SingletonImmutableBiMap<K extends @Immutable Object, V extends @Immu
   @Override
   @J2ktIncompatible // serialization
   @GwtIncompatible // serialization
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return super.writeReplace();
   }
 }

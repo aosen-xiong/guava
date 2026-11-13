@@ -24,6 +24,7 @@ import java.util.Comparator;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
 import org.checkerframework.common.value.qual.IntRange;
 import org.checkerframework.common.value.qual.MinLen;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code byte} primitives that interpret values as signed. The
@@ -173,7 +174,7 @@ public final class SignedBytes {
    *
    * @since 2.0
    */
-  public static Comparator<byte[]> lexicographicalComparator() {
+  public static @Immutable Comparator<byte[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 

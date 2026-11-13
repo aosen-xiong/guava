@@ -17,6 +17,7 @@ package com.google.common.util.concurrent;
 import com.google.common.annotations.GwtCompatible;
 import com.google.common.annotations.J2ktIncompatible;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Hidden superclass of {@link FluentFuture} that provides us a place to declare special GWT
@@ -26,7 +27,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible(emulated = true)
 @J2ktIncompatible // Super-sourced
 @ElementTypesAreNonnullByDefault
-abstract class GwtFluentFutureCatchingSpecialization<V extends @Nullable Object>
+abstract class GwtFluentFutureCatchingSpecialization<V extends @Nullable @Readonly Object>
     extends AbstractFuture<V> {
   /*
    * This server copy of the class is empty. The corresponding GWT copy contains alternative

@@ -56,7 +56,7 @@ final class LexicographicalOrdering<T extends @Nullable @Readonly Object> extend
   }
 
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     if (object == this) {
       return true;
     }

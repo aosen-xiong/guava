@@ -37,7 +37,7 @@ import java.util.Map;
 @AnnotatedFor("mutability")
 @GwtCompatible(emulated = true)
 @ReceiverDependentMutable
-abstract class HashMultimapGwtSerializationDependencies<K extends @Immutable Object , V extends @Readonly Object> extends AbstractSetMultimap<K, V> {
+abstract class HashMultimapGwtSerializationDependencies<K extends @Immutable Object , V extends @Immutable Object> extends AbstractSetMultimap<K, V> {
   HashMultimapGwtSerializationDependencies(@ReceiverDependentMutable Map<K, @ReceiverDependentMutable Collection<V>> map) {
     super(map);
   }

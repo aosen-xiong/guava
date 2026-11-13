@@ -34,7 +34,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.index.qual.NonNegative;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * Static utility methods pertaining to instances of {@link Throwable}.
@@ -410,7 +412,7 @@ public final class Throwables {
      * TODO(cpovirk): Consider the UnsignedBytes pattern if it performs faster and doesn't cause
      * AOSP grief.
      */
-    return new AbstractList<StackTraceElement>() {
+    return new @Mutable AbstractList<StackTraceElement>() {
       /*
        * The following requireNonNull calls are safe because we use jlaStackTrace() only if
        * lazyStackTraceIsLazy() returns true.
@@ -433,8 +435,8 @@ public final class Throwables {
 
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
-  private static Object invokeAccessibleNonThrowingMethod(
-      Method method, Object receiver, Object... params) {
+  private static @Readonly Object invokeAccessibleNonThrowingMethod(
+      Method method, @Readonly Object receiver, @Readonly Object... params) {
     try {
       return method.invoke(receiver, params);
     } catch (IllegalAccessException e) {
@@ -458,7 +460,7 @@ public final class Throwables {
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   @CheckForNull
-  private static final Object jla = getJLA();
+  private static final @Readonly Object jla = getJLA();
 
   /**
    * The "getStackTraceElementMethod" method, only available on some JDKs so we use reflection to
@@ -486,7 +488,7 @@ public final class Throwables {
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   @CheckForNull
-  private static Object getJLA() {
+  private static @Readonly Object getJLA() {
     try {
       /*
        * We load sun.misc.* classes using reflection since Android doesn't support these classes and
@@ -529,7 +531,7 @@ public final class Throwables {
   @J2ktIncompatible
   @GwtIncompatible // java.lang.reflect
   @CheckForNull
-  private static Method getSizeMethod(Object jla) {
+  private static Method getSizeMethod(@Readonly Object jla) {
     try {
       Method getStackTraceDepth = getJlaMethod("getStackTraceDepth", Throwable.class);
       if (getStackTraceDepth == null) {

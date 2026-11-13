@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
@@ -66,7 +67,7 @@ final class TopKSelector<
    *
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
-  public static <T extends Comparable<? super T>> TopKSelector<T> least(int k) {
+  public static <T extends @Immutable Comparable<? super T>> TopKSelector<T> least(int k) {
     return least(k, Ordering.natural());
   }
 
@@ -77,7 +78,7 @@ final class TopKSelector<
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
   public static <T extends @Nullable @Readonly Object> TopKSelector<T> least(
-      int k, Comparator<? super T> comparator) {
+      int k, @Readonly Comparator<? super T> comparator) {
     return new TopKSelector<T>(comparator, k);
   }
 
@@ -88,7 +89,7 @@ final class TopKSelector<
    *
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
-  public static <T extends Comparable<? super T>> TopKSelector<T> greatest(int k) {
+  public static <T extends @Immutable Comparable<? super T>> TopKSelector<T> greatest(int k) {
     return greatest(k, Ordering.natural());
   }
 
@@ -98,13 +99,13 @@ final class TopKSelector<
    *
    * @throws IllegalArgumentException if {@code k < 0} or {@code k > Integer.MAX_VALUE / 2}
    */
-  public static <T extends @Nullable Object> TopKSelector<T> greatest(
-      int k, Comparator<? super T> comparator) {
+  public static <T extends @Nullable @Readonly Object> TopKSelector<T> greatest(
+      int k, @Readonly Comparator<? super T> comparator) {
     return new TopKSelector<T>(Ordering.from(comparator).reverse(), k);
   }
 
   private final int k;
-  private final Comparator<? super T> comparator;
+  private final @Readonly Comparator<? super T> comparator;
 
   /*
    * We are currently considering the elements in buffer in the range [0, bufferSize) as candidates
@@ -121,7 +122,7 @@ final class TopKSelector<
   @CheckForNull private T threshold;
 
   @SuppressWarnings("unchecked") // TODO(cpovirk): Consider storing Object[] instead of T[].
-  private TopKSelector(Comparator<? super T> comparator, int k) {
+  private TopKSelector(@Readonly Comparator<? super T> comparator, int k) {
     this.comparator = checkNotNull(comparator, "comparator");
     this.k = k;
     checkArgument(k >= 0, "k (%s) must be >= 0", k);
@@ -276,7 +277,7 @@ final class TopKSelector<
    * this {@code TopKSelector}. This method returns in O(k log k) time.
    */
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public List<T> topK() {
+  public @Readonly List<T> topK() {
     @SuppressWarnings("nullness") // safe because we pass sort() a range that contains real Ts
     T[] castBuffer = (T[]) buffer;
     Arrays.sort(castBuffer, 0, bufferSize, comparator);

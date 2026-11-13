@@ -57,7 +57,7 @@ import org.checkerframework.framework.qual.AnnotatedFor;
 public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements RangeMap<K, V>, Serializable {
 
   private static final ImmutableRangeMap<@Immutable Comparable<?>, Object> EMPTY =
-      new ImmutableRangeMap<>(ImmutableList.<Range<Comparable<?>>>of(), ImmutableList.of());
+      new ImmutableRangeMap<>(ImmutableList.<Range<@Immutable Comparable<?>>>of(), ImmutableList.of());
 
   /**
    * Returns a {@code Collector} that accumulates the input elements into a new {@code
@@ -89,7 +89,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
 
   @SuppressWarnings("unchecked")
   public static <K extends @Immutable Comparable<?>, V> ImmutableRangeMap<K, V> copyOf(
-      RangeMap<K, ? extends V> rangeMap) {
+      @Readonly RangeMap<K, ? extends V> rangeMap) {
     if (rangeMap instanceof ImmutableRangeMap) {
       return (ImmutableRangeMap<K, V>) rangeMap;
     }
@@ -115,7 +115,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
    */
   @DoNotMock
   public static final class Builder<K extends @Immutable Comparable<?>, V> {
-    private final List<Entry<Range<K>, V>> entries;
+    private final List<@Immutable Entry<Range<K>, V>> entries;
 
     public Builder() {
       this.entries = Lists.newArrayList();
@@ -137,7 +137,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
 
     /** Copies all associations from the specified range map into this builder. */
     @CanIgnoreReturnValue
-    public Builder<K, V> putAll(RangeMap<K, ? extends V> rangeMap) {
+    public Builder<K, V> putAll(@Readonly RangeMap<K, ? extends V> rangeMap) {
       for (Entry<Range<K>, ? extends V> entry : rangeMap.asMapOfRanges().entrySet()) {
         put(entry.getKey(), entry.getValue());
       }
@@ -383,7 +383,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
           @SuppressWarnings("RedundantOverride")
           @Override
           @J2ktIncompatible // serialization
-          Object writeReplace() {
+          @Readonly Object writeReplace() {
             return super.writeReplace();
           }
         };
@@ -402,14 +402,14 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
       @SuppressWarnings("RedundantOverride")
       @Override
       @J2ktIncompatible // serialization
-      Object writeReplace() {
+      @Readonly Object writeReplace() {
         return super.writeReplace();
       }
     };
   }
 
   @Override
-  public int hashCode(@UnknownSignedness @Readonly ImmutableRangeMap<K, V> this) {
+  public int hashCode(@UnknownSignedness ImmutableRangeMap<K, V> this) {
     return asMapOfRanges().hashCode();
   }
 
@@ -431,7 +431,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
    * This class is used to serialize ImmutableRangeMap instances. Serializes the {@link
    * #asMapOfRanges()} form.
    */
-  private static class SerializedForm<K extends Comparable<?>, V> implements Serializable {
+  private static class SerializedForm<K extends @Immutable Comparable<?>, V> implements Serializable {
 
     private final ImmutableMap<Range<K>, V> mapOfRanges;
 
@@ -439,7 +439,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
       this.mapOfRanges = mapOfRanges;
     }
 
-    Object readResolve() {
+    @Readonly Object readResolve() {
       if (mapOfRanges.isEmpty()) {
         return of();
       } else {
@@ -447,7 +447,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
       }
     }
 
-    Object createRangeMap() {
+    @Readonly Object createRangeMap() {
       Builder<K, V> builder = new Builder<>();
       for (Entry<Range<K>, V> entry : mapOfRanges.entrySet()) {
         builder.put(entry.getKey(), entry.getValue());
@@ -458,7 +458,7 @@ public class ImmutableRangeMap<K extends @Immutable Comparable<?>, V> implements
     private static final long serialVersionUID = 0;
   }
 
-  Object writeReplace() {
+  @Readonly Object writeReplace() {
     return new SerializedForm<>(asMapOfRanges());
   }
 

@@ -43,11 +43,14 @@ import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.PolyNull;
+import org.checkerframework.checker.mutability.qual.Immutable;
 import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
 
 /**
  * A double-ended priority queue, which provides constant-time access to both its least element and
@@ -110,16 +113,16 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * Creates a new min-max priority queue with default settings: natural order, no maximum size, no
    * initial contents, and an initial expected size of 11.
    */
-  public static <E extends Comparable<E>> MinMaxPriorityQueue<E> create() {
-    return new Builder<Comparable<E>>(Ordering.natural()).create();
+  public static <E extends @Immutable Comparable<E>> MinMaxPriorityQueue<E> create() {
+    return new Builder<@Immutable Comparable<E>>(Ordering.natural()).create();
   }
 
   /**
    * Creates a new min-max priority queue using natural order, no maximum size, and initially
    * containing the given elements.
    */
-  public static <E extends Comparable<E>> MinMaxPriorityQueue<E> create(
-      Iterable<? extends E> initialContents) {
+  public static <E extends @Immutable Comparable<E>> MinMaxPriorityQueue<E> create(
+      @Readonly Iterable<? extends E> initialContents) {
     return new Builder<E>(Ordering.<E>natural()).create(initialContents);
   }
 
@@ -142,8 +145,8 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * sized appropriately to hold {@code expectedSize} elements.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static Builder<Comparable> expectedSize(int expectedSize) {
-    return new Builder<Comparable>(Ordering.natural()).expectedSize(expectedSize);
+  public static Builder<@Immutable Comparable> expectedSize(int expectedSize) {
+    return new Builder<@Immutable Comparable>(Ordering.natural()).expectedSize(expectedSize);
   }
 
   /**
@@ -153,8 +156,8 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
    * element that was just added.
    */
   @SuppressWarnings("rawtypes") // https://github.com/google/guava/issues/989
-  public static Builder<Comparable> maximumSize(int maximumSize) {
-    return new Builder<Comparable>(Ordering.natural()).maximumSize(maximumSize);
+  public static Builder<@Immutable Comparable> maximumSize(int maximumSize) {
+    return new Builder<@Immutable Comparable>(Ordering.natural()).maximumSize(maximumSize);
   }
 
   /**
@@ -218,7 +221,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
      * Builds a new min-max priority queue using the previously specified options, and having the
      * given initial elements.
      */
-    public <T extends B> MinMaxPriorityQueue<T> create(Iterable<? extends T> initialContents) {
+    public <T extends B> MinMaxPriorityQueue<T> create(@Readonly Iterable<? extends T> initialContents) {
       MinMaxPriorityQueue<T> queue =
           new MinMaxPriorityQueue<>(
               this, initialQueueSize(expectedSize, maximumSize, initialContents));
@@ -237,7 +240,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
   private final Heap minHeap;
   private final Heap maxHeap;
   @VisibleForTesting final int maximumSize;
-  private @Nullable Object[] queue;
+  private @Nullable @Readonly Object[] queue;
   private int size;
   private int modCount;
 
@@ -250,7 +253,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
     this.maximumSize = builder.maximumSize;
     // TODO(kevinb): pad?
-    this.queue = new Object[queueSize];
+    this.queue = new @Readonly Object[queueSize];
   }
 
   @Override
@@ -274,7 +277,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @CanIgnoreReturnValue
   @Override
-  public boolean addAll(Collection<? extends E> newElements) {
+  public boolean addAll(@Readonly Collection<? extends E> newElements) {
     boolean modified = false;
     for (E element : newElements) {
       offer(element);
@@ -858,7 +861,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
     }
 
     /** Removes only this exact instance, not others that are equals() */
-    private boolean removeExact(Object target) {
+    private boolean removeExact(@Readonly Object target) {
       for (int i = 0; i < size; i++) {
         if (queue[i] == target) {
           removeAt(i);
@@ -924,8 +927,8 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @Override
   @J2ktIncompatible // Incompatible return type change. Use inherited (unoptimized) implementation
-  public @PolyNull @PolySigned Object[] toArray(MinMaxPriorityQueue<@PolyNull @PolySigned E> this) {
-    Object[] copyTo = new Object[size];
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly MinMaxPriorityQueue<@PolyNull @PolySigned @PolyMutable E> this) {
+    @PolyMutable Object[] copyTo = new @PolyMutable Object[size];
     System.arraycopy(queue, 0, copyTo, 0, size);
     return copyTo;
   }
@@ -950,7 +953,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
   @VisibleForTesting
   static int initialQueueSize(
-      int configuredExpectedSize, int maximumSize, Iterable<?> initialContents) {
+      int configuredExpectedSize, int maximumSize, @Readonly Iterable<?> initialContents) {
     // Start with what they said, if they said it, otherwise DEFAULT_CAPACITY
     int result =
         (configuredExpectedSize == Builder.UNSET_EXPECTED_SIZE)
@@ -959,7 +962,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
 
     // Enlarge to contain initial contents
     if (initialContents instanceof Collection) {
-      int initialSize = ((Collection<?>) initialContents).size();
+      int initialSize = ((@Readonly Collection<?>) initialContents).size();
       result = Math.max(result, initialSize);
     }
 
@@ -970,7 +973,7 @@ public final class MinMaxPriorityQueue<E> extends AbstractQueue<E> {
   private void growIfNeeded() {
     if (size > queue.length) {
       int newCapacity = calculateNewCapacity();
-      Object[] newQueue = new Object[newCapacity];
+      @Readonly Object[] newQueue = new @Readonly Object[newCapacity];
       System.arraycopy(queue, 0, newQueue, 0, queue.length);
       queue = newQueue;
     }

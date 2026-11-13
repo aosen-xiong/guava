@@ -155,7 +155,6 @@ public final class Strings {
    */
   @InlineMe(replacement = "string.repeat(count)")
   @InlineMeValidationDisabled("Java 11+ API only")
-  @SuppressWarnings("mutability:argument.type.incompatible") // cast from @Unique @Mutable to @Immutable
   public static String repeat(String string, @NonNegative int count) {
     checkNotNull(string); // eager for GWT.
 

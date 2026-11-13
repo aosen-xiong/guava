@@ -19,6 +19,7 @@ package com.google.common.graph;
 import java.util.AbstractSet;
 import java.util.Set;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.NonNegative;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 
@@ -29,15 +30,15 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @ElementTypesAreNonnullByDefault
 abstract class IncidentEdgeSet<N> extends AbstractSet<EndpointPair<N>> {
   final N node;
-  final BaseGraph<N> graph;
+  final @Readonly BaseGraph<N> graph;
 
-  IncidentEdgeSet(BaseGraph<N> graph, N node) {
+  IncidentEdgeSet(@Readonly BaseGraph<N> graph, N node) {
     this.graph = graph;
     this.node = node;
   }
 
   @Override
-  public boolean remove(@CheckForNull @UnknownSignedness Object o) {
+  public boolean remove(@CheckForNull @UnknownSignedness @Readonly Object o) {
     throw new UnsupportedOperationException();
   }
 
@@ -53,7 +54,7 @@ abstract class IncidentEdgeSet<N> extends AbstractSet<EndpointPair<N>> {
   }
 
   @Override
-  public boolean contains(@CheckForNull @UnknownSignedness Object obj) {
+  public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object obj) {
     if (!(obj instanceof EndpointPair)) {
       return false;
     }

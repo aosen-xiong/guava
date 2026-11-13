@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.RandomAccess;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Readonly;
 import org.checkerframework.checker.index.qual.HasSubsequence;
 import org.checkerframework.checker.index.qual.IndexFor;
 import org.checkerframework.checker.index.qual.IndexOrHigh;
@@ -44,6 +45,7 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 import org.checkerframework.common.value.qual.MinLen;
 import org.checkerframework.framework.qual.AnnotatedFor;
 import org.checkerframework.framework.qual.CFComment;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * Static utility methods pertaining to {@code boolean} primitives, that are not already found in
@@ -95,7 +97,7 @@ public final class Booleans {
    *
    * @since 21.0
    */
-  public static Comparator<Boolean> trueFirst() {
+  public static @Immutable Comparator<Boolean> trueFirst() {
     return BooleanComparator.TRUE_FIRST;
   }
 
@@ -107,7 +109,7 @@ public final class Booleans {
    *
    * @since 21.0
    */
-  public static Comparator<Boolean> falseFirst() {
+  public static @Immutable Comparator<Boolean> falseFirst() {
     return BooleanComparator.FALSE_FIRST;
   }
 
@@ -323,7 +325,7 @@ public final class Booleans {
    *
    * @since 2.0
    */
-  public static Comparator<boolean[]> lexicographicalComparator() {
+  public static @Immutable Comparator<boolean[]> lexicographicalComparator() {
     return LexicographicalComparator.INSTANCE;
   }
 
@@ -367,7 +369,7 @@ public final class Booleans {
       return ((BooleanArrayAsList) collection).toBooleanArray();
     }
 
-    Object[] boxedArray = collection.toArray();
+    @Readonly Object[] boxedArray = collection.toArray();
     int len = boxedArray.length;
     boolean[] array = new boolean[len];
     for (int i = 0; i < len; i++) {
@@ -390,6 +392,7 @@ public final class Booleans {
    * @param backingArray the array to back the list
    * @return a list view of the array
    */
+  @SuppressWarnings("mutability:return.type.incompatible") // an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
   public static List<Boolean> asList(boolean... backingArray) {
     if (backingArray.length == 0) {
       return Collections.emptyList();
@@ -439,14 +442,14 @@ public final class Booleans {
 
     @Override
     @SuppressWarnings("signedness:cast.unsafe") // CF bug? Boolean should always be @Signed
-    public boolean contains(@CheckForNull @UnknownSignedness Object target) {
+    public boolean contains(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       return (target instanceof Boolean)
           && Booleans.indexOf(array, (@Signed Boolean) target, start, end) != -1;
     }
 
     @Override
-    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int indexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Boolean) {
         @SuppressWarnings("signedness:cast.unsafe") // https://github.com/typetools/checker-framework/pull/5862
@@ -459,7 +462,7 @@ public final class Booleans {
     }
 
     @Override
-    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness Object target) {
+    public @IndexOrLow("this") int lastIndexOf(@CheckForNull @UnknownSignedness @Readonly Object target) {
       // Overridden to prevent a ton of boxing
       if (target instanceof Boolean) {
         @SuppressWarnings("signedness:cast.unsafe") // https://github.com/typetools/checker-framework/pull/5862
@@ -481,7 +484,7 @@ public final class Booleans {
     }
 
     @Override
-    @SuppressWarnings("index") // needs https://github.com/kelloggm/checker-framework/issues/229
+    @SuppressWarnings({"index", "mutability:return.type.incompatible"}) // index: needs https://github.com/kelloggm/checker-framework/issues/229. mutability: an empty list has no index to set, so the immutable Collections.emptyList() behaves as this fixed-size view would
     public List<Boolean> subList(@IndexOrHigh("this") int fromIndex, @IndexOrHigh("this") int toIndex) {
       int size = size();
       checkPositionIndexes(fromIndex, toIndex, size);
@@ -492,7 +495,7 @@ public final class Booleans {
     }
 
     @Override
-    public boolean equals(@CheckForNull @UnknownSignedness Object object) {
+    public boolean equals(@CheckForNull @UnknownSignedness @Readonly Object object) {
       if (object == this) {
         return true;
       }

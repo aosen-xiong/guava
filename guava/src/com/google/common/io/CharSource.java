@@ -40,7 +40,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A readable source of characters, such as a text file. Unlike a {@link Reader}, a {@code
@@ -363,7 +365,7 @@ public abstract class CharSource {
    */
   @CanIgnoreReturnValue // some processors won't return a useful result
   @ParametricNullness
-  public <T extends @Nullable Object> T readLines(LineProcessor<T> processor) throws IOException {
+  public <T extends @Nullable @Readonly Object> T readLines(LineProcessor<T> processor) throws IOException {
     checkNotNull(processor);
 
     Closer closer = Closer.create();
@@ -438,7 +440,7 @@ public abstract class CharSource {
    * @return a {@code CharSource} containing the concatenated data
    * @since 15.0
    */
-  public static CharSource concat(Iterable<? extends CharSource> sources) {
+  public static CharSource concat(@Readonly Iterable<? extends CharSource> sources) {
     return new ConcatenatedCharSource(sources);
   }
 
@@ -460,7 +462,7 @@ public abstract class CharSource {
    * @throws NullPointerException if any of {@code sources} is {@code null}
    * @since 15.0
    */
-  public static CharSource concat(Iterator<? extends CharSource> sources) {
+  public static CharSource concat(@Mutable Iterator<? extends CharSource> sources) {
     return concat(ImmutableList.copyOf(sources));
   }
 
@@ -534,9 +536,9 @@ public abstract class CharSource {
 
     private static final Splitter LINE_SPLITTER = Splitter.onPattern("\r\n|\n|\r");
 
-    protected final CharSequence seq;
+    protected final @Readonly CharSequence seq;
 
-    protected CharSequenceCharSource(CharSequence seq) {
+    protected CharSequenceCharSource(@Readonly CharSequence seq) {
       this.seq = checkNotNull(seq);
     }
 
@@ -570,7 +572,7 @@ public abstract class CharSource {
      * empty string is not included, to match the behavior of BufferedReader/LineReader.readLine().
      */
     private Iterator<String> linesIterator() {
-      return new AbstractIterator<String>() {
+      return new @Mutable AbstractIterator<String>() {
         Iterator<String> lines = LINE_SPLITTER.split(seq).iterator();
 
         @Override
@@ -607,7 +609,7 @@ public abstract class CharSource {
 
     @Override
     @ParametricNullness
-    public <T extends @Nullable Object> T readLines(LineProcessor<T> processor) throws IOException {
+    public <T extends @Nullable @Readonly Object> T readLines(LineProcessor<T> processor) throws IOException {
       Iterator<String> lines = linesIterator();
       while (lines.hasNext()) {
         if (!processor.processLine(lines.next())) {
@@ -686,9 +688,9 @@ public abstract class CharSource {
 
   private static final class ConcatenatedCharSource extends CharSource {
 
-    private final Iterable<? extends CharSource> sources;
+    private final @Readonly Iterable<? extends CharSource> sources;
 
-    ConcatenatedCharSource(Iterable<? extends CharSource> sources) {
+    ConcatenatedCharSource(@Readonly Iterable<? extends CharSource> sources) {
       this.sources = checkNotNull(sources);
     }
 

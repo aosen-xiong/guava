@@ -103,7 +103,7 @@ public class HashBasedTable<R extends @Immutable Object, C extends @Immutable Ob
     return result;
   }
 
-  HashBasedTable(@ReceiverDependentMutable Map<R, Map<C, V>> backingMap, @ReceiverDependentMutable Factory<C, V> factory) {
+  HashBasedTable(@ReceiverDependentMutable Map<R, @ReceiverDependentMutable Map<C, V>> backingMap, @ReceiverDependentMutable Factory<C, V> factory) {
     super(backingMap, factory);
   }
 

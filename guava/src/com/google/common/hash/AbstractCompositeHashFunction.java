@@ -24,6 +24,7 @@ import org.checkerframework.common.value.qual.MinLen;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An abstract composition of multiple hash functions. {@linkplain #newHasher()} delegates to the
@@ -34,10 +35,11 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 @Immutable
 @ElementTypesAreNonnullByDefault
+@org.checkerframework.checker.mutability.qual.Immutable
 abstract class AbstractCompositeHashFunction extends AbstractHashFunction {
 
   @SuppressWarnings("Immutable") // array not modified after creation
-  final HashFunction[] functions;
+  final HashFunction @Readonly [] functions;
 
   AbstractCompositeHashFunction(HashFunction... functions) {
     for (HashFunction function : functions) {
@@ -182,7 +184,7 @@ abstract class AbstractCompositeHashFunction extends AbstractHashFunction {
       }
 
       @Override
-      public <T extends @Nullable Object> Hasher putObject(
+      public <T extends @Nullable @Readonly Object> Hasher putObject(
           @ParametricNullness T instance, Funnel<? super T> funnel) {
         for (Hasher hasher : hashers) {
           hasher.putObject(instance, funnel);

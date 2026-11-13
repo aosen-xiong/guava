@@ -65,6 +65,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * A manager for monitoring and controlling a set of {@linkplain Service services}. This class
@@ -637,7 +639,7 @@ public final class ServiceManager implements ServiceManagerBridge {
     }
 
     ImmutableMap<Service, Long> startupTimes() {
-      List<Entry<Service, Long>> loadTimes;
+      List<@Immutable Entry<Service, Long>> loadTimes;
       monitor.enter();
       try {
         loadTimes = Lists.newArrayListWithCapacity(startupTimers.size());
@@ -656,9 +658,9 @@ public final class ServiceManager implements ServiceManagerBridge {
           loadTimes,
           Ordering.natural()
               .onResultOf(
-                  new Function<Entry<Service, Long>, Long>() {
+                  new Function<@Readonly Entry<Service, Long>, Long>() {
                     @Override
-                    public Long apply(Entry<Service, Long> input) {
+                    public Long apply(@Readonly Entry<Service, Long> input) {
                       return input.getValue();
                     }
                   }));

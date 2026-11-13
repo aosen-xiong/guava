@@ -32,6 +32,10 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
 import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 import org.checkerframework.checker.signedness.qual.PolySigned;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Mutable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.PolyMutable;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * CompactLinkedHashSet is an implementation of a Set, which a predictable iteration order that
@@ -57,10 +61,10 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
 @GwtIncompatible // not worth using in GWT for now
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E> {
+class CompactLinkedHashSet<E extends @Nullable @Immutable Object> extends CompactHashSet<E> {
 
   /** Creates an empty {@code CompactLinkedHashSet} instance. */
-  public static <E extends @Nullable Object> CompactLinkedHashSet<E> create() {
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> create() {
     return new CompactLinkedHashSet<>();
   }
 
@@ -71,7 +75,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
    * @param collection the elements that the set should contain
    * @return a new {@code CompactLinkedHashSet} containing those elements (minus duplicates)
    */
-  public static <E extends @Nullable Object> CompactLinkedHashSet<E> create(
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> create(
       Collection<? extends E> collection) {
     CompactLinkedHashSet<E> set = createWithExpectedSize(collection.size());
     set.addAll(collection);
@@ -87,7 +91,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
    */
   @SafeVarargs
   @SuppressWarnings("nullness") // TODO: b/316358623 - Remove after checker fix.
-  public static <E extends @Nullable Object> CompactLinkedHashSet<E> create(E... elements) {
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> create(E... elements) {
     CompactLinkedHashSet<E> set = createWithExpectedSize(elements.length);
     Collections.addAll(set, elements);
     return set;
@@ -102,7 +106,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
    *     expectedSize} elements without resizing
    * @throws IllegalArgumentException if {@code expectedSize} is negative
    */
-  public static <E extends @Nullable Object> CompactLinkedHashSet<E> createWithExpectedSize(
+  public static <E extends @Nullable @Immutable Object> CompactLinkedHashSet<E> createWithExpectedSize(
       int expectedSize) {
     return new CompactLinkedHashSet<>(expectedSize);
   }
@@ -140,14 +144,14 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  void init(int expectedSize) {
+  void init(@Mutable CompactLinkedHashSet<E> this, int expectedSize) {
     super.init(expectedSize);
     this.firstEntry = ENDPOINT;
     this.lastEntry = ENDPOINT;
   }
 
   @Override
-  int allocArrays() {
+  int allocArrays(@Mutable CompactLinkedHashSet<E> this) {
     int expectedSize = super.allocArrays();
     this.predecessor = new int[expectedSize];
     this.successor = new int[expectedSize];
@@ -156,7 +160,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
 
   @Override
   @CanIgnoreReturnValue
-  Set<E> convertToHashFloodingResistantImplementation() {
+  Set<E> convertToHashFloodingResistantImplementation(@Mutable CompactLinkedHashSet<E> this) {
     Set<E> result = super.convertToHashFloodingResistantImplementation();
     this.predecessor = null;
     this.successor = null;
@@ -178,15 +182,15 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
     return requireSuccessors()[entry] - 1;
   }
 
-  private void setSuccessor(int entry, int succ) {
+  private void setSuccessor(@Mutable CompactLinkedHashSet<E> this, int entry, int succ) {
     requireSuccessors()[entry] = succ + 1;
   }
 
-  private void setPredecessor(int entry, int pred) {
+  private void setPredecessor(@Mutable CompactLinkedHashSet<E> this, int entry, int pred) {
     requirePredecessors()[entry] = pred + 1;
   }
 
-  private void setSucceeds(int pred, int succ) {
+  private void setSucceeds(@Mutable CompactLinkedHashSet<E> this, int pred, int succ) {
     if (pred == ENDPOINT) {
       firstEntry = succ;
     } else {
@@ -201,14 +205,14 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  void insertEntry(int entryIndex, @ParametricNullness E object, int hash, int mask) {
+  void insertEntry(@Mutable CompactLinkedHashSet<E> this, int entryIndex, @ParametricNullness E object, int hash, int mask) {
     super.insertEntry(entryIndex, object, hash, mask);
     setSucceeds(lastEntry, entryIndex);
     setSucceeds(entryIndex, ENDPOINT);
   }
 
   @Override
-  void moveLastEntry(int dstIndex, int mask) {
+  void moveLastEntry(@Mutable CompactLinkedHashSet<E> this, int dstIndex, int mask) {
     int srcIndex = size() - 1;
     super.moveLastEntry(dstIndex, mask);
 
@@ -222,7 +226,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  void resizeEntries(int newCapacity) {
+  void resizeEntries(@Mutable CompactLinkedHashSet<E> this, int newCapacity) {
     super.resizeEntries(newCapacity);
     predecessor = Arrays.copyOf(requirePredecessors(), newCapacity);
     successor = Arrays.copyOf(requireSuccessors(), newCapacity);
@@ -239,13 +243,14 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  public @PolyNull @PolySigned Object[] toArray(CompactLinkedHashSet<@PolyNull @PolySigned E> this) {
+  @SuppressWarnings("mutability:return.type.incompatible") // the copy holds this set's elements, of the receiver's @PolyMutable E, but ObjectArrays.toArrayImpl takes a Collection<?> and types the copy @Readonly Object[]
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly CompactLinkedHashSet<@PolyNull @PolySigned E> this) {
     return ObjectArrays.toArrayImpl(this);
   }
 
   @Override
   @SuppressWarnings("nullness") // b/192354773 in our checker affects toArray declarations
-  public <T extends @Nullable @UnknownSignedness Object> T[] toArray(T[] a) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(T[] a) {
     return ObjectArrays.toArrayImpl(this, a);
   }
 
@@ -255,7 +260,7 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
   }
 
   @Override
-  public void clear() {
+  public void clear(@Mutable CompactLinkedHashSet<E> this) {
     if (needsAllocArrays()) {
       return;
     }
@@ -274,11 +279,11 @@ class CompactLinkedHashSet<E extends @Nullable Object> extends CompactHashSet<E>
    * CompactHashMap.
    */
 
-  private int[] requirePredecessors() {
+  private int @ReceiverDependentMutable [] requirePredecessors() {
     return requireNonNull(predecessor);
   }
 
-  private int[] requireSuccessors() {
+  private int @ReceiverDependentMutable [] requireSuccessors() {
     return requireNonNull(successor);
   }
 

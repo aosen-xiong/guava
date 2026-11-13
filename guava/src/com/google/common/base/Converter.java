@@ -26,7 +26,12 @@ import com.google.j2objc.annotations.RetainedWith;
 import java.io.Serializable;
 import java.util.Iterator;
 import javax.annotation.CheckForNull;
+import org.checkerframework.checker.mutability.qual.Mutable;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.ReceiverDependentMutable;
 
 /**
  * A function from {@code A} to {@code B} with an associated <i>reverse</i> function from {@code B}
@@ -141,11 +146,12 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  *
  * [*] In annotating this class, we're ignoring LegacyConverter.
  */
+@ReceiverDependentMutable
 public abstract class Converter<A, B> implements Function<A, B> {
   private final boolean handleNullAutomatically;
 
   // We lazily cache the reverse view to avoid allocating on every call to reverse().
-  @LazyInit @RetainedWith @CheckForNull private transient Converter<B, A> reverse;
+  @LazyInit @RetainedWith @CheckForNull private transient @Assignable Converter<B, A> reverse;
 
   /** Constructor for use by subclasses. */
   protected Converter() {
@@ -275,7 +281,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     return new Iterable<B>() {
       @Override
       public Iterator<B> iterator() {
-        return new Iterator<B>() {
+        return new @Mutable Iterator<B>() {
           private final Iterator<? extends A> fromIterator = fromIterable.iterator();
 
           @Override
@@ -306,16 +312,17 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * <p><b>Note:</b> you should not override this method. It is non-final for legacy reasons.
    */
   @CheckReturnValue
-  public Converter<B, A> reverse() {
+  public @ReceiverDependentMutable Converter<B, A> reverse(@ReceiverDependentMutable Converter<A, B> this) {
     Converter<B, A> result = reverse;
-    return (result == null) ? reverse = new ReverseConverter<>(this) : result;
+    return (result == null) ? reverse = new @ReceiverDependentMutable ReverseConverter<>(this) : result;
   }
 
+  @ReceiverDependentMutable
   private static final class ReverseConverter<A, B> extends Converter<B, A>
       implements Serializable {
     final Converter<A, B> original;
 
-    ReverseConverter(Converter<A, B> original) {
+    ReverseConverter(@ReceiverDependentMutable Converter<A, B> original) {
       this.original = original;
     }
 
@@ -349,12 +356,12 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public Converter<A, B> reverse() {
+    public @ReceiverDependentMutable Converter<A, B> reverse(@ReceiverDependentMutable ReverseConverter<A, B> this) {
       return original;
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof ReverseConverter) {
         ReverseConverter<?, ?> that = (ReverseConverter<?, ?>) object;
         return this.original.equals(that.original);
@@ -382,21 +389,22 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * <p>The returned converter is serializable if {@code this} converter and {@code secondConverter}
    * are.
    */
-  public final <C> Converter<A, C> andThen(Converter<B, C> secondConverter) {
+  public final <C> @ReceiverDependentMutable Converter<A, C> andThen(@ReceiverDependentMutable Converter<A, B> this, @ReceiverDependentMutable Converter<B, C> secondConverter) {
     return doAndThen(secondConverter);
   }
 
   /** Package-private non-final implementation of andThen() so only we can override it. */
-  <C> Converter<A, C> doAndThen(Converter<B, C> secondConverter) {
-    return new ConverterComposition<>(this, checkNotNull(secondConverter));
+  <C> @ReceiverDependentMutable Converter<A, C> doAndThen(@ReceiverDependentMutable Converter<A, B> this, @ReceiverDependentMutable Converter<B, C> secondConverter) {
+    return new @ReceiverDependentMutable ConverterComposition<>(this, checkNotNull(secondConverter));
   }
 
+  @ReceiverDependentMutable
   private static final class ConverterComposition<A, B, C> extends Converter<A, C>
       implements Serializable {
     final Converter<A, B> first;
     final Converter<B, C> second;
 
-    ConverterComposition(Converter<A, B> first, Converter<B, C> second) {
+    ConverterComposition(@ReceiverDependentMutable Converter<A, B> first, @ReceiverDependentMutable Converter<B, C> second) {
       this.first = first;
       this.second = second;
     }
@@ -431,7 +439,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof ConverterComposition) {
         ConverterComposition<?, ?, ?> that = (ConverterComposition<?, ?, ?>) object;
         return this.first.equals(that.first) && this.second.equals(that.second);
@@ -492,7 +500,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * interchangeable.
    */
   @Override
-  public boolean equals(@CheckForNull Object object) {
+  public boolean equals(@CheckForNull @Readonly Object object) {
     return super.equals(object);
   }
 
@@ -541,7 +549,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    public boolean equals(@CheckForNull Object object) {
+    public boolean equals(@CheckForNull @Readonly Object object) {
       if (object instanceof FunctionBasedConverter) {
         FunctionBasedConverter<?, ?> that = (FunctionBasedConverter<?, ?>) object;
         return this.forwardFunction.equals(that.forwardFunction)
@@ -563,7 +571,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
 
   /** Returns a serializable converter that always converts or reverses an object to itself. */
   @SuppressWarnings("unchecked") // implementation is "fully variant"
-  public static <T> Converter<T, T> identity() {
+  public static <T> @Immutable Converter<T, T> identity() {
     return (IdentityConverter<T>) IdentityConverter.INSTANCE;
   }
 
@@ -571,8 +579,9 @@ public abstract class Converter<A, B> implements Function<A, B> {
    * A converter that always converts or reverses an object to itself. Note that T is now a
    * "pass-through type".
    */
+  @Immutable
   private static final class IdentityConverter<T> extends Converter<T, T> implements Serializable {
-    static final Converter<?, ?> INSTANCE = new IdentityConverter<>();
+    static final @Immutable Converter<?, ?> INSTANCE = new IdentityConverter<>();
 
     @Override
     protected T doForward(T t) {
@@ -590,7 +599,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
     }
 
     @Override
-    <S> Converter<T, S> doAndThen(Converter<T, S> otherConverter) {
+    <S> @Immutable Converter<T, S> doAndThen(@Immutable Converter<T, S> otherConverter) {
       return checkNotNull(otherConverter, "otherConverter");
     }
 
@@ -604,7 +613,7 @@ public abstract class Converter<A, B> implements Function<A, B> {
       return "Converter.identity()";
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return INSTANCE;
     }
 

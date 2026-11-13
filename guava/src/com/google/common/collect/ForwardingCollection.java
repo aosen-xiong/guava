@@ -68,10 +68,10 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
   protected ForwardingCollection() {}
 
   @Override
-  protected abstract @PolyMutable Collection<E> delegate(@PolyMutable ForwardingCollection<E> this);
+  protected abstract @ReceiverDependentMutable Collection<E> delegate(@ReceiverDependentMutable ForwardingCollection<E> this);
 
   @Override
-  public Iterator<E> iterator(@Readonly ForwardingCollection<E> this) {
+  public @Mutable Iterator<E> iterator(@ReceiverDependentMutable ForwardingCollection<E> this) {
     return delegate().iterator();
   }
 
@@ -83,7 +83,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
 
   @CanIgnoreReturnValue
   @Override
-  public boolean removeAll(@Mutable ForwardingCollection<E> this, Collection<?> collection) {
+  public boolean removeAll(@Mutable ForwardingCollection<E> this, @Readonly Collection<?> collection) {
     return delegate().removeAll(collection);
   }
 
@@ -109,7 +109,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:argument")
-  public boolean remove(@Mutable ForwardingCollection<E> this, @CheckForNull @UnknownSignedness Object object) {
+  public boolean remove(@Mutable ForwardingCollection<E> this, @CheckForNull @UnknownSignedness @Readonly Object object) {
     return delegate().remove(object);
   }
 
@@ -137,14 +137,14 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
   }
 
   @Override
-  public @PolyNull @PolySigned @PolyMutable Object @ReceiverDependentMutable [] toArray(ForwardingCollection<@PolyNull @PolySigned @PolyMutable E> this) {
+  public @PolyNull @PolySigned @PolyMutable Object[] toArray(@Readonly ForwardingCollection<@PolyNull @PolySigned @PolyMutable E> this) {
     return delegate().toArray();
   }
 
   @CanIgnoreReturnValue
   @Override
   @SuppressWarnings("nullness:return")
-  public <T extends @Nullable @UnknownSignedness @Readonly Object> T @ReceiverDependentMutable [] toArray(@ReceiverDependentMutable ForwardingCollection<E> this, @PolyNull T @ReceiverDependentMutable[] array) {
+  public <T extends @Nullable @UnknownSignedness @Readonly Object> T[] toArray(@Readonly ForwardingCollection<E> this, @PolyNull T[] array) {
     return delegate().toArray(array);
   }
 
@@ -260,8 +260,8 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
    *
    * @since 7.0
    */
-  protected @Nullable @PolyMutable Object @ReceiverDependentMutable [] standardToArray(ForwardingCollection<@PolyMutable E> this) {
-    @Nullable @PolyMutable Object @ReceiverDependentMutable [] newArray = new @Nullable @PolyMutable Object @ReceiverDependentMutable [size()];
+  protected @Nullable @PolyMutable Object @Mutable [] standardToArray(ForwardingCollection<@PolyMutable E> this) {
+    @Nullable @PolyMutable Object @Mutable [] newArray = new @Nullable @PolyMutable Object @Mutable [size()];
     return toArray(newArray);
   }
 
@@ -272,7 +272,7 @@ public abstract class ForwardingCollection<E extends @Nullable @Readonly Object>
    *
    * @since 7.0
    */
-  protected <T extends @Nullable @Readonly Object> T[] standardToArray(T @ReceiverDependentMutable [] array) {
+  protected <T extends @Nullable @Readonly Object> T[] standardToArray(T @Mutable [] array) {
     return ObjectArrays.toArrayImpl(this, array);
   }
 }

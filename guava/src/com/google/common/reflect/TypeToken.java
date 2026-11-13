@@ -49,6 +49,9 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.signedness.qual.UnknownSignedness;
+import org.checkerframework.checker.mutability.qual.Assignable;
+import org.checkerframework.checker.mutability.qual.Readonly;
+import org.checkerframework.checker.mutability.qual.Immutable;
 
 /**
  * A {@link Type} with generics.
@@ -100,15 +103,16 @@ import org.checkerframework.checker.signedness.qual.UnknownSignedness;
  */
 @SuppressWarnings("serial") // SimpleTypeToken is the serialized form.
 @ElementTypesAreNonnullByDefault
+@Immutable
 public abstract class TypeToken<T> extends TypeCapture<T> implements Serializable {
 
   private final Type runtimeType;
 
   /** Resolver for resolving parameter and field types with {@link #runtimeType} as context. */
-  @LazyInit @CheckForNull private transient TypeResolver invariantTypeResolver;
+  @LazyInit @CheckForNull private transient @Assignable TypeResolver invariantTypeResolver;
 
   /** Resolver for resolving covariant types with {@link #runtimeType} as context. */
-  @LazyInit @CheckForNull private transient TypeResolver covariantTypeResolver;
+  @LazyInit @CheckForNull private transient @Assignable TypeResolver covariantTypeResolver;
 
   /**
    * Constructs a new type token of {@code T}.
@@ -670,9 +674,10 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
    *
    * @since 13.0
    */
+  @Immutable
   public class TypeSet extends ForwardingSet<TypeToken<? super T>> implements Serializable {
 
-    @CheckForNull private transient ImmutableSet<TypeToken<? super T>> types;
+    @CheckForNull private transient @Assignable ImmutableSet<TypeToken<? super T>> types;
 
     TypeSet() {}
 
@@ -687,7 +692,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     @Override
-    protected Set<TypeToken<? super T>> delegate() {
+    protected @Immutable Set<TypeToken<? super T>> delegate() {
       ImmutableSet<TypeToken<? super T>> filteredTypes = types;
       if (filteredTypes == null) {
         // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
@@ -704,7 +709,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     /** Returns the raw types of the types in this set, in the same order. */
-    public Set<Class<? super T>> rawTypes() {
+    public @Immutable Set<Class<? super T>> rawTypes() {
       // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
       @SuppressWarnings({"unchecked", "rawtypes"})
       ImmutableList<Class<? super T>> collectedTypes =
@@ -715,17 +720,18 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     private static final long serialVersionUID = 0;
   }
 
+  @Immutable
   private final class InterfaceSet extends TypeSet {
 
     private final transient TypeSet allTypes;
-    @CheckForNull private transient ImmutableSet<TypeToken<? super T>> interfaces;
+    @CheckForNull private transient @Assignable ImmutableSet<TypeToken<? super T>> interfaces;
 
     InterfaceSet(TypeSet allTypes) {
       this.allTypes = allTypes;
     }
 
     @Override
-    protected Set<TypeToken<? super T>> delegate() {
+    protected @Immutable Set<TypeToken<? super T>> delegate() {
       ImmutableSet<TypeToken<? super T>> result = interfaces;
       if (result == null) {
         return (interfaces =
@@ -741,7 +747,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     @Override
-    public Set<Class<? super T>> rawTypes() {
+    public @Immutable Set<Class<? super T>> rawTypes() {
       // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
       @SuppressWarnings({"unchecked", "rawtypes"})
       ImmutableList<Class<? super T>> collectedTypes =
@@ -754,19 +760,20 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       throw new UnsupportedOperationException("interfaces().classes() not supported.");
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return getTypes().interfaces();
     }
 
     private static final long serialVersionUID = 0;
   }
 
+  @Immutable
   private final class ClassSet extends TypeSet {
 
-    @CheckForNull private transient ImmutableSet<TypeToken<? super T>> classes;
+    @CheckForNull private transient @Assignable ImmutableSet<TypeToken<? super T>> classes;
 
     @Override
-    protected Set<TypeToken<? super T>> delegate() {
+    protected @Immutable Set<TypeToken<? super T>> delegate() {
       ImmutableSet<TypeToken<? super T>> result = classes;
       if (result == null) {
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -788,7 +795,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     }
 
     @Override
-    public Set<Class<? super T>> rawTypes() {
+    public @Immutable Set<Class<? super T>> rawTypes() {
       // Java has no way to express ? super T when we parameterize TypeToken vs. Class.
       @SuppressWarnings({"unchecked", "rawtypes"})
       ImmutableList<Class<? super T>> collectedTypes =
@@ -801,7 +808,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       throw new UnsupportedOperationException("classes().interfaces() not supported.");
     }
 
-    private Object readResolve() {
+    private @Readonly Object readResolve() {
       return getTypes().classes();
     }
 
@@ -828,7 +835,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
    * Returns true if {@code o} is another {@code TypeToken} that represents the same {@link Type}.
    */
   @Override
-  public boolean equals(@CheckForNull Object o) {
+  public boolean equals(@CheckForNull @Readonly Object o) {
     if (o instanceof TypeToken) {
       TypeToken<?> that = (TypeToken<?>) o;
       return runtimeType.equals(that.runtimeType);
@@ -847,7 +854,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
   }
 
   /** Implemented to support serialization of subclasses. */
-  protected Object writeReplace() {
+  protected @Readonly Object writeReplace() {
     // TypeResolver just transforms the type to our own impls that are Serializable
     // except TypeVariable.
     return of(new TypeResolver().resolveType(runtimeType));
@@ -1305,6 +1312,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     return Types.JavaVersion.JAVA7.newArrayType(componentType);
   }
 
+  @Immutable
   private static final class SimpleTypeToken<T> extends TypeToken<T> {
 
     SimpleTypeToken(Type type) {
@@ -1319,7 +1327,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
    *
    * @param <K> The type "kind". Either a TypeToken, or Class.
    */
-  private abstract static class TypeCollector<K> {
+  private abstract static class TypeCollector<K extends @Immutable Object> {
 
     static final TypeCollector<TypeToken<?>> FOR_GENERIC_TYPE =
         new TypeCollector<TypeToken<?>>() {
@@ -1329,7 +1337,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
           }
 
           @Override
-          Iterable<? extends TypeToken<?>> getInterfaces(TypeToken<?> type) {
+          @Immutable Iterable<? extends TypeToken<?>> getInterfaces(TypeToken<?> type) {
             return type.getGenericInterfaces();
           }
 
@@ -1363,12 +1371,12 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
     final TypeCollector<K> classesOnly() {
       return new ForwardingTypeCollector<K>(this) {
         @Override
-        Iterable<? extends K> getInterfaces(K type) {
+        @Immutable Iterable<? extends K> getInterfaces(K type) {
           return ImmutableSet.of();
         }
 
         @Override
-        ImmutableList<K> collectTypes(Iterable<? extends K> types) {
+        ImmutableList<K> collectTypes(@Readonly Iterable<? extends K> types) {
           ImmutableList.Builder<K> builder = ImmutableList.builder();
           for (K type : types) {
             if (!getRawType(type).isInterface()) {
@@ -1384,7 +1392,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       return collectTypes(ImmutableList.of(type));
     }
 
-    ImmutableList<K> collectTypes(Iterable<? extends K> types) {
+    ImmutableList<K> collectTypes(@Readonly Iterable<? extends K> types) {
       // type -> order number. 1 for Object, 2 for anything directly below, so on so forth.
       Map<K, Integer> map = Maps.newHashMap();
       for (K type : types) {
@@ -1419,7 +1427,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       return aboveMe + 1;
     }
 
-    private static <K, V> ImmutableList<K> sortKeysByValue(
+    private static <K extends @Immutable Object, V> ImmutableList<K> sortKeysByValue(
         Map<K, V> map, Comparator<? super V> valueComparator) {
       Ordering<K> keyOrdering =
           new Ordering<K>() {
@@ -1435,12 +1443,12 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
 
     abstract Class<?> getRawType(K type);
 
-    abstract Iterable<? extends K> getInterfaces(K type);
+    abstract @Readonly Iterable<? extends K> getInterfaces(K type);
 
     @CheckForNull
     abstract K getSuperclass(K type);
 
-    private static class ForwardingTypeCollector<K> extends TypeCollector<K> {
+    private static class ForwardingTypeCollector<K extends @Immutable Object> extends TypeCollector<K> {
 
       private final TypeCollector<K> delegate;
 
@@ -1454,7 +1462,7 @@ public abstract class TypeToken<T> extends TypeCapture<T> implements Serializabl
       }
 
       @Override
-      Iterable<? extends K> getInterfaces(K type) {
+      @Readonly Iterable<? extends K> getInterfaces(K type) {
         return delegate.getInterfaces(type);
       }
 

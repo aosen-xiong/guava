@@ -44,6 +44,7 @@ import java.util.concurrent.locks.LockSupport;
 import java.util.logging.Level;
 import javax.annotation.CheckForNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.mutability.qual.Readonly;
 
 /**
  * An abstract implementation of {@link ListenableFuture}, intended for advanced users only. More
@@ -71,7 +72,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 @GwtCompatible(emulated = true)
 @ReflectionSupport(value = ReflectionSupport.Level.FULL)
 @ElementTypesAreNonnullByDefault
-public abstract class AbstractFuture<V extends @Nullable Object> extends InternalFutureFailureAccess
+public abstract class AbstractFuture<V extends @Nullable @Readonly Object> extends InternalFutureFailureAccess
     implements ListenableFuture<V> {
   // NOTE: Whenever both tests are cheap and functional, it's faster to use &, | instead of &&, ||
 
@@ -95,13 +96,13 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
    * of this interface must also be an AbstractFuture and must not override or expose for overriding
    * any of the public methods of ListenableFuture.
    */
-  interface Trusted<V extends @Nullable Object> extends ListenableFuture<V> {}
+  interface Trusted<V extends @Nullable @Readonly Object> extends ListenableFuture<V> {}
 
   /**
    * A less abstract subclass of AbstractFuture. This can be used to optimize setFuture by ensuring
    * that {@link #get} calls exactly the implementation of {@link AbstractFuture#get}.
    */
-  abstract static class TrustedFuture<V extends @Nullable Object> extends AbstractFuture<V>
+  abstract static class TrustedFuture<V extends @Nullable @Readonly Object> extends AbstractFuture<V>
       implements Trusted<V> {
     @CanIgnoreReturnValue
     @Override
@@ -340,7 +341,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
   }
 
   /** A special value that encodes the 'setFuture' state. */
-  private static final class SetFuture<V extends @Nullable Object> implements Runnable {
+  private static final class SetFuture<V extends @Nullable @Readonly Object> implements Runnable {
     final AbstractFuture<V> owner;
     final ListenableFuture<? extends V> future;
 
@@ -385,7 +386,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
    *       argument.
    * </ul>
    */
-  @CheckForNull private volatile Object value;
+  @CheckForNull private volatile @Readonly Object value;
 
   /** All listeners. */
   @CheckForNull private volatile Listener listeners;
@@ -585,7 +586,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
 
   /** Unboxes {@code obj}. Assumes that obj is not {@code null} or a {@link SetFuture}. */
   @ParametricNullness
-  private V getDoneValue(Object obj) throws ExecutionException {
+  private V getDoneValue(@Readonly Object obj) throws ExecutionException {
     // While this seems like it might be too branch-y, simple benchmarking proves it to be
     // unmeasurable (comparing done AbstractFutures with immediateFuture)
     if (obj instanceof Cancellation) {
@@ -900,7 +901,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
    *
    * <p>This is approximately the inverse of {@link #getDoneValue(Object)}
    */
-  private static Object getFutureValue(ListenableFuture<?> future) {
+  private static @Readonly Object getFutureValue(ListenableFuture<?> future) {
     if (future instanceof Trusted) {
       // Break encapsulation for TrustedFuture instances since we know that subclasses cannot
       // override .get() (since it is final) and therefore this is equivalent to calling .get()
@@ -980,7 +981,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
    * internal dependency on other /util/concurrent classes.
    */
   @ParametricNullness
-  private static <V extends @Nullable Object> V getUninterruptibly(Future<V> future)
+  private static <V extends @Nullable @Readonly Object> V getUninterruptibly(Future<V> future)
       throws ExecutionException {
     boolean interrupted = false;
     try {
@@ -1253,7 +1254,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
    * implementation. Using a reconstruction of the default Object.toString() prevents OOMs and stack
    * overflows, and helps avoid sensitive data inadvertently ending up in exception messages.
    */
-  private void appendResultObject(StringBuilder builder, @CheckForNull Object o) {
+  private void appendResultObject(StringBuilder builder, @CheckForNull @Readonly Object o) {
     if (o == null) {
       builder.append("null");
     } else if (o == this) {
@@ -1333,7 +1334,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
     abstract Listener gasListeners(AbstractFuture<?> future, Listener update);
 
     /** Performs a CAS operation on the {@link #value} field. */
-    abstract boolean casValue(AbstractFuture<?> future, @CheckForNull Object expect, Object update);
+    abstract boolean casValue(AbstractFuture<?> future, @CheckForNull @Readonly Object expect, @Readonly Object update);
   }
 
   /**
@@ -1427,7 +1428,8 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
 
     /** Performs a CAS operation on the {@link #value} field. */
     @Override
-    boolean casValue(AbstractFuture<?> future, @CheckForNull Object expect, Object update) {
+    @SuppressWarnings("mutability:argument.type.incompatible") // compareAndSwapObject only swaps the reference; sun.misc.Unsafe is not annotated
+    boolean casValue(AbstractFuture<?> future, @CheckForNull @Readonly Object expect, @Readonly Object update) {
       return UNSAFE.compareAndSwapObject(future, VALUE_OFFSET, expect, update);
     }
   }
@@ -1439,14 +1441,14 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
     final AtomicReferenceFieldUpdater<Waiter, Waiter> waiterNextUpdater;
     final AtomicReferenceFieldUpdater<AbstractFuture, Waiter> waitersUpdater;
     final AtomicReferenceFieldUpdater<AbstractFuture, Listener> listenersUpdater;
-    final AtomicReferenceFieldUpdater<AbstractFuture, Object> valueUpdater;
+    final AtomicReferenceFieldUpdater<AbstractFuture, @Readonly Object> valueUpdater;
 
     SafeAtomicHelper(
         AtomicReferenceFieldUpdater<Waiter, Thread> waiterThreadUpdater,
         AtomicReferenceFieldUpdater<Waiter, Waiter> waiterNextUpdater,
         AtomicReferenceFieldUpdater<AbstractFuture, Waiter> waitersUpdater,
         AtomicReferenceFieldUpdater<AbstractFuture, Listener> listenersUpdater,
-        AtomicReferenceFieldUpdater<AbstractFuture, Object> valueUpdater) {
+        AtomicReferenceFieldUpdater<AbstractFuture, @Readonly Object> valueUpdater) {
       this.waiterThreadUpdater = waiterThreadUpdater;
       this.waiterNextUpdater = waiterNextUpdater;
       this.waitersUpdater = waitersUpdater;
@@ -1488,7 +1490,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
     }
 
     @Override
-    boolean casValue(AbstractFuture<?> future, @CheckForNull Object expect, Object update) {
+    boolean casValue(AbstractFuture<?> future, @CheckForNull @Readonly Object expect, @Readonly Object update) {
       return valueUpdater.compareAndSet(future, expect, update);
     }
   }
@@ -1558,7 +1560,7 @@ public abstract class AbstractFuture<V extends @Nullable Object> extends Interna
     }
 
     @Override
-    boolean casValue(AbstractFuture<?> future, @CheckForNull Object expect, Object update) {
+    boolean casValue(AbstractFuture<?> future, @CheckForNull @Readonly Object expect, @Readonly Object update) {
       synchronized (future) {
         if (future.value == expect) {
           future.value = update;

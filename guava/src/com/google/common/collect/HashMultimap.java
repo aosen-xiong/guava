@@ -61,7 +61,7 @@ import org.checkerframework.framework.qual.CFComment;
 @GwtCompatible(serializable = true, emulated = true)
 @ElementTypesAreNonnullByDefault
 @ReceiverDependentMutable
-public final class HashMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+public final class HashMultimap<K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
     extends HashMultimapGwtSerializationDependencies<K, V> {
   private static final int DEFAULT_VALUES_PER_KEY = 2;
 
@@ -73,7 +73,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * <p>This method will soon be deprecated in favor of {@code
    * MultimapBuilder.hashKeys().hashSetValues().build()}.
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object>
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object>
       HashMultimap<K, V> create() {
     return new HashMultimap<>();
   }
@@ -90,7 +90,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * @throws IllegalArgumentException if {@code expectedKeys} or {@code expectedValuesPerKey} is
    *     negative
    */
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> HashMultimap<K, V> create(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> HashMultimap<K, V> create(
       int expectedKeys, int expectedValuesPerKey) {
     return new HashMultimap<>(expectedKeys, expectedValuesPerKey);
   }
@@ -106,7 +106,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * @param multimap the multimap whose contents are copied to this multimap
    */
   @CFComment("PICO: good example to have poly only for mutable and immutable, like boolean algebra")
-  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Readonly Object> @PolyMutable HashMultimap<K, V> create(
+  public static <K extends @Nullable @Immutable Object, V extends @Nullable @Immutable Object> @PolyMutable HashMultimap<K, V> create(
       @PolyMutable Multimap<? extends K, ? extends V> multimap) {
     return new @PolyMutable HashMultimap<>(multimap);
   }
@@ -115,14 +115,15 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
     this(12, DEFAULT_VALUES_PER_KEY);
   }
 
+  @SuppressWarnings("mutability:argument.type.incompatible") // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter while the object is being initialized, as jdk#4's collection constructors do
   private HashMultimap(int expectedKeys, int expectedValuesPerKey) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newHashMapWithExpectedSize(expectedKeys));
     Preconditions.checkArgument(expectedValuesPerKey >= 0);
     this.expectedValuesPerKey = expectedValuesPerKey;
   }
 
-  @SuppressWarnings("mutability:method.invocation.invalid") // Putall method
-  private HashMultimap(@ReceiverDependentMutable Multimap<? extends K, ? extends V> multimap) {
+  @SuppressWarnings({"mutability:method.invocation.invalid", "mutability:argument.type.incompatible"}) // PICO constructor fix: the constructor passes a fresh @Mutable map to its superclass constructor's receiver-dependent parameter and calls its own putAll while the object is being initialized, as jdk#4's collection constructors do
+  private HashMultimap(@Readonly Multimap<? extends K, ? extends V> multimap) {
     super(Platform.<K, @ReceiverDependentMutable Collection<V>>newHashMapWithExpectedSize(multimap.keySet().size()));
     putAll(multimap);
   }
@@ -135,6 +136,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
    * @return a new {@code HashSet} containing a collection of values for one key
    */
   @Override
+  @SuppressWarnings("mutability:return.type.incompatible") // one poly: the fresh value set gets the multimap's mutability, as ArrayListMultimap's new @PolyMutable ArrayList does, but Platform's factory types it @Mutable
   @PolyMutable Set<V> createCollection(@PolyMutable HashMultimap<K, V> this) {
     return Platform.<V>newHashSetWithExpectedSize(expectedValuesPerKey);
   }
@@ -152,7 +154,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
 
   @GwtIncompatible // java.io.ObjectInputStream
   @J2ktIncompatible
-  private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+  private void readObject(@Mutable HashMultimap<K, V> this, ObjectInputStream stream) throws IOException, ClassNotFoundException {
     stream.defaultReadObject();
     expectedValuesPerKey = DEFAULT_VALUES_PER_KEY;
     int distinctKeys = Serialization.readCount(stream);
@@ -170,7 +172,7 @@ public final class HashMultimap<K extends @Nullable @Immutable Object, V extends
 public boolean equals(@Readonly HashMultimap<K,V> this, @Nullable @Readonly Object arg0) { return super.equals(arg0); }
 
 @Override
-public @PolyMutable Set<V> get(@PolyMutable HashMultimap<K,V> this, @Nullable K arg0) { return super.get(arg0); }
+public @ReceiverDependentMutable Set<V> get(@ReceiverDependentMutable HashMultimap<K,V> this, @Nullable K arg0) { return super.get(arg0); }
 
 @Override
 public @Readonly Set<V> removeAll(@Mutable HashMultimap<K,V> this, @Nullable @Readonly Object arg0) { return super.removeAll(arg0); }
