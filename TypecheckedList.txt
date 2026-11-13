@@ -10,12 +10,15 @@
 # demand, the checker then sees some of those classes with raw supertypes, and
 # files below report errors that the whole-module run does not.
 #
-# State at gait c3efe775ef (checker gait 4aed5b663, annotated JDK jdk#4
+# State at gait c3efe775ef (checker gait f4062696e, annotated JDK jdk#4
 # 96fbe6402d4, run on JDK 17): 411 files, 71,498 lines (count_java_annotations.pl),
 # 8,425 PICO annotations (qualcount.py), 304 suppressions. The whole module (625
-# files) has 66 errors, all in files not listed as T1, T2 or T3. Checker
+# files) has 64 errors, all in files not listed as T1, T2 or T3. Checker
 # ffb75181e reported 60. The 6 more are self() calls in MapMakerInternalMap,
 # which now return @Mutable S through a @Mutable receiver (eisop#2516).
+# Checker 4aed5b663 reported 66. f4062696e treats two plain uses of one type
+# parameter as one type, which removes FluentIterable.java:284 and
+# Iterables.java:1086 (methodref.return.invalid).
 #
 # Not listed: 186 files that are clean but have no PICO annotation, so there is
 # nothing to check, and the 23 other files that still report errors.
